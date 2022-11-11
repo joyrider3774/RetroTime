@@ -1,0 +1,56 @@
+app-id: io.github.joyrider3774.RetroTime
+runtime: org.freedesktop.Platform
+default-branch: "stable"
+runtime: org.freedesktop.Sdk
+runtime-version: "21.08"
+command: retrotimerunner.sh
+rename-desktop-file: retrotime.desktop
+rename-icon: retrotime
+
+modules:
+  - name: "SDL_gfx"
+    config-opts:
+      - "--disable-static"
+      - "--disable-mmx"
+    build-options: {
+        "arch": {
+            "i386": {
+                "config-opts": [
+                    "--enable-mmx"
+                ]
+            },
+            "x86_64": {
+                "config-opts": [
+                    "--enable-mmx"
+                ]
+            }
+        }
+    } 
+    sources:
+      - type: archive
+        url: https://downloads.sourceforge.net/project/sdlgfx/SDL_gfx-2.0.25.tar.gz
+        sha256: 556eedc06b6cf29eb495b6d27f2dcc51bf909ad82389ba2fa7bdc4dec89059c0
+  - name: RetroTime
+    buildsystem: simple
+    sources:
+      - type: git
+        url: https://github.com/joyrider3774/RetroTime.git
+      - type: script
+		dest-filename: retrotimerunner.sh
+		commands:
+          - #!/usr/bin/bash        
+		  - self_dir="$(dirname $(realpath $0))"
+          - echo $self_dir
+          - "$self_dir/retrotime" "$@" 
+    build-commands:
+      - make
+      - mkdir /app/bin/retrotime
+      - cp -r ./retrotimefs /app/bin/
+      - cp znax /app/bin/retrotime
+
+finish-args:
+  - --device=all # needed for gamepads
+  - --share=ipc  # needed for X11
+  - --socket=x11
+  - --socket=pulseaudio
+  - --filesystem=home
