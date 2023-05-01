@@ -11,6 +11,7 @@
 #include "CInput.h"
 #include "CFont.h"
 #include "CImage.h"
+#include "CSprites.h"
 #include "Common.h"
 
 
@@ -52,6 +53,7 @@ public:
     CFont *Font;
     CInput *Input;
     CImage *Image;
+    CSprites *Sprites;
     SDL_Renderer *Renderer;
     SDL_Texture *TexOffScreen, *TexScreen, *TexCrt;
     SDL_Texture* GameScreenShots[Games];

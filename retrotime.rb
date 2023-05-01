@@ -1,4 +1,4 @@
-class Znax < Formula
+class RetroTime < Formula
   desc "Retrotime is a cross platform retro game using SDL2 libraries"
   homepage "https://joyrider3774.github.io/RetroTime/"
   url "https://github.com/joyrider3774/RetroTime/archive/refs/tags/v1.1.tar.gz"

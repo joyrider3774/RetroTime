@@ -317,9 +317,7 @@ void CGameBlockStacker::drawbackground()
 
 void CGameBlockStacker::init()
 {
-	background = Game->Image->LoadImage(Game->Renderer, "blockstacker/background.png");
-	backgroundtz = Game->Image->ImageSize(background);
-	
+	LoadGraphics();
 	if(!ScreenshotMode)
 	{
 		SfxLineClear = Game->Audio->LoadSound("blockstacker/lineclear.ogg");
@@ -349,10 +347,19 @@ void CGameBlockStacker::init()
 	}
 }
 
-void CGameBlockStacker::deinit()
+void CGameBlockStacker::LoadGraphics()
+{
+	background = Game->Image->LoadImage(Game->Renderer, "blockstacker/background.png");
+	backgroundtz = Game->Image->ImageSize(background);
+}
+
+void CGameBlockStacker::UnloadGraphics()
 {
 	Game->Image->UnLoadImage(background);
+}
 
+void CGameBlockStacker::deinit()
+{
 	if (!ScreenshotMode)
 	{
 		Game->Audio->StopMusic();
@@ -365,6 +372,7 @@ void CGameBlockStacker::deinit()
 		Game->SubStateCounter = 0;
 		Game->SubGameState = SGNone;
 		Game->CurrentGameMusicID = -1;
+		UnloadGraphics();
 	}
 }
 	
@@ -405,7 +413,6 @@ void CGameBlockStacker::Draw()
     SDL_RenderClear(Game->Renderer);
 	drawbackground();
 	drawplayfield();
-	Game->DrawCrt();
 	DrawScoreBar();
 	DrawSubStateText();
 }

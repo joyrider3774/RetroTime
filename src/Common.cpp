@@ -116,7 +116,7 @@ GameDesc GSGames[Games] = {
 	    "a game based on Ram-It (Atari 2600)"
     },
     {
-	    GSRamItInit,//gseddy,
+	    GSEddyInit,//gseddy,
 	    "Faster Dave",
 	    "Faster Dave is a game based on Fast Eddie. You control Dave with the\n" 
 	    "left joystick or dpad. You need to avoid or jump over enemies with\n" 

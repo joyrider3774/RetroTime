@@ -12,8 +12,8 @@ CC ?= g++
 DESTDIR ?=
 PREFIX ?= /usr
 OPT_LEVEL ?= -O2
-CPPFLAGS ?= -Wall -Wextra -std=c++11 `sdl2-config --cflags` -I/usr/include -I/usr/include/SDL2  
-LDFLAGS ?= -L$(PREFIX)/lib
+CPPFLAGS ?= -Wall -Wextra -std=c++11 `sdl2-config --cflags`  -g
+LDFLAGS ?= -L$(PREFIX)/lib -g
 LDLIBS ?= `sdl2-config --libs` -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lSDL2 -lSDL2_gfx -lm -lstdc++ -mconsole
 
 #MINGW does not have X11 and does not require it
@@ -44,7 +44,7 @@ $(SRC_SUBDIR):
 	mkdir -p $(OBJ_DIR)/$@
 
 clean:
-	$(RM) -rv *~ $(OBJ_DIR) $(EXE) 
+	$(RM) -rv *~ $(OBJ_DIR) $(EXE)
 
 install: all
 	install -d $(GAMEDIR)

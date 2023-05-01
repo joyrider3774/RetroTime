@@ -29,5 +29,7 @@ public:
     virtual void deinit();
     virtual void UpdateLogic();
     virtual void Draw();
+    virtual void LoadGraphics();
+    virtual void UnloadGraphics();
     virtual SDL_Texture* screenshot();
 };

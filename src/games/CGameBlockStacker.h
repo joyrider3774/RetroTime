@@ -46,4 +46,6 @@ public:
     void deinit() override;
     void UpdateLogic() override;
     void Draw() override;
+    void UnloadGraphics() override;
+    void LoadGraphics() override;
 };

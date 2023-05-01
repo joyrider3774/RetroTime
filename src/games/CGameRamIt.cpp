@@ -475,7 +475,6 @@ void CGameRamIt::Draw()
     ridrawbullet();
     ridrawplayer();
     ridrawplayfield();
-	Game->DrawCrt();
     DrawScoreBar();
 	DrawSubStateText();
 }

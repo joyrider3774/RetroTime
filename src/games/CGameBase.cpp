@@ -24,6 +24,16 @@ void CGameBase::deinit()
 
 }
 
+void CGameBase::LoadGraphics()
+{
+
+}
+
+void CGameBase::UnloadGraphics()
+{
+
+}
+
 void CGameBase::PauseMenu()
 {
 	int prevsubgamestate = Game->SubGameState;
@@ -147,6 +157,9 @@ void CGameBase::PauseMenu()
         if(Game->Input->Buttons.RenderReset)
         {
             SDL_Log("Render Reset, Recreating crt and background");
+            Game->Image->UnloadImages();
+            LoadGraphics();
+            Game->LoadGraphics();
             Game->CreateScreenshotsAndBackground();
             Game->ReCreateCrt();
         }
@@ -320,6 +333,7 @@ void CGameBase::PauseMenu()
                         Game->Crt += 1;
                         if (Game->Crt == Crts)
                             Game->Crt = 0;
+                        Game->ReCreateCrt();
                         break;
                     }
                     
@@ -359,8 +373,9 @@ void CGameBase::PauseMenu()
         Text += "FrameTime: " + to_string(AvgFrameTime) + "\n";
         Text += "GFX Slots: " + to_string(Game->Image->ImageSlotsUsed()) + "/" + to_string(Game->Image->ImageSlotsMax()) + "\n";
         Text += "SND Slots: " + to_string(Game->Audio->SoundSlotsUsed()) + "/" + to_string(Game->Audio->SoundSlotsMax()) + "\n";
-        Text += "MUS Slots: " + to_string(Game->Audio->MusicSlotsUsed()) + "/" + to_string(Game->Audio->MusicSlotsMax()) + "\n";        
-        Game->Font->WriteText(Game->Renderer, "RobotoMono-Bold", 16, Text, Text.length(), 0, 0, 0, {255, 0, 255, 255});        
+        Text += "MUS Slots: " + to_string(Game->Audio->MusicSlotsUsed()) + "/" + to_string(Game->Audio->MusicSlotsMax()) + "\n";
+        Text += "SPR Slots: " + to_string(Game->Sprites->SpriteSlotsUsed()) + "/" + to_string(Game->Sprites->SpriteSlotsMax()) + "\n";
+        Game->Font->WriteText(Game->Renderer, "RobotoMono-Bold", 16, Text, Text.length(), 0, 0, 0, {255, 0, 255, 255});
         SDL_RenderPresent(Game->Renderer);
         
         Uint64 FrameEndPerf = SDL_GetPerformanceCounter();

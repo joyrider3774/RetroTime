@@ -11,6 +11,7 @@
 #include <unistd.h>
 #include <inttypes.h>
 #include "games\CGameBase.h"
+#include "games\CGameFastEddy.h"
 #include "games\CGameRamIt.h"
 #include "games\CGameSnake.h"
 #include "games\CGameBlockStacker.h"
@@ -91,6 +92,7 @@ void CGame::CreateScreenshotsAndBackground()
     CGameRamIt *TmpGameRamIt = new CGameRamIt(this, true);
     CGameBlockStacker *TmpGameBlockStacker = new CGameBlockStacker(this, true);
     CGameSnake *TmpGameSnake = new CGameSnake(this, true);
+    CGameFastEddy *TmpGameFastEddy = new CGameFastEddy(this, true);
     int ScreenShotNr = 0;
     SDL_DestroyTexture(GameScreenShots[ScreenShotNr]);
     GameScreenShots[ScreenShotNr++] = TmpGameRamIt->screenshot();
@@ -107,12 +109,13 @@ void CGame::CreateScreenshotsAndBackground()
     SDL_DestroyTexture(GameScreenShots[ScreenShotNr]);
     GameScreenShots[ScreenShotNr++] = TmpGameRamIt->screenshot();
     SDL_DestroyTexture(GameScreenShots[ScreenShotNr]);
-    GameScreenShots[ScreenShotNr++] = TmpGameRamIt->screenshot();
+    GameScreenShots[ScreenShotNr++] = TmpGameFastEddy->screenshot();
     SDL_DestroyTexture(ScreenShotRandom);
     ScreenShotRandom = RandomScreenshot(0.25);
     delete TmpGameRamIt;
     delete TmpGameBlockStacker;
     delete TmpGameSnake;
+    delete TmpGameFastEddy;
 }
 
 void CGame::DrawCrt()
@@ -496,6 +499,9 @@ void CGame::CreateActiveGame()
         case GSRamItInit:
             ActiveGame = new CGameRamIt(this);
             break;
+        case GSEddyInit:
+            ActiveGame = new CGameFastEddy(this);
+            break;
         default:
             ActiveGame = nullptr;
     }
@@ -522,6 +528,10 @@ void CGame::MainLoop()
         if(Input->Buttons.RenderReset)
         {
             SDL_Log("Render Reset, Recreating crt and background");
+            Image->UnloadImages();
+            LoadGraphics();
+            if(ActiveGame != nullptr)
+                ActiveGame->LoadGraphics();
             CreateScreenshotsAndBackground();
             ReCreateCrt();
         }
@@ -546,6 +556,7 @@ void CGame::MainLoop()
                 TitleScreen(this);
                 break;
             
+            case GSEddyInit:
             case GSSnakeInit:
             case GSTetrisInit:
             case GSRamItInit:
@@ -554,12 +565,13 @@ void CGame::MainLoop()
                 ResetTimer();
 	            StartCrossFade(ActiveGame->GameStateID, SGReadyGo, 3, 500);
                 break;
-
+            
+            case GSEddy:
             case GSSnake:
             case GSTetris:
             case GSRamIt:
                 ActiveGame->UpdateLogic();
-                ActiveGame->Draw();                
+                ActiveGame->Draw();
                 break;
             default:
                 break;
@@ -593,7 +605,8 @@ void CGame::MainLoop()
         Text += "GFX Slots: " + to_string(Image->ImageSlotsUsed()) + "/" + to_string(Image->ImageSlotsMax()) + "\n";
         Text += "SND Slots: " + to_string(Audio->SoundSlotsUsed()) + "/" + to_string(Audio->SoundSlotsMax()) + "\n";
         Text += "MUS Slots: " + to_string(Audio->MusicSlotsUsed()) + "/" + to_string(Audio->MusicSlotsMax()) + "\n";
-        Font->WriteText(Renderer, "RobotoMono-Bold", 16, Text, Text.length(), 0, 0, 0, {255, 0, 255, 255});        
+        Text += "SPR Slots: " + to_string(Sprites->SpriteSlotsUsed()) + "/" + to_string(Sprites->SpriteSlotsMax()) + "\n";
+        Font->WriteText(Renderer, "RobotoMono-Bold", 16, Text, Text.length(), 0, 0, 0, {255, 0, 255, 255});
         SDL_RenderPresent(Renderer);
         
         Uint64 FrameEndPerf = SDL_GetPerformanceCounter();
@@ -695,6 +708,7 @@ Possible options are:\n\
                 Font = new CFont(DataPath);
                 Image = new CImage(DataPath);
                 Input = new CInput();
+                Sprites = new CSprites(Image);
                 
                 // Main game loop that loops untile the gamestate = GSQuit
                 // and calls the procedure according to the gamestate.
@@ -738,7 +752,8 @@ Possible options are:\n\
                 delete Audio;
                 delete Font; 
                 delete Image;
-                delete Input;          
+                delete Input;
+                delete Sprites;
                 SDL_DestroyRenderer(Renderer);
             } 
             else 

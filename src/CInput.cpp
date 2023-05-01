@@ -147,13 +147,16 @@ void CInput::HandleKeyboardEvent(int Key, bool Value)
 {
     switch (Key)
     {
-        case SDLK_f:
+        case SDLK_F4:
+            Buttons.ButQuit = Value;
+            break;
+        case SDLK_F3:
             Buttons.ButFullscreen = Value;
             break;
-        case SDLK_PAGEDOWN:
+        case SDLK_b:
             Buttons.ButRB = Value;
             break;
-        case SDLK_PAGEUP:
+        case SDLK_x:
             Buttons.ButLB = Value;
             break;
         case SDLK_UP:
@@ -175,10 +178,27 @@ void CInput::HandleKeyboardEvent(int Key, bool Value)
             Buttons.ButBack = Value;
             break;
         case SDLK_SPACE:
+        case SDLK_c:
             Buttons.ButA = Value;
             break;
-        case SDLK_b:
+        case SDLK_LALT:
+        case SDLK_RALT:
+        case SDLK_v:
             Buttons.ButB = Value;
+            break;
+        case SDLK_LCTRL:
+        case SDLK_RCTRL:
+        case SDLK_d:
+            Buttons.ButX = Value;
+            break;
+        case SDLK_f:
+            Buttons.ButY = Value;
+			break;
+		case SDLK_s:
+            Buttons.ButLT = Value;
+            break;
+        case SDLK_g:
+            Buttons.ButRT = Value;
             break;
         default:
             break;
