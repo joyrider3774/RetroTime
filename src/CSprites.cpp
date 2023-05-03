@@ -33,7 +33,7 @@ CSprite* CSprites::CreateSprite()
             Spr->animInc = 0;
             Spr->animTimer = 0;
             Spr->rotation = 0;
-            Spr->imageID = -1;
+            Spr->imageID = nullptr;
             Spr->xscale = 1;
             Spr->yscale = 1;
             Spr->xscale_speed = 0;
@@ -46,10 +46,12 @@ CSprite* CSprites::CreateSprite()
             Spr->animEndTile = 0;
             Spr->animSpeed = 0;
             Spr->animTile = 0;
-            Spr->collisionShape = SHAPE_NONE;
+            Spr->collisionShape = SHAPE_BOX;
             Spr->collisionAngle = 0;
             Spr->collisionWidth = 0;
             Spr->collisionHeight = 0;
+            Spr->collisionxoffset = 0;
+            Spr->collisionyoffset = 0;
             Spr->depth = 0;
             Spr->show = true;
             Spr->r = 1.0;
@@ -137,22 +139,19 @@ void CSprites::SortSprites()
                         Sprites[j] = Tmp;
                         Sprites[j]->index = j;
                     }
-                    else
-                        break;
                 }
-                else
-                {
-                    if ((Sprites[i] == nullptr) && (Sprites[j] != nullptr))
-                    {
-                        CSprite* Tmp = Sprites[i];
-                        Sprites[i] = Sprites[j];
-                        Sprites[i]->index = i;
-                        Sprites[j] = Tmp;
-                        Sprites[j]->index = j;
-                    }
-                    else
-                        break;
-                }
+                // else
+                // {
+                //     if ((Sprites[i] == nullptr) && (Sprites[j] != nullptr))
+                //     {
+                //         CSprite* Tmp = Sprites[i];
+                //         Sprites[i] = Sprites[j];
+                //         Sprites[i]->index = i;
+                //         Sprites[j] = Tmp;
+                //     }
+                //     else
+                //         break;
+                // }
             }
         }
         needSpriteSorting = false;
@@ -166,16 +165,16 @@ void CSprites::DrawSprites(SDL_Renderer* Renderer)
     {
         if (Sprites[i] == nullptr)
             continue;
-        if (Sprites[i]->show && ((Sprites[i]->imageID > -1) && (Sprites[i]->imageID < Images->ImageSlotsMax())))
+        if (Sprites[i]->show && ((*Sprites[i]->imageID > -1) && (*Sprites[i]->imageID < Images->ImageSlotsMax())))
         {
-            SDL_Point pos = {(int)floor(Sprites[i]->x), (int)floor(Sprites[i]->y)};
+            SDL_Point pos = {(int)(Sprites[i]->x), (int)(Sprites[i]->y)};
             SDL_FPoint scale = {Sprites[i]->xscale, Sprites[i]->yscale};
             int AnimTile = Sprites[i]->animTile;
             int y = (int)floor(AnimTile / Sprites[i]->tilesX);
             int x = AnimTile - (y * Sprites[i]->tilesX);
             SDL_Rect SrcRect = {x * Sprites[i]->tileSizeX, y* Sprites[i]->tileSizeY, Sprites[i]->tileSizeX, Sprites[i]->tileSizeY};
-            Images->DrawImageFuzeSrcRectTintFloat(Renderer, Sprites[i]->imageID, &SrcRect, true, &pos, Sprites[i]->rotation, &scale, Sprites[i]->r, Sprites[i]->g, Sprites[i]->b, Sprites[i]->a);
-            // const SDL_Rect rect = {(int)(Sprites[i]->x - (Sprites[i]->collisionWidth * (Sprites[i]->xscale) / 2)), (int)(Sprites[i]->y - (Sprites[i]->collisionHeight * (Sprites[i]->yscale) / 2)), (int)(Sprites[i]->collisionWidth * (Sprites[i]->xscale)),  (int)(Sprites[i]->collisionHeight * (Sprites[i]->yscale))};
+            Images->DrawImageFuzeSrcRectTintFloat(Renderer, *Sprites[i]->imageID, &SrcRect, true, &pos, Sprites[i]->rotation, &scale, Sprites[i]->r, Sprites[i]->g, Sprites[i]->b, Sprites[i]->a);
+            // const SDL_Rect rect = {(int)(Sprites[i]->x + Sprites[i]->collisionxoffset - (Sprites[i]->collisionWidth * (Sprites[i]->xscale) / 2)), (int)(Sprites[i]->y + Sprites[i]->collisionyoffset - (Sprites[i]->collisionHeight * (Sprites[i]->yscale) / 2)), (int)(Sprites[i]->collisionWidth * (Sprites[i]->xscale)),  (int)(Sprites[i]->collisionHeight * (Sprites[i]->yscale))};
             // SDL_SetRenderDrawColor(Renderer, 255, 0, 255, 255);
             // SDL_RenderDrawRect(Renderer, &rect);
         }        
@@ -206,19 +205,24 @@ SDL_FPoint CSprites::GetSpriteLocation(CSprite* Spr)
     return Result;
 }
 
-void CSprites::SetSpriteImage(CSprite* Spr, int AImageID)
+void CSprites::SetSpriteImage(CSprite* Spr, int *AImageID)
 {
     SetSpriteImage(Spr, AImageID, 1, 1);
 }
 
-void CSprites::SetSpriteImage(CSprite* Spr, int AImageID, int TilesX, int TilesY)
+void CSprites::SetSpriteImage(CSprite* Spr, int *AImageID, int TilesX, int TilesY)
 {
     Spr->imageID = AImageID;
-    SDL_Point Tz = Images->ImageSize(AImageID);
+    SDL_Point Tz = Images->ImageSize(*AImageID);
     Spr->tileSizeX = (int)floor(Tz.x / TilesX);
     Spr->tileSizeY = (int)floor(Tz.y / TilesY);
     Spr->tilesX = TilesX;
     Spr->tilesY = TilesY;
+    if ((Spr->collisionHeight == 0) && (Spr->collisionWidth == 0))
+    {
+        Spr->collisionHeight = Spr->tileSizeY;
+        Spr->collisionWidth = Spr->tileSizeX;
+    }
 }
 
 void CSprites::SetSpriteScale(CSprite* Spr, SDL_FPoint AScale)
@@ -256,12 +260,14 @@ void CSprites::SetSpriteAnimation(CSprite* Spr, int StartTile, int EndTile, int 
     }
 }
 
-void CSprites::SetSpriteCollisionShape(CSprite* Spr, ECollisionShape shape, double width, double height, double rotation)
+void CSprites::SetSpriteCollisionShape(CSprite* Spr, ECollisionShape shape, double width, double height, double rotation, float xoffset, float yoffset)
 {
     Spr->collisionShape = shape;
     Spr->collisionWidth = width;
     Spr->collisionHeight = height;
     Spr->collisionAngle = rotation;
+    Spr->collisionxoffset = xoffset;
+    Spr->collisionyoffset = yoffset;
 }
 
 void CSprites::SetSpriteLocation(CSprite* Spr, SDL_FPoint pos )
@@ -286,6 +292,11 @@ int CSprites::GetSpriteAnimFrame(CSprite* Spr)
     return Spr->animTile;
 }
 
+SDL_Point CSprites::TileSize(CSprite* Spr)
+{
+    return {Spr->tileSizeX, Spr->tileSizeY};
+}
+
 bool CSprites::DetectSpriteCollision(CSprite* Spr, CSprite* SprOther)
 {
     if((Spr == nullptr) || (SprOther == nullptr))
@@ -301,13 +312,13 @@ bool CSprites::DetectSpriteCollision(CSprite* Spr, CSprite* SprOther)
                 {
                     float widthA = (abs(Spr->collisionWidth) * abs(Spr->xscale));
                     float heightA = (abs(Spr->collisionHeight) * abs(Spr->yscale));
-                    float minAx = Spr->x - (abs(Spr->collisionWidth) * abs(Spr->xscale) / 2);
-                    float minAy = Spr->y - (abs(Spr->collisionHeight) * abs(Spr->yscale) / 2);
+                    float minAx = Spr->x + Spr->collisionxoffset - (abs(Spr->collisionWidth) * abs(Spr->xscale) / 2);
+                    float minAy = Spr->y + Spr->collisionyoffset - (abs(Spr->collisionHeight) * abs(Spr->yscale) / 2);
                     
                     float widthB = (abs(SprOther->collisionWidth) * abs(SprOther->xscale));
                     float heightB = (abs(SprOther->collisionHeight) * abs(SprOther->yscale));
-                    float minBx = SprOther->x - (abs(SprOther->collisionWidth) * abs(SprOther->xscale) / 2);
-                    float minBy = SprOther->y - (abs(SprOther->collisionHeight) * abs(SprOther->yscale) / 2);
+                    float minBx = SprOther->x + SprOther->collisionxoffset - (abs(SprOther->collisionWidth) * abs(SprOther->xscale) / 2);
+                    float minBy = SprOther->y + SprOther->collisionyoffset - (abs(SprOther->collisionHeight) * abs(SprOther->yscale) / 2);
                                         
                     bool xOverlap = ((minAx >= minBx) && (minAx <= minBx + widthB))  ||
                                     ((minBx >= minAx) && (minBx <= minAx + widthA));

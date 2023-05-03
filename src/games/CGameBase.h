@@ -21,6 +21,7 @@ protected:
     void DrawScoreBar();
     void DrawSubStateText();
     void PauseMenu();
+    virtual void OnGameStart();
 public:
     int GameStateID;
     CGameBase(CGame *aGame, int aGameStateID, bool aUsesLevels);

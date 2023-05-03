@@ -83,7 +83,7 @@ void CGameRamIt::riupdatebullet()
 									playfield[side][block].segments -= 1;
 									if (playfield[side][block].segments == 0)
 										if(!ScreenshotMode)
-									    	Game->AddToScore((level + 2) * 2*playfield[side][block].maxsegments);
+									    	Game->AddToScore((level + 1) * 2*playfield[side][block].maxsegments);
 
 									playaudiobullet = true;
 									destroybullet = true;
@@ -97,7 +97,7 @@ void CGameRamIt::riupdatebullet()
 									playfield[side][block].segments -= 1;
 									if (playfield[side][block].segments == 0)
 										if(!ScreenshotMode)
-									    	Game->AddToScore((level + 3) * 2 * playfield[side][block].maxsegments);
+									    	Game->AddToScore((level + 2) * 2 * playfield[side][block].maxsegments);
 
 									playaudiobullet = true;
 									destroybullet = true;
@@ -272,7 +272,7 @@ void CGameRamIt::riupdateplayfield(bool force)
 {
 	speedcount += 1;
 
-	if (force || (speedcount >= speed - (level * tickslevelmul)))
+	if (force || (speedcount >= speed - ((level-1) * tickslevelmul)))
     {
 		speedcount = 0;
 		int stageclear = true;		
@@ -293,7 +293,7 @@ void CGameRamIt::riupdateplayfield(bool force)
 			ricreateplayfield();
 			level += 1;
 			if(!ScreenshotMode)
-				Game->AddToScore(level * 100);
+				Game->AddToScore((level-1) * 100);
         }
 		
 		if (!stageclear)
@@ -371,7 +371,7 @@ void CGameRamIt::init()
     
 	bulletalive = false;
 	speed = ticksidle;
-	level = 0;
+	level = 1;
 	playerdeath = false;
 	if(!ScreenshotMode)
 	{
@@ -379,7 +379,7 @@ void CGameRamIt::init()
 		SfxShoot = Game->Audio->LoadSound("ramit/shoot.wav");
 		SfxHit = Game->Audio->LoadSound("ramit/hit.wav");
 		SfxDie = Game->Audio->LoadSound("common/die.wav");
-		SfxSucces = Game->Audio->LoadSound("common/succes.mp3");
+		SfxSucces = Game->Audio->LoadSound("common/succes.wav");
 		MusMusic = Game->Audio->LoadMusic("ramit/music.mp3");	
 		Game->CurrentGameMusicID = MusMusic;
 		ricreateplayer();

@@ -11,6 +11,7 @@
 #include <unistd.h>
 #include <inttypes.h>
 #include "games\CGameBase.h"
+#include "games\CGameFrog.h"
 #include "games\CGameFastEddy.h"
 #include "games\CGameRamIt.h"
 #include "games\CGameSnake.h"
@@ -88,18 +89,22 @@ void CGame::Init()
 
 void CGame::CreateScreenshotsAndBackground()
 {   
-
+    //need to create a temporary sprites holder & replace it because
+    //games could be running and already have sprites assigned
+    CSprites *TmpSprites = Sprites;
+    Sprites = new CSprites(Image);
     CGameRamIt *TmpGameRamIt = new CGameRamIt(this, true);
     CGameBlockStacker *TmpGameBlockStacker = new CGameBlockStacker(this, true);
     CGameSnake *TmpGameSnake = new CGameSnake(this, true);
     CGameFastEddy *TmpGameFastEddy = new CGameFastEddy(this, true);
+    CGameFrog *TmpGameFrog = new CGameFrog(this, true);
     int ScreenShotNr = 0;
     SDL_DestroyTexture(GameScreenShots[ScreenShotNr]);
     GameScreenShots[ScreenShotNr++] = TmpGameRamIt->screenshot();
     SDL_DestroyTexture(GameScreenShots[ScreenShotNr]);
     GameScreenShots[ScreenShotNr++] = TmpGameRamIt->screenshot();
     SDL_DestroyTexture(GameScreenShots[ScreenShotNr]);
-    GameScreenShots[ScreenShotNr++] = TmpGameRamIt->screenshot();
+    GameScreenShots[ScreenShotNr++] = TmpGameFrog->screenshot();
     SDL_DestroyTexture(GameScreenShots[ScreenShotNr]);
     GameScreenShots[ScreenShotNr++] = TmpGameSnake->screenshot();
     SDL_DestroyTexture(GameScreenShots[ScreenShotNr]);
@@ -112,10 +117,13 @@ void CGame::CreateScreenshotsAndBackground()
     GameScreenShots[ScreenShotNr++] = TmpGameFastEddy->screenshot();
     SDL_DestroyTexture(ScreenShotRandom);
     ScreenShotRandom = RandomScreenshot(0.25);
+    delete TmpGameFrog;
     delete TmpGameRamIt;
     delete TmpGameBlockStacker;
     delete TmpGameSnake;
     delete TmpGameFastEddy;
+    delete Sprites;
+    Sprites = TmpSprites;
 }
 
 void CGame::DrawCrt()
@@ -502,6 +510,9 @@ void CGame::CreateActiveGame()
         case GSEddyInit:
             ActiveGame = new CGameFastEddy(this);
             break;
+        case GSFrogInit:
+            ActiveGame = new CGameFrog(this);
+            break;
         default:
             ActiveGame = nullptr;
     }
@@ -556,6 +567,7 @@ void CGame::MainLoop()
                 TitleScreen(this);
                 break;
             
+            case GSFrogInit:
             case GSEddyInit:
             case GSSnakeInit:
             case GSTetrisInit:
@@ -566,6 +578,7 @@ void CGame::MainLoop()
 	            StartCrossFade(ActiveGame->GameStateID, SGReadyGo, 3, 500);
                 break;
             
+            case GSFrog:
             case GSEddy:
             case GSSnake:
             case GSTetris:
@@ -633,7 +646,7 @@ void CGame::MainLoop()
 void CGame::Run(int argc, char *argv[]) {
 
     bool useSoftwareRenderer = false;
-    bool useLinear = true;
+    bool useLinear = false; //causes issues in for example frog from scaling textures and then bleeding into each other
     bool useVsync = false;
     bool useFullScreenAtStartup = true;
     string StartPath = GetFilePath(string(argv[0]));
@@ -649,7 +662,6 @@ void CGame::Run(int argc, char *argv[]) {
 Usage: Znax [Options]\n\n\
 Possible options are:\n\
   -?: show this help message\n\
-  -d: disable linear filtering (only works when hardware renderer is used)\n\
   -s: Use Software Renderer\n\
   -f: Show FPS\n\
   -w: Run windowed at startup (by default starts up fullscreen)\n");

@@ -143,26 +143,26 @@ void  CImage::DrawImageFuze(SDL_Renderer* Renderer, SDL_Texture *Texture, SDL_Re
     
     if(Texture == nullptr)
         return;
-    int dstW;
-    int dstH;
+    float dstW;
+    float dstH;
     
     if(SrcRect)
     {
-        dstW = floor(SrcRect->w * abs(Scale->x));
-        dstH = floor(SrcRect->h * abs(Scale->y));
+        dstW = (SrcRect->w * abs(Scale->x));
+        dstH = (SrcRect->h * abs(Scale->y));
     }
     else
     {
     
         SDL_Point ImageTz = ImageSize(Texture);
-        dstW = floor(ImageTz.x * abs(Scale->x));
-        dstH = floor(ImageTz.y * abs(Scale->y));
+        dstW = (ImageTz.x * abs(Scale->x));
+        dstH = (ImageTz.y * abs(Scale->y));
     }
     SDL_Rect Dst;
     if(CenterImagePos)
-        Dst = {Pos->x - (dstW >> 1), Pos->y - (dstH >> 1), dstW, dstH};
+        Dst = {(int)(Pos->x - ((dstW) / 2)), (int)(Pos->y - ((dstH) / 2)), (int)(dstW), (int)(dstH)};
     else
-        Dst = {Pos->x, Pos->y, dstW, dstH};
+        Dst = {Pos->x, Pos->y, (int)(dstW), (int)(dstH)};
 
     //save values
     SDL_BlendMode Mode;

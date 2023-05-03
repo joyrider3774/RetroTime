@@ -430,6 +430,11 @@ void CGameBase::DrawScoreBar()
     Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 20, Text, Text.length(), 0, 0, 0, {255,255,255,255});
 }
 
+void CGameBase::OnGameStart()
+{
+
+}
+
 void CGameBase::DrawSubStateText()
 {
     //textSize(scpregamefontsize)
@@ -508,8 +513,11 @@ void CGameBase::UpdateLogic()
                 }
                 else
                 {
-					if (Game->SubGameState == SGReadyGo)						
+					if (Game->SubGameState == SGReadyGo)
+                    {
+                        OnGameStart();
 						Game->SubGameState = SGGame;
+                    }
 					else
                     {
 						Game->GameState = GSSubScoreInit;

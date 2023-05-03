@@ -1,4 +1,5 @@
 #include <SDL.h>
+#include <Limits>
 #include <inttypes.h>
 #include <string.h>
 #include <iostream>
@@ -57,7 +58,7 @@ GameDesc GSGames[Games] = {
 
     },
     {   
-        GSRamItInit,//gsfrog,
+        GSFrogInit,//gsfrog,
 	    "Toady",
 	    "Toady is a game based on Frogger. You control the robot\n"
 	    "by left joystick or dpad and you have to keep moving up.\n" 

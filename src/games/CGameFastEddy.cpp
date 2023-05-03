@@ -49,10 +49,10 @@ void CGameFastEddy::fecreatekey()
 	SDL_FPoint scale = {keyheight / tz.y, keyheight / tz.y};
 	key.tz.x = tz.x * scale.x;
     key.tz.y = tz.y * scale.y;
-	Game->Sprites->SetSpriteImage(key.spr, spritesheetkey, 1, 1);
+	Game->Sprites->SetSpriteImage(key.spr, &spritesheetkey, 1, 1);
 	Game->Sprites->SetSpriteScale(key.spr, scale);
 	Game->Sprites->SetSpriteAnimation(key.spr, 0, 0, 0);
-	Game->Sprites->SetSpriteCollisionShape(key.spr, SHAPE_BOX, tz.x - 20, tz.y, 0); 
+	Game->Sprites->SetSpriteCollisionShape(key.spr, SHAPE_BOX, tz.x - 20, tz.y, 0, 0, 0); 
 	key.pos.y = enemies[rowzeroenemyindex].pos.y - enemies[rowzeroenemyindex].tz.y;
 	key.pos.x = enemies[rowzeroenemyindex].pos.x;
 	Game->Sprites->SetSpriteLocation(key.spr, key.pos);
@@ -152,11 +152,11 @@ void CGameFastEddy::fecreatecollectables(int ignorerow)
 				SDL_FPoint scale = {collectableheight / tz.y, collectableheight / tz.y};
 				collectables[i].tz.x = tz.x * scale.x;
                 collectables[i].tz.y = tz.y * scale.y;
-				Game->Sprites->SetSpriteImage(collectables[i].spr, spritesheetcollectable, 5, 1);
+				Game->Sprites->SetSpriteImage(collectables[i].spr, &spritesheetcollectable, 5, 1);
 				Game->Sprites->SetSpriteScale(collectables[i].spr, scale);
-				Game->Sprites->SetSpriteAnimation(collectables[i].spr, (level % 5), (level % 5), 0);
+				Game->Sprites->SetSpriteAnimation(collectables[i].spr, ((level-1) % 5), ((level-1) % 5), 0);
 				//Game->Sprites->SetSpriteCollisionShape(collectables[i].spr, SHAPE_CIRCLE, tz.x - 66, tz.y - 66,0);
-                Game->Sprites->SetSpriteCollisionShape(collectables[i].spr, SHAPE_BOX, tz.x - 66, tz.y - 66, 0);
+                Game->Sprites->SetSpriteCollisionShape(collectables[i].spr, SHAPE_BOX, tz.x - 66, tz.y - 66, 0, 0, 0); 
 				collectables[i].pos.y = (row) * rowspacingsize + rowfloorsize / 2;
 				collectables[i].pos.x = ((screenright - screenleft) /7) + 
 					(rand() % (screenright - screenleft - ((screenright - screenleft) /6 )));
@@ -227,7 +227,7 @@ void CGameFastEddy::feenemyenablelevelend()
     enemies[index].tz.y = tz.y * scale.y;
 	enemies[index].pos.y = (0 + 1) * rowspacingsize - rowfloorsize / 2 - enemies[index].tz.y / 2;
 	Game->Sprites->SetSpriteScale(enemies[index].spr, scale);
-	Game->Sprites->SetSpriteCollisionShape(enemies[index].spr, SHAPE_BOX, tz.x - 10, tz.y-10,0);
+	Game->Sprites->SetSpriteCollisionShape(enemies[index].spr, SHAPE_BOX, tz.x - 10, tz.y-10,0, 0, 0); 
 	Game->Sprites->SetSpriteLocation(enemies[index].spr, enemies[index].pos);
 }
 
@@ -248,7 +248,7 @@ void CGameFastEddy::fecreateenemy(int row, float x, int state, int group, int mu
 			SDL_FPoint scale = {enemyheight / tz.y * multiply, enemyheight / tz.y * multiply};
 			enemies[i].tz.x = tz.x * scale.x;
             enemies[i].tz.y = tz.y * scale.y;
-			Game->Sprites->SetSpriteImage(enemies[i].spr, spritesheetenemy, 3, 4);
+			Game->Sprites->SetSpriteImage(enemies[i].spr, &spritesheetenemy, 3, 4);
 			Game->Sprites->SetSpriteScale(enemies[i].spr, scale);
 			if (enemies[i].state == enemystatemoveright)
 				Game->Sprites->SetSpriteAnimation(enemies[i].spr, 6, 8, 10);
@@ -265,7 +265,7 @@ void CGameFastEddy::fecreateenemy(int row, float x, int state, int group, int mu
 				Game->Sprites->SetSpriteAnimation(enemies[i].spr, 0, 2, 10);
             }
 			
-			Game->Sprites->SetSpriteCollisionShape(enemies[i].spr, SHAPE_BOX, tz.x - 10, tz.y-10,0); 
+			Game->Sprites->SetSpriteCollisionShape(enemies[i].spr, SHAPE_BOX, tz.x - 10, tz.y-10,0, 0, 0);  
 			enemies[i].pos.y = (row + 1) * rowspacingsize - rowfloorsize / 2 - enemies[i].tz.y / 2;
 			enemies[i].pos.x = x;
 			Game->Sprites->SetSpriteLocation(enemies[i].spr, enemies[i].pos);
@@ -276,7 +276,7 @@ void CGameFastEddy::fecreateenemy(int row, float x, int state, int group, int mu
 
 void CGameFastEddy::fecreateenemies(bool levelsucces)
 {
-	if (level < 5)
+	if (level-1 < 5)
     {
 		fecreateenemy(0, (screenright - screenleft) / 2, enemystatemoveright, 0, 2);
 		if (levelsucces)
@@ -294,7 +294,7 @@ void CGameFastEddy::fecreateenemies(bool levelsucces)
     }
 	else
     {
-		if (level < 10)
+		if (level-1 < 10)
         {
 			fecreateenemy(0, (screenright - screenleft) / 2, enemystatemoveright, 0, 2);
 			fecreateenemy(1, (screenright - screenleft) * 4 / 10, enemystatemoveright, 1, 1);
@@ -305,7 +305,7 @@ void CGameFastEddy::fecreateenemies(bool levelsucces)
         }
 		else
         {
-			if (level < 15)
+			if (level-1 < 15)
             {
 				fecreateenemy(0, (screenright - screenleft) / 2, enemystatemoveright, 0, 2);
 				fecreateenemy(1, (screenright - screenleft) * 4 / 10, enemystatemoveright, 1, 1);
@@ -440,10 +440,10 @@ void CGameFastEddy::fecreateplayer()
     player.tz.y = tz.y * scale.y;
 	player.state = playerstateunknown;
 	Game->Sprites->SetSpriteDepth(player.spr, 5);
-	Game->Sprites->SetSpriteImage(player.spr, spritesheetplayeridle, 1, 15);
+	Game->Sprites->SetSpriteImage(player.spr, &spritesheetplayeridle, 1, 15);
 	Game->Sprites->SetSpriteScale(player.spr, scale);
 	Game->Sprites->SetSpriteAnimation(player.spr, 0, 14, 10);
-	Game->Sprites->SetSpriteCollisionShape(player.spr, SHAPE_BOX, tz.x - 120, tz.y-30,0);
+	Game->Sprites->SetSpriteCollisionShape(player.spr, SHAPE_BOX, tz.x - 120, tz.y-30,0,0,0);
 	player.pos = { (float)(screenright - screenleft) / 2,  5 * rowspacingsize - rowfloorsize / 2 - player.tz.y / 2};
 	Game->Sprites->SetSpriteLocation(player.spr, player.pos);
 }
@@ -489,7 +489,7 @@ void CGameFastEddy::feupdateplayer()
                 {
 					if (player.state != playerstateleftjump)
                     {	
-						Game->Sprites->SetSpriteImage(player.spr, spritesheetplayerjump, 1, 6);
+						Game->Sprites->SetSpriteImage(player.spr, &spritesheetplayerjump, 1, 6);
 						Game->Sprites->SetSpriteAnimation(player.spr, 3, 3, 10);
 
 						player.state = playerstateleftjump;
@@ -504,7 +504,7 @@ void CGameFastEddy::feupdateplayer()
                     {
 						if (player.state != playerstaterightjump)
                         {
-							Game->Sprites->SetSpriteImage(player.spr, spritesheetplayerjump, 1, 6);
+							Game->Sprites->SetSpriteImage(player.spr, &spritesheetplayerjump, 1, 6);
 							Game->Sprites->SetSpriteAnimation(player.spr, 3, 3, 10);
 
 							player.floory = player.pos.y;
@@ -517,7 +517,7 @@ void CGameFastEddy::feupdateplayer()
                     {
 						if(player.state != playerstatejump)
                         {
-							Game->Sprites->SetSpriteImage(player.spr, spritesheetplayerjump, 1, 6);
+							Game->Sprites->SetSpriteImage(player.spr, &spritesheetplayerjump, 1, 6);
 							Game->Sprites->SetSpriteAnimation(player.spr, 3, 3, 10);
 							player.floory = player.pos.y;
 							player.state = playerstatejump;
@@ -538,7 +538,7 @@ void CGameFastEddy::feupdateplayer()
                     {
 						if (Game->Sprites->DetectSpriteCollision(player.spr, ladders[i].spr))
                         {
-							Game->Sprites->SetSpriteImage(player.spr, spritesheetplayerclimb, 1, 15);
+							Game->Sprites->SetSpriteImage(player.spr, &spritesheetplayerclimb, 1, 15);
 							Game->Sprites->SetSpriteAnimation(player.spr, 0, 14, 20);
 							
 							player.pos.x = ladders[i].pos.x;
@@ -554,7 +554,7 @@ void CGameFastEddy::feupdateplayer()
                     {
                         if (player.state != playerstateidle)
                         {
-                            Game->Sprites->SetSpriteImage(player.spr, spritesheetplayeridle, 1, 15);
+                            Game->Sprites->SetSpriteImage(player.spr, &spritesheetplayeridle, 1, 15);
                             Game->Sprites->SetSpriteAnimation(player.spr, 0, 14, 10);
                             player.state = playerstateidle;
                         }
@@ -571,7 +571,7 @@ void CGameFastEddy::feupdateplayer()
                         {
 							if (Game->Sprites->DetectSpriteCollision(player.spr, ladders[i].spr))
                             {
-								Game->Sprites->SetSpriteImage(player.spr, spritesheetplayerclimb, 1, 15);
+								Game->Sprites->SetSpriteImage(player.spr, &spritesheetplayerclimb, 1, 15);
 								Game->Sprites->SetSpriteAnimation(player.spr, 14, 0, 20);
 
 								player.pos.x = ladders[i].pos.x;
@@ -587,7 +587,7 @@ void CGameFastEddy::feupdateplayer()
                         {
                             if (player.state != playerstateidle)
                             {
-                                Game->Sprites->SetSpriteImage(player.spr, spritesheetplayeridle, 1, 15);
+                                Game->Sprites->SetSpriteImage(player.spr, &spritesheetplayeridle, 1, 15);
                                 Game->Sprites->SetSpriteAnimation(player.spr, 0, 14, 10);
                                 player.state = playerstateidle;
                             }
@@ -598,8 +598,8 @@ void CGameFastEddy::feupdateplayer()
 						if (left)
                         {
 							if (player.state != playerstateleft)
-                            {				
-								Game->Sprites->SetSpriteImage(player.spr, spritesheetplayerrun, 1, 7);
+                            {
+								Game->Sprites->SetSpriteImage(player.spr, &spritesheetplayerrun, 1, 7);
 								Game->Sprites->SetSpriteAnimation(player.spr, 0, 6, 10);
 								player.spr->xscale = -(abs(player.spr->xscale));
 								player.state = playerstateleft;
@@ -611,7 +611,7 @@ void CGameFastEddy::feupdateplayer()
                             {
 								if (player.state != playerstateright)
                                 {
-									Game->Sprites->SetSpriteImage(player.spr, spritesheetplayerrun, 1, 7);
+									Game->Sprites->SetSpriteImage(player.spr, &spritesheetplayerrun, 1, 7);
 									Game->Sprites->SetSpriteAnimation(player.spr, 0, 6, 10);
 									player.spr->xscale = (abs(player.spr->xscale));
 									player.state = playerstateright;
@@ -621,7 +621,7 @@ void CGameFastEddy::feupdateplayer()
                             {
 								if (player.state != playerstateidle)
                                 {
-									Game->Sprites->SetSpriteImage(player.spr, spritesheetplayeridle, 1, 15) ;
+									Game->Sprites->SetSpriteImage(player.spr, &spritesheetplayeridle, 1, 15) ;
 									Game->Sprites->SetSpriteAnimation(player.spr, 0, 14, 10);
 									player.state = playerstateidle;
                                 }
@@ -827,7 +827,7 @@ void CGameFastEddy::fecreatefloors()
         {
 			floors[i].spr = Game->Sprites->CreateSprite();
 			floors[i].alive = true;
-			Game->Sprites->SetSpriteImage(floors[i].spr, spritesheet, 9, 10);
+			Game->Sprites->SetSpriteImage(floors[i].spr, &spritesheet, 9, 10);
 			Game->Sprites->SetSpriteLocation(floors[i].spr, {(float)x * rowfloorsize + rowfloorsize / 2, (float)(y + 1) * rowspacingsize - rowfloorsize / 2});
 			Game->Sprites->SetSpriteScale(floors[i].spr, {(float)rowfloorsize / tz.x , (float)rowfloorsize / tz.y});
 			if (x == 0)
@@ -863,8 +863,8 @@ void CGameFastEddy::fecreateladders()
 		ladders[i].spr = Game->Sprites->CreateSprite();
 		ladders[i].alive = true;
 		ladders[i].pos = {x1 * ladderwidth + ladderwidth / 2 , y * rowspacingsize + rowspacingsize / 2 - rowfloorsize / 2};
-		Game->Sprites->SetSpriteImage(ladders[i].spr, spritesheetladder);
-		Game->Sprites->SetSpriteCollisionShape(ladders[i].spr, SHAPE_BOX, tz.x - 20, tz.y-10,0);
+		Game->Sprites->SetSpriteImage(ladders[i].spr, &spritesheetladder);
+		Game->Sprites->SetSpriteCollisionShape(ladders[i].spr, SHAPE_BOX, tz.x - 20, tz.y-10,0,0,0);
 
 		Game->Sprites->SetSpriteLocation(ladders[i].spr, ladders[i].pos );
 		Game->Sprites->SetSpriteScale(ladders[i].spr, {ladderwidth / tz.x , (rowspacingsize + rowfloorsize/2) / tz.y});
@@ -874,8 +874,8 @@ void CGameFastEddy::fecreateladders()
 		ladders[i].spr =  Game->Sprites->CreateSprite();
 		ladders[i].alive = true;
 		ladders[i].pos = {x2 * ladderwidth + ladderwidth / 2 , y * rowspacingsize + rowspacingsize / 2 - rowfloorsize / 2};
-		Game->Sprites->SetSpriteImage(ladders[i].spr, spritesheetladder);
-		Game->Sprites->SetSpriteCollisionShape(ladders[i].spr, SHAPE_BOX, tz.x - 20, tz.y-10,0); 
+		Game->Sprites->SetSpriteImage(ladders[i].spr, &spritesheetladder);
+		Game->Sprites->SetSpriteCollisionShape(ladders[i].spr, SHAPE_BOX, tz.x - 20, tz.y-10,0,0,0); 
 		Game->Sprites->SetSpriteLocation(ladders[i].spr, ladders[i].pos );
 		Game->Sprites->SetSpriteScale(ladders[i].spr, {ladderwidth / tz.x , (rowspacingsize + rowfloorsize/2) / tz.y});
 		i += 1;
@@ -906,8 +906,8 @@ void CGameFastEddy::init()
 	if(!ScreenshotMode)
 	{
 		SfxDie = Game->Audio->LoadSound("common/die.wav");
-		SfxSucces = Game->Audio->LoadSound("common/succes.mp3");
-        SfxCollect = Game->Audio->LoadSound("fasterdave/coin.wav");
+		SfxSucces = Game->Audio->LoadSound("common/succes.wav");
+        SfxCollect = Game->Audio->LoadSound("common/coin.wav");
 		MusMusic = Game->Audio->LoadMusic("fasterdave/music.mp3");	
 		Game->CurrentGameMusicID = MusMusic;
 		fecreatefloors();
