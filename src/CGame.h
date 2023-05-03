@@ -63,7 +63,7 @@ public:
     int GameState, SubGameState, GameMode, Game, Crt;
     float SubStateCounter;
     int MusMenu;
-    int SfxConfirm, SfxBack, SfxSelect, SfxScore;
+    int SfxConfirm, SfxBack, SfxSelect, SfxScore, SfxOne, SfxTwo, SfxThree, SfxTimeOver, SfxReadyGo, SfxOneMinute;
     double Timer;
     Uint32 SubStateTime;
     bool MotionBlur;

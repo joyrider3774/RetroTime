@@ -344,6 +344,12 @@ void CGame::ReCreateCrt()
 
 void CGame::LoadSound()
 {
+    SfxTimeOver = Audio->LoadSound("common/timeover.wav");
+    SfxReadyGo = Audio->LoadSound("common/readygo.wav");
+    SfxOne = Audio->LoadSound("common/one.wav");
+    SfxTwo = Audio->LoadSound("common/two.wav");
+    SfxThree = Audio->LoadSound("common/three.wav");
+    SfxOneMinute = Audio->LoadSound("common/oneminute.wav");
     SfxConfirm = Audio->LoadSound("main/confirm.wav");
     SfxBack = Audio->LoadSound("main/back.wav"); 
     SfxSelect = Audio->LoadSound("main/select.wav");
@@ -476,8 +482,23 @@ void CGame::UpdateTimer()
             else
             {
                 Timer -= 0.25f;
+
+                if (Timer == 60)
+                    Audio->PlaySound(SfxOneMinute, 0);
+
+                if (Timer == 3)
+                    Audio->PlaySound(SfxThree, 0);
+
+                if (Timer == 2)
+                    Audio->PlaySound(SfxTwo, 0);
+
+                if (Timer == 1)
+                    Audio->PlaySound(SfxOne, 0);
+
+
                 if (Timer <= 0)
                 {
+                    Audio->PlaySound(SfxTimeOver, 0);
                     SubGameState = SGTimeUp;
                     SubStateTime = SDL_GetTicks() + 750;
                     SubStateCounter = 0;
