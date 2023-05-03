@@ -10,10 +10,9 @@
 
 using namespace std;
 
-CGameBlockStacker::CGameBlockStacker(CGame* aGame, bool aScreenshotMode): CGameBase(aGame, GSTetris, true)
+CGameBlockStacker::CGameBlockStacker(CGame* aGame, bool aScreenshotMode): CGameBase(aGame, GSTetris, true, aScreenshotMode)
 {
     Game = aGame;
-	ScreenshotMode = aScreenshotMode;
 	MusMusic = -1;
 	SfxDie = -1;
 	SfxLineClear = -1;

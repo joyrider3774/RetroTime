@@ -8,10 +8,9 @@
 
 using namespace std;
 
-CGameFastEddy::CGameFastEddy(CGame* aGame, bool aScreenshotMode): CGameBase(aGame, GSEddy, true)
+CGameFastEddy::CGameFastEddy(CGame* aGame, bool aScreenshotMode): CGameBase(aGame, GSEddy, true, aScreenshotMode)
 {
     Game = aGame;
-	ScreenshotMode = aScreenshotMode;
 	MusMusic = -1;
     SfxSucces = -1;
     SfxDie = -1;

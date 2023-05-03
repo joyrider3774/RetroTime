@@ -39,7 +39,7 @@ private:
 	SDL_Point playerpos;
 	SDL_Point bulletpos;
 	SDL_Point bulletvel;
-	bool bulletalive = false, ScreenshotMode;
+	bool bulletalive = false;
     ramitblock playfield[sides][numblocks];
 
     bool ricreatebullet();

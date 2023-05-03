@@ -22,7 +22,7 @@ private:
     const SDL_Color snakebodycolor = {255, 255, 255, 255};
     const SDL_Color snakefoodcolor = {0, 255 ,0, 255};
 
-    bool movedone = true, ScreenshotMode;
+    bool movedone = true;
 	int snakelength;
 	int ticks;
 	SDL_Point head;

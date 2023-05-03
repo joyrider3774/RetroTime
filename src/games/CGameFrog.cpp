@@ -9,10 +9,9 @@
 using namespace std;
 
 
-CGameFrog::CGameFrog(CGame* aGame, bool aScreenshotMode): CGameBase(aGame, GSFrog, true)
+CGameFrog::CGameFrog(CGame* aGame, bool aScreenshotMode): CGameBase(aGame, GSFrog, true, aScreenshotMode)
 {
     Game = aGame;
-	ScreenshotMode = aScreenshotMode;
 	MusMusic = -1;
     SfxDie = -1;
     SfxCollect = -1;

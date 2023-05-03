@@ -26,7 +26,7 @@ private:
     SDL_Point backgroundtz;
 	int playfield[numcols * numrows];
 	int currpiece, rotation,speed, speedcount, piececount, lineclear, plrx, plry;
-    bool rotateblock,  dropblock, ScreenshotMode;
+    bool rotateblock, dropblock;
     int MusMusic, SfxDie, SfxLineClear, SfxDrop, SfxRotate;
     
     bool piecefits(int tetrimo, int rotation, int posx, int posy);

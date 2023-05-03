@@ -50,8 +50,6 @@ private:
     static const int maxladders = (rows - 1) * 2;
     float playerjumpspeeddec;
 
-    bool ScreenshotMode;
-
     int numfloortilesperrow;
     int maxfloortiles;
     float rowspacingsize;

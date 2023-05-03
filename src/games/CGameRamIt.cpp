@@ -9,10 +9,9 @@
 
 using namespace std;
 
-CGameRamIt::CGameRamIt(CGame* aGame, bool aScreenshotMode): CGameBase(aGame, GSRamIt, true)
+CGameRamIt::CGameRamIt(CGame* aGame, bool aScreenshotMode): CGameBase(aGame, GSRamIt, true, aScreenshotMode)
 {
     Game = aGame;
-	ScreenshotMode = aScreenshotMode;
     speed = 0;
 	speedcount = 0;
 	SfxShoot = -1;

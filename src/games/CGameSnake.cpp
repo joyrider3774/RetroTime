@@ -1,10 +1,9 @@
 #include <SDL.h>
 #include "CGameSnake.h"
 
-CGameSnake::CGameSnake(CGame* aGame, bool aScreenshotMode) : CGameBase(aGame, GSSnake, false)
+CGameSnake::CGameSnake(CGame* aGame, bool aScreenshotMode) : CGameBase(aGame, GSSnake, false, aScreenshotMode)
 {
     Game = aGame;
-    ScreenshotMode = aScreenshotMode;
     MusMusic = -1;
     SfxFood = -1;
     SfxDie = -1;

@@ -1,8 +1,9 @@
 #include "CGameBase.h"
 
-CGameBase::CGameBase(CGame *aGame, int aGameStateID, bool aUsesLevels)
+CGameBase::CGameBase(CGame *aGame, int aGameStateID, bool aUsesLevels, bool aScreenshotMode)
 {
     Game = aGame;
+    ScreenshotMode = aScreenshotMode;
     UsesLevels = aUsesLevels;
     GameStateID = aGameStateID;
     level = 0;
@@ -461,19 +462,6 @@ void CGameBase::UpdateLogic()
                 Game->SubStateCounter = 0;
             }
         }
-    }	
-
-    if (Game->GameMode == GMGame)
-    {
-        if (Game->SubGameState == SGGame)
-        {
-            if(HealthPoints == 0)
-            {
-                Game->SubGameState = SGTimeUp;
-                Game->SubStateTime = SDL_GetTicks() + 750;
-                Game->SubStateCounter = 0;
-            }
-        }
     }
 
     SubStateText = "";    
@@ -486,14 +474,23 @@ void CGameBase::UpdateLogic()
 				if (Game->SubStateCounter >= 0)
                 { 
 					SubStateText = to_string((int)Game->SubStateCounter);
+                    if(Game->SubStateCounter == 2)
+                    {
+                        Game->Audio->PlaySound(Game->SfxReadyGo, 0);
+                    }
+
 					if (Game->SubStateCounter == 0)
                     {
 						if (Game->SubGameState == SGReadyGo)
-							SubStateText = "GO";
+                        {
+							SubStateText = "GO";                            
+                        }
 						else
                         {                    
 							if (Game->GameMode != GMGame)
-								SubStateText = "Time Up";
+                            {
+								SubStateText = "Time Up";                                
+                            }
 							else
 								SubStateText = "Game Over";
 		

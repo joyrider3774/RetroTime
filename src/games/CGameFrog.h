@@ -131,7 +131,6 @@ private:
 
     
     int MusMusic, SfxSucces, SfxCollect, SfxDie, SfxPlayerMove;
-    bool ScreenshotMode;
 
     int background;
 	int spritesheetfrog;

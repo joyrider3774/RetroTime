@@ -15,6 +15,7 @@ class CGameBase {
 protected:
     CGame *Game;
     string SubStateText;
+    bool ScreenshotMode;
     bool UsesLevels;
     int level;
     int screenleft, screenright, screentop, screenbottom, playfieldwidth, playfieldheight, HealthPoints;
@@ -24,7 +25,7 @@ protected:
     virtual void OnGameStart();
 public:
     int GameStateID;
-    CGameBase(CGame *aGame, int aGameStateID, bool aUsesLevels);
+    CGameBase(CGame *aGame, int aGameStateID, bool aUsesLevels, bool aScreenshotMode);
     virtual ~CGameBase();
     virtual void init();
     virtual void deinit();
