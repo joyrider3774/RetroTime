@@ -5,7 +5,7 @@
 
 class CSpriteObject
 {
-	public:
+public:
         bool alive = false;
         SDL_FPoint vel = {0,0};
         SDL_FPoint pos = {0,0};

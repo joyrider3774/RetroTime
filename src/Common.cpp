@@ -45,7 +45,7 @@ GameDesc GSGames[Games] = {
 	    "a game based on Space Invaders (Arcade)"
     },
 	{
-	    GSRamItInit, //gsbreakout,
+	    GSBreakoutInit, //gsbreakout,
 	    "Brick Breaker",
 	    "Brick Breaker is a game based on Breakout. Rows of blocks\n" 
 	    "have to be destroyed by touching them with the ball.\n" 

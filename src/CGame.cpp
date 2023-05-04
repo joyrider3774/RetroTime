@@ -16,6 +16,7 @@
 #include "games\CGameRamIt.h"
 #include "games\CGameSnake.h"
 #include "games\CGameBlockStacker.h"
+#include "games\CGameBreakOut.h"
 #include "CGame.h"
 #include "Common.h"
 #include "TitleScreen.h"
@@ -49,7 +50,7 @@ void CGame::Init()
 {
     //Main State Variables and such
     CurrentGameMusicID = -1;
-    GameState = GSTitleScreenInit;
+    GameState = GSIntroInit;
     Game = 0;
     GameMode = GMGame;
     Alpha = MaxAlpha;
@@ -98,11 +99,12 @@ void CGame::CreateScreenshotsAndBackground()
     CGameSnake *TmpGameSnake = new CGameSnake(this, true);
     CGameFastEddy *TmpGameFastEddy = new CGameFastEddy(this, true);
     CGameFrog *TmpGameFrog = new CGameFrog(this, true);
+    CGameBreakOut *TmpGameBreakOut = new CGameBreakOut(this, true);
     int ScreenShotNr = 0;
     SDL_DestroyTexture(GameScreenShots[ScreenShotNr]);
     GameScreenShots[ScreenShotNr++] = TmpGameRamIt->screenshot();
     SDL_DestroyTexture(GameScreenShots[ScreenShotNr]);
-    GameScreenShots[ScreenShotNr++] = TmpGameRamIt->screenshot();
+    GameScreenShots[ScreenShotNr++] = TmpGameBreakOut->screenshot();
     SDL_DestroyTexture(GameScreenShots[ScreenShotNr]);
     GameScreenShots[ScreenShotNr++] = TmpGameFrog->screenshot();
     SDL_DestroyTexture(GameScreenShots[ScreenShotNr]);
@@ -117,6 +119,7 @@ void CGame::CreateScreenshotsAndBackground()
     GameScreenShots[ScreenShotNr++] = TmpGameFastEddy->screenshot();
     SDL_DestroyTexture(ScreenShotRandom);
     ScreenShotRandom = RandomScreenshot(0.25);
+    delete TmpGameBreakOut;
     delete TmpGameFrog;
     delete TmpGameRamIt;
     delete TmpGameBlockStacker;
@@ -534,6 +537,9 @@ void CGame::CreateActiveGame()
         case GSFrogInit:
             ActiveGame = new CGameFrog(this);
             break;
+        case GSBreakoutInit:
+            ActiveGame = new CGameBreakOut(this);
+            break;
         default:
             ActiveGame = nullptr;
     }
@@ -588,6 +594,7 @@ void CGame::MainLoop()
                 TitleScreen(this);
                 break;
             
+            case GSBreakoutInit:
             case GSFrogInit:
             case GSEddyInit:
             case GSSnakeInit:
@@ -599,6 +606,7 @@ void CGame::MainLoop()
 	            StartCrossFade(ActiveGame->GameStateID, SGReadyGo, 3, 500);
                 break;
             
+            case GSBreakout:
             case GSFrog:
             case GSEddy:
             case GSSnake:
