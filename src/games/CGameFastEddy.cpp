@@ -897,6 +897,11 @@ void CGameFastEddy::fedrawbackground(bool motionblur)
 
 void CGameFastEddy::init()
 {
+	SDL_Texture* prev = SDL_GetRenderTarget(Game->Renderer);
+    SDL_SetRenderTarget(Game->Renderer, Game->TexTmp);
+    SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 255);
+    SDL_RenderClear(Game->Renderer);
+    SDL_SetRenderTarget(Game->Renderer, prev);
     collecteditems = 0;
 	collectedcreated = 0;
 	level = 1;	
@@ -921,12 +926,12 @@ void CGameFastEddy::init()
 
 void CGameFastEddy::deinit()
 {
-    fedestroyfloors();
+	fedestroyfloors();
     fedestroyladders();
     fedestroyenemies();
     fedestroyallcollectables();
     fedestroykey();
-    fedestroyplayer();    
+    fedestroyplayer();
 	if (!ScreenshotMode)
 	{
 		Game->Audio->StopMusic();
@@ -935,8 +940,8 @@ void CGameFastEddy::deinit()
 		Game->SubStateCounter = 0;
 		Game->SubGameState = SGNone;
 		Game->CurrentGameMusicID = -1;
-        UnloadGraphics();       
-	}   
+        UnloadGraphics();
+	}
 }
 
 void CGameFastEddy::LoadGraphics()
@@ -1005,9 +1010,6 @@ void CGameFastEddy::UpdateLogic()
 
 void CGameFastEddy::Draw()
 {
-    //return;
-	// SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 255);
-    // SDL_RenderClear(Game->Renderer);
 	fedrawbackground(Game->SubGameState == SGGame);
 	Game->Sprites->DrawSprites(Game->Renderer);
 	DrawScoreBar();

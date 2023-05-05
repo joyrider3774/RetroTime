@@ -909,9 +909,6 @@ void CGameFrog::UpdateLogic()
 
 void CGameFrog::Draw()
 {
-    //return;
-	//SDL_SetRenderDrawColor(Game->Renderer, 255, 0, 255, 255);
-    //SDL_RenderClear(Game->Renderer);
 	Game->Sprites->DrawSprites(Game->Renderer);
 	sfdrawbackground();
 	DrawScoreBar();

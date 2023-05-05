@@ -406,8 +406,6 @@ void CGameBlockStacker::UpdateLogic()
 
 void CGameBlockStacker::Draw()
 {
-	// SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 255);
-    // SDL_RenderClear(Game->Renderer);
 	drawbackground();
 	drawplayfield();
 	DrawScoreBar();
