@@ -140,18 +140,6 @@ void CSprites::SortSprites()
                         Sprites[j]->index = j;
                     }
                 }
-                // else
-                // {
-                //     if ((Sprites[i] == nullptr) && (Sprites[j] != nullptr))
-                //     {
-                //         CSprite* Tmp = Sprites[i];
-                //         Sprites[i] = Sprites[j];
-                //         Sprites[i]->index = i;
-                //         Sprites[j] = Tmp;
-                //     }
-                //     else
-                //         break;
-                // }
             }
         }
         needSpriteSorting = false;
@@ -294,12 +282,12 @@ void CSprites::SetSpriteDepth(CSprite* Spr, int depth)
 
 int CSprites::GetSpriteAnimFrameCount(CSprite* Spr)
 {
-    return Spr->animEndTile - Spr->animEndTile + 1;
+    return max(Spr->animEndTile, Spr->animStartTile) - min(Spr->animEndTile, Spr->animStartTile) + 1;
 }
 
 int CSprites::GetSpriteAnimFrame(CSprite* Spr)
 {
-    return Spr->animTile;
+    return Spr->animTile - min(Spr->animEndTile, Spr->animStartTile);
 }
 
 SDL_Point CSprites::TileSize(CSprite* Spr)

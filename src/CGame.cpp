@@ -18,6 +18,7 @@
 #include "games\CGameBlockStacker.h"
 #include "games\CGameBreakOut.h"
 #include "games\CGamePang.h"
+#include "games\CGameInvaders.h"
 #include "CGame.h"
 #include "Common.h"
 #include "TitleScreen.h"
@@ -103,9 +104,10 @@ void CGame::CreateScreenshotsAndBackground()
     CGameFrog *TmpGameFrog = new CGameFrog(this, true);
     CGameBreakOut *TmpGameBreakOut = new CGameBreakOut(this, true);
     CGamePang *TmpGamePang = new CGamePang(this,true);
+    CGameInvaders *TmpGameInvaders = new CGameInvaders(this,true);
     int ScreenShotNr = 0;
     SDL_DestroyTexture(GameScreenShots[ScreenShotNr]);
-    GameScreenShots[ScreenShotNr++] = TmpGameRamIt->screenshot();
+    GameScreenShots[ScreenShotNr++] = TmpGameInvaders->screenshot();
     SDL_DestroyTexture(GameScreenShots[ScreenShotNr]);
     GameScreenShots[ScreenShotNr++] = TmpGameBreakOut->screenshot();
     SDL_DestroyTexture(GameScreenShots[ScreenShotNr]);
@@ -122,6 +124,7 @@ void CGame::CreateScreenshotsAndBackground()
     GameScreenShots[ScreenShotNr++] = TmpGameFastEddy->screenshot();
     SDL_DestroyTexture(ScreenShotRandom);
     ScreenShotRandom = RandomScreenshot(0.25);
+    delete TmpGameInvaders;
     delete TmpGamePang;
     delete TmpGameBreakOut;
     delete TmpGameFrog;
@@ -547,6 +550,9 @@ void CGame::CreateActiveGame()
         case GSPangInit:
             ActiveGame = new CGamePang(this);
             break;
+        case GSSpaceInvadersInit:
+            ActiveGame = new CGameInvaders(this);
+            break;
         default:
             ActiveGame = nullptr;
     }
@@ -613,6 +619,7 @@ void CGame::MainLoop()
             case GSSnakeInit:
             case GSTetrisInit:
             case GSRamItInit:
+            case GSSpaceInvadersInit:
                 CreateActiveGame();
                 ActiveGame->init();
                 ResetTimer();
@@ -626,6 +633,7 @@ void CGame::MainLoop()
             case GSSnake:
             case GSTetris:
             case GSRamIt:
+            case GSSpaceInvaders:
                 ActiveGame->UpdateLogic();
                 ActiveGame->Draw();
                 break;

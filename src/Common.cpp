@@ -33,7 +33,7 @@ ModeDesc GMModes[Modes] = {
 //GameDescriptions
 GameDesc GSGames[Games] = {
     {
-        GSRamItInit,//GSSpaceInvaders,
+        GSSpaceInvadersInit,//GSSpaceInvaders,
         "Invaders",
 	    "Invaders is a game based on Space Invaders. Rows of enemies\n"
 	    "are closing in you. You have to shoot them down before they\n" 
