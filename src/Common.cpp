@@ -82,7 +82,7 @@ GameDesc GSGames[Games] = {
 	    "a game based on Snake (Nokia 3310)",
     },
     {
-	    GSRamItInit,//gspang,
+	    GSPangInit,//gspang,
 	    "Bubble Buster",
 	    "Bubble Buster is a game based on Pang. You control a player\n"
 	    "that needs to pop bubbles. You can control the player using the left\n"

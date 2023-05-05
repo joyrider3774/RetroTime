@@ -68,6 +68,7 @@ public:
     void RemoveSprite(CSprite* Spr);
     SDL_FPoint GetSpriteLocation(CSprite* Spr);
     void UpdateSprites();
+    void DrawSprite(SDL_Renderer* Renderer, CSprite* Spr);
     void DrawSprites(SDL_Renderer* Renderer);
     int GetSpriteAnimFrame(CSprite* Spr);
     int GetSpriteAnimFrameCount(CSprite* Spr);

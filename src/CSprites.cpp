@@ -158,26 +158,36 @@ void CSprites::SortSprites()
     }
 }
 
+void CSprites::DrawSprite(SDL_Renderer* Renderer, CSprite* Spr)
+{
+    if (Spr == nullptr)
+        return;
+
+    SortSprites();
+   
+    if (Spr->show && ((*Spr->imageID > -1) && (*Spr->imageID < Images->ImageSlotsMax())))
+    {
+        SDL_Point pos = {(int)(Spr->x), (int)(Spr->y)};
+        SDL_FPoint scale = {Spr->xscale, Spr->yscale};
+        int AnimTile = Spr->animTile;
+        int y = (int)floor(AnimTile / Spr->tilesX);
+        int x = AnimTile - (y * Spr->tilesX);
+        SDL_Rect SrcRect = {x * Spr->tileSizeX, y* Spr->tileSizeY, Spr->tileSizeX, Spr->tileSizeY};
+        Images->DrawImageFuzeSrcRectTintFloat(Renderer, *Spr->imageID, &SrcRect, true, &pos, Spr->rotation, &scale, Spr->r, Spr->g, Spr->b, Spr->a);
+        // const SDL_Rect rect = {(int)(Spr->x + Spr->collisionxoffset - (Spr->collisionWidth * (Spr->xscale) / 2)), (int)(Spr->y + Spr->collisionyoffset - (Spr->collisionHeight * (Spr->yscale) / 2)), (int)(Spr->collisionWidth * (Spr->xscale)),  (int)(Spr->collisionHeight * (Spr->yscale))};
+        // SDL_SetRenderDrawColor(Renderer, 255, 0, 255, 255);
+        // SDL_RenderDrawRect(Renderer, &rect);
+    }
+}
+
 void CSprites::DrawSprites(SDL_Renderer* Renderer)
 {
-    SortSprites();
     for (int i = 0; i < SPR_Max; i++)
     {
         if (Sprites[i] == nullptr)
             continue;
-        if (Sprites[i]->show && ((*Sprites[i]->imageID > -1) && (*Sprites[i]->imageID < Images->ImageSlotsMax())))
-        {
-            SDL_Point pos = {(int)(Sprites[i]->x), (int)(Sprites[i]->y)};
-            SDL_FPoint scale = {Sprites[i]->xscale, Sprites[i]->yscale};
-            int AnimTile = Sprites[i]->animTile;
-            int y = (int)floor(AnimTile / Sprites[i]->tilesX);
-            int x = AnimTile - (y * Sprites[i]->tilesX);
-            SDL_Rect SrcRect = {x * Sprites[i]->tileSizeX, y* Sprites[i]->tileSizeY, Sprites[i]->tileSizeX, Sprites[i]->tileSizeY};
-            Images->DrawImageFuzeSrcRectTintFloat(Renderer, *Sprites[i]->imageID, &SrcRect, true, &pos, Sprites[i]->rotation, &scale, Sprites[i]->r, Sprites[i]->g, Sprites[i]->b, Sprites[i]->a);
-            // const SDL_Rect rect = {(int)(Sprites[i]->x + Sprites[i]->collisionxoffset - (Sprites[i]->collisionWidth * (Sprites[i]->xscale) / 2)), (int)(Sprites[i]->y + Sprites[i]->collisionyoffset - (Sprites[i]->collisionHeight * (Sprites[i]->yscale) / 2)), (int)(Sprites[i]->collisionWidth * (Sprites[i]->xscale)),  (int)(Sprites[i]->collisionHeight * (Sprites[i]->yscale))};
-            // SDL_SetRenderDrawColor(Renderer, 255, 0, 255, 255);
-            // SDL_RenderDrawRect(Renderer, &rect);
-        }        
+
+        DrawSprite(Renderer, Sprites[i]);
     }
 }
 

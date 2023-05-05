@@ -17,6 +17,7 @@
 #include "games\CGameSnake.h"
 #include "games\CGameBlockStacker.h"
 #include "games\CGameBreakOut.h"
+#include "games\CGamePang.h"
 #include "CGame.h"
 #include "Common.h"
 #include "TitleScreen.h"
@@ -101,6 +102,7 @@ void CGame::CreateScreenshotsAndBackground()
     CGameFastEddy *TmpGameFastEddy = new CGameFastEddy(this, true);
     CGameFrog *TmpGameFrog = new CGameFrog(this, true);
     CGameBreakOut *TmpGameBreakOut = new CGameBreakOut(this, true);
+    CGamePang *TmpGamePang = new CGamePang(this,true);
     int ScreenShotNr = 0;
     SDL_DestroyTexture(GameScreenShots[ScreenShotNr]);
     GameScreenShots[ScreenShotNr++] = TmpGameRamIt->screenshot();
@@ -111,7 +113,7 @@ void CGame::CreateScreenshotsAndBackground()
     SDL_DestroyTexture(GameScreenShots[ScreenShotNr]);
     GameScreenShots[ScreenShotNr++] = TmpGameSnake->screenshot();
     SDL_DestroyTexture(GameScreenShots[ScreenShotNr]);
-    GameScreenShots[ScreenShotNr++] = TmpGameRamIt->screenshot();
+    GameScreenShots[ScreenShotNr++] = TmpGamePang->screenshot();
     SDL_DestroyTexture(GameScreenShots[ScreenShotNr]);
     GameScreenShots[ScreenShotNr++] = TmpGameBlockStacker->screenshot();
     SDL_DestroyTexture(GameScreenShots[ScreenShotNr]);
@@ -120,6 +122,7 @@ void CGame::CreateScreenshotsAndBackground()
     GameScreenShots[ScreenShotNr++] = TmpGameFastEddy->screenshot();
     SDL_DestroyTexture(ScreenShotRandom);
     ScreenShotRandom = RandomScreenshot(0.25);
+    delete TmpGamePang;
     delete TmpGameBreakOut;
     delete TmpGameFrog;
     delete TmpGameRamIt;
@@ -541,6 +544,9 @@ void CGame::CreateActiveGame()
         case GSBreakoutInit:
             ActiveGame = new CGameBreakOut(this);
             break;
+        case GSPangInit:
+            ActiveGame = new CGamePang(this);
+            break;
         default:
             ActiveGame = nullptr;
     }
@@ -600,6 +606,7 @@ void CGame::MainLoop()
                 TitleScreen(this);
                 break;
 
+            case GSPangInit:
             case GSBreakoutInit:
             case GSFrogInit:
             case GSEddyInit:
@@ -612,6 +619,7 @@ void CGame::MainLoop()
 	            StartCrossFade(ActiveGame->GameStateID, SGReadyGo, 3, 500);
                 break;
 
+            case GSPang:
             case GSBreakout:
             case GSFrog:
             case GSEddy:
@@ -780,6 +788,7 @@ Possible options are:\n\
                 SDL_RenderClear(Renderer);
 
                 TexTmp = SDL_CreateTexture(Renderer, PixelFormat, SDL_TEXTUREACCESS_TARGET, ScreenWidth, ScreenHeight);
+                SDL_SetRenderDrawBlendMode(Renderer, SDL_BLENDMODE_BLEND);
                 SDL_SetRenderTarget(Renderer, TexTmp);
                 SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
                 SDL_RenderClear(Renderer);
