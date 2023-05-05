@@ -740,19 +740,15 @@ void CGameFrog::sfupdateplayer()
 
 //background ----------------------------------------------------------------------------------------------------------------
 
-void CGameFrog::sfdrawbackground(bool motionblur)
+void CGameFrog::sfdrawbackground()
 {
-	float alpha = 1;
-	if ((motionblur) && (Game->MotionBlur))
-		alpha = 0.5;
-    
     SDL_FPoint Scale = {(float)ScreenWidth / backgroundtz.x, (float)ScreenHeight / backgroundtz.x};
 	SDL_Point Pos = { 0, 0};
 	SDL_Rect Rect = {0, 0, (int)(screenleft / Scale.x), (int)(ScreenHeight / Scale.y)};
-	Game->Image->DrawImageFuzeSrcRectTintFloat(Game->Renderer, background, &Rect, false, &Pos, 0, &Scale, 1, 1, 1, alpha);
+	Game->Image->DrawImageFuzeSrcRectTintFloat(Game->Renderer, background, &Rect, false, &Pos, 0, &Scale, 1, 1, 1, 1);
 	Pos = { screenright, 0};
 	Rect = {(int)(screenright / Scale.x), 0, (int)((ScreenWidth - screenright) / Scale.x), (int)(ScreenHeight / Scale.y)};
-	Game->Image->DrawImageFuzeSrcRectTintFloat(Game->Renderer, background, &Rect, false, &Pos, 0, &Scale, 1, 1, 1, alpha);
+	Game->Image->DrawImageFuzeSrcRectTintFloat(Game->Renderer, background, &Rect, false, &Pos, 0, &Scale, 1, 1, 1, 1);
 	Rect = {screenleft,0,1, ScreenHeight};
 	SDL_SetRenderDrawColor(Game->Renderer, 128,128,128,255);
 	SDL_RenderDrawRect(Game->Renderer, &Rect);
@@ -853,8 +849,7 @@ SDL_Texture* CGameFrog::screenshot()
 		Game->Sprites->UpdateSprites();
 	}	
 	Game->Sprites->DrawSprites(Game->Renderer);
-	sfdrawbackground(false);
-	
+	sfdrawbackground();
 	
 	SDL_RenderPresent(Game->Renderer);
 	SDL_SetRenderTarget(Game->Renderer, prev);
@@ -915,10 +910,10 @@ void CGameFrog::UpdateLogic()
 void CGameFrog::Draw()
 {
     //return;
-	SDL_SetRenderDrawColor(Game->Renderer, 255, 0, 255, 255);
-    SDL_RenderClear(Game->Renderer);	
+	//SDL_SetRenderDrawColor(Game->Renderer, 255, 0, 255, 255);
+    //SDL_RenderClear(Game->Renderer);
 	Game->Sprites->DrawSprites(Game->Renderer);
-	sfdrawbackground(Game->SubGameState == SGGame);
+	sfdrawbackground();
 	DrawScoreBar();
 	DrawSubStateText();
 }

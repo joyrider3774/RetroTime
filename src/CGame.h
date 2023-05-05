@@ -55,7 +55,7 @@ public:
     CImage *Image;
     CSprites *Sprites;
     SDL_Renderer *Renderer;
-    SDL_Texture *TexOffScreen, *TexScreen, *TexCrt;
+    SDL_Texture *TexOffScreen, *TexScreen, *TexCrt, *TexTmp;
     SDL_Texture* GameScreenShots[Games];
     long long int RetroCarouselHighScore, RetroCarouselScore;
     long long int HighScores[Games][Modes]; 

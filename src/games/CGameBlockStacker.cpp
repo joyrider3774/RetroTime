@@ -325,6 +325,7 @@ void CGameBlockStacker::init()
 		MusMusic = Game->Audio->LoadMusic("blockstacker/music.mp3");
 		SfxDie = Game->Audio->LoadSound("common/die.wav");
 		Game->CurrentGameMusicID = MusMusic;
+		Game->Audio->PlayMusic(MusMusic, -1);
 		HealthPoints = 1;
 	}
 	currpiece = rand() % 7;
@@ -338,12 +339,7 @@ void CGameBlockStacker::init()
 	dropblock = true;
 	level = 1;
 	lineclear = 0;
-
-	if(!ScreenshotMode)
-	{
-		createplayfield();	
-		Game->Audio->PlayMusic(MusMusic, -1);
-	}
+	createplayfield();	
 }
 
 void CGameBlockStacker::LoadGraphics()
@@ -384,11 +380,13 @@ SDL_Texture* CGameBlockStacker::screenshot()
 	SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 255);
 	SDL_RenderClear(Game->Renderer);
 	init();
-	createplayfield();
+
 	for(int i = 0; i < numrows * 2; i++)
 		updateplayfield(true);
+
 	drawbackground();
 	drawplayfield();	
+
 	SDL_RenderPresent(Game->Renderer);
 	SDL_SetRenderTarget(Game->Renderer, prev);
 	deinit();
@@ -408,8 +406,8 @@ void CGameBlockStacker::UpdateLogic()
 
 void CGameBlockStacker::Draw()
 {
-	SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 255);
-    SDL_RenderClear(Game->Renderer);
+	// SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 255);
+    // SDL_RenderClear(Game->Renderer);
 	drawbackground();
 	drawplayfield();
 	DrawScoreBar();

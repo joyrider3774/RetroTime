@@ -372,6 +372,8 @@ void CGameRamIt::init()
 	speed = ticksidle;
 	level = 1;
 	playerdeath = false;
+	ricreateplayer();
+	ricreateplayfield();
 	if(!ScreenshotMode)
 	{
 		HealthPoints = 3;
@@ -381,8 +383,7 @@ void CGameRamIt::init()
 		SfxSucces = Game->Audio->LoadSound("common/succes.wav");
 		MusMusic = Game->Audio->LoadMusic("ramit/music.mp3");	
 		Game->CurrentGameMusicID = MusMusic;
-		ricreateplayer();
-		ricreateplayfield();
+
 		Game->Audio->PlayMusic(MusMusic, -1);
 	}
 }
@@ -413,18 +414,19 @@ SDL_Texture* CGameRamIt::screenshot()
 	SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 255);
 	SDL_RenderClear(Game->Renderer);
 	init();
-	ricreateplayer();
-	ricreateplayfield();
+
 	for(int i = 0; i < 30; i++)
 		riupdateplayfield(true);
 	ricreatebullet();
 	riupdatebullet();
 	riupdatebullet();
 	riupdatebullet();
+
 	ridrawbackground();
 	ridrawbullet();
 	ridrawplayer();
 	ridrawplayfield();
+
 	SDL_RenderPresent(Game->Renderer);
 	SDL_SetRenderTarget(Game->Renderer, prev);
 	deinit();	
@@ -435,20 +437,13 @@ SDL_Texture* CGameRamIt::screenshot()
 
 void CGameRamIt::UpdateLogic()
 {
-	//initramit()
 	CGameBase::UpdateLogic();
     if (Game->SubGameState == SGGame)
     {
         riupdateplayer();
         riupdateplayfield(false);
         riupdatebullet();
-    
-	    // if global.gamestate == gsramit then
-		// 	setdrawtarget(framebuffer)
-		// 	drawimageex(screen,{screenwidth/2,screenheight/2},0,{1,1},{1,1,1,alpha})
-		// 	update()
-		// endif
-		
+
 		if (playerdeath)
         {
 			Game->Audio->PlaySound(SfxDie, 0);
@@ -468,8 +463,8 @@ void CGameRamIt::UpdateLogic()
 
 void CGameRamIt::Draw()
 {
-	SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 255);
-    SDL_RenderClear(Game->Renderer);
+	// SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 255);
+    // SDL_RenderClear(Game->Renderer);
     ridrawbackground();
     ridrawbullet();
     ridrawplayer();

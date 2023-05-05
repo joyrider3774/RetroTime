@@ -887,7 +887,7 @@ void CGameFastEddy::fedrawbackground(bool motionblur)
 {
 	float alpha = 1;
 	if ((motionblur) && (Game->MotionBlur))
-		alpha = 0.5;
+		alpha = 0.3;
     SDL_Point Pos = { ScreenWidth / 2, ScreenHeight / 2};
     SDL_FPoint Scale = {(float)ScreenWidth / backgroundtz.x, (float)ScreenHeight / backgroundtz.y};
 	Game->Image->DrawImageFuzeTintFloat(Game->Renderer, background, true, &Pos, 0, &Scale, 1, 1, 1, alpha);
@@ -902,6 +902,12 @@ void CGameFastEddy::init()
 	level = 1;	
 	HealthPoints = 3;
     LoadGraphics();
+	fecreatefloors();
+	fecreateladders();
+	fecreateenemies(false);
+	fecreatecollectables(-1);
+	fecreatekey();
+	fecreateplayer();
 	if(!ScreenshotMode)
 	{
 		SfxDie = Game->Audio->LoadSound("common/die.wav");
@@ -909,12 +915,6 @@ void CGameFastEddy::init()
         SfxCollect = Game->Audio->LoadSound("common/coin.wav");
 		MusMusic = Game->Audio->LoadMusic("fasterdave/music.mp3");	
 		Game->CurrentGameMusicID = MusMusic;
-		fecreatefloors();
-        fecreateladders();
-        fecreateenemies(false);
-        fecreatecollectables(-1);
-        fecreatekey();
-        fecreateplayer();
 		Game->Audio->PlayMusic(MusMusic, -1);
 	}
 }
@@ -979,16 +979,8 @@ SDL_Texture* CGameFastEddy::screenshot()
 	SDL_RenderClear(Game->Renderer);
 	init();
     
-    fecreatefloors();
-	fecreateladders();
-	fecreateenemies(false);
-	fecreatecollectables(-1);
-	fecreatekey();
-	fecreateplayer();
-
 	fedrawbackground(false);
 	Game->Sprites->DrawSprites(Game->Renderer);
-
 	
 	SDL_RenderPresent(Game->Renderer);
 	SDL_SetRenderTarget(Game->Renderer, prev);
@@ -1003,9 +995,6 @@ void CGameFastEddy::UpdateLogic()
     CGameBase::UpdateLogic();
 	if (Game->SubGameState == SGGame)
 	{
-        SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 255);
-        SDL_RenderClear(Game->Renderer);
-        fedrawbackground(Game->SubGameState == SGGame);
 		feupdateplayer();
 		feupdateenemies();
 		feupdatecollectables();
@@ -1017,8 +1006,8 @@ void CGameFastEddy::UpdateLogic()
 void CGameFastEddy::Draw()
 {
     //return;
-	SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 255);
-    SDL_RenderClear(Game->Renderer);
+	// SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 255);
+    // SDL_RenderClear(Game->Renderer);
 	fedrawbackground(Game->SubGameState == SGGame);
 	Game->Sprites->DrawSprites(Game->Renderer);
 	DrawScoreBar();

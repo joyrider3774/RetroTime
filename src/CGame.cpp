@@ -21,6 +21,7 @@
 #include "Common.h"
 #include "TitleScreen.h"
 #include "SubScoreScreen.h"
+#include "Intro.h"
 
 using namespace std;
 
@@ -584,16 +585,21 @@ void CGame::MainLoop()
         
         switch (GameState) 
         {
+            case GSIntroInit:
+            case GSIntro:
+                Intro(this);
+                break;
+
             case GSSubScoreInit:
-            case GSSubScore:           
+            case GSSubScore:
                 SubScoreScreen(this);
                 break;
-            
+
             case GSTitleScreenInit:
             case GSTitleScreen:
                 TitleScreen(this);
                 break;
-            
+
             case GSBreakoutInit:
             case GSFrogInit:
             case GSEddyInit:
@@ -605,7 +611,7 @@ void CGame::MainLoop()
                 ResetTimer();
 	            StartCrossFade(ActiveGame->GameStateID, SGReadyGo, 3, 500);
                 break;
-            
+
             case GSBreakout:
             case GSFrog:
             case GSEddy:
@@ -624,8 +630,8 @@ void CGame::MainLoop()
             Alpha = trunc(MaxAlpha * ((double)(SDL_GetTicks() - AlphaTimer) / MaxAlphaTime));
             if (Alpha + AlphaIncrease >= MaxAlpha) 
             {
-                SDL_SetTextureBlendMode(TexOffScreen, SDL_BLENDMODE_NONE);
-                Alpha = 255;
+                //SDL_SetTextureBlendMode(TexOffScreen, SDL_BLENDMODE_NONE);
+                Alpha = MaxAlpha;
                 SubGameState = NextSubState;
                 SubStateTime = SDL_GetTicks() + NextSubStateTimeAdd; 
                 SubStateCounter = NextSubStateCounter;
@@ -639,8 +645,8 @@ void CGame::MainLoop()
         SDL_SetRenderTarget(Renderer, TexScreen);
         SDL_RenderCopy(Renderer, TexOffScreen, NULL, NULL);
         SDL_SetRenderTarget(Renderer, NULL);
-        SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
-        SDL_RenderClear(Renderer);
+        //SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
+        //SDL_RenderClear(Renderer);
         SDL_RenderCopy(Renderer, TexScreen, NULL, NULL);
         string Text = "FPS: " + to_string(Fps) + "\n";
         Text += "FrameTime: " + to_string(AvgFrameTime) + "\n";
@@ -772,6 +778,11 @@ Possible options are:\n\
                 SDL_SetRenderTarget(Renderer, TexCrt);
                 SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 0);
                 SDL_RenderClear(Renderer);
+
+                TexTmp = SDL_CreateTexture(Renderer, PixelFormat, SDL_TEXTUREACCESS_TARGET, ScreenWidth, ScreenHeight);
+                SDL_SetRenderTarget(Renderer, TexTmp);
+                SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
+                SDL_RenderClear(Renderer);
              
                 TexOffScreen = SDL_CreateTexture(Renderer, PixelFormat, SDL_TEXTUREACCESS_TARGET, ScreenWidth, ScreenHeight);
                 SDL_SetRenderTarget(Renderer, TexOffScreen);
@@ -785,6 +796,7 @@ Possible options are:\n\
                 SDL_DestroyTexture(TexCrt);
                 SDL_DestroyTexture(TexOffScreen);
                 SDL_DestroyTexture(TexScreen);
+                SDL_DestroyTexture(TexTmp);
                 UnLoadMusic();
                 UnLoadGraphics();
                 UnLoadSound();

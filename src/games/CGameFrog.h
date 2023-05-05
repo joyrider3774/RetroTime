@@ -156,7 +156,7 @@ private:
     void sfdestroyobject(int index);
     void sfdestroyallobjects();
     void sfcreateobjects(bool initialize);
-    void sfdrawbackground(bool motionblur);
+    void sfdrawbackground();
     void OnGameStart() override;
 public:
     CGameFrog(CGame* aGame, bool aScreenshotMode = false);
