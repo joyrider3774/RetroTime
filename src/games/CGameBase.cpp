@@ -440,8 +440,8 @@ void CGameBase::DrawSubStateText()
 {
     //textSize(scpregamefontsize)
     //tz = textWidth(text)
-					
-    Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 60, SubStateText, SubStateText.length(), screenleft + ((screenright - screenleft) / 2) - 20,
+	int w = Game->Font->TextWidth("Roboto-Regular", 60, SubStateText, SubStateText.length());
+    Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 60, SubStateText, SubStateText.length(), screenleft + ((screenright - screenleft) / 2) - w/2,
 	    screentop + ((screenbottom - screentop) / 2) - 90, 0, {255, 255, 255, 240});
 }
 
