@@ -19,5 +19,7 @@ private:
 public:
     CFont(string AssetsPath);
     ~CFont();
+    int TextWidth(string Font, int FontSize, string Tekst, size_t NrOfChars);
+    SDL_Point TextSize(string Font, int FontSize, string Tekst, size_t NrOfChars, int YSpacing);
     void WriteText(SDL_Renderer *Renderer, string Font, int FontSize, string Tekst, size_t NrOfChars, int X, int Y, int YSpacing, SDL_Color ColorIn);
 };

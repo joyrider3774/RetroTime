@@ -27,7 +27,12 @@ public:
     void DrawImage(SDL_Renderer* Renderer, SDL_Texture*, SDL_Rect* Src, SDL_Rect* Dst);
     void DrawImageEx(SDL_Renderer* Renderer, int GFXID, SDL_Rect* Src, SDL_Rect* Dst, double Angle, SDL_Point* Center, SDL_RendererFlip Flip);
     void DrawImageEx(SDL_Renderer* Renderer, SDL_Texture *Texture, SDL_Rect* Src, SDL_Rect* Dst, double Angle, SDL_Point* Center, SDL_RendererFlip Flip);
-    void DrawImageFuzeSrcRectTintFloat(SDL_Renderer* Renderer, int GFXID, SDL_Rect *SrcRect, bool CenterImagePos, SDL_Point* Pos, double Angle, SDL_FPoint* Scale, float TintR, float TintG, float TintB, float Alpha);
+    //tint & alpha value between 0.0 & 1.0
+    void DrawImageFuzeSrcRectTintFloat(SDL_Renderer* Renderer, int GFXID, SDL_Rect *SrcRect, bool CenterImagePos, SDL_Point* Pos, double Angle, SDL_FPoint* Scale, 
+        float TintR, float TintG, float TintB, float Alpha);
+    //tint & alpha value between 0.0 & 1.0
+    void DrawImageFuzeTintFloat(SDL_Renderer* Renderer, SDL_Texture *Texture, bool CenterImagePos, SDL_Point* Pos, double Angle, SDL_FPoint* Scale, 
+        float TintR, float TintG, float TintB, float Alpha);
     //tint & alpha value between 0.0 & 1.0
     void DrawImageFuzeTintFloat(SDL_Renderer* Renderer, int GFXID, bool CenterImagePos, SDL_Point* Pos, double Angle, SDL_FPoint* Scale, 
         float TintR, float TintG, float TintB, float Alpha);

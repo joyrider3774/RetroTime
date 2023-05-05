@@ -30,6 +30,71 @@ CFont::~CFont()
     }
 }
 
+int CFont::TextWidth(string Font, int FontSize, string Tekst, size_t NrOfChars)
+{
+    SDL_Point Tmp = TextSize(Font, FontSize, Tekst, NrOfChars, 0);
+    return Tmp.x;
+}
+
+SDL_Point CFont::TextSize(string Font, int FontSize, string Tekst, size_t NrOfChars, int YSpacing)
+{
+    SDL_Point Result = {0,0};
+    if(!GlobalFontEnabled || (NrOfChars == 0))
+        return Result;
+
+    TTF_Font *FontIn;
+    map<std::string, TTF_Font*>::iterator i;
+    string FontNameSize = string(Font) + to_string(FontSize);
+    i = FontCache.find(FontNameSize);
+    if (i != FontCache.end())
+        FontIn = i->second;
+    else
+    { 
+        string Filename = DataPath + "fonts/" + Font + ".ttf";
+        FontIn = TTF_OpenFont(Filename.c_str(), FontSize);
+        if (!FontIn)
+        {
+            SDL_Log("Failed loading fonts: %s\n", SDL_GetError());
+            return Result;
+        } 
+            
+        TTF_SetFontStyle(FontIn, TTF_STYLE_NORMAL);
+
+        FontCache[FontNameSize] = FontIn;
+    }
+
+    char List[100][255];
+    size_t Lines, Teller, Chars;
+    Lines = 0;
+    Chars = 0;
+    for (Teller = 0; Teller < NrOfChars; Teller++) 
+    {
+        if (Lines > 100)
+            break;
+        if ((Tekst[Teller] == '\n') || (Chars == 255)) 
+        {
+            List[Lines][Chars] = '\0';
+            Lines++;
+            Chars = 0;
+        } 
+        else 
+        {
+            List[Lines][Chars] = Tekst[Teller];
+            Chars++;
+        }
+    }
+    List[Lines][Chars] = '\0';
+    int w,h;
+    Result.y = (Lines)*TTF_FontLineSkip(FontIn) + (Lines * YSpacing);
+    for (Teller = 0; Teller <= Lines; Teller++) 
+    {
+        TTF_SizeText(FontIn, List[Teller], &w, &h);
+        if (w > Result.x)
+            Result.x = w;
+    }
+    return Result;
+}
+
 void CFont::WriteText(SDL_Renderer *Renderer, string Font, int FontSize, string Tekst, size_t NrOfChars, int X, int Y, int YSpacing, SDL_Color ColorIn) 
 {
     if(!GlobalFontEnabled || (NrOfChars == 0))
