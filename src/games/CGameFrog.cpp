@@ -15,7 +15,7 @@ CGameFrog::CGameFrog(CGame* aGame, bool aScreenshotMode): CGameBase(aGame, GSFro
     SfxDie = -1;
     SfxCollect = -1;
 	SfxPlayerMove = -1;
-
+	prevrowtype = -1;
 	playfieldwidth = numcols * playerspeed;
 	playfieldheight = numrows * playerspeed;
 	screenleft = (ScreenWidth - playfieldwidth) / 2;

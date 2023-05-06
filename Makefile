@@ -9,19 +9,19 @@ SRC=$(wildcard $(SRC_DIR)/*.cpp $(foreach fd, $(SRC_SUBDIR), $(SRC_DIR)/$(fd)/*.
 OBJS=$(SRC:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
 
 
-CC = g++
+CXX ?= g++
 DESTDIR ?=
 PREFIX ?= /usr
 OPT_LEVEL ?= -O2
-CPPFLAGS ?= -Wall -Wextra -std=c++11 `sdl2-config --cflags`  -g
+CPPFLAGS ?= -Wall -Wextra -std=c++11 `sdl2-config --cflags`
 LDFLAGS ?= -L$(PREFIX)/lib -g
-LDLIBS ?= `sdl2-config --libs` -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lSDL2 -lSDL2_gfx -lm -lstdc++
+LDLIBS ?= `sdl2-config --libs` -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lSDL2 -lSDL2_gfx -lstdc++
 
 ifeq ($(DEBUG), 1)
 ifeq ($(OS),Windows_NT)
 LDLIBS += -mconsole
 endif
-CFLAGS += -g
+CPPFLAGS += -g
 OPT_LEVEL =
 endif
 
@@ -41,10 +41,10 @@ ICONDIR = $(DESTDIR)$(PREFIX)/share/icons/
 all: $(EXE)
 
 $(EXE): $(OBJS)
-	$(CC) $(OPT_LEVEL) $(LDFLAGS) $(TARGET_ARCH) $^ $(LDLIBS) -o $@ 
+	$(CXX) $(OPT_LEVEL) $(LDFLAGS) $(TARGET_ARCH) $^ $(LDLIBS) -o $@ 
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)  
-	$(CC) $(OPT_LEVEL) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+	$(CXX) $(OPT_LEVEL) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
 
 $(OBJ_DIR): $(SRC_SUBDIR)
 	mkdir -p $@

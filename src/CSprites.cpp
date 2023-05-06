@@ -7,6 +7,7 @@
 CSprites::CSprites(CImage* ACImage)
 {
     Images = ACImage;
+    needSpriteSorting = false;
     for (int i=0; i < SPR_Max; i++)
     {
         Sprites[i] = nullptr;
