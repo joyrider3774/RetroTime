@@ -101,11 +101,11 @@ void CGameBase::PauseMenu()
 			            Game->Font->WriteText(Game->Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 300, 180 + i * menuspacing, 0, color);	
                         break;
                     case PMSoundVol:
-					    Text = PMPauseMenus[menu].name + to_string(Game->Audio->GetVolumeSound());
+					    Text = PMPauseMenus[menu].name + to_string(((int)(Game->Audio->GetVolumeSound()*100/128))) + "%";
 			            Game->Font->WriteText(Game->Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 300, 180 + i * menuspacing, 0, color);	
                         break;
                     case PMMusicVol:
-					    Text = PMPauseMenus[menu].name + to_string(Game->Audio->GetVolumeMusic());
+					    Text = PMPauseMenus[menu].name + to_string((int)(Game->Audio->GetVolumeMusic()*100/128)) + "%";
 			            Game->Font->WriteText(Game->Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 300, 180 + i * menuspacing, 0, color);	
                         break;
 					case PMCrt:

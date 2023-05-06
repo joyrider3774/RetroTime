@@ -63,53 +63,53 @@ void CAudio::SetVolumeSound(const int VolumeIn)
     }
 }
 
-// increase the music volume with 8
+// increase the music volume with 4
 void CAudio::IncVolumeMusic() 
 {
     if (GlobalSoundEnabled) 
     {
         if (VolumeMusic < 128) 
         {
-            VolumeMusic += 8;
+            VolumeMusic += 4;
             SetVolumeMusic(VolumeMusic);
         }
     }
 }
 
-// increase the sound volume with 8
+// increase the sound volume with 4
 void CAudio::IncVolumeSound() 
 {
     if (GlobalSoundEnabled) 
     {
         if (VolumeSound < 128) 
         {
-            VolumeSound += 8;
+            VolumeSound += 4;
             SetVolumeSound(VolumeSound);
         }
     }
 }
 
-// decrease the volume with 8
+// decrease the volume with 4
 void CAudio::DecVolumeMusic() 
 {
     if (GlobalSoundEnabled) 
     {
         if (VolumeMusic > 0) 
         {
-            VolumeMusic -= 8;
+            VolumeMusic -= 4;
             SetVolumeMusic(VolumeMusic);
         }
     }
 }
 
-// decrease the volume with 8
+// decrease the volume with 4
 void CAudio::DecVolumeSound() 
 {
     if (GlobalSoundEnabled) 
     {
         if (VolumeSound > 0) 
         {
-            VolumeSound -= 8;
+            VolumeSound -= 4;
             SetVolumeSound(VolumeSound);
         }
     }

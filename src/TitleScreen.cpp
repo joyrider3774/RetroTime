@@ -76,11 +76,11 @@ void TitleScreen(CGame *Game)
                         }
                         break;
                     case OMSoundVol:
-                        Text = OMOptionMenus[menu].name + to_string(Game->Audio->GetVolumeSound());
+                        Text = OMOptionMenus[menu].name + to_string((int)(Game->Audio->GetVolumeSound()*100/128)) + "%";
                         Game->Font->WriteText(Game->Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 400, 185 + i * menuspacing, 0, color);
                         break;
                     case OMMusicVol:
-                        Text = OMOptionMenus[menu].name + to_string(Game->Audio->GetVolumeMusic());
+                        Text = OMOptionMenus[menu].name + to_string((int)(Game->Audio->GetVolumeMusic()*100/128)) + "%";
                         Game->Font->WriteText(Game->Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 400, 185 + i * menuspacing, 0, color);
                         break;
                     case OMCrt:       
