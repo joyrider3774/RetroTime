@@ -64,8 +64,6 @@ void CGame::Init()
     NextSubState = 0; 
     NextSubStateCounter = 0;
     NextSubStateTimeAdd = 0;
-    MotionBlur = false;
-    Crt = 0;
     TexCrt = nullptr;
     ReCreateCrt();
     
@@ -407,16 +405,17 @@ void CGame::LoadSettings() {
     char *EnvHomePath = getenv("HOMEPATH");
 
     if (EnvHome) //linux systems normally
-        FileName = string() + "/.retrotimesettings";
+        FileName = string(EnvHome) + "/.retrotimesettings";
     else
         if(EnvHomeDrive && EnvHomePath) //windows systems normally
-            FileName = string() + string() + "/.retrotimesettings";
+            FileName = string(EnvHomeDrive) + string(EnvHomePath) + "/.retrotimesettings";
 
     SettingsFile = fopen(FileName.c_str(), "r");
     if (SettingsFile) 
     {
-        int VolumeMusic, VolumeSound;
-        fscanf(SettingsFile, "VolumeMusic=%d\nVolumeSound=%d\n", &VolumeMusic, &VolumeSound);
+        int VolumeMusic, VolumeSound, aMotionBlur;
+        fscanf(SettingsFile, "VolumeMusic=%d\nVolumeSound=%d\nCrt=%d\nSpriteGhosting=%d\n", &VolumeMusic, &VolumeSound, &Crt, &aMotionBlur);
+        MotionBlur = (aMotionBlur == 1);
         Audio->SetVolumeSound(VolumeSound);
         Audio->SetVolumeMusic(VolumeMusic);
         fclose(SettingsFile);
@@ -425,6 +424,8 @@ void CGame::LoadSettings() {
     {
         Audio->SetVolumeMusic(128);
         Audio->SetVolumeSound(128);
+        MotionBlur = false;
+        Crt = 0;
     }
 }
 
@@ -437,16 +438,16 @@ void CGame::SaveSettings() {
     char *EnvHomePath = getenv("HOMEPATH");
 
     if (EnvHome) //linux systems normally
-        FileName = string() + "/.retrotimesettings";
+        FileName = string(EnvHome) + "/.retrotimesettings";
     else
         if(EnvHomeDrive && EnvHomePath) //windows systems normally
-            FileName = string() + string() + "/.retrotimesettings";
+            FileName = string(EnvHomeDrive) + string(EnvHomePath) + "/.retrotimesettings";
 
     SettingsFile = fopen(FileName.c_str(), "w");
     if (SettingsFile) {
         int VolumeMusic = Audio->GetVolumeMusic();
         int VolumeSound = Audio->GetVolumeSound();
-        fprintf(SettingsFile, "VolumeMusic=%d\nVolumeSound=%d\n", VolumeMusic, VolumeSound);
+        fprintf(SettingsFile, "VolumeMusic=%d\nVolumeSound=%d\nCrt=%d\nSpriteGhosting=%d\n", VolumeMusic, VolumeSound, Crt, MotionBlur?1:0);
         fclose(SettingsFile);
     }
 }
