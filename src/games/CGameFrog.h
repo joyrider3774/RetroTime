@@ -147,16 +147,16 @@ private:
 	int spritesheetfruit3;
     
     
-    void sfupdateplayer();
-    void sfcreateplayer();
-    void sfdestroyplayer();	
-    void sfupdateobjects();
-    void sfcreateobjectrow(int rownr, int arowtype);
-    int sfcreateobject(int rownr, int col, int id, int arowtype, float speed, int dir, int startobjectindex);
-    void sfdestroyobject(int index);
-    void sfdestroyallobjects();
-    void sfcreateobjects(bool initialize);
-    void sfdrawbackground();
+    void updateplayer();
+    void createplayer();
+    void destroyplayer();	
+    void updateobjects();
+    void createobjectrow(int rownr, int arowtype);
+    int createobject(int rownr, int col, int id, int arowtype, float speed, int dir, int startobjectindex);
+    void destroyobject(int index);
+    void destroyallobjects();
+    void createobjects(bool initialize);
+    void drawbackground();
     void OnGameStart() override;
 public:
     CGameFrog(CGame* aGame, bool aScreenshotMode = false);

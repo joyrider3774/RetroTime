@@ -28,7 +28,7 @@ CGameBreakOut::~CGameBreakOut() {};
 
 //blocks  ---------------------------------------------------------------------------------------------------------------- 
 
-void CGameBreakOut::sbupdateblockinfo()
+void CGameBreakOut::updateblockinfo()
 {
 	blockinfo.mostleft = -1;
 	blockinfo.mostright = -1;
@@ -37,7 +37,7 @@ void CGameBreakOut::sbupdateblockinfo()
 	int x1 = screenright + 1;
 	int x2 = screenleft - 1;
 	int y = screentop - 1;
-	for (int i = 0; i < sbnumblocks; i++)
+	for (int i = 0; i < numblocks; i++)
     {	
 		if (blocks[i].alive)
         {
@@ -63,13 +63,13 @@ void CGameBreakOut::sbupdateblockinfo()
 }
 
 
-void CGameBreakOut::sbdestroyallblocks()
+void CGameBreakOut::destroyallblocks()
 {
-	for (int i = 0; i < sbnumblocks; i++)
-		sbdestroyblock(i);
+	for (int i = 0; i < numblocks; i++)
+		destroyblock(i);
 }
 
-void CGameBreakOut::sbdestroyblock(int index)
+void CGameBreakOut::destroyblock(int index)
 {
 	if(blocks[index].alive)
     {
@@ -78,109 +78,109 @@ void CGameBreakOut::sbdestroyblock(int index)
     }
 }
 
-void CGameBreakOut::sbcreateblocks(bool setlocation)
+void CGameBreakOut::createblocks(bool setlocation)
 {
 	pattern = rand() % 5;
-	for (int x = 0; x < sbblockcols; x++)
+	for (int x = 0; x < blockcols; x++)
     {
-		for(int y = 0; y < sbblockrows; y++)
+		for(int y = 0; y < blockrows; y++)
         {			
-			tweens[x + y * sbblockcols][sbtweenblockpositions] = createtween(sbtweenblockpositions, 1+ ((rand() %(6)) / 10), funcsmoothstop, 1, true, DesiredFps);
-			blocks[x + y * sbblockcols].spr = Game->Sprites->CreateSprite();
-			blocks[x + y * sbblockcols].state = 0;
-			blocks[x + y * sbblockcols].alive = true;
-			Game->Sprites->SetSpriteImage(blocks[x + y * sbblockcols].spr, &spritesheetblocks, 6, 1);
-			SDL_Point tz = Game->Sprites->TileSize(blocks[x + y * sbblockcols].spr);
-            tz.x =  tz.x * sbblockspritecale.x;
-            tz.y =  tz.y * sbblockspritecale.y;
-			blocks[x + y * sbblockcols].tz = tz;
-			Game->Sprites->SetSpriteAnimation(blocks[x + y * sbblockcols].spr, y % 6, y % 6, 0);
+			tweens[x + y * blockcols][tweenblockpositions] = createtween(tweenblockpositions, 1+ ((rand() %(6)) / 10), funcsmoothstop, 1, true, DesiredFps);
+			blocks[x + y * blockcols].spr = Game->Sprites->CreateSprite();
+			blocks[x + y * blockcols].state = 0;
+			blocks[x + y * blockcols].alive = true;
+			Game->Sprites->SetSpriteImage(blocks[x + y * blockcols].spr, &spritesheetblocks, 6, 1);
+			SDL_Point tz = Game->Sprites->TileSize(blocks[x + y * blockcols].spr);
+            tz.x =  tz.x * blockspritecale.x;
+            tz.y =  tz.y * blockspritecale.y;
+			blocks[x + y * blockcols].tz = tz;
+			Game->Sprites->SetSpriteAnimation(blocks[x + y * blockcols].spr, y % 6, y % 6, 0);
 
-			Game->Sprites->SetSpriteScale(blocks[x + y * sbblockcols].spr, sbblockspritecale);
-			blocks[x + y * sbblockcols].pos = { screenleft + sbblockxoffset + (x * tz.x), screentop + sbblockyoffset + y * tz.y}; 
+			Game->Sprites->SetSpriteScale(blocks[x + y * blockcols].spr, blockspritecale);
+			blocks[x + y * blockcols].pos = { screenleft + blockxoffset + (x * tz.x), screentop + blockyoffset + y * tz.y}; 
 			if (setlocation)
-				Game->Sprites->SetSpriteLocation(blocks[x + y * sbblockcols].spr, blocks[x + y * sbblockcols].pos);
+				Game->Sprites->SetSpriteLocation(blocks[x + y * blockcols].spr, blocks[x + y * blockcols].pos);
 		
         }
     }
-	sbupdateblockinfo();
+	updateblockinfo();
 }
 
 
-void CGameBreakOut::sbupdateblocks()
+void CGameBreakOut::updateblocks()
 {
-	for(int x = 0; x < sbblockcols; x++)
+	for(int x = 0; x < blockcols; x++)
     {
-		for(int y = 0; y < sbblockrows; y++)
+		for(int y = 0; y < blockrows; y++)
         {			
-			if(blocks[x + y * sbblockcols].alive)
+			if(blocks[x + y * blockcols].alive)
             {
-				if(tweens[x + y * sbblockcols][sbtweenblockpositions].active)
+				if(tweens[x + y * blockcols][tweenblockpositions].active)
                 {
-					tweens[x + y * sbblockcols][sbtweenblockpositions] = updatetween(tweens[x + y * sbblockcols][sbtweenblockpositions]);
-					SDL_FPoint pos = blocks[x + y * sbblockcols].pos;
+					tweens[x + y * blockcols][tweenblockpositions] = updatetween(tweens[x + y * blockcols][tweenblockpositions]);
+					SDL_FPoint pos = blocks[x + y * blockcols].pos;
 					if (pattern == 0)
                     {
-						if (x < sbblockcols / 3)
-                            pos.x = pos.x * tweens[x + y * sbblockcols][sbtweenblockpositions].funcval;
+						if (x < blockcols / 3)
+                            pos.x = pos.x * tweens[x + y * blockcols][tweenblockpositions].funcval;
 						else
                         {
-							if( x > sbblockcols * 2 / 3)
-								pos.x = screenright - (screenright - pos.x) * tweens[x + y * sbblockcols][sbtweenblockpositions].funcval;
+							if( x > blockcols * 2 / 3)
+								pos.x = screenright - (screenright - pos.x) * tweens[x + y * blockcols][tweenblockpositions].funcval;
 							
                         }
-						if (y < sbblockrows / 2)
-							pos.y = pos.y * tweens[x + y * sbblockcols][sbtweenblockpositions].funcval;
+						if (y < blockrows / 2)
+							pos.y = pos.y * tweens[x + y * blockcols][tweenblockpositions].funcval;
                     }
 					else 
                     {
 						if(pattern == 1)
-							pos.y = pos.y * tweens[x + y * sbblockcols][sbtweenblockpositions].funcval;
+							pos.y = pos.y * tweens[x + y * blockcols][tweenblockpositions].funcval;
 						else
                         {
 							if (pattern == 2)
                             {
-								if (x < sbblockcols / 2)                            
-									pos.x = pos.x * tweens[x + y * sbblockcols][sbtweenblockpositions].funcval;
+								if (x < blockcols / 2)                            
+									pos.x = pos.x * tweens[x + y * blockcols][tweenblockpositions].funcval;
 								else 
-									pos.x = screenright - (screenright - pos.x) * tweens[x + y * sbblockcols][sbtweenblockpositions].funcval;
+									pos.x = screenright - (screenright - pos.x) * tweens[x + y * blockcols][tweenblockpositions].funcval;
                             }
 							else
                             {
 								if (pattern == 3)
-									pos.x = pos.x * tweens[x + y * sbblockcols][sbtweenblockpositions].funcval;
+									pos.x = pos.x * tweens[x + y * blockcols][tweenblockpositions].funcval;
 								else
                                 {
 									if (pattern == 4)
-										pos.x = screenright - (screenright - pos.x) * tweens[x + y * sbblockcols][sbtweenblockpositions].funcval;
+										pos.x = screenright - (screenright - pos.x) * tweens[x + y * blockcols][tweenblockpositions].funcval;
                                 }
                             }
                         }
                     }
 	
-//					setSpriteLocation(blocks[x + y * sbblockcols].spr, pos)
-					blocks[x + y * sbblockcols].spr->x = int(pos.x);
-					blocks[x + y * sbblockcols].spr->y = int(pos.y);
+//					setSpriteLocation(blocks[x + y * blockcols].spr, pos)
+					blocks[x + y * blockcols].spr->x = int(pos.x);
+					blocks[x + y * blockcols].spr->y = int(pos.y);
 					
                 }
-				if (blocks[x + y * sbblockcols].state == sbblockstatedeath)
+				if (blocks[x + y * blockcols].state == blockstatedeath)
                 {
-					if (tweens[x + y * sbblockcols][sbtweenblockdeath].active)
+					if (tweens[x + y * blockcols][tweenblockdeath].active)
                     {
-						tweens[x + y * sbblockcols][sbtweenblockdeath] = updatetween(tweens[x + y * sbblockcols][sbtweenblockdeath]);
-						SDL_FPoint pos = blocks[x + y * sbblockcols].pos;
-						pos.y = pos.y + (50 * tweens[x + y * sbblockcols][sbtweenblockdeath].funcval);
-						pos.x = pos.x + (30 * tweens[x + y * sbblockcols][sbtweenblockdeath].funcval);
-//						setSpriteLocation(blocks[x + y * sbblockcols].spr, pos)
-						blocks[x + y * sbblockcols].spr->x = int(pos.x);
-						blocks[x + y * sbblockcols].spr->y = int(pos.y);
-						Game->Sprites->SetSpriteRotation(blocks[x + y * sbblockcols].spr, 720 * tweens[x + y * sbblockcols][sbtweenblockdeath].funcval);
-						Game->Sprites->SetSpriteColour(blocks[x + y * sbblockcols].spr, 1,1,1, 1- tweens[x + y * sbblockcols][sbtweenblockdeath].funcval);
+						tweens[x + y * blockcols][tweenblockdeath] = updatetween(tweens[x + y * blockcols][tweenblockdeath]);
+						SDL_FPoint pos = blocks[x + y * blockcols].pos;
+						pos.y = pos.y + (50 * tweens[x + y * blockcols][tweenblockdeath].funcval);
+						pos.x = pos.x + (30 * tweens[x + y * blockcols][tweenblockdeath].funcval);
+//						setSpriteLocation(blocks[x + y * blockcols].spr, pos)
+						blocks[x + y * blockcols].spr->x = int(pos.x);
+						blocks[x + y * blockcols].spr->y = int(pos.y);
+						Game->Sprites->SetSpriteRotation(blocks[x + y * blockcols].spr, 720 * tweens[x + y * blockcols][tweenblockdeath].funcval);
+						Game->Sprites->SetSpriteColour(blocks[x + y * blockcols].spr, 1,1,1, 1- tweens[x + y * blockcols][tweenblockdeath].funcval);
                     }
 					else
                     {
-						sbdestroyblock(x + y * sbblockcols);
-						sbupdateblockinfo();
+						destroyblock(x + y * blockcols);
+						updateblockinfo();
                     }
                 }
 
@@ -191,14 +191,14 @@ void CGameBreakOut::sbupdateblocks()
 	if (blockinfo.mostleft == -1)
     {
 		Game->AddToScore(500);
-		sbcreateblocks(false);
+		createblocks(false);
 		Game->Audio->PlaySound(SfxSucces, 0);
     }
 }
 
 //player ----------------------------------------------------------------------------------------------------------------
 
-void CGameBreakOut::sbdestroyplayer()
+void CGameBreakOut::destroyplayer()
 {
 	if (player.alive)
     {
@@ -207,21 +207,21 @@ void CGameBreakOut::sbdestroyplayer()
     }
 }
 
-void CGameBreakOut::sbcreateplayer()
+void CGameBreakOut::createplayer()
 {
 	player.spr = Game->Sprites->CreateSprite();
 	Game->Sprites->SetSpriteImage(player.spr, &spritesheetbat);
-	Game->Sprites->SetSpriteScale(player.spr, sbspritescale);
+	Game->Sprites->SetSpriteScale(player.spr, spritescale);
 	player.tz = Game->Image->ImageSize(spritesheetbat);
-    player.tz.x = player.tz.x * sbspritescale.x;
-    player.tz.y = player.tz.y * sbspritescale.y;
+    player.tz.x = player.tz.x * spritescale.x;
+    player.tz.y = player.tz.y * spritescale.y;
 	player.pos = { (float)(screenright - screenleft) / 2,(float)screenbottom - 20 - (player.tz.y  / 2)};
 	HealthPoints = 5;
 	Game->Sprites->SetSpriteLocation(player.spr, player.pos);
 	player.alive = true;
 }
 
-void CGameBreakOut::sbupdateplayer()
+void CGameBreakOut::updateplayer()
 {
 	Game->Sprites->SetSpriteVisibility(player.spr, player.alive);
 	if (player.alive)
@@ -233,16 +233,16 @@ void CGameBreakOut::sbupdateplayer()
 		
 		if (Game->Input->Buttons.ButLeft)
         {
-			if (player.pos.x - player.tz.x / 2 - (sbplayerspeed * speedmultiplier) > screenleft)
-				player.pos.x -= sbplayerspeed * speedmultiplier;
+			if (player.pos.x - player.tz.x / 2 - (playerspeed * speedmultiplier) > screenleft)
+				player.pos.x -= playerspeed * speedmultiplier;
 			else
 				player.pos.x = screenleft + player.tz.x / 2;
         }
 
 		if (Game->Input->Buttons.ButRight)
         {
-			if ( player.pos.x + player.tz.x / 2 + (sbplayerspeed * speedmultiplier) < screenright)
-				player.pos.x += sbplayerspeed * speedmultiplier;
+			if ( player.pos.x + player.tz.x / 2 + (playerspeed * speedmultiplier) < screenright)
+				player.pos.x += playerspeed * speedmultiplier;
 			else
 				player.pos.x = screenright - player.tz.x / 2;
         }
@@ -263,7 +263,7 @@ void CGameBreakOut::sbupdateplayer()
 
 //ball ----------------------------------------------------------------------------------------------------------------
 
-void CGameBreakOut::sbdestroyball()
+void CGameBreakOut::destroyball()
 {
 	if (ball.alive)
     {
@@ -272,7 +272,7 @@ void CGameBreakOut::sbdestroyball()
     }
 }
 			
-void CGameBreakOut::sbcreateball()
+void CGameBreakOut::createball()
 {
 	ball.spr = Game->Sprites->CreateSprite();
 	Game->Sprites->SetSpriteImage(ball.spr, &spritesheetball);
@@ -280,12 +280,12 @@ void CGameBreakOut::sbcreateball()
 	//Game->Sprites->SetSpriteCollisionShape(ball.spr, SHAPE_CIRCLE)
 	ball.pos = { (float)((screenright - screenleft) / 2) + 250, (float)screenbottom - 250 - 20};
 	ball.vel = {-0.5,0.5};
-	ballspeed = sbballspeed;
+	curballspeed = ballspeed;
 	ball.alive = true;
 	Game->Sprites->SetSpriteLocation(ball.spr, ball.pos);
 }
 
-void CGameBreakOut::sbupdateball()
+void CGameBreakOut::updateball()
 {
 	if (ball.alive)
     {			
@@ -293,9 +293,9 @@ void CGameBreakOut::sbupdateball()
 			ball.freeze -= 1;
 		else
         {
-			float steps = ballspeed  / sbballvelsegments;
+			float steps = curballspeed  / ballvelsegments;
 			
-			for (int j = 1; j <sbballvelsegments + 1; j++)
+			for (int j = 1; j <ballvelsegments + 1; j++)
             {
 				ball.pos.x += (steps * ball.vel.x);
                 ball.pos.y += (steps * ball.vel.y);
@@ -322,17 +322,17 @@ void CGameBreakOut::sbupdateball()
 		
 				if (ball.pos.y >= screenbottom)
                 {
-					sbdestroyball();
-					sbcreateball();
+					destroyball();
+					createball();
 					ball.freeze = 45;
 					HealthPoints -= 1;
 					Game->AddToScore(-100);
 					Game->Audio->PlaySound(SfxDie, 0);
                 }
 
-				for (int k = 0; k < sbnumblocks; k++)
+				for (int k = 0; k < numblocks; k++)
                 {				
-					if (blocks[k].alive && (blocks[k].state != sbblockstatedeath))
+					if (blocks[k].alive && (blocks[k].state != blockstatedeath))
                     {	
 						if (Game->Sprites->DetectSpriteCollision(ball.spr, blocks[k].spr))
                         {
@@ -347,11 +347,11 @@ void CGameBreakOut::sbupdateball()
 
 							Game->AddToScore(20);
 							//inc ballspeed
-							ballspeed += sbballspeedinc;
+							curballspeed += ballspeedinc;
 							Game->Audio->PlaySound(SfxBrick, 0);
-							blocks[k].state = sbblockstatedeath;
+							blocks[k].state = blockstatedeath;
 							Game->Sprites->SetSpriteDepth(blocks[k].spr, 5);
-							tweens[k][sbtweenblockdeath] = createtween(sbtweenblockdeath, 1, funcsmoothstep, 1, true, DesiredFps);
+							tweens[k][tweenblockdeath] = createtween(tweenblockdeath, 1, funcsmoothstep, 1, true, DesiredFps);
                         }
                     }
                 }
@@ -426,7 +426,7 @@ void CGameBreakOut::sbupdateball()
                         }
 						
 						//increase ballspeed	
-						ballspeed += sbballspeedinc;
+						curballspeed += ballspeedinc;
 						
 						//just a safety
 						while (Game->Sprites->DetectSpriteCollision(ball.spr, player.spr))
@@ -446,7 +446,7 @@ void CGameBreakOut::sbupdateball()
 	
 //background ----------------------------------------------------------------------------------------------------------------
 
-void CGameBreakOut::sbdrawbackground(bool motionblur)
+void CGameBreakOut::drawbackground(bool motionblur)
 {
 	float alpha = 1;
 	if ((motionblur) && (Game->MotionBlur))
@@ -466,9 +466,9 @@ void CGameBreakOut::init()
     SDL_RenderClear(Game->Renderer);
     SDL_SetRenderTarget(Game->Renderer, prev);
     LoadGraphics();
-    sbcreateblocks(ScreenshotMode);
-	sbcreateplayer();
-	sbcreateball();
+    createblocks(ScreenshotMode);
+	createplayer();
+	createball();
 
     if(!ScreenshotMode)
 	{
@@ -484,9 +484,9 @@ void CGameBreakOut::init()
 
 void CGameBreakOut::deinit()
 {
-    sbdestroyplayer();
-	sbdestroyallblocks();
-	sbdestroyball();
+    destroyplayer();
+	destroyallblocks();
+	destroyball();
 	if (!ScreenshotMode)
 	{
 		Game->Audio->StopMusic();
@@ -529,7 +529,7 @@ SDL_Texture* CGameBreakOut::screenshot()
 	SDL_RenderClear(Game->Renderer);
 	init();
     
-    sbdrawbackground(false);
+    drawbackground(false);
 	Game->Sprites->DrawSprites(Game->Renderer);
 
 	
@@ -544,18 +544,18 @@ SDL_Texture* CGameBreakOut::screenshot()
 void CGameBreakOut::UpdateLogic()
 {
     CGameBase::UpdateLogic();
-	sbupdateblocks();
+	updateblocks();
     if (Game->SubGameState == SGGame)
 	{
-        sbupdateplayer();
-        sbupdateball();
+        updateplayer();
+        updateball();
         Game->Sprites->UpdateSprites();
 	}
 }
 
 void CGameBreakOut::Draw()
 {
-    sbdrawbackground(Game->SubGameState == SGGame);
+    drawbackground(Game->SubGameState == SGGame);
 	Game->Sprites->DrawSprites(Game->Renderer);
 	
     DrawScoreBar();

@@ -32,7 +32,7 @@ CGameRamIt::CGameRamIt(CGame* aGame, bool aScreenshotMode): CGameBase(aGame, GSR
 
 CGameRamIt::~CGameRamIt() {}
 
-bool CGameRamIt::ricreatebullet()
+bool CGameRamIt::createbullet()
 {
 	bool result = false;
 	if (!bulletalive) 
@@ -48,7 +48,7 @@ bool CGameRamIt::ricreatebullet()
 
 //BULLET ----------------------------------------------------------------------------------------------------------------
 
-void CGameRamIt::riupdatebullet()
+void CGameRamIt::updatebullet()
 {
 	if (bulletalive)
     {
@@ -118,7 +118,7 @@ void CGameRamIt::riupdatebullet()
     }
 }
 
-void CGameRamIt::ridrawbullet()
+void CGameRamIt::drawbullet()
 {
 	if (bulletalive)
     {
@@ -130,14 +130,14 @@ void CGameRamIt::ridrawbullet()
 
 //PLAYER ----------------------------------------------------------------------------------------------------------------
 
-void CGameRamIt::ricreateplayer()
+void CGameRamIt::createplayer()
 {
 	playerpos.x = screenleft + (screenright - screenleft) / 2;
     playerpos.y = screentop + (screenbottom - screentop) / 2;
 	playerdx = 1;
 }
 
-void CGameRamIt::ridrawplayer()
+void CGameRamIt::drawplayer()
 {
 	SDL_Rect r;
 	
@@ -157,7 +157,7 @@ void CGameRamIt::ridrawplayer()
 	SDL_RenderFillRect(Game->Renderer, &r);
 }
 
-void CGameRamIt::riupdateplayer()
+void CGameRamIt::updateplayer()
 {
 	if(ScreenshotMode)
 	{
@@ -187,7 +187,7 @@ void CGameRamIt::riupdateplayer()
     }
 
 	if (Game->Input->Buttons.ButA && !Game->Input->PrevButtons.ButA)
-		if (ricreatebullet())
+		if (createbullet())
         {
 			Game->Audio->PlaySound(SfxShoot, 0);
         }
@@ -195,7 +195,7 @@ void CGameRamIt::riupdateplayer()
 
 //playfield ----------------------------------------------------------------------------------------------------------------
 
-void CGameRamIt::ricreateplayfield()
+void CGameRamIt::createplayfield()
 {
 	int prevpiece = -1;
 	int piece = -1;
@@ -267,7 +267,7 @@ void CGameRamIt::ricreateplayfield()
     }
 }
 
-void CGameRamIt::riupdateplayfield(bool force)
+void CGameRamIt::updateplayfield(bool force)
 {
 	speedcount += 1;
 
@@ -289,7 +289,7 @@ void CGameRamIt::riupdateplayfield(bool force)
 		if (stageclear)
         {
 			Game->Audio->PlaySound(SfxSucces, 0);
-			ricreateplayfield();
+			createplayfield();
 			level += 1;
 			if(!ScreenshotMode)
 				Game->AddToScore((level-1) * 100);
@@ -331,7 +331,7 @@ void CGameRamIt::riupdateplayfield(bool force)
     }
 }	
 
-void CGameRamIt::ridrawplayfield()
+void CGameRamIt::drawplayfield()
 {
 	for (int side = 0; side < sides; side++)
 		for (int block = 0; block < numblocks; block++)
@@ -354,7 +354,7 @@ void CGameRamIt::ridrawplayfield()
 
 //background ----------------------------------------------------------------------------------------------------------------
 
-void CGameRamIt::ridrawbackground()
+void CGameRamIt::drawbackground()
 {
 	SDL_SetRenderDrawColor(Game->Renderer, 150, 150, 150, 255);
     SDL_RenderClear(Game->Renderer);
@@ -372,8 +372,8 @@ void CGameRamIt::init()
 	speed = ticksidle;
 	level = 1;
 	playerdeath = false;
-	ricreateplayer();
-	ricreateplayfield();
+	createplayer();
+	createplayfield();
 	if(!ScreenshotMode)
 	{
 		HealthPoints = 3;
@@ -416,16 +416,16 @@ SDL_Texture* CGameRamIt::screenshot()
 	init();
 
 	for(int i = 0; i < 30; i++)
-		riupdateplayfield(true);
-	ricreatebullet();
-	riupdatebullet();
-	riupdatebullet();
-	riupdatebullet();
+		updateplayfield(true);
+	createbullet();
+	updatebullet();
+	updatebullet();
+	updatebullet();
 
-	ridrawbackground();
-	ridrawbullet();
-	ridrawplayer();
-	ridrawplayfield();
+	drawbackground();
+	drawbullet();
+	drawplayer();
+	drawplayfield();
 
 	SDL_RenderPresent(Game->Renderer);
 	SDL_SetRenderTarget(Game->Renderer, prev);
@@ -440,9 +440,9 @@ void CGameRamIt::UpdateLogic()
 	CGameBase::UpdateLogic();
     if (Game->SubGameState == SGGame)
     {
-        riupdateplayer();
-        riupdateplayfield(false);
-        riupdatebullet();
+        updateplayer();
+        updateplayfield(false);
+        updatebullet();
 
 		if (playerdeath)
         {
@@ -454,7 +454,7 @@ void CGameRamIt::UpdateLogic()
 			if (HealthPoints > 0)
 			{
             	SDL_Delay(500);
-				ricreateplayfield();
+				createplayfield();
             }
 			playerdeath = false;
         }
@@ -465,10 +465,10 @@ void CGameRamIt::Draw()
 {
 	// SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 255);
     // SDL_RenderClear(Game->Renderer);
-    ridrawbackground();
-    ridrawbullet();
-    ridrawplayer();
-    ridrawplayfield();
+    drawbackground();
+    drawbullet();
+    drawplayer();
+    drawplayfield();
     DrawScoreBar();
 	DrawSubStateText();
 }

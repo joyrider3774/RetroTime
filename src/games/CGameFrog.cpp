@@ -30,7 +30,7 @@ CGameFrog::~CGameFrog() {};
 
 
 //objects  ----------------------------------------------------------------------------------------------------------------
-void CGameFrog::sfcreateobjects(bool initialize)
+void CGameFrog::createobjects(bool initialize)
 {
 	int rowtype = prevrowtype;
 	int i = 0;
@@ -45,7 +45,7 @@ void CGameFrog::sfcreateobjects(bool initialize)
 		while (i < numrows)
 		{
 			if (i < playerstartrow)
-				sfcreateobjectrow(i, lenrowtypes - 1);
+				createobjectrow(i, lenrowtypes - 1);
 			else
 			{
 				if (nextrowtype == rowtyperoad)
@@ -96,7 +96,7 @@ void CGameFrog::sfcreateobjects(bool initialize)
 				else
 					nextrowtypecount += 1;
 
-				sfcreateobjectrow(i, rowtype);
+				createobjectrow(i, rowtype);
 								
 			}
 			i+=1;
@@ -154,19 +154,19 @@ void CGameFrog::sfcreateobjects(bool initialize)
 			}
 			else
 				nextrowtypecount += 1;
-			sfcreateobjectrow(i, rowtype);
+			createobjectrow(i, rowtype);
 			i += 1;
 		}
 	}
 }
 
-void CGameFrog::sfdestroyallobjects()
+void CGameFrog::destroyallobjects()
 {
 	for (int i = 0; i < maxobjects; i++)
-		sfdestroyobject(i);
+		destroyobject(i);
 }
 
-void CGameFrog::sfdestroyobject(int index)
+void CGameFrog::destroyobject(int index)
 {
 	if (objects[index].alive)
 	{
@@ -176,7 +176,7 @@ void CGameFrog::sfdestroyobject(int index)
 	}
 }
 
-int CGameFrog::sfcreateobject(int rownr, int col, int id, int arowtype, float speed, int dir, int startobjectindex)
+int CGameFrog::createobject(int rownr, int col, int id, int arowtype, float speed, int dir, int startobjectindex)
 {
 	SDL_Point tz = {1,1};
 	SDL_FPoint scale;
@@ -368,7 +368,7 @@ int CGameFrog::sfcreateobject(int rownr, int col, int id, int arowtype, float sp
 	return result;
 }
 
-void CGameFrog::sfcreateobjectrow(int rownr, int arowtype)
+void CGameFrog::createobjectrow(int rownr, int arowtype)
 {
 	int type = rowtypes[arowtype].type;
 	int minspace = rowtypes[arowtype].minspace;
@@ -387,7 +387,7 @@ void CGameFrog::sfcreateobjectrow(int rownr, int arowtype)
 	{	
 		if (type == rowtyperoad)
 		{
-			index = sfcreateobject(rownr, x, idroad, arowtype, 0, 0, index);
+			index = createobject(rownr, x, idroad, arowtype, 0, 0, index);
 				
 			if ((x - lastplaced > minspace) || (repeats < maxrepeats))
 			{
@@ -398,14 +398,14 @@ void CGameFrog::sfcreateobjectrow(int rownr, int arowtype)
 				}
 				lastplaced = x;
 				repeats += 1;
-				index = sfcreateobject(rownr, x, id, arowtype, speed, dir, index);
+				index = createobject(rownr, x, id, arowtype, speed, dir, index);
 			}
 		}
 		else
 		{
 			if (type == rowtypewater)
 			{
-				index = sfcreateobject(rownr, x, idwater, arowtype, 0, 0, index);
+				index = createobject(rownr, x, idwater, arowtype, 0, 0, index);
 				if ((x - lastplaced > minspace) || (repeats < maxrepeats))
 				{
 					if (x - lastplaced > minspace)
@@ -415,30 +415,30 @@ void CGameFrog::sfcreateobjectrow(int rownr, int arowtype)
 					}
 					lastplaced = x;
 					repeats += 1;
-					index = sfcreateobject(rownr, x, id, arowtype, speed, dir, index);
+					index = createobject(rownr, x, id, arowtype, speed, dir, index);
 					plantsspawned += 1;
 	
 					if (plantsspawned % cherryspawntrigger == 0)
-						index = sfcreateobject(rownr, x, idcherry, arowtype, speed, dir, index);
+						index = createobject(rownr, x, idcherry, arowtype, speed, dir, index);
 
 					if (plantsspawned % lemonspawntrigger == 0)
-						index = sfcreateobject(rownr, x, idlemon, arowtype, speed, dir, index);
+						index = createobject(rownr, x, idlemon, arowtype, speed, dir, index);
 
 					if (plantsspawned % applespawntrigger == 0)
-						index = sfcreateobject(rownr, x, idapple, arowtype, speed, dir, index);
+						index = createobject(rownr, x, idapple, arowtype, speed, dir, index);
 				}	
 			}
 			else
 			{
 				if (type == rowtypesafety)
-					index = sfcreateobject(rownr, x, idgrass, arowtype, 0, 0, index);
+					index = createobject(rownr, x, idgrass, arowtype, 0, 0, index);
 			}
 		}
 	}
 }
 
 
-void CGameFrog::sfupdateobjects()
+void CGameFrog::updateobjects()
 {
 	objectinfo.mostleft = -1;
 	objectinfo.mostright = -1;
@@ -498,7 +498,7 @@ void CGameFrog::sfupdateobjects()
 							if (id == idlemon)
 							{
 								Game->AddToScore(lemonscore);
-								sfdestroyobject(i);
+								destroyobject(i);
 								Game->Audio->PlaySound(SfxCollect, 0);
 							}
 							else
@@ -506,7 +506,7 @@ void CGameFrog::sfupdateobjects()
 								if (id == idapple)
 								{
 									Game->AddToScore(applescore);
-									sfdestroyobject(i);
+									destroyobject(i);
 									Game->Audio->PlaySound(SfxCollect, 0);
 								}
 								else
@@ -514,7 +514,7 @@ void CGameFrog::sfupdateobjects()
 									if (id == idcherry)
 									{
 										Game->AddToScore(cherryscore);
-										sfdestroyobject(i);
+										destroyobject(i);
 										Game->Audio->PlaySound(SfxCollect, 0);
 									}
 								}
@@ -553,7 +553,7 @@ void CGameFrog::sfupdateobjects()
 			{
 				objects[i].pos.y = objects[i].pos.y + worldspeed + levelincspeeds[level-1];
 				if (objects[i].pos.y - objects[i].tz.y / 2 > screenbottom)
-					sfdestroyobject(i);
+					destroyobject(i);
 				else 		
 				{
 					objects[i].pos.x = objects[i].pos.x +  objects[i].vel.x;
@@ -612,7 +612,7 @@ void CGameFrog::sfupdateobjects()
 	{
 		if (objects[objectinfo.mosttop].pos.y - objects[objectinfo.mosttop].tz.y / 2 == screenbottom - (visiblerows * playerspeed))
 		{
-			sfcreateobjects(false);
+			createobjects(false);
 			rowsspawned += 1;
 			if (rowsspawned == levelincspawns[level-1])
 				dolevelinc = true;
@@ -625,13 +625,13 @@ void CGameFrog::sfupdateobjects()
 
 //player ----------------------------------------------------------------------------------------------------------------
 
-void CGameFrog::sfdestroyplayer()
+void CGameFrog::destroyplayer()
 {	
 	Game->Sprites->RemoveSprite(player.spr);
 	player.alive = false;
 }
 
-void CGameFrog::sfcreateplayer()
+void CGameFrog::createplayer()
 {
 	player.spr = Game->Sprites->CreateSprite();
 	Game->Sprites->SetSpriteDepth(player.spr, 2);				
@@ -651,7 +651,7 @@ void CGameFrog::sfcreateplayer()
 	player.alive = true;
 }
 
-void CGameFrog::sfupdateplayer()
+void CGameFrog::updateplayer()
 {
 	Game->Sprites->SetSpriteVisibility(player.spr, player.alive);
 	if (player.alive)
@@ -740,7 +740,7 @@ void CGameFrog::sfupdateplayer()
 
 //background ----------------------------------------------------------------------------------------------------------------
 
-void CGameFrog::sfdrawbackground()
+void CGameFrog::drawbackground()
 {
     SDL_FPoint Scale = {(float)ScreenWidth / backgroundtz.x, (float)ScreenHeight / backgroundtz.x};
 	SDL_Point Pos = { 0, 0};
@@ -767,8 +767,8 @@ void CGameFrog::init()
 	plantsspawned = 0;
 	numobjects = 0;	
 	worldspeed = globalworldspeed;
-	sfcreateplayer();
-	sfcreateobjects(true);
+	createplayer();
+	createobjects(true);
 	if(!ScreenshotMode)
 	{
 		SfxDie = Game->Audio->LoadSound("common/die.wav");
@@ -783,8 +783,8 @@ void CGameFrog::init()
 
 void CGameFrog::deinit()
 {
-	sfdestroyplayer();
-	sfdestroyallobjects();
+	destroyplayer();
+	destroyallobjects();
 	if (!ScreenshotMode)
 	{
 		Game->Audio->StopMusic();
@@ -844,12 +844,12 @@ SDL_Texture* CGameFrog::screenshot()
     worldspeed = playerspeed;
 	for (int i = 0; i < 5; i++)
 	{
-		sfupdateplayer();
-		sfupdateobjects();
+		updateplayer();
+		updateobjects();
 		Game->Sprites->UpdateSprites();
 	}	
 	Game->Sprites->DrawSprites(Game->Renderer);
-	sfdrawbackground();
+	drawbackground();
 	
 	SDL_RenderPresent(Game->Renderer);
 	SDL_SetRenderTarget(Game->Renderer, prev);
@@ -869,7 +869,7 @@ void CGameFrog::UpdateLogic()
     CGameBase::UpdateLogic();
 	if (Game->SubGameState == SGGame)
 	{
-		sfupdateplayer();
+		updateplayer();
 		//needs to be done after player update and before object update
 		//object update checks collisions etc and thus also player death
 		//it does this before adjusting worldspeed to y value
@@ -883,7 +883,7 @@ void CGameFrog::UpdateLogic()
 			}
 		}
 
-		sfupdateobjects();
+		updateobjects();
 		Game->Sprites->UpdateSprites();
 
 
@@ -893,10 +893,10 @@ void CGameFrog::UpdateLogic()
 			Game->AddToScore(-150);
 			if(HealthPoints > 1)
 			{
-				sfdestroyallobjects();
-				sfdestroyplayer();
-				sfcreateobjects(true);
-				sfcreateplayer();
+				destroyallobjects();
+				destroyplayer();
+				createobjects(true);
+				createplayer();
 				HealthPoints = HealthPoints - 1;
 				Game->SubGameState = SGReadyGo;
 				Game->SubStateTime = SDL_GetTicks() + 500;
@@ -910,7 +910,7 @@ void CGameFrog::UpdateLogic()
 void CGameFrog::Draw()
 {
 	Game->Sprites->DrawSprites(Game->Renderer);
-	sfdrawbackground();
+	drawbackground();
 	DrawScoreBar();
 	DrawSubStateText();
 }

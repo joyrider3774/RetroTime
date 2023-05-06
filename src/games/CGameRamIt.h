@@ -42,19 +42,19 @@ private:
 	bool bulletalive = false;
     ramitblock playfield[sides][numblocks];
 
-    bool ricreatebullet();
-    void riupdatebullet();
-    void ridrawbullet();
+    bool createbullet();
+    void updatebullet();
+    void drawbullet();
 
-    void ricreateplayer();
-    void ridrawplayer();
-    void riupdateplayer();
+    void createplayer();
+    void drawplayer();
+    void updateplayer();
 
-    void ricreateplayfield();
-    void riupdateplayfield(bool force);
-    void ridrawplayfield();
+    void createplayfield();
+    void updateplayfield(bool force);
+    void drawplayfield();
 
-    void ridrawbackground();
+    void drawbackground();
 
 public:
     CGameRamIt(CGame* aGame, bool aScreenshotMode = false);

@@ -26,46 +26,46 @@ typedef struct senemyinfo senemyinfo;
 class CGameInvaders: public CGameBase {
 
 private:
-    static const int sitweenenemypositions = 0;
-    static const int sitweenenemydeath = 1;
+    static const int tweenenemypositions = 0;
+    static const int tweenenemydeath = 1;
 
 
-    static const int sienemyrows = 5;
-    static const int sienemycols = 7;
-    static const int sienemystartxoffset = 50;
-    static const int sienemystartyoffset = 50;
-    static const int sienemyspacing = 60;
-    static const int sienemyhorzspacing = 50;
-    SDL_FPoint sienemyscale = {1.5,1.5};
-    static const int sienemyspeed = 1;
-    static constexpr float sienemyspeedinc = 0.15;
-    static const int siplayerspeed = 8;
-    static const int sibulletspeed = 10;
-    static const int siasteroidsoffset = 150;
-    static const int siendscreenconstant = 45 + siasteroidsoffset;
-    static const int simaxexplosion = 10;
-    static const int simaxasteroids = 6;
-    static constexpr float siasteroidscale = 2.5  ;
-    static const int siasteroidmaxhealthpoints = 50;
-    static const int simaxenemybullets = 5;
-    static const int sienemybulletrandomizer = 100;
+    static const int enemyrows = 5;
+    static const int enemycols = 7;
+    static const int enemystartxoffset = 50;
+    static const int enemystartyoffset = 50;
+    static const int enemyspacing = 60;
+    static const int enemyhorzspacing = 50;
+    SDL_FPoint enemyscale = {1.5,1.5};
+    static const int enemyspeed = 1;
+    static constexpr float enemyspeedinc = 0.15;
+    static const int playerspeed = 8;
+    static const int bulletspeed = 10;
+    static const int asteroidsoffset = 150;
+    static const int endscreenconstant = 45 + asteroidsoffset;
+    static const int maxexplosion = 10;
+    static const int maxasteroids = 6;
+    static constexpr float asteroidscale = 2.5  ;
+    static const int asteroidmaxhealthpoints = 50;
+    static const int maxenemybullets = 5;
+    static const int enemybulletrandomizer = 100;
     
 
 	int deaths = 0;
 	int pattern = 0;
 	float backgroundfade = 0;
 	float backgroundfadeinc = 0;
-	SDL_FPoint enemyvel = {sienemyspeed,0};
+	SDL_FPoint enemyvel = {enemyspeed,0};
 
 	senemyinfo enemyinfo;
 	CSpriteObject player;
 	CSpriteObject bullet;
-	CSpriteObject enemies[sienemycols * sienemycols];
-	CSpriteObject explosions[simaxexplosion];
-	CSpriteObject asteroids[simaxasteroids];
-	CSpriteObject enemybullets[simaxenemybullets];
+	CSpriteObject enemies[enemycols * enemycols];
+	CSpriteObject explosions[maxexplosion];
+	CSpriteObject asteroids[maxasteroids];
+	CSpriteObject enemybullets[maxenemybullets];
 	
-	CTweenInfo tweens[sienemycols * sienemycols][2];
+	CTweenInfo tweens[enemycols * enemycols][2];
 
     int background;
     int background2;
@@ -87,31 +87,31 @@ private:
 
     int MusMusic, SfxPlayerShoot, SfxPlayerDeath, SfxEnemyShoot, SfxEnemyDeath, SfxSucces, SfxDie;
 
-    void siupdateplayer();
-    void sicreateplayer();
-    void sidestroyplayer();
-    void siupdateinvaders();
-    void sicreateinvaders(bool setposition);
-    bool sitweenactive(int id);
-    void sidestroyinvader(int index);
-    void sidestroyallinvaders();
-    void siupdateenemyinfo();
-    void siupdatebullet();
-    void sidestroybullet();
-    void sicreatebullet();
-    void siupdateasteroids();
-    void sicreateasteroids();
-    void sidestroyasteroid(int index);
-    void sidestroyallasteroids();
-    void siupdateenemybullet();
-    void sicreatenemybullet(SDL_FPoint pos);
-    void sidestroyenemybullet(int index);
-    void sidestroyallenemybullet();
-    void sicreateexplosion(SDL_FPoint pos);
-    void sidestroyexploison(int index);
-    void sidestroyallexplosion();
-    void sicheckexplosions();
-    void sidrawbackground(bool motionblur);
+    void updateplayer();
+    void createplayer();
+    void destroyplayer();
+    void updateinvaders();
+    void createinvaders(bool setposition);
+    bool tweenactive(int id);
+    void destroyinvader(int index);
+    void destroyallinvaders();
+    void updateenemyinfo();
+    void updatebullet();
+    void destroybullet();
+    void createbullet();
+    void updateasteroids();
+    void createasteroids();
+    void destroyasteroid(int index);
+    void destroyallasteroids();
+    void updateenemybullet();
+    void createnemybullet(SDL_FPoint pos);
+    void destroyenemybullet(int index);
+    void destroyallenemybullet();
+    void createexplosion(SDL_FPoint pos);
+    void destroyexploison(int index);
+    void destroyallexplosion();
+    void checkexplosions();
+    void drawbackground(bool motionblur);
 public:
     CGameInvaders(CGame* aGame, bool aScreenshotMode = false);
     ~CGameInvaders();

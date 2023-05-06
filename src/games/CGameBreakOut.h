@@ -25,49 +25,49 @@ typedef struct sblockinfo sblockinfo;
 class CGameBreakOut: public CGameBase {
 
 private:
-    static const int sbtweenblockpositions = 0;
-    static const int sbtweenblockdeath = 1;
-    static const int sbblockstatedeath = 1;   
-    static constexpr float sbballspeed = 6.0;
-    static constexpr float sbballspeedinc = 0.1;
-    static const int sbballvelsegments = 5;
-    static constexpr float sbplayerspeed = 8;
-    static constexpr float sbblockxoffset = 120;
-    static constexpr float sbblockyoffset = 80;
-    static const int sbblockrows = 10;
-    static const int sbblockcols = 17;
-    static const int sbnumblocks = sbblockrows * sbblockcols;
+    static const int tweenblockpositions = 0;
+    static const int tweenblockdeath = 1;
+    static const int blockstatedeath = 1;   
+    static constexpr float ballspeed = 6.0;
+    static constexpr float ballspeedinc = 0.1;
+    static const int ballvelsegments = 5;
+    static constexpr float playerspeed = 8;
+    static constexpr float blockxoffset = 120;
+    static constexpr float blockyoffset = 80;
+    static const int blockrows = 10;
+    static const int blockcols = 17;
+    static const int numblocks = blockrows * blockcols;
 
-    const SDL_FPoint sbspritescale = {2.5,2.5};
-    const SDL_FPoint sbblockspritecale = {1,2};
+    const SDL_FPoint spritescale = {2.5,2.5};
+    const SDL_FPoint blockspritecale = {1,2};
     
     int MusMusic, SfxDie, SfxSucces, SfxBat, SfxBrick;
     int background, spritesheetblocks, spritesheetbat, spritesheetball;
     SDL_Point backgroundtz;
 
-	float ballspeed;
+	float curballspeed;
 	int pattern;
 	sblockinfo blockinfo;
-	CSpriteObject blocks[sbnumblocks];
-	CTweenInfo tweens[sbnumblocks][2];
+	CSpriteObject blocks[numblocks];
+	CTweenInfo tweens[numblocks][2];
 	CSpriteObject player;
 	CSpriteObject ball;
 
-    void sbupdateball();
-    void sbcreateball();
-    void sbdestroyball();
+    void updateball();
+    void createball();
+    void destroyball();
 
-    void sbupdateplayer();
-    void sbcreateplayer();
-    void sbdestroyplayer();
+    void updateplayer();
+    void createplayer();
+    void destroyplayer();
 
-    void sbupdateblocks();
-    void sbcreateblocks(bool setlocation);
-    void sbdestroyblock(int index);
-    void sbdestroyallblocks();
+    void updateblocks();
+    void createblocks(bool setlocation);
+    void destroyblock(int index);
+    void destroyallblocks();
     
-    void sbdrawbackground(bool motionblur);
-    void sbupdateblockinfo();
+    void drawbackground(bool motionblur);
+    void updateblockinfo();
 public:
     CGameBreakOut(CGame* aGame, bool aScreenshotMode = false);
     ~CGameBreakOut();

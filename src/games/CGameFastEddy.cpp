@@ -40,7 +40,7 @@ CGameFastEddy::~CGameFastEddy() {};
 
 //end level key  ----------------------------------------------------------------------------------------------------------------
 
-void CGameFastEddy::fecreatekey()
+void CGameFastEddy::createkey()
 {
 	key.spr =  Game->Sprites->CreateSprite();
 	key.alive = true;
@@ -57,7 +57,7 @@ void CGameFastEddy::fecreatekey()
 	Game->Sprites->SetSpriteLocation(key.spr, key.pos);
 }
 
-void CGameFastEddy::fedestroykey()
+void CGameFastEddy::destroykey()
 {
 	if (key.alive)
     {
@@ -66,7 +66,7 @@ void CGameFastEddy::fedestroykey()
     }
 }
 
-void CGameFastEddy::feupdatekey()
+void CGameFastEddy::updatekey()
 {
 	if (key.alive)
     {
@@ -82,29 +82,29 @@ void CGameFastEddy::feupdatekey()
 			level += 1;
 			collecteditems = 0;
 			collectedcreated = 0;
-			fedestroyenemies();
-			fedestroyplayer();
-			fedestroyallcollectables();
-			fedestroykey();
-			fedestroyladders();
-			fecreateladders();
-			fecreateplayer();
-			fecreateenemies(true);
-			fecreatecollectables(-1);
-			fecreatekey();
+			destroyenemies();
+			destroyplayer();
+			destroyallcollectables();
+			destroykey();
+			destroyladders();
+			createladders();
+			createplayer();
+			createenemies(true);
+			createcollectables(-1);
+			createkey();
         }
     }
 }
 
 //collectables ----------------------------------------------------------------------------------------------------------------
 
-void CGameFastEddy::fedestroyallcollectables()
+void CGameFastEddy::destroyallcollectables()
 {
 	for (int i = 0; i < maxcollectables; i++)
-		fedestroycollectable(i);
+		destroycollectable(i);
 }
 
-void CGameFastEddy::fedestroycollectable(int index)
+void CGameFastEddy::destroycollectable(int index)
 {
 	if (collectables[index].alive)
     {
@@ -113,7 +113,7 @@ void CGameFastEddy::fedestroycollectable(int index)
     }
 }
 
-void CGameFastEddy::fecreatecollectables(int ignorerow)
+void CGameFastEddy::createcollectables(int ignorerow)
 {
 	SDL_Point tz = {128, 128}; 
 	for (int i = 0; i < maxcollectables; i++)
@@ -166,7 +166,7 @@ void CGameFastEddy::fecreatecollectables(int ignorerow)
     }
 }
 
-void CGameFastEddy::feupdatecollectables()
+void CGameFastEddy::updatecollectables()
 {
 	for(int i = 0; i < maxcollectables; i++)
     {
@@ -192,12 +192,12 @@ void CGameFastEddy::feupdatecollectables()
             {
 			    Game->Audio->PlaySound(SfxCollect, 0);
 				int ignorerow = collectables[i].row;
-				fedestroycollectable(i);
+				destroycollectable(i);
 				collecteditems += 1;
 				Game->AddToScore(collecteditems * 10);
 				if(collecteditems >= 9)
-					feenemyenablelevelend();
-				fecreatecollectables(ignorerow);
+					enemyenablelevelend();
+				createcollectables(ignorerow);
             }
         }
     }
@@ -205,7 +205,7 @@ void CGameFastEddy::feupdatecollectables()
 
 //enemies ----------------------------------------------------------------------------------------------------------------
 
-void CGameFastEddy::fedestroyenemies()
+void CGameFastEddy::destroyenemies()
 {
 	for(int i = 0; i < maxenemies; i++)
     {
@@ -217,7 +217,7 @@ void CGameFastEddy::fedestroyenemies()
     }
 }
 
-void CGameFastEddy::feenemyenablelevelend()
+void CGameFastEddy::enemyenablelevelend()
 {
 	int index = rowzeroenemyindex;
 	SDL_Point tz = {32, 32};
@@ -230,7 +230,7 @@ void CGameFastEddy::feenemyenablelevelend()
 	Game->Sprites->SetSpriteLocation(enemies[index].spr, enemies[index].pos);
 }
 
-void CGameFastEddy::fecreateenemy(int row, float x, int state, int group, int multiply)
+void CGameFastEddy::createenemy(int row, float x, int state, int group, int multiply)
 {
 	SDL_Point tz = {32, 32};
 	for (int i = 0; i < maxenemies; i++)
@@ -273,62 +273,62 @@ void CGameFastEddy::fecreateenemy(int row, float x, int state, int group, int mu
     }
 }
 
-void CGameFastEddy::fecreateenemies(bool levelsucces)
+void CGameFastEddy::createenemies(bool levelsucces)
 {
 	if (level-1 < 5)
     {
-		fecreateenemy(0, (screenright - screenleft) / 2, enemystatemoveright, 0, 2);
+		createenemy(0, (screenright - screenleft) / 2, enemystatemoveright, 0, 2);
 		if (levelsucces)
-			fecreateenemy(1, (screenright - screenleft) * 4 / 10, enemystatemoveright, 1, 1);
+			createenemy(1, (screenright - screenleft) * 4 / 10, enemystatemoveright, 1, 1);
 		else
-			fecreateenemy(1, (screenright - screenleft) / 10, enemystateidle, 1, 1);
+			createenemy(1, (screenright - screenleft) / 10, enemystateidle, 1, 1);
 
-        fecreateenemy(2, (screenright - screenleft) / 2, enemystatemoveright, 2, 1);
+        createenemy(2, (screenright - screenleft) / 2, enemystatemoveright, 2, 1);
 		if (levelsucces)
-			fecreateenemy(3, (screenright - screenleft) * 6 / 10, enemystatemoveright, 3, 1);
+			createenemy(3, (screenright - screenleft) * 6 / 10, enemystatemoveright, 3, 1);
 		else
-			fecreateenemy(3, (screenright - screenleft) * 6 / 10, enemystateidle, 3, 1);
+			createenemy(3, (screenright - screenleft) * 6 / 10, enemystateidle, 3, 1);
 
-		fecreateenemy(4, (screenright - screenleft) / 10, enemystatewaitmove, 4, 1);
+		createenemy(4, (screenright - screenleft) / 10, enemystatewaitmove, 4, 1);
     }
 	else
     {
 		if (level-1 < 10)
         {
-			fecreateenemy(0, (screenright - screenleft) / 2, enemystatemoveright, 0, 2);
-			fecreateenemy(1, (screenright - screenleft) * 4 / 10, enemystatemoveright, 1, 1);
-			fecreateenemy(1, (screenright - screenleft) * 5 / 10, enemystatemoveright, 1, 1);
-			fecreateenemy(2, (screenright - screenleft) / 2, enemystatemoveright, 2, 1);
-			fecreateenemy(3, (screenright - screenleft) * 6 / 10, enemystatemoveleft, 3, 1);
-			fecreateenemy(4, (screenright - screenleft) / 10, enemystatewaitmove, 4, 1);
+			createenemy(0, (screenright - screenleft) / 2, enemystatemoveright, 0, 2);
+			createenemy(1, (screenright - screenleft) * 4 / 10, enemystatemoveright, 1, 1);
+			createenemy(1, (screenright - screenleft) * 5 / 10, enemystatemoveright, 1, 1);
+			createenemy(2, (screenright - screenleft) / 2, enemystatemoveright, 2, 1);
+			createenemy(3, (screenright - screenleft) * 6 / 10, enemystatemoveleft, 3, 1);
+			createenemy(4, (screenright - screenleft) / 10, enemystatewaitmove, 4, 1);
         }
 		else
         {
 			if (level-1 < 15)
             {
-				fecreateenemy(0, (screenright - screenleft) / 2, enemystatemoveright, 0, 2);
-				fecreateenemy(1, (screenright - screenleft) * 4 / 10, enemystatemoveright, 1, 1);
-				fecreateenemy(1, (screenright - screenleft) * 5 / 10, enemystatemoveright, 1, 1);
-				fecreateenemy(2, (screenright - screenleft) / 2, enemystatemoveright, 2, 1);
-				fecreateenemy(3, (screenright - screenleft) * 6 / 10, enemystatemoveleft, 3, 1);
-				fecreateenemy(3, (screenright - screenleft) * 7 / 10, enemystatemoveleft, 3, 1);
-				fecreateenemy(4, (screenright - screenleft) / 10, enemystatewaitmove, 4, 1);
+				createenemy(0, (screenright - screenleft) / 2, enemystatemoveright, 0, 2);
+				createenemy(1, (screenright - screenleft) * 4 / 10, enemystatemoveright, 1, 1);
+				createenemy(1, (screenright - screenleft) * 5 / 10, enemystatemoveright, 1, 1);
+				createenemy(2, (screenright - screenleft) / 2, enemystatemoveright, 2, 1);
+				createenemy(3, (screenright - screenleft) * 6 / 10, enemystatemoveleft, 3, 1);
+				createenemy(3, (screenright - screenleft) * 7 / 10, enemystatemoveleft, 3, 1);
+				createenemy(4, (screenright - screenleft) / 10, enemystatewaitmove, 4, 1);
             }
 			else
             {
-				fecreateenemy(0, (screenright - screenleft) / 2, enemystatemoveright, 0, 2);
-				fecreateenemy(1, (screenright - screenleft) * 4 / 10, enemystatemoveright, 1, 1);
-				fecreateenemy(1, (screenright - screenleft) * 5 / 10, enemystatemoveright, 1, 1);
-				fecreateenemy(2, (screenright - screenleft) / 2, enemystatemoveright, 2, 1);
-				fecreateenemy(3, (screenright - screenleft) * 1 / 10, enemystatemoveright, 3, 1);
-				fecreateenemy(3, (screenright - screenleft) * 6 / 10, enemystatemoveright, 4, 1);
-				fecreateenemy(4, (screenright - screenleft) / 10, enemystatewaitmove, 5, 1);
+				createenemy(0, (screenright - screenleft) / 2, enemystatemoveright, 0, 2);
+				createenemy(1, (screenright - screenleft) * 4 / 10, enemystatemoveright, 1, 1);
+				createenemy(1, (screenright - screenleft) * 5 / 10, enemystatemoveright, 1, 1);
+				createenemy(2, (screenright - screenleft) / 2, enemystatemoveright, 2, 1);
+				createenemy(3, (screenright - screenleft) * 1 / 10, enemystatemoveright, 3, 1);
+				createenemy(3, (screenright - screenleft) * 6 / 10, enemystatemoveright, 4, 1);
+				createenemy(4, (screenright - screenleft) / 10, enemystatewaitmove, 5, 1);
             }
         }
     }
 }
 
-void CGameFastEddy::feupdateenemies()
+void CGameFastEddy::updateenemies()
 {
 	for (int i = 0; i < maxenemies; i++)
     {
@@ -402,14 +402,14 @@ void CGameFastEddy::feupdateenemies()
                     {
 						Game->AddToScore(-100);
 						SDL_Delay(500);
-						fedestroyenemies();
-						fedestroyplayer();
-						fedestroykey();
-						fecreateplayer();
-						fecreateenemies(false);
-						fecreatekey();
+						destroyenemies();
+						destroyplayer();
+						destroykey();
+						createplayer();
+						createenemies(false);
+						createkey();
 						if (collecteditems >= 9)
-							feenemyenablelevelend();
+							enemyenablelevelend();
                     }
 					break;
                 }
@@ -420,7 +420,7 @@ void CGameFastEddy::feupdateenemies()
 
 //player  ----------------------------------------------------------------------------------------------------------------
 
-void CGameFastEddy::fedestroyplayer()
+void CGameFastEddy::destroyplayer()
 {
 	if (player.alive)
     {
@@ -429,7 +429,7 @@ void CGameFastEddy::fedestroyplayer()
     }
 }
 
-void CGameFastEddy::fecreateplayer()
+void CGameFastEddy::createplayer()
 {
 	player.spr = Game->Sprites->CreateSprite();
 	player.alive = true;
@@ -447,7 +447,7 @@ void CGameFastEddy::fecreateplayer()
 	Game->Sprites->SetSpriteLocation(player.spr, player.pos);
 }
 
-void CGameFastEddy::feupdateplayer()
+void CGameFastEddy::updateplayer()
 {
 	bool jump = false;
 	bool left = false;
@@ -808,13 +808,13 @@ void CGameFastEddy::feupdateplayer()
 
 //floors  ----------------------------------------------------------------------------------------------------------------
 
-void CGameFastEddy::fedestroyfloors()
+void CGameFastEddy::destroyfloors()
 {
 	for (int i = 0; i < maxfloortiles; i++)
 		Game->Sprites->RemoveSprite(floors[i].spr);
 }
 
-void CGameFastEddy::fecreatefloors()
+void CGameFastEddy::createfloors()
 {
 	int tilenr = 0;
 	int i = 0;
@@ -846,13 +846,13 @@ void CGameFastEddy::fecreatefloors()
 
 //ladders  ----------------------------------------------------------------------------------------------------------------
 
-void CGameFastEddy::fedestroyladders()
+void CGameFastEddy::destroyladders()
 {
 	for (int i = 0; i < maxladders; i++)
 		Game->Sprites->RemoveSprite(ladders[i].spr);
 }
 
-void CGameFastEddy::fecreateladders()
+void CGameFastEddy::createladders()
 {
 	int i = 0;
 	SDL_Point tz = Game->Image->ImageSize(spritesheetladder);
@@ -883,7 +883,7 @@ void CGameFastEddy::fecreateladders()
 
 //background ----------------------------------------------------------------------------------------------------------------
 
-void CGameFastEddy::fedrawbackground(bool motionblur)
+void CGameFastEddy::drawbackground(bool motionblur)
 {
 	float alpha = 1;
 	if ((motionblur) && (Game->MotionBlur))
@@ -907,12 +907,12 @@ void CGameFastEddy::init()
 	level = 1;	
 	HealthPoints = 3;
     LoadGraphics();
-	fecreatefloors();
-	fecreateladders();
-	fecreateenemies(false);
-	fecreatecollectables(-1);
-	fecreatekey();
-	fecreateplayer();
+	createfloors();
+	createladders();
+	createenemies(false);
+	createcollectables(-1);
+	createkey();
+	createplayer();
 	if(!ScreenshotMode)
 	{
 		SfxDie = Game->Audio->LoadSound("common/die.wav");
@@ -926,12 +926,12 @@ void CGameFastEddy::init()
 
 void CGameFastEddy::deinit()
 {
-	fedestroyfloors();
-    fedestroyladders();
-    fedestroyenemies();
-    fedestroyallcollectables();
-    fedestroykey();
-    fedestroyplayer();
+	destroyfloors();
+    destroyladders();
+    destroyenemies();
+    destroyallcollectables();
+    destroykey();
+    destroyplayer();
 	if (!ScreenshotMode)
 	{
 		Game->Audio->StopMusic();
@@ -984,7 +984,7 @@ SDL_Texture* CGameFastEddy::screenshot()
 	SDL_RenderClear(Game->Renderer);
 	init();
     
-	fedrawbackground(false);
+	drawbackground(false);
 	Game->Sprites->DrawSprites(Game->Renderer);
 	
 	SDL_RenderPresent(Game->Renderer);
@@ -1000,17 +1000,17 @@ void CGameFastEddy::UpdateLogic()
     CGameBase::UpdateLogic();
 	if (Game->SubGameState == SGGame)
 	{
-		feupdateplayer();
-		feupdateenemies();
-		feupdatecollectables();
-		feupdatekey();
+		updateplayer();
+		updateenemies();
+		updatecollectables();
+		updatekey();
 		Game->Sprites->UpdateSprites();
 	}
 }
 
 void CGameFastEddy::Draw()
 {
-	fedrawbackground(Game->SubGameState == SGGame);
+	drawbackground(Game->SubGameState == SGGame);
 	Game->Sprites->DrawSprites(Game->Renderer);
 	DrawScoreBar();
 	DrawSubStateText();

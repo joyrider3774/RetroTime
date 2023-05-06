@@ -22,7 +22,7 @@ CGameSnake::~CGameSnake()
 
 //food  ----------------------------------------------------------------------------------------------------------------
 
-void CGameSnake::sscreatefood()
+void CGameSnake::createfood()
 {
 	bool bok = false;
 	while (!bok) 
@@ -34,20 +34,20 @@ void CGameSnake::sscreatefood()
     }
 }
 
-void CGameSnake::ssdrawfood()
+void CGameSnake::drawfood()
 {
     SDL_SetRenderDrawColor(Game->Renderer, snakefoodcolor.r, snakefoodcolor.g, snakefoodcolor.b, snakefoodcolor.a);
 	SDL_Rect r = {food.x, food.y, snakesize, snakesize};
 	SDL_RenderFillRect(Game->Renderer, &r);
 }
 
-void CGameSnake::ssupdatefood()
+void CGameSnake::updatefood()
 {
 	if ((head.x == food.x) && (head.y == food.y))
     {
 		Game->Audio->PlaySound(SfxFood, 0);
 		snakelength += 1;
-		sscreatefood();
+		createfood();
         if(!ScreenshotMode)
 		    Game->AddToScore(snakelength*2);
 	}
@@ -55,7 +55,7 @@ void CGameSnake::ssupdatefood()
 
 //snake  ----------------------------------------------------------------------------------------------------------------
 
-void CGameSnake::sscreatesnake()
+void CGameSnake::createsnake()
 {
 	playerdeath = false;
 	snakelength = 0;
@@ -64,7 +64,7 @@ void CGameSnake::sscreatesnake()
 	ticks = 0;
 }
 
-void CGameSnake::ssdrawsnake()
+void CGameSnake::drawsnake()
 {
     SDL_Rect r;
     SDL_SetRenderDrawColor(Game->Renderer, snakebodycolor.r, snakebodycolor.g, snakebodycolor.b, snakebodycolor.a);
@@ -78,7 +78,7 @@ void CGameSnake::ssdrawsnake()
     SDL_RenderFillRect(Game->Renderer, &r);
 }
 
-void CGameSnake::ssupdatesnake()
+void CGameSnake::updatesnake()
 {
 	if(!ScreenshotMode)
     {
@@ -152,7 +152,7 @@ void CGameSnake::ssupdatesnake()
 
 //background ----------------------------------------------------------------------------------------------------------------
 
-void CGameSnake::ssdrawbackground()
+void CGameSnake::drawbackground()
 {
     SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 255, 255);
 	SDL_RenderClear(Game->Renderer);
@@ -172,14 +172,14 @@ SDL_Texture* CGameSnake::screenshot()
 
 	for (int i = 0; i < 7; i++)
     {
-		ssupdatesnake();
+		updatesnake();
 		snakelength += 1;
     }
 	food = {screenleft + (int(cols / 2)-2) * snakesize, screentop + (int(rows / 2) -2) * snakesize};
 
-	ssdrawbackground();
-	ssdrawsnake();
-	ssdrawfood();
+	drawbackground();
+	drawsnake();
+	drawfood();
 
     SDL_RenderPresent(Game->Renderer);
     SDL_SetRenderTarget(Game->Renderer, prev);
@@ -192,8 +192,8 @@ SDL_Texture* CGameSnake::screenshot()
 void CGameSnake::init()
 {
 
-    sscreatesnake();
-    sscreatefood();
+    createsnake();
+    createfood();
 
     movedone = true;
     if (!ScreenshotMode)
@@ -230,8 +230,8 @@ void CGameSnake::UpdateLogic()
 
     if (Game->SubGameState == SGGame)
     {
-        ssupdatesnake();
-        ssupdatefood();
+        updatesnake();
+        updatefood();
     }
 
     if ((Game->SubGameState == SGGame) && playerdeath)
@@ -242,8 +242,8 @@ void CGameSnake::UpdateLogic()
 
         if (HealthPoints > 1)
         {
-            sscreatesnake();
-            sscreatefood();
+            createsnake();
+            createfood();
             if (Game->GameMode == GMGame)
                 HealthPoints -= 1;
             Game->SubGameState = SGReadyGo;
@@ -261,9 +261,9 @@ void CGameSnake::Draw()
 {
 	// SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 255);
     // SDL_RenderClear(Game->Renderer);
-    ssdrawbackground();
-    ssdrawfood();
-    ssdrawsnake();
+    drawbackground();
+    drawfood();
+    drawsnake();
     DrawScoreBar();
     DrawSubStateText();    
 }

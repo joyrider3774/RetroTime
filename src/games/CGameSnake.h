@@ -32,14 +32,14 @@ private:
 	int playerdeath;
     int MusMusic, SfxFood, SfxDie;
     
-    void sscreatefood();
-    void ssdrawfood();
-    void ssupdatefood();
+    void createfood();
+    void drawfood();
+    void updatefood();
 
-    void sscreatesnake();
-    void ssdrawsnake();
-    void ssupdatesnake();
-    void ssdrawbackground();
+    void createsnake();
+    void drawsnake();
+    void updatesnake();
+    void drawbackground();
     
 public:
     CGameSnake(CGame* aGame, bool aScreenshotMode = false);
