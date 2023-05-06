@@ -1,9 +1,11 @@
 #include <SDL.h>
 #include <string>
 #include <iostream>
+#include <cmath>
 #include "CGamePang.h"
 #include "../CGame.h"
 #include "../Common.h"
+#include "../Types.h"
 
 using namespace std;
 
@@ -60,7 +62,7 @@ void CGamePang::createball(int size, float x, float y, float speed)
 			Game->Sprites->SetSpriteImage(balls[i].spr, &spritesheetball);
 			Game->Sprites->SetSpriteCollisionShape(balls[i].spr, SHAPE_BOX, 27,27,0,0,0);
             Game->Sprites->SetSpriteColour(balls[i].spr, 1, 1, 1, 0.7f);
-			SDL_FPoint Scale = ballscale;
+			Vec2F Scale = ballscale;
             Scale.x = Scale.x * size;
             Scale.y = Scale.y * size;
             Game->Sprites->SetSpriteScale(balls[i].spr, Scale);
@@ -445,7 +447,7 @@ void CGamePang::drawbackground(bool motionblur)
     SDL_SetRenderDrawColor(Game->Renderer, 0.3*255, 0.6*255,0.9*255,255);
     SDL_RenderClear(Game->Renderer);
     SDL_Point Pos = { 0, 0};
-    SDL_FPoint Scale = {(float)(screenright - screenleft) / backgroundcloudtz.x, 4};
+    Vec2F Scale = {(float)(screenright - screenleft) / backgroundcloudtz.x, 4};
 	Game->Image->DrawImageFuze(Game->Renderer, backgroundcloud, false, &Pos, 0, &Scale, 255, 255, 255, 255 );
 	
     Scale = {2,2};

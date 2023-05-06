@@ -13,10 +13,10 @@ class RetroTime < Formula
   depends_on "sdl2_gfx"
   
   def install
-    system "make","CFLAGS=\"-I#{HOMEBREW_PREFIX}/include/SDL2\"", "LDFLAGS=\"-L#{HOMEBREW_PREFIX}/lib\""
-    prefix.install "RetroTime"
-    prefix.install "RetroTimefs"
-    bin.write_exec_script (prefix/"RetroTime")
+    system "make","CXXLAGS=\"-I#{HOMEBREW_PREFIX}/include/SDL2\"", "LDFLAGS=\"-L#{HOMEBREW_PREFIX}/lib\""
+    prefix.install "retrotime"
+    prefix.install "retrotimefs"
+    bin.write_exec_script (prefix/"retrotime")
   end
 
 end

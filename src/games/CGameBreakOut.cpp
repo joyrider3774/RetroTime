@@ -1,10 +1,12 @@
 #include <SDL.h>
 #include <string>
 #include <iostream>
+#include <cmath>
 #include "CGameBreakOut.h"
 #include "../CGame.h"
 #include "../Common.h"
 #include "../CTween.h"
+#include "../Types.h"
 
 using namespace std;
 
@@ -117,7 +119,7 @@ void CGameBreakOut::updateblocks()
 				if(tweens[x + y * blockcols][tweenblockpositions].active)
                 {
 					tweens[x + y * blockcols][tweenblockpositions] = updatetween(tweens[x + y * blockcols][tweenblockpositions]);
-					SDL_FPoint pos = blocks[x + y * blockcols].pos;
+					Vec2F pos = blocks[x + y * blockcols].pos;
 					if (pattern == 0)
                     {
 						if (x < blockcols / 3)
@@ -167,7 +169,7 @@ void CGameBreakOut::updateblocks()
 					if (tweens[x + y * blockcols][tweenblockdeath].active)
                     {
 						tweens[x + y * blockcols][tweenblockdeath] = updatetween(tweens[x + y * blockcols][tweenblockdeath]);
-						SDL_FPoint pos = blocks[x + y * blockcols].pos;
+						Vec2F pos = blocks[x + y * blockcols].pos;
 						pos.y = pos.y + (50 * tweens[x + y * blockcols][tweenblockdeath].funcval);
 						pos.x = pos.x + (30 * tweens[x + y * blockcols][tweenblockdeath].funcval);
 //						setSpriteLocation(blocks[x + y * blockcols].spr, pos)
@@ -451,7 +453,7 @@ void CGameBreakOut::drawbackground(bool motionblur)
 	if ((motionblur) && (Game->MotionBlur))
 		alpha = 0.3;
     SDL_Point Pos = { ScreenWidth / 2, ScreenHeight / 2};
-    SDL_FPoint Scale = {(float)ScreenWidth / backgroundtz.x, (float)ScreenHeight / backgroundtz.y};
+    Vec2F Scale = {(float)ScreenWidth / backgroundtz.x, (float)ScreenHeight / backgroundtz.y};
 	Game->Image->DrawImageFuzeTintFloat(Game->Renderer, background, true, &Pos, 0, &Scale, 1, 1, 1, alpha);
 }
 

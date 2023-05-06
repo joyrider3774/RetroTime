@@ -189,7 +189,7 @@ void CGame::DrawTitleBackground(bool k)
     // //DrawCrt();
     
     // SDL_Point Pos = {ScreenWidth / 2, ScreenHeight / 2};
-    // SDL_FPoint Scale = {10.6f / 4, 10.6f};
+    // Vec2F Scale = {10.6f / 4, 10.6f};
     // Image->DrawImageFuze(Renderer, GFXFrameID, &Pos, 0, &Scale, 255, 255, 255, 255);
 
     if (k)

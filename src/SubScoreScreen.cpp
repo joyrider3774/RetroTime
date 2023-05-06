@@ -4,7 +4,7 @@
 #include "games/CGameBase.h"
 #include "Common.h"
 #include "SubScoreScreen.h"
-
+#include "Types.h"
 
 bool wasnewhighscorecarousel;
 bool wasnewhighscoregame;
@@ -59,11 +59,11 @@ void SubScoreScreen(CGame *Game)
     
     //so we can can copy the transparant part with the blue and text from this image 	
     SDL_Point pos = {ScreenWidth / 2, ScreenHeight / 2};
-    SDL_FPoint Scale = {Game->SubStateCounter / 4, Game->SubStateCounter};
+    Vec2F Scale = {Game->SubStateCounter / 4, Game->SubStateCounter};
     Game->Image->DrawImageFuze(Game->Renderer, Game->GFXFrameID, true, &pos, 0, &Scale, 255, 255, 255, 240);
     string Text;
     SDL_Point MedalTz = Game->Image->ImageSize(Game->GFXMedal);
-    SDL_FPoint MedalScale = {30.0f/MedalTz.y, 30.0f/MedalTz.y};
+    Vec2F MedalScale = {30.0f/MedalTz.y, 30.0f/MedalTz.y};
     if (Game->SubGameState == SGCalcScore)
     {			
         if ((Game->Game == Games -1) && (Game->GameMode == GMRetroCarousel))

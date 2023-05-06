@@ -4,6 +4,7 @@
 #include "Common.h"
 #include "Intro.h"
 #include "CTween.h"
+#include "Types.h"
 
 float alpha = 0.0f;
 int maxticks = 240;
@@ -80,7 +81,7 @@ void Intro(CGame *Game)
     //SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 255);
     SDL_RenderClear(Game->Renderer);
     SDL_Point Pos = {0,0};
-    SDL_FPoint Scale = {1,1};
+    Vec2F Scale = {1,1};
     Game->Image->DrawImageFuzeTintFloat(Game->Renderer, Game->TexTmp, false, &Pos, 0, &Scale, 1, 1, 1, archalpha);
     sceneticks += 1;
             
