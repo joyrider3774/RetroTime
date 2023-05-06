@@ -1,7 +1,6 @@
 #pragma once
 
 #include <SDL.h>
-#include <limits.h>
 #include <iostream>
 #include <string>
 #include "Platform.h"

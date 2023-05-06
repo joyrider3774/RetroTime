@@ -1,10 +1,9 @@
 #include <SDL.h>
-#include <limits.h>
 #include <string>
 #include <iostream>
 #include "CGamePang.h"
-#include "..\CGame.h"
-#include "..\Common.h"
+#include "../CGame.h"
+#include "../Common.h"
 
 using namespace std;
 

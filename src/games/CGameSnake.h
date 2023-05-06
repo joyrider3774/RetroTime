@@ -4,8 +4,8 @@
 #include <iostream>
 #include <string>
 #include "CGameBase.h"
-#include "..\CGame.h"
-#include "..\Common.h"
+#include "../CGame.h"
+#include "../Common.h"
 
 using namespace std;
 

@@ -1,7 +1,7 @@
 #include <SDL.h>
 #include <string.h>
 #include "CGame.h"
-#include "games\CGameBase.h"
+#include "games/CGameBase.h"
 #include "Common.h"
 #include "SubScoreScreen.h"
 

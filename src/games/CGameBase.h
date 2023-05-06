@@ -3,8 +3,8 @@
 #include <SDL.h>
 #include <iostream>
 #include <string>
-#include "..\CGame.h"
-#include "..\Common.h"
+#include "../CGame.h"
+#include "../Common.h"
 
 using namespace std;
 

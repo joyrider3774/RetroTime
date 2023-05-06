@@ -1,14 +1,13 @@
 #pragma once
 
 #include <SDL.h>
-#include <limits.h>
 #include <map>
 #include <iostream>
 #include <string>
 #include "CGameBase.h"
-#include "..\CGame.h"
-#include "..\Platform.h"
-#include "..\Common.h"
+#include "../CGame.h"
+#include "../Platform.h"
+#include "../Common.h"
 
 using namespace std;
 

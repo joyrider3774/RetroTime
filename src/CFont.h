@@ -2,7 +2,6 @@
 
 #include <SDL.h>
 #include <SDL_ttf.h>
-#include <limits.h>
 #include <map>
 #include <iostream>
 #include <string>

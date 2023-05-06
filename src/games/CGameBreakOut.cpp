@@ -1,11 +1,10 @@
 #include <SDL.h>
-#include <limits.h>
 #include <string>
 #include <iostream>
 #include "CGameBreakOut.h"
-#include "..\CGame.h"
-#include "..\Common.h"
-#include "..\CTween.h"
+#include "../CGame.h"
+#include "../Common.h"
+#include "../CTween.h"
 
 using namespace std;
 

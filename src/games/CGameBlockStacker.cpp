@@ -1,12 +1,11 @@
 #include <SDL.h>
 #include <SDL2_gfxPrimitives.h>
-#include <limits.h>
 #include <string>
 #include <iostream>
 #include "CGameBlockStacker.h"
 #include "BlockStackerBlocks.h"
-#include "..\CGame.h"
-#include "..\Common.h"
+#include "../CGame.h"
+#include "../Common.h"
 
 using namespace std;
 

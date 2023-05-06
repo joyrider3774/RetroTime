@@ -1,7 +1,7 @@
 #pragma once
 
 #include <SDL.h>
-#include "..\CSprites.h"
+#include "../CSprites.h"
 
 class CSpriteObject
 {

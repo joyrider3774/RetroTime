@@ -1,3 +1,4 @@
+DEBUG=1
 SRC_DIR = src
 SRC_SUBDIR = games
 OBJ_DIR = obj
@@ -8,13 +9,21 @@ SRC=$(wildcard $(SRC_DIR)/*.cpp $(foreach fd, $(SRC_SUBDIR), $(SRC_DIR)/$(fd)/*.
 OBJS=$(SRC:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
 
 
-CC ?= g++
+CC = g++
 DESTDIR ?=
 PREFIX ?= /usr
 OPT_LEVEL ?= -O2
 CPPFLAGS ?= -Wall -Wextra -std=c++11 `sdl2-config --cflags`  -g
 LDFLAGS ?= -L$(PREFIX)/lib -g
-LDLIBS ?= `sdl2-config --libs` -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lSDL2 -lSDL2_gfx -lm -lstdc++ -mconsole
+LDLIBS ?= `sdl2-config --libs` -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lSDL2 -lSDL2_gfx -lm -lstdc++
+
+ifeq ($(DEBUG), 1)
+ifeq ($(OS),Windows_NT)
+LDLIBS += -mconsole
+endif
+CFLAGS += -g
+OPT_LEVEL =
+endif
 
 #MINGW does not have X11 and does not require it
 #dont know about cygwin

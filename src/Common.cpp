@@ -1,5 +1,4 @@
 #include <SDL.h>
-#include <Limits>
 #include <inttypes.h>
 #include <string.h>
 #include <iostream>

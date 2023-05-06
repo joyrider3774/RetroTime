@@ -2,7 +2,6 @@
 
 #include <SDL.h>
 #include <SDL_mixer.h>
-#include <limits.h>
 #include <iostream>
 #include <string>
 #include "Platform.h"

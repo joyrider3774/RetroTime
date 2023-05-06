@@ -1,5 +1,4 @@
 #include <SDL.h>
-#include <limits.h>
 #include <stdio.h>
 #include <iostream>
 #include <string>
