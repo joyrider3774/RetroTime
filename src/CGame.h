@@ -28,7 +28,6 @@ private:
     SDL_Window *SdlWindow;
     string DataPath;
 
-    bool ShowFPS = false;
     Uint8 Alpha = 0;
     Uint32 AlphaTimer; 
     Uint32 TimerTicks;
@@ -48,6 +47,7 @@ private:
     void CreateCrt(int type);
     void CreateActiveGame();
 public:
+    bool ShowFPS = false;
     CGameBase *ActiveGame;
     CAudio *Audio;
     CFont *Font;

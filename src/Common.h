@@ -5,6 +5,8 @@
 
 using namespace std;
 
+constexpr bool debugInfo = false;
+
 constexpr bool titleAlphaEnabled = true;
 
 constexpr int MaxAlpha = 245;

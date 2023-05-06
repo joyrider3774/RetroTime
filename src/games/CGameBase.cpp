@@ -370,13 +370,20 @@ void CGameBase::PauseMenu()
         SDL_RenderClear(Game->Renderer);
         SDL_RenderCopy(Game->Renderer, Game->TexScreen, NULL, NULL);       
 
-        string Text = "FPS: " + to_string(Fps) + "\n";
-        Text += "FrameTime: " + to_string(AvgFrameTime) + "\n";
-        Text += "GFX Slots: " + to_string(Game->Image->ImageSlotsUsed()) + "/" + to_string(Game->Image->ImageSlotsMax()) + "\n";
-        Text += "SND Slots: " + to_string(Game->Audio->SoundSlotsUsed()) + "/" + to_string(Game->Audio->SoundSlotsMax()) + "\n";
-        Text += "MUS Slots: " + to_string(Game->Audio->MusicSlotsUsed()) + "/" + to_string(Game->Audio->MusicSlotsMax()) + "\n";
-        Text += "SPR Slots: " + to_string(Game->Sprites->SpriteSlotsUsed()) + "/" + to_string(Game->Sprites->SpriteSlotsMax()) + "\n";
-        Game->Font->WriteText(Game->Renderer, "RobotoMono-Bold", 16, Text, Text.length(), 0, 0, 0, {255, 0, 255, 255});
+        if (debugInfo || Game->ShowFPS)
+        {
+            string Text = "FPS: " + to_string(Fps) + "\n";
+            if(debugInfo)
+            {
+                Text += "FrameTime: " + to_string(AvgFrameTime) + "\n";
+                Text += "GFX Slots: " + to_string(Game->Image->ImageSlotsUsed()) + "/" + to_string(Game->Image->ImageSlotsMax()) + "\n";
+                Text += "SND Slots: " + to_string(Game->Audio->SoundSlotsUsed()) + "/" + to_string(Game->Audio->SoundSlotsMax()) + "\n";
+                Text += "MUS Slots: " + to_string(Game->Audio->MusicSlotsUsed()) + "/" + to_string(Game->Audio->MusicSlotsMax()) + "\n";
+                Text += "SPR Slots: " + to_string(Game->Sprites->SpriteSlotsUsed()) + "/" + to_string(Game->Sprites->SpriteSlotsMax()) + "\n";
+            }
+            int tw = Game->Font->TextWidth("RobotoMono-Bold", 16, Text, Text.length());
+            Game->Font->WriteText(Game->Renderer, "RobotoMono-Bold", 16, Text, Text.length(), ScreenWidth - tw, 0, 0, {255, 0, 255, 255});
+        }
         SDL_RenderPresent(Game->Renderer);
         
         Uint64 FrameEndPerf = SDL_GetPerformanceCounter();
