@@ -69,7 +69,6 @@ void CGame::Init()
     
     //Clear score values
     ResetScores();
-    ResetHighScores();
 
     //menubackground related
     pinc = ScreenWidth;
@@ -395,6 +394,60 @@ void CGame::ToggleFullscreen()
     //ScreenShotRandom = RandomScreenshot(0.25);
 }
 
+void CGame::LoadHighScores() 
+{
+    FILE *ScoreFile;
+    string FileName = "./.retrotimesscores";
+
+    char *EnvHome = getenv("HOME");
+    char *EnvHomeDrive = getenv("HOMEDRIVE");
+    char *EnvHomePath = getenv("HOMEPATH");
+
+    if (EnvHome) //linux systems normally
+        FileName = string(EnvHome) + "/.retrotimesscores";
+    else
+        if(EnvHomeDrive && EnvHomePath) //windows systems normally
+            FileName = string(EnvHomeDrive) + string(EnvHomePath) + "/.retrotimesscores";
+
+    ScoreFile = fopen(FileName.c_str(), "r");
+    if (ScoreFile) 
+    {
+        fscanf(ScoreFile, "RetroCarousel=%llu\n", &RetroCarouselHighScore);
+        for (int i = 0; i < Games; i++)
+            for (int j = 0; j < Modes; j++)
+                fscanf(ScoreFile, string("Game_" + to_string(i) + "_Mode_" + to_string(j) + "=%llu\n").c_str(), &HighScores[i][j]); 
+        fclose(ScoreFile);
+    }
+    else
+    {
+        ResetHighScores();
+    }
+}
+
+void CGame::SaveHighScores() {
+    FILE *ScoreFile;
+    string FileName = "./.retrotimesscores";
+
+    char *EnvHome = getenv("HOME");
+    char *EnvHomeDrive = getenv("HOMEDRIVE");
+    char *EnvHomePath = getenv("HOMEPATH");
+
+    if (EnvHome) //linux systems normally
+        FileName = string(EnvHome) + "/.retrotimesscores";
+    else
+        if(EnvHomeDrive && EnvHomePath) //windows systems normally
+            FileName = string(EnvHomeDrive) + string(EnvHomePath) + "/.retrotimesscores";
+
+    ScoreFile = fopen(FileName.c_str(), "w");
+    if (ScoreFile) 
+    {
+        fprintf(ScoreFile, "RetroCarousel=%llu\n", RetroCarouselHighScore);
+        for (int i = 0; i < Games; i++)
+            for (int j = 0; j < Modes; j++)
+                fprintf(ScoreFile, string("Game_" + to_string(i) + "_Mode_" + to_string(j) + "=%llu\n").c_str(), HighScores[i][j]); 
+        fclose(ScoreFile);
+    }
+}
 
 void CGame::LoadSettings() {
     FILE *SettingsFile;
@@ -444,7 +497,8 @@ void CGame::SaveSettings() {
             FileName = string(EnvHomeDrive) + string(EnvHomePath) + "/.retrotimesettings";
 
     SettingsFile = fopen(FileName.c_str(), "w");
-    if (SettingsFile) {
+    if (SettingsFile)
+    {
         int VolumeMusic = Audio->GetVolumeMusic();
         int VolumeSound = Audio->GetVolumeSound();
         fprintf(SettingsFile, "VolumeMusic=%d\nVolumeSound=%d\nCrt=%d\nSpriteGhosting=%d\n", VolumeMusic, VolumeSound, Crt, MotionBlur?1:0);
@@ -589,7 +643,7 @@ void CGame::MainLoop()
         //Need to recreate screenshots and background
         if(Input->Buttons.RenderReset)
         {
-            SDL_Log("Render Reset, Recreating crt and background");
+            SDL_Log("Render Reset, Recreating crt and background, Reloading Game Graphics");
             Image->UnloadImages();
             LoadGraphics();
             if(ActiveGame != nullptr)
@@ -794,6 +848,7 @@ Possible options are:\n\
                 // Main game loop that loops untile the gamestate = GSQuit
                 // and calls the procedure according to the gamestate.
                 LoadSettings();
+                LoadHighScores();
                 LoadGraphics();
                 LoadMusic();
                 LoadSound();
@@ -836,6 +891,7 @@ Possible options are:\n\
                 UnLoadGraphics();
                 UnLoadSound();
                 SaveSettings();
+                SaveHighScores();
                 
                 delete Audio;
                 delete Font; 

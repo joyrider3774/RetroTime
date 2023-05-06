@@ -157,7 +157,7 @@ void CGameBase::PauseMenu()
         //Need to recreate screenshots and background
         if(Game->Input->Buttons.RenderReset)
         {
-            SDL_Log("Render Reset, Recreating crt and background");
+            SDL_Log("Render Reset, Recreating crt and background, Reloading Game Graphics");
             Game->Image->UnloadImages();
             LoadGraphics();
             Game->LoadGraphics();

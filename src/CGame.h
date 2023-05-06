@@ -81,6 +81,8 @@ public:
     void LoadGraphics();
     void LoadSettings();
     void SaveSettings();
+    void LoadHighScores();
+    void SaveHighScores();
     void ResetTimer();
     void ResetScores();
     void ResetHighScores();
