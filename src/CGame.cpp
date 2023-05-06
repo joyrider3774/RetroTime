@@ -535,8 +535,7 @@ void CGame::ResetTimer()
     Timer = 120;
     if (GameMode == GMRetroCarousel)
     {
-	    //Timer = 2 * 60;
-        Timer = 5;
+	    Timer = 2 * 60;
     }
 	if (GameMode == GMTimeAttack)
     {
