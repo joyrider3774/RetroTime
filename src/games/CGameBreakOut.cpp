@@ -9,7 +9,7 @@
 
 using namespace std;
 
-CGameBreakOut::CGameBreakOut(CGame* aGame, bool aScreenshotMode): CGameBase(aGame, GSBreakout, true, aScreenshotMode)
+CGameBreakOut::CGameBreakOut(CGame* aGame, bool aScreenshotMode): CGameBase(aGame, GSBreakout, false, aScreenshotMode)
 {
     Game = aGame;
 	MusMusic = -1;
