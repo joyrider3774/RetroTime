@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include "CImage.h"
+#include "Types.h"
 
 constexpr int SPR_Max = 1000;
 
@@ -65,7 +66,7 @@ public:
     ~CSprites();
     CSprite* CreateSprite();
     void RemoveSprite(CSprite* Spr);
-    SDL_FPoint GetSpriteLocation(CSprite* Spr);
+    Vec2F GetSpriteLocation(CSprite* Spr);
     void UpdateSprites();
     void DrawSprite(SDL_Renderer* Renderer, CSprite* Spr);
     void DrawSprites(SDL_Renderer* Renderer);
@@ -74,10 +75,10 @@ public:
     void SetSpriteImage(CSprite* Spr, int *AImageID);
     void SetSpriteImage(CSprite* Spr, int *AImageID, int TilesX, int TilesY);
     void SetSpriteRotation(CSprite* Spr, double AAngle);
-    void SetSpriteScale(CSprite* Spr, SDL_FPoint AScale);
+    void SetSpriteScale(CSprite* Spr, Vec2F AScale);
     void SetSpriteAnimation(CSprite* Spr, int StartTile, int EndTile, int animSpeed);
     void SetSpriteCollisionShape(CSprite* Spr, ECollisionShape shape, double width, double height, double rotation, float xoffset, float yoffset);
-    void SetSpriteLocation(CSprite* Spr, SDL_FPoint pos );
+    void SetSpriteLocation(CSprite* Spr, Vec2F pos );
     void SetSpriteDepth(CSprite* Spr, int depth);
     void SetSpriteColour(CSprite* Spr, float red, float green, float blue, float alpha);
     void SetSpriteVisibility(CSprite* Spr, bool visibility);

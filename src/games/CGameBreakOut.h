@@ -37,8 +37,8 @@ private:
     static const int blockcols = 17;
     static const int numblocks = blockrows * blockcols;
 
-    const SDL_FPoint spritescale = {2.5,2.5};
-    const SDL_FPoint blockspritecale = {1,2};
+    const Vec2F spritescale = {2.5,2.5};
+    const Vec2F blockspritecale = {1,2};
     
     int MusMusic, SfxDie, SfxSucces, SfxBat, SfxBrick;
     int background, spritesheetblocks, spritesheetbat, spritesheetball;

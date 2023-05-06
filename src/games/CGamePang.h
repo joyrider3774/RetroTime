@@ -9,6 +9,7 @@
 #include "../CGame.h"
 #include "../Platform.h"
 #include "../Common.h"
+#include "../Types.h"
 
 using namespace std;
 
@@ -16,9 +17,9 @@ class CGamePang: public CGameBase {
 
 private:
     static const int backgroundcopyheight = 30;
-    SDL_FPoint playerscale = {2,2};
-    SDL_FPoint bulletscale = {1,0.8};
-    SDL_FPoint ballscale = {1.5,1.5};
+    Vec2F playerscale = {2,2};
+    Vec2F bulletscale = {1,0.8};
+    Vec2F ballscale = {1.5,1.5};
 
     static const int enemyspeed = 1;
     static const int playerspeed = 8;

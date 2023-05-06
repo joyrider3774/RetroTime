@@ -1,4 +1,5 @@
 #include "CGameBase.h"
+#include "../Types.h"
 
 CGameBase::CGameBase(CGame *aGame, int aGameStateID, bool aUsesLevels, bool aScreenshotMode)
 {
@@ -73,7 +74,7 @@ void CGameBase::PauseMenu()
         SDL_SetRenderDrawColor(Game->Renderer, 25, 25, 255, 235);
         //so we can can copy the transparant part with the blue and text from this image 	
         SDL_Point FramePos = {ScreenWidth / 2, ScreenHeight / 2};
-        SDL_FPoint FrameScale = {10.6f / 4, 10.6f};
+        Vec2F FrameScale = {10.6f / 4, 10.6f};
         Game->Image->DrawImageFuze(Game->Renderer, Game->GFXFrameID, true, &FramePos, 0, &FrameScale, 255, 255, 255, 240);
 		
         if (Game->SubGameState == SGPauseMenu)

@@ -1,9 +1,11 @@
 #include <SDL.h>
 #include <string>
 #include <iostream>
+#include <cmath>
 #include "CGameFastEddy.h"
 #include "../CGame.h"
 #include "../Common.h"
+#include "../Types.h"
 
 using namespace std;
 
@@ -44,7 +46,7 @@ void CGameFastEddy::createkey()
 	key.spr =  Game->Sprites->CreateSprite();
 	key.alive = true;
 	SDL_Point tz = Game->Image->ImageSize(spritesheetkey);
-	SDL_FPoint scale = {keyheight / tz.y, keyheight / tz.y};
+	Vec2F scale = {keyheight / tz.y, keyheight / tz.y};
 	key.tz.x = tz.x * scale.x;
     key.tz.y = tz.y * scale.y;
 	Game->Sprites->SetSpriteImage(key.spr, &spritesheetkey, 1, 1);
@@ -147,7 +149,7 @@ void CGameFastEddy::createcollectables(int ignorerow)
 				collectables[i].alive = true;
 				collectables[i].row = row;
 				collectables[i].state = rand() % 3;
-				SDL_FPoint scale = {collectableheight / tz.y, collectableheight / tz.y};
+				Vec2F scale = {collectableheight / tz.y, collectableheight / tz.y};
 				collectables[i].tz.x = tz.x * scale.x;
                 collectables[i].tz.y = tz.y * scale.y;
 				Game->Sprites->SetSpriteImage(collectables[i].spr, &spritesheetcollectable, 5, 1);
@@ -220,7 +222,7 @@ void CGameFastEddy::enemyenablelevelend()
 {
 	int index = rowzeroenemyindex;
 	SDL_Point tz = {32, 32};
-	SDL_FPoint scale = {enemyheight / tz.y, enemyheight / tz.y};
+	Vec2F scale = {enemyheight / tz.y, enemyheight / tz.y};
 	enemies[index].tz.x = tz.x * scale.x;
     enemies[index].tz.y = tz.y * scale.y;
 	enemies[index].pos.y = (0 + 1) * rowspacingsize - rowfloorsize / 2 - enemies[index].tz.y / 2;
@@ -243,7 +245,7 @@ void CGameFastEddy::createenemy(int row, float x, int state, int group, int mult
 			enemies[i].row = row;
 			enemies[i].group = group;
 			enemies[i].state = state;
-			SDL_FPoint scale = {enemyheight / tz.y * multiply, enemyheight / tz.y * multiply};
+			Vec2F scale = {enemyheight / tz.y * multiply, enemyheight / tz.y * multiply};
 			enemies[i].tz.x = tz.x * scale.x;
             enemies[i].tz.y = tz.y * scale.y;
 			Game->Sprites->SetSpriteImage(enemies[i].spr, &spritesheetenemy, 3, 4);
@@ -433,7 +435,7 @@ void CGameFastEddy::createplayer()
 	player.spr = Game->Sprites->CreateSprite();
 	player.alive = true;
 	SDL_Point tz = {238, 342};
-	SDL_FPoint scale = {playerheight / tz.y, playerheight / tz.y};
+	Vec2F scale = {playerheight / tz.y, playerheight / tz.y};
 	player.tz.x = tz.x * scale.x;
     player.tz.y = tz.y * scale.y;
 	player.state = playerstateunknown;
@@ -888,7 +890,7 @@ void CGameFastEddy::drawbackground(bool motionblur)
 	if ((motionblur) && (Game->MotionBlur))
 		alpha = 0.3;
     SDL_Point Pos = { ScreenWidth / 2, ScreenHeight / 2};
-    SDL_FPoint Scale = {(float)ScreenWidth / backgroundtz.x, (float)ScreenHeight / backgroundtz.y};
+    Vec2F Scale = {(float)ScreenWidth / backgroundtz.x, (float)ScreenHeight / backgroundtz.y};
 	Game->Image->DrawImageFuzeTintFloat(Game->Renderer, background, true, &Pos, 0, &Scale, 1, 1, 1, alpha);
 }
 

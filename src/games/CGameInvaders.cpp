@@ -1,9 +1,11 @@
 #include <SDL.h>
 #include <string>
 #include <iostream>
+#include <cmath>
 #include "CGameInvaders.h"
 #include "../CGame.h"
 #include "../Common.h"
+#include "../Types.h"
 
 using namespace std;
 
@@ -56,7 +58,7 @@ void CGameInvaders::destroyexploison(int index)
 	}
 }
 
-void CGameInvaders::createexplosion(SDL_FPoint pos)
+void CGameInvaders::createexplosion(Vec2F pos)
 {
 	for(int i = 0; i < maxexplosion;i++)
     {
@@ -92,7 +94,7 @@ void CGameInvaders::destroyenemybullet(int index)
 	}
 }
 	
-void CGameInvaders::createnemybullet(SDL_FPoint pos)
+void CGameInvaders::createnemybullet(Vec2F pos)
 {
 	for(int i = 0; i <  maxenemybullets; i++)
     {
@@ -474,7 +476,7 @@ void CGameInvaders::updateinvaders()
 			if (btweenactive)
             {
 				tweens[i][tweenenemypositions] = updatetween( tweens[i][tweenenemypositions]);
-				SDL_FPoint pos = enemies[i].pos;
+				Vec2F pos = enemies[i].pos;
 				
 				if (pattern == 0)
                 {
@@ -624,7 +626,7 @@ void CGameInvaders::drawbackground(bool motionblur)
 		backgroundfade = 0;
     }
     SDL_Point Pos = { ScreenWidth / 2, ScreenHeight / 2};
-    SDL_FPoint Scale =  {(float)ScreenWidth / backgroundtz.x, (float)ScreenHeight / backgroundtz.y};
+    Vec2F Scale =  {(float)ScreenWidth / backgroundtz.x, (float)ScreenHeight / backgroundtz.y};
 	Game->Image->DrawImageFuzeTintFloat(Game->Renderer, background, true, &Pos, 0, &Scale, 1, 1, 1, alpha);
 
     Scale =  {(float)ScreenWidth / background2tz.x, (float)ScreenHeight / background2tz.y};

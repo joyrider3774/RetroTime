@@ -2,7 +2,9 @@
 #include <stdio.h>
 #include <iostream>
 #include <string>
+#include <cmath>
 #include "CSprites.h"
+#include "Types.h"
 
 CSprites::CSprites(CImage* ACImage)
 {
@@ -156,7 +158,7 @@ void CSprites::DrawSprite(SDL_Renderer* Renderer, CSprite* Spr)
     if (Spr->show && ((*Spr->imageID > -1) && (*Spr->imageID < Images->ImageSlotsMax())))
     {
         SDL_Point pos = {(int)(Spr->x), (int)(Spr->y)};
-        SDL_FPoint scale = {Spr->xscale, Spr->yscale};
+        Vec2F scale = {Spr->xscale, Spr->yscale};
         int AnimTile = Spr->animTile;
         int y = (int)floor(AnimTile / Spr->tilesX);
         int x = AnimTile - (y * Spr->tilesX);
@@ -197,9 +199,9 @@ void CSprites::SetSpriteVisibility(CSprite* Spr, bool visibility)
     Spr->show = visibility;
 }
 
-SDL_FPoint CSprites::GetSpriteLocation(CSprite* Spr)
+Vec2F CSprites::GetSpriteLocation(CSprite* Spr)
 {
-    SDL_FPoint Result = {Spr->x, Spr->y};
+    Vec2F Result = {Spr->x, Spr->y};
     return Result;
 }
 
@@ -223,7 +225,7 @@ void CSprites::SetSpriteImage(CSprite* Spr, int *AImageID, int TilesX, int Tiles
     }
 }
 
-void CSprites::SetSpriteScale(CSprite* Spr, SDL_FPoint AScale)
+void CSprites::SetSpriteScale(CSprite* Spr, Vec2F AScale)
 {  
     Spr->xscale = AScale.x;
     Spr->yscale = AScale.y;
@@ -268,7 +270,7 @@ void CSprites::SetSpriteCollisionShape(CSprite* Spr, ECollisionShape shape, doub
     Spr->collisionyoffset = yoffset;
 }
 
-void CSprites::SetSpriteLocation(CSprite* Spr, SDL_FPoint pos )
+void CSprites::SetSpriteLocation(CSprite* Spr, Vec2F pos )
 {
     Spr->x = pos.x;
     Spr->y = pos.y;

@@ -2,13 +2,14 @@
 
 #include <SDL.h>
 #include "../CSprites.h"
+#include "../Types.h"
 
 class CSpriteObject
 {
 public:
         bool alive = false;
-        SDL_FPoint vel = {0,0};
-        SDL_FPoint pos = {0,0};
+        Vec2F vel = {0,0};
+        Vec2F pos = {0,0};
         SDL_Point tz = {0,0};
         CSprite* spr = nullptr;
         int healthpoints = 0;

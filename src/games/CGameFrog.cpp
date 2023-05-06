@@ -4,6 +4,7 @@
 #include "CGameFrog.h"
 #include "../CGame.h"
 #include "../Common.h"
+#include "../Types.h"
 
 using namespace std;
 
@@ -178,8 +179,8 @@ void CGameFrog::destroyobject(int index)
 int CGameFrog::createobject(int rownr, int col, int id, int arowtype, float speed, int dir, int startobjectindex)
 {
 	SDL_Point tz = {1,1};
-	SDL_FPoint scale;
-	SDL_FPoint visualscale;
+	Vec2F scale;
+	Vec2F visualscale;
 	int tilenr;
 	int endtilenr;
 	CSpriteObject object;
@@ -637,7 +638,7 @@ void CGameFrog::createplayer()
 	Game->Sprites->SetSpriteImage(player.spr, &spritesheetfrog, 3, 4);	
 	Game->Sprites->SetSpriteAnimation(player.spr, 11, 11, 10);
 	SDL_Point tz = Game->Sprites->TileSize(player.spr);
-	SDL_FPoint scale = {(playerspeed -8) / tz.x, (playerspeed -8) / tz.y};
+	Vec2F scale = {(playerspeed -8) / tz.x, (playerspeed -8) / tz.y};
 	Game->Sprites->SetSpriteScale(player.spr, scale);
 	Game->Sprites->SetSpriteCollisionShape(player.spr, SHAPE_BOX, (int)(playerspeed / 3), (int)(playerspeed/3), 0, 0, (int)(playerspeed/12));
 	player.tz.x = tz.x * scale.x;
@@ -741,7 +742,7 @@ void CGameFrog::updateplayer()
 
 void CGameFrog::drawbackground()
 {
-    SDL_FPoint Scale = {(float)ScreenWidth / backgroundtz.x, (float)ScreenHeight / backgroundtz.x};
+    Vec2F Scale = {(float)ScreenWidth / backgroundtz.x, (float)ScreenHeight / backgroundtz.x};
 	SDL_Point Pos = { 0, 0};
 	SDL_Rect Rect = {0, 0, (int)(screenleft / Scale.x), (int)(ScreenHeight / Scale.y)};
 	Game->Image->DrawImageFuzeSrcRectTintFloat(Game->Renderer, background, &Rect, false, &Pos, 0, &Scale, 1, 1, 1, 1);

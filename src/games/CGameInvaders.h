@@ -10,6 +10,7 @@
 #include "../Platform.h"
 #include "../Common.h"
 #include "../CTween.h"
+#include "../Types.h"
 
 using namespace std;
 
@@ -35,7 +36,7 @@ private:
     static const int enemystartyoffset = 50;
     static const int enemyspacing = 60;
     static const int enemyhorzspacing = 50;
-    SDL_FPoint enemyscale = {1.5,1.5};
+    Vec2F enemyscale = {1.5,1.5};
     static const int enemyspeed = 1;
     static constexpr float enemyspeedinc = 0.15;
     static const int playerspeed = 8;
@@ -54,7 +55,7 @@ private:
 	int pattern = 0;
 	float backgroundfade = 0;
 	float backgroundfadeinc = 0;
-	SDL_FPoint enemyvel = {enemyspeed,0};
+	Vec2F enemyvel = {enemyspeed,0};
 
 	senemyinfo enemyinfo;
 	CSpriteObject player;
@@ -103,10 +104,10 @@ private:
     void destroyasteroid(int index);
     void destroyallasteroids();
     void updateenemybullet();
-    void createnemybullet(SDL_FPoint pos);
+    void createnemybullet(Vec2F pos);
     void destroyenemybullet(int index);
     void destroyallenemybullet();
-    void createexplosion(SDL_FPoint pos);
+    void createexplosion(Vec2F pos);
     void destroyexploison(int index);
     void destroyallexplosion();
     void checkexplosions();
