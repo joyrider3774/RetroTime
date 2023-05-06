@@ -1,3 +1,4 @@
+#include <SDL.h>
 #include "CGameBase.h"
 #include "../Types.h"
 
