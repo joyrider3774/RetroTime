@@ -1,9 +1,12 @@
 # RetroTime
 <img width="384" height="206" src="metadata/retrotime.png">
+
 RetroTime is a game containing 8 retro based games playable in 3 game modes being Retro Carousel, Time Attack and Lives mode. The game is a port from my competetion entry for Fuze 4 for Nintendo switch, in colleboration Wireframe magazine. 
 
 
 ## Game Modes
+<img width="384" height="206" src="metadata/gamemodes.png">
+
 The games can be played in 3 game modes
 
 ### Retro Carousel Mode
