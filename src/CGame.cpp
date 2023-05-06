@@ -400,12 +400,17 @@ void CGame::ToggleFullscreen()
 
 void CGame::LoadSettings() {
     FILE *SettingsFile;
-    string FileName;
-#ifdef WIN32
-    FileName = string(getenv("HOMEDRIVE")) + string(getenv("HOMEPATH")) + "/.retrotimesettings";
-#else
-    FileName = string(getenv("HOME")) + "/.retrotimesettings";
-#endif
+    string FileName = "./.retrotimesettings";
+
+    char *EnvHome = getenv("HOME");
+    char *EnvHomeDrive = getenv("HOMEDRIVE");
+    char *EnvHomePath = getenv("HOMEPATH");
+
+    if (EnvHome) //linux systems normally
+        FileName = string() + "/.retrotimesettings";
+    else
+        if(EnvHomeDrive && EnvHomePath) //windows systems normally
+            FileName = string() + string() + "/.retrotimesettings";
 
     SettingsFile = fopen(FileName.c_str(), "r");
     if (SettingsFile) 
@@ -425,12 +430,18 @@ void CGame::LoadSettings() {
 
 void CGame::SaveSettings() {
     FILE *SettingsFile;
-    string FileName;
-#ifdef WIN32
-    FileName = string(getenv("HOMEDRIVE")) + string(getenv("HOMEPATH")) + "/.retrotimesettings";
-#else
-    FileName = string(getenv("HOME")) + "/.retrotimesettings";
-#endif
+    string FileName = "./.retrotimesettings";
+
+    char *EnvHome = getenv("HOME");
+    char *EnvHomeDrive = getenv("HOMEDRIVE");
+    char *EnvHomePath = getenv("HOMEPATH");
+
+    if (EnvHome) //linux systems normally
+        FileName = string() + "/.retrotimesettings";
+    else
+        if(EnvHomeDrive && EnvHomePath) //windows systems normally
+            FileName = string() + string() + "/.retrotimesettings";
+
     SettingsFile = fopen(FileName.c_str(), "w");
     if (SettingsFile) {
         int VolumeMusic = Audio->GetVolumeMusic();
