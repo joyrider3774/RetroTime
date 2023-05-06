@@ -1,0 +1,77 @@
+# Controls when the workflow will run
+on:
+  # Allows you to run this workflow manually target the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - { sys: mingw64, env: x86_64 }
+          - { sys: mingw32, env: i686 }
+    runs-on: windows-latest    
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v3
+      - name: Setup Msys
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: ${{matrix.sys}}
+          install: >-
+            base-devel
+            mingw-w64-${{matrix.env}}-gcc
+            mingw-w64-${{matrix.env}}-SDL2             
+            mingw-w64-${{matrix.env}}-SDL2_ttf
+            mingw-w64-${{matrix.env}}-SDL2_image
+            mingw-w64-${{matrix.env}}-SDL2_mixer
+            mingw-w64-${{matrix.env}}-SDL2_gfx
+            mingw-w64-${{matrix.env}}-make
+            mingw-w64-${{matrix.env}}-harfbuzz
+            mingw-w64-${{matrix.env}}-freetype
+            mingw-w64-${{matrix.env}}-libwebp
+            mingw-w64-${{matrix.env}}-libtiff
+      - name: Build Game
+        shell: msys2 {0}
+        run: |
+          make
+      - name: Copy dll libraries
+        shell: msys2 {0}
+        run: |
+          cp /${{matrix.sys}}/bin/libbrotli*.dll ./
+          cp /${{matrix.sys}}/bin/libbz*.dll ./
+          cp /${{matrix.sys}}/bin/libdeflate*.dll ./
+          cp /${{matrix.sys}}/bin/libdeflate*.dll ./
+          cp /${{matrix.sys}}/bin/libfreetype*.dll ./
+          cp /${{matrix.sys}}/bin/libgcc*.dll ./
+          cp /${{matrix.sys}}/bin/libglib*.dll ./
+          cp /${{matrix.sys}}/bin/libgraphite*.dll ./        
+          cp /${{matrix.sys}}/bin/libharfbuzz*.dll ./
+          cp /${{matrix.sys}}/bin/libhwy*.dll ./
+          cp /${{matrix.sys}}/bin/libiconv*.dll ./
+          cp /${{matrix.sys}}/bin/libintl*.dll ./
+          cp /${{matrix.sys}}/bin/libjbig*.dll ./
+          cp /${{matrix.sys}}/bin/libjpeg*.dll ./
+          cp /${{matrix.sys}}/bin/libjxl*.dll ./
+          cp /${{matrix.sys}}/bin/liblcms*.dll ./
+          cp /${{matrix.sys}}/bin/libLerc*.dll ./
+          cp /${{matrix.sys}}/bin/liblzma*.dll ./
+          cp /${{matrix.sys}}/bin/libmpg123*.dll ./
+          cp /${{matrix.sys}}/bin/libogg*.dll ./
+          cp /${{matrix.sys}}/bin/libopus*.dll ./
+          cp /${{matrix.sys}}/bin/libpcre*.dll ./
+          cp /${{matrix.sys}}/bin/libpng*.dll ./          
+          cp /${{matrix.sys}}/bin/libstdc*.dll ./
+          cp /${{matrix.sys}}/bin/libtiff*.dll ./
+          cp /${{matrix.sys}}/bin/libwebp*.dll ./
+          cp /${{matrix.sys}}/bin/libzstd*.dll ./
+          cp /${{matrix.sys}}/bin/zlib*.dll ./
+          cp /${{matrix.sys}}/bin/libSDL2*.dll ./
+          cp /${{matrix.sys}}/bin/SDL2*.dll ./
+          cp /${{matrix.sys}}/bin/libsharpyuv*.dll ./
+          cp /${{matrix.sys}}/bin/libwinpthread*.dll ./
+      - name: Store build
+        uses: actions/upload-artifact@v3
+        with:
+          name: RetroTime ${{ matrix.env }}
+          path: ./
