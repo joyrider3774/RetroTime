@@ -1,5 +1,6 @@
 #pragma once
 
+#include <SDL.h>
 #include <string.h>
 #include <sstream>
 
@@ -16,7 +17,7 @@ constexpr int MaxAlphaTime = 750;
 constexpr int ScreenWidth=1280;
 constexpr int ScreenHeight=720;
 
-constexpr SDL_PixelFormatEnum PixelFormat = SDL_PIXELFORMAT_ARGB8888;
+constexpr Uint32 PixelFormat = SDL_PIXELFORMAT_ARGB8888;
 
 constexpr float DesiredFps=60.0f;
 
