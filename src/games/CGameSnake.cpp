@@ -201,7 +201,7 @@ void CGameSnake::init()
         HealthPoints = 2;
         SfxFood = Game->Audio->LoadSound("snakey/food.wav");
         SfxDie = Game->Audio->LoadSound("common/die.wav");
-        MusMusic = Game->Audio->LoadMusic("snakey/music.mp3");	
+        MusMusic = Game->Audio->LoadMusic("snakey/music.ogg");	
         Game->CurrentGameMusicID = MusMusic;
         Game->Audio->PlayMusic(MusMusic, -1);
     }

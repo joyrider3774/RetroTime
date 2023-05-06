@@ -322,7 +322,7 @@ void CGameBlockStacker::init()
 		SfxLineClear = Game->Audio->LoadSound("blockstacker/lineclear.ogg");
 		SfxDrop = Game->Audio->LoadSound("blockbreaker/drop.wav");
 		SfxRotate = Game->Audio->LoadSound("blockstacker/rotate.wav");
-		MusMusic = Game->Audio->LoadMusic("blockstacker/music.mp3");
+		MusMusic = Game->Audio->LoadMusic("blockstacker/music.ogg");
 		SfxDie = Game->Audio->LoadSound("common/die.wav");
 		Game->CurrentGameMusicID = MusMusic;
 		Game->Audio->PlayMusic(MusMusic, -1);

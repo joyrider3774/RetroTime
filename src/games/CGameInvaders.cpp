@@ -666,12 +666,12 @@ void CGameInvaders::init()
 	if(!ScreenshotMode)
 	{
         SfxDie = Game->Audio->LoadSound("common/die.wav");
-        SfxPlayerShoot = Game->Audio->LoadSound("invaders/playershoot.mp3");
+        SfxPlayerShoot = Game->Audio->LoadSound("invaders/playershoot.wav");
         SfxPlayerDeath = Game->Audio->LoadSound("invaders/playerdeath.wav");
-        SfxEnemyShoot = Game->Audio->LoadSound("invaders/enemyshoot.mp3");
+        SfxEnemyShoot = Game->Audio->LoadSound("invaders/enemyshoot.wav");
         SfxEnemyDeath = Game->Audio->LoadSound("invaders/enemydeath.wav");
 		SfxSucces = Game->Audio->LoadSound("common/succes.wav");
-		MusMusic = Game->Audio->LoadMusic("invaders/music.mp3");
+		MusMusic = Game->Audio->LoadMusic("invaders/music.ogg");
         //SfxExplosion = 
 		Game->CurrentGameMusicID = MusMusic;
 		Game->Audio->PlayMusic(MusMusic, -1);

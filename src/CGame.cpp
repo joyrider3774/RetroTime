@@ -154,7 +154,7 @@ void CGame::ResetScores()
 }
 void CGame::LoadMusic()
 {
-    MusMenu = Audio->LoadMusic("main/music.mp3");
+    MusMenu = Audio->LoadMusic("main/music.ogg");
 }
 
 void CGame::UnLoadMusic()

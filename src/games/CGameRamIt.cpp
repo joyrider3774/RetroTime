@@ -380,7 +380,7 @@ void CGameRamIt::init()
 		SfxHit = Game->Audio->LoadSound("ramit/hit.wav");
 		SfxDie = Game->Audio->LoadSound("common/die.wav");
 		SfxSucces = Game->Audio->LoadSound("common/succes.wav");
-		MusMusic = Game->Audio->LoadMusic("ramit/music.mp3");	
+		MusMusic = Game->Audio->LoadMusic("ramit/music.ogg");	
 		Game->CurrentGameMusicID = MusMusic;
 
 		Game->Audio->PlayMusic(MusMusic, -1);

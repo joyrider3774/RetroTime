@@ -477,7 +477,7 @@ void CGameBreakOut::init()
 		SfxSucces = Game->Audio->LoadSound("common/succes.wav");
         SfxBat = Game->Audio->LoadSound("breakout/bat.wav");
         SfxBrick = Game->Audio->LoadSound("breakout/brick.wav");
-        MusMusic = Game->Audio->LoadMusic("breakout/music.mp3");	
+        MusMusic = Game->Audio->LoadMusic("breakout/music.ogg");	
 		Game->CurrentGameMusicID = MusMusic;
 		Game->Audio->PlayMusic(MusMusic, -1);
 	}

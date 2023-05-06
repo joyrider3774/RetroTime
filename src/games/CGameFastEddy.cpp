@@ -919,7 +919,7 @@ void CGameFastEddy::init()
 		SfxDie = Game->Audio->LoadSound("common/die.wav");
 		SfxSucces = Game->Audio->LoadSound("common/succes.wav");
         SfxCollect = Game->Audio->LoadSound("common/coin.wav");
-		MusMusic = Game->Audio->LoadMusic("fasterdave/music.mp3");	
+		MusMusic = Game->Audio->LoadMusic("fasterdave/music.ogg");	
 		Game->CurrentGameMusicID = MusMusic;
 		Game->Audio->PlayMusic(MusMusic, -1);
 	}

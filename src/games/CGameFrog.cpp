@@ -774,7 +774,7 @@ void CGameFrog::init()
 		SfxDie = Game->Audio->LoadSound("common/die.wav");
 		SfxCollect = Game->Audio->LoadSound("common/coin.wav");
         SfxPlayerMove = Game->Audio->LoadSound("frog/move.wav");
-		MusMusic = Game->Audio->LoadMusic("frog/music.mp3");	
+		MusMusic = Game->Audio->LoadMusic("frog/music.ogg");	
 		Game->CurrentGameMusicID = MusMusic;
 
 		Game->Audio->PlayMusic(MusMusic, -1);

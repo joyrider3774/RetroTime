@@ -514,9 +514,9 @@ void CGamePang::init()
 	    createballs();
 		SfxDie = Game->Audio->LoadSound("common/die.wav");
 		SfxSucces = Game->Audio->LoadSound("common/succes.wav");
-        SfxShoot = Game->Audio->LoadSound("pang/shoot.mp3");
+        SfxShoot = Game->Audio->LoadSound("pang/shoot.wav");
         SfxPop = Game->Audio->LoadSound("pang/pop.wav");
-		MusMusic = Game->Audio->LoadMusic("pang/music.mp3");	
+		MusMusic = Game->Audio->LoadMusic("pang/music.ogg");	
 		Game->CurrentGameMusicID = MusMusic;
 		Game->Audio->PlayMusic(MusMusic, -1);
 	}
