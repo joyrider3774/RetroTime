@@ -1,4 +1,4 @@
-DEBUG=1
+DEBUG=0
 SRC_DIR = src
 SRC_SUBDIR = games
 OBJ_DIR = obj
