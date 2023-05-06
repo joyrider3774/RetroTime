@@ -1,7 +1,7 @@
 # appimage-builder recipe see https://appimage-builder.readthedocs.io for details
 version: 1
 AppDir:
-  path: /home/kubuntu/dev/RetroTime/AppDir
+  path: /home/dev/RetroTime/AppDir
   app_info:
     id: io.github.joyrider3774.retrotime
     name: retrotime
