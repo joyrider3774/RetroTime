@@ -1,0 +1,45 @@
+app-id: io.github.joyrider3774.retrotime
+runtime: org.freedesktop.Platform
+runtime-version: "22.08"
+sdk: org.freedesktop.Sdk
+command: /app/games/retrotime/retrotime
+
+finish-args:
+  - --device=all # needed for gamepads
+  - --share=ipc  # needed for X11
+  - --socket=x11
+  - --socket=pulseaudio
+  - --filesystem=home:rw
+  
+cleanup:
+  - "/include"
+  - "*.a"
+  - "/lib/pkgconfig"
+  
+modules:
+  - name: SDL2_gfx
+    config-opts: 
+      - --disable-static
+      - --disable-mmx
+    build-options:
+      arch:
+        i386:
+          config-opts:
+            - --enable-mmx
+        x86_64:
+          config-opts:
+            - --enable-mmx
+    sources:
+      - type: archive
+        url: https://downloads.sourceforge.net/project/sdl2gfx/SDL2_gfx-1.0.4.tar.gz
+        sha256: 63e0e01addedc9df2f85b93a248f06e8a04affa014a835c2ea34bfe34e576262
+  - name: retrotime
+    no-autogen: true    
+    build-options: 
+      env: 
+        PREFIX: /app     
+      cppflags: "`sdl2-config --cflags` `pkg-config --cflags SDL2_gfx`"
+      ldflags: "`sdl2-config --libs` `pkg-config --libs SDL2_gfx`"
+    sources:
+      - type: git
+        url: https://github.com/joyrider3774/RetroTime.git
