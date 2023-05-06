@@ -76,7 +76,7 @@ void CSprites::RemoveSprite(CSprite* Spr)
         return;
 
     Sprites[Spr->index] = nullptr;
-    free(Spr);
+    delete Spr;
 }
 
 void CSprites::UpdateSprites()
