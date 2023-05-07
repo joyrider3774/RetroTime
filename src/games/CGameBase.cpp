@@ -67,9 +67,12 @@ void CGameBase::PauseMenu()
         //draw everything to offscreen surface
 
 		SDL_SetRenderTarget(Game->Renderer, Game->TexOffScreen);
-		Draw(); //game
-        SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 128);
-        SDL_RenderFillRect(Game->Renderer, NULL);
+        Draw(); //game
+        
+        // this seems to cause a blackscreen somehow when certain games
+        // are paused not sure as to why but i disabled it for now
+        // SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 128);
+        // SDL_RenderFillRect(Game->Renderer, NULL);
 		
          //draw everything to offscreen surface
         SDL_SetRenderDrawColor(Game->Renderer, 25, 25, 255, 235);

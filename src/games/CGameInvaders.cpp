@@ -646,12 +646,6 @@ void CGameInvaders::drawbackground(bool motionblur)
 
 void CGameInvaders::init()
 {
-	SDL_Texture* prev = SDL_GetRenderTarget(Game->Renderer);
-    SDL_SetRenderTarget(Game->Renderer, Game->TexTmp);
-    SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 255);
-    SDL_RenderClear(Game->Renderer);
-    SDL_SetRenderTarget(Game->Renderer, prev);
-  
     LoadGraphics();
 
     deaths = 0;

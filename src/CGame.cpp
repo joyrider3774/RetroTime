@@ -869,7 +869,7 @@ Possible options are:\n\
                 SDL_RenderClear(Renderer);
 
                 TexTmp = SDL_CreateTexture(Renderer, PixelFormat, SDL_TEXTUREACCESS_TARGET, ScreenWidth, ScreenHeight);
-                SDL_SetRenderDrawBlendMode(Renderer, SDL_BLENDMODE_BLEND);
+                SDL_SetTextureBlendMode(TexTmp, SDL_BLENDMODE_BLEND);
                 SDL_SetRenderTarget(Renderer, TexTmp);
                 SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
                 SDL_RenderClear(Renderer);

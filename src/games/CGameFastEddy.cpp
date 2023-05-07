@@ -898,11 +898,6 @@ void CGameFastEddy::drawbackground(bool motionblur)
 
 void CGameFastEddy::init()
 {
-	SDL_Texture* prev = SDL_GetRenderTarget(Game->Renderer);
-    SDL_SetRenderTarget(Game->Renderer, Game->TexTmp);
-    SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 255);
-    SDL_RenderClear(Game->Renderer);
-    SDL_SetRenderTarget(Game->Renderer, prev);
     collecteditems = 0;
 	collectedcreated = 0;
 	level = 1;	
