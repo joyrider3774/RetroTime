@@ -280,7 +280,6 @@ void CGame::CreateCrt(int type)
     SDL_DestroyTexture(TexCrt);
     int w,h;
     SDL_GetWindowSize(SdlWindow, &w , &h);
-    printf("CreateCrt w: %d h:%d\n",w,h);
     TexCrt = SDL_CreateTexture(Renderer, PixelFormat, SDL_TEXTUREACCESS_TARGET, w, h);
     SDL_SetTextureBlendMode(TexCrt, SDL_BLENDMODE_BLEND);
     SDL_SetRenderTarget(Renderer, TexCrt);
