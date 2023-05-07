@@ -65,6 +65,7 @@ void CGame::Init()
     NextSubStateCounter = 0;
     NextSubStateTimeAdd = 0;
     TexCrt = nullptr;
+    ActiveGame = nullptr;
     ReCreateCrt();
     
     //Clear score values
@@ -130,11 +131,6 @@ void CGame::CreateScreenshotsAndBackground()
     delete TmpGameFastEddy;
     delete Sprites;
     Sprites = TmpSprites;
-}
-
-void CGame::DrawCrt()
-{
-    SDL_RenderCopy(Renderer, TexCrt, NULL, NULL);
 }
 
 void CGame::ResetHighScores()
@@ -255,11 +251,37 @@ void CGame::AddToScore(long long int Value)
 		Scores[Game][GameMode] = 0;
 }
 
+void CGame::DrawCrt()
+{   
+    int w,h;
+    SDL_GetWindowSize(SdlWindow, &w , &h); 
+    SDL_Point size;
+    SDL_QueryTexture(TexCrt, NULL, NULL, &size.x, &size.y);
+    if ((w != size.x) || (h != size.y))
+        ReCreateCrt();
+
+    //don't put it over scorebar
+    int w2;
+    float ScaleX = (float)w / (float)ScreenWidth;
+    float ScaleY = (float)h / (float)ScreenHeight;
+    int ScaledScoreBarHeight = (ScoreBarHeight) * ScaleY;
+    w2 = ScreenWidth * ScaleY;
+    if (w2 > w)
+        ScaledScoreBarHeight = (ScoreBarHeight) * ScaleX;
+
+    SDL_Rect Rect = {0,ScaledScoreBarHeight,w,h-ScaledScoreBarHeight};
+    SDL_RenderCopy(Renderer, TexCrt, &Rect, &Rect);
+}
+
+
 void CGame::CreateCrt(int type)
 {
 	SDL_Texture* prev = SDL_GetRenderTarget(Renderer);
     SDL_DestroyTexture(TexCrt);
-    TexCrt = SDL_CreateTexture(Renderer, PixelFormat, SDL_TEXTUREACCESS_TARGET, ScreenWidth, ScreenHeight);
+    int w,h;
+    SDL_GetWindowSize(SdlWindow, &w , &h);
+    printf("CreateCrt w: %d h:%d\n",w,h);
+    TexCrt = SDL_CreateTexture(Renderer, PixelFormat, SDL_TEXTUREACCESS_TARGET, w, h);
     SDL_SetTextureBlendMode(TexCrt, SDL_BLENDMODE_BLEND);
     SDL_SetRenderTarget(Renderer, TexCrt);
     SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 0);
@@ -279,8 +301,8 @@ void CGame::CreateCrt(int type)
 				steps = 8;
 
             SDL_SetRenderDrawColor(Renderer, 0,0,0, 255);
-			for(int y = 0; y < ScreenHeight; y+=steps)
-                SDL_RenderDrawLine(Renderer, 0, y, ScreenWidth, y);
+			for(int y = 0; y < h; y+=steps)
+                SDL_RenderDrawLine(Renderer, 0, y, w, y);
         }
 		else
         {
@@ -289,12 +311,12 @@ void CGame::CreateCrt(int type)
 			    int size = 2;
 			    int xsteps = 1;
 			    int ysteps = 1;
-                SDL_Texture* img = SDL_CreateTexture(Renderer, PixelFormat, SDL_TEXTUREACCESS_TARGET, ScreenWidth, ysteps+size);
+                SDL_Texture* img = SDL_CreateTexture(Renderer, PixelFormat, SDL_TEXTUREACCESS_TARGET, w, ysteps+size);
                 SDL_SetRenderTarget(Renderer, img);
                 SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 0);
                 SDL_RenderClear(Renderer);
                 SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
-			    for(int x = 0; x < ScreenWidth + xsteps + size; x+= xsteps + size)
+			    for(int x = 0; x < w + xsteps + size; x+= xsteps + size)
                 {
                     SDL_RenderDrawPoint(Renderer, x, 0);
 				    SDL_RenderDrawPoint(Renderer, x+1, 0);
@@ -303,9 +325,9 @@ void CGame::CreateCrt(int type)
                 }
             
 			    SDL_SetRenderTarget(Renderer, TexCrt);
-			    for(int y = 0; y < ScreenHeight + ysteps + size; y+= ysteps + size)
+			    for(int y = 0; y < h + ysteps + size; y+= ysteps + size)
 				{
-                    SDL_Rect r = {0, y, ScreenWidth, ysteps + size};
+                    SDL_Rect r = {0, y, w, ysteps + size};
                     SDL_RenderCopy(Renderer, img, NULL, &r);
                 }
 			    SDL_DestroyTexture(img);
@@ -317,21 +339,21 @@ void CGame::CreateCrt(int type)
                     int size = 3;
                     int xsteps = 1;
                     int ysteps = 1;
-                    SDL_Texture* img = SDL_CreateTexture(Renderer, PixelFormat, SDL_TEXTUREACCESS_TARGET, ScreenWidth, ysteps+size);
+                    SDL_Texture* img = SDL_CreateTexture(Renderer, PixelFormat, SDL_TEXTUREACCESS_TARGET, w, ysteps+size);
                     SDL_SetRenderTarget(Renderer, img);
                     SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 0);
                     SDL_RenderClear(Renderer);
                     SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
                     
-                    for(int x = 0; x < ScreenWidth + xsteps + size; x+= xsteps + size)
+                    for(int x = 0; x < w + xsteps + size; x+= xsteps + size)
                     {
                         SDL_RenderDrawLine(Renderer, x + 1, 1, x + size, size);
                         SDL_RenderDrawLine(Renderer, x + 1, size, x + size, 1);
                     }
                     SDL_SetRenderTarget(Renderer, TexCrt);
-                    for(int y = 0; y < ScreenHeight +  ysteps + size; y+= ysteps + size)
+                    for(int y = 0; y < h +  ysteps + size; y+= ysteps + size)
                     {
-                        SDL_Rect r = {0, y, ScreenWidth, ysteps + size};
+                        SDL_Rect r = {0, y, w, ysteps + size};
                         SDL_RenderCopy(Renderer, img, NULL, &r);
                     }
                     SDL_DestroyTexture(img);
@@ -672,6 +694,8 @@ void CGame::MainLoop()
 
             case GSTitleScreenInit:
             case GSTitleScreen:
+                //to clear the game data & set nullptr to ActiveGame
+                CreateActiveGame();
                 TitleScreen(this);
                 break;
 
@@ -703,7 +727,6 @@ void CGame::MainLoop()
             default:
                 break;
         }
-
         if (Alpha < MaxAlpha) 
         {
             Alpha = trunc(MaxAlpha * ((double)(SDL_GetTicks() - AlphaTimer) / MaxAlphaTime));
@@ -723,10 +746,31 @@ void CGame::MainLoop()
         }
         SDL_SetRenderTarget(Renderer, TexScreen);
         SDL_RenderCopy(Renderer, TexOffScreen, NULL, NULL);
+
         SDL_SetRenderTarget(Renderer, NULL);
         SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
         SDL_RenderClear(Renderer);
-        SDL_RenderCopy(Renderer, TexScreen, NULL, NULL);
+
+        int w, h, w2, h2, x, y;
+        SDL_GetWindowSize(SdlWindow, &w , &h);
+        float ScaleX = (float)w / (float)ScreenWidth;
+        float ScaleY = (float)h / (float)ScreenHeight;
+        h2 = ScreenHeight * ScaleY;
+        w2 = ScreenWidth * ScaleY;
+        if (w2 > w)
+        {
+            h2 = ScreenHeight * ScaleX;
+            w2 = ScreenWidth * ScaleX;
+        }
+        x = ((w - w2) / 2);
+        y = ((h - h2) / 2);
+
+        SDL_Rect Rect = { x, y, w2, h2};
+        SDL_RenderCopy(Renderer, TexScreen, NULL, &Rect);
+
+        if((ActiveGame != nullptr) && (GameState != GSSubScore) && (GameState != GSTitleScreenInit))
+            DrawCrt();
+
         if (debugInfo || ShowFPS)
         {
             string Text = "FPS: " + to_string(Fps) + "\n";
@@ -740,7 +784,7 @@ void CGame::MainLoop()
             }
             int tw = Font->TextWidth("RobotoMono-Bold", 16, Text, Text.length());
             Font->WriteText(Renderer, "RobotoMono-Bold", 16, Text, Text.length(), ScreenWidth - tw, 0, 0, {255, 0, 255, 255});
-        }        
+        }
         SDL_RenderPresent(Renderer);
         
         Uint64 FrameEndPerf = SDL_GetPerformanceCounter();
@@ -833,7 +877,6 @@ Possible options are:\n\
                 if (useLinear)
                     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 
-                SDL_RenderSetLogicalSize(Renderer, ScreenWidth, ScreenHeight);
                 SDL_Log("Succesfully Created Buffer\n");
                 srand(time(NULL));
 

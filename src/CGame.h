@@ -24,7 +24,6 @@ class CGameBase;
 class CGame {
 
 private:    
-    SDL_Window *SdlWindow;
     string DataPath;
 
     Uint8 Alpha = 0;
@@ -46,6 +45,7 @@ private:
     void CreateCrt(int type);
     void CreateActiveGame();
 public:
+    SDL_Window *SdlWindow;
     bool ShowFPS = false;
     CGameBase *ActiveGame;
     CAudio *Audio;
@@ -96,4 +96,3 @@ public:
     void StartCrossFade(int SetGameState, int SetNextSubState, int SetNextSubStateCounter, Uint32 SetNextSubStateTimeAdd);
     void ToggleFullscreen();
 };
-

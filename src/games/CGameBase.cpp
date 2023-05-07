@@ -370,10 +370,27 @@ void CGameBase::PauseMenu()
 
 		SDL_SetRenderTarget(Game->Renderer, Game->TexScreen);
         SDL_RenderCopy(Game->Renderer, Game->TexOffScreen, NULL, NULL);
+        
         SDL_SetRenderTarget(Game->Renderer, NULL);
         SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 255);
         SDL_RenderClear(Game->Renderer);
-        SDL_RenderCopy(Game->Renderer, Game->TexScreen, NULL, NULL);       
+        
+        int w, h, w2, h2, x, y;
+        SDL_GetWindowSize(Game->SdlWindow, &w , &h);
+        float ScaleX = (float)w / (float)ScreenWidth;
+        float ScaleY = (float)h / (float)ScreenHeight;
+        h2 = ScreenHeight * ScaleY;
+        w2 = ScreenWidth * ScaleY;
+        if (w2 > w)
+        {
+            h2 = ScreenHeight * ScaleX;
+            w2 = ScreenWidth * ScaleX;
+        }
+        x = ((w - w2) / 2);
+        y = ((h - h2) / 2);
+
+        SDL_Rect Rect = { x, y, w2, h2};
+        SDL_RenderCopy(Game->Renderer, Game->TexScreen, NULL, &Rect);
 
         if (debugInfo || Game->ShowFPS)
         {
@@ -410,15 +427,12 @@ void CGameBase::PauseMenu()
           SDL_Delay(RequiredDelay);
     }
 	Game->Input->ResetButtons();
-    Game->ReCreateCrt();
-    //savehighscoresoptions()
 }
 
 void CGameBase::DrawScoreBar()
 {
-    Game->DrawCrt();
     SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 100);
-	SDL_Rect r = {0, 0, ScreenWidth, 22};
+	SDL_Rect r = {0, 0, ScreenWidth, ScoreBarHeight};
 	SDL_RenderFillRect(Game->Renderer, &r);
     string Text = "";
     if(UsesLevels)
