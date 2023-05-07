@@ -43,6 +43,7 @@ jobs:
           mkdir ./Release/RetroTime
           cp retrotime.exe ./Release/RetroTime/
           cp -R ./retrotimefs ./Release/RetroTime/
+          cp ./README.md ./Release/Retrotime/
           cp ./LICENSE ./Release/Retrotime/
       - name: Copy dll libraries
         shell: msys2 {0}
@@ -79,16 +80,6 @@ jobs:
           cp /${{matrix.sys}}/bin/SDL2*.dll ./Release/RetroTime/
           cp /${{matrix.sys}}/bin/libsharpyuv*.dll ./Release/RetroTime/
           cp /${{matrix.sys}}/bin/libwinpthread*.dll ./Release/RetroTime/
-      - name: Make Readme.pdf
-        uses: baileyjm02/markdown-to-pdf@v1.2.0
-        with:
-          input_path: ./
-          output_dir: Release/RetroTime/
-          images_dir: metadata
-          # for example <img src="./images/file-name.png">
-          image_import: metadata
-          # Default is true, can set to false to only get PDF files
-          build_html: false
       - name: Store build
         uses: actions/upload-artifact@v3
         with:
