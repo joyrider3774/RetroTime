@@ -284,11 +284,11 @@ void CGame::CreateCrt(int type)
         }
 		else
         {
-		    if(type < 5)
+		    if(type < 5) //dots
             {
-			    int size = 1;
-			    int xsteps = 2;
-			    int ysteps = 2;
+			    int size = 2;
+			    int xsteps = 1;
+			    int ysteps = 1;
                 SDL_Texture* img = SDL_CreateTexture(Renderer, PixelFormat, SDL_TEXTUREACCESS_TARGET, ScreenWidth, ysteps+size);
                 SDL_SetRenderTarget(Renderer, img);
                 SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 0);
@@ -296,11 +296,10 @@ void CGame::CreateCrt(int type)
                 SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
 			    for(int x = 0; x < ScreenWidth + xsteps + size; x+= xsteps + size)
                 {
-                    SDL_RenderDrawPoint(Renderer, x+1, 1);
-				    SDL_RenderDrawPoint(Renderer, x-1, 1);
                     SDL_RenderDrawPoint(Renderer, x, 0);
-                    SDL_RenderDrawPoint(Renderer, x, 1);                    
-                    SDL_RenderDrawPoint(Renderer, x, 2);
+				    SDL_RenderDrawPoint(Renderer, x+1, 0);
+                    SDL_RenderDrawPoint(Renderer, x, 1);
+                    SDL_RenderDrawPoint(Renderer, x+1, 1);
                 }
             
 			    SDL_SetRenderTarget(Renderer, TexCrt);
@@ -313,7 +312,7 @@ void CGame::CreateCrt(int type)
             }
 		    else		
             {
-                if  (type < 6) 
+                if  (type < 6)  //cross
                 {
                     int size = 3;
                     int xsteps = 1;
@@ -326,8 +325,8 @@ void CGame::CreateCrt(int type)
                     
                     for(int x = 0; x < ScreenWidth + xsteps + size; x+= xsteps + size)
                     {
-                        SDL_RenderDrawLine(Renderer, x + 1, 1, x + 1 + size, 1 + size);
-                        SDL_RenderDrawLine(Renderer, x + 1, 1 + size, x + 1 + size, 1);
+                        SDL_RenderDrawLine(Renderer, x + 1, 1, x + size, size);
+                        SDL_RenderDrawLine(Renderer, x + 1, size, x + size, 1);
                     }
                     SDL_SetRenderTarget(Renderer, TexCrt);
                     for(int y = 0; y < ScreenHeight +  ysteps + size; y+= ysteps + size)
@@ -725,8 +724,8 @@ void CGame::MainLoop()
         SDL_SetRenderTarget(Renderer, TexScreen);
         SDL_RenderCopy(Renderer, TexOffScreen, NULL, NULL);
         SDL_SetRenderTarget(Renderer, NULL);
-        //SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
-        //SDL_RenderClear(Renderer);
+        SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
+        SDL_RenderClear(Renderer);
         SDL_RenderCopy(Renderer, TexScreen, NULL, NULL);
         if (debugInfo || ShowFPS)
         {

@@ -639,7 +639,7 @@ void CGameInvaders::drawbackground(bool motionblur)
 
     Scale =  {4,4};
     Pos = {800, 400};
-    Game->Image->DrawImageFuzeTintFloat(Game->Renderer, backgrounditem, true, &Pos, 45, &Scale, 1, 1, 1,1);
+    Game->Image->DrawImageFuzeTintFloat(Game->Renderer, backgrounditem, true, &Pos, 45, &Scale, 1, 1, 1, 1);
 }
 
 //init - deinit ----------------------------------------------------------------------------------------------------------------
