@@ -208,3 +208,23 @@ The game makes uses of multiple payed and free assets packs, below are the credi
 | parallax-space-far-planets.png | [Space Background by ansimuz ](https://ansimuz.itch.io/space-background) |
 | parallax-space-ring-planet.png | [Space Background by ansimuz ](https://ansimuz.itch.io/space-background) |
 | parallax-space-stars.png | [Space Background by ansimuz ](https://ansimuz.itch.io/space-background) |
+
+
+### Toady
+| Asset | Asset Pack |
+| ----- | --------- |
+| Music.ogg | Created and Owned by me on [Strofe](https://www.strofe.com/) |
+| move.wav | [game music stingers and ui sfx pack 2](https://www.gamedevmarket.net/asset/game-music-stingers-and-ui-sfx-pack-2/) |
+| food.wav | [Pro Sound Collection by gamemasteraudio](https://www.gamedevmarket.net/asset/pro-sound-collection/) |
+| background | [Bonus pictures by pipoya](https://pipoya.net/sozai/assets/background/background-image/) |
+| carblue.png | [isometric vehicls by kenny](https://kenney.nl/assets/isometric-vehicles) |
+| police.png | [isometric vehicls by kenny](https://kenney.nl/assets/isometric-vehicles) |
+| taxi.png | [isometric vehicls by kenny](https://kenney.nl/assets/isometric-vehicles) |
+| garbagetruck.png | [isometric vehicls by kenny](https://kenney.nl/assets/isometric-vehicles) |
+| ambulance.png | [isometric vehicls by kenny](https://kenney.nl/assets/isometric-vehicles) |
+| player.png | [Tyler Warren RPG Battlers – 7th 50 - Time Fantasy Tribute](https://tylerjwarren.itch.io/7th-50-time-fantasy-tribute) |
+| waterplant.png | [Open RPG Fantasy Tilesets by finalbossblue](https://finalbossblues.itch.io/openrtp-tiles) |
+| apple.png | [Small Fruit Assets 16x16 by dantepixels](https://dantepixels.itch.io/small-fruits-asset-16x16) |
+| cherry.png | [Small Fruit Assets 16x16 by dantepixels](https://dantepixels.itch.io/small-fruits-asset-16x16) |
+| lemon.png | [Small Fruit Assets 16x16 by dantepixels](https://dantepixels.itch.io/small-fruits-asset-16x16) |
+| watergrass.png | Created and Owned by me |
