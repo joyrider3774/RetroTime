@@ -44,7 +44,7 @@ jobs:
           cp retrotime.exe ./Release/RetroTime/
           cp -R ./retrotimefs ./Release/
           cp ./README.md ./Release/Retrotime/
-          cp ./LICENSE.md ./Release/Retrotime/
+          cp ./LICENSE ./Release/Retrotime/
       - name: Copy dll libraries
         shell: msys2 {0}
         run: |
