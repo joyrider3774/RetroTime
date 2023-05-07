@@ -42,7 +42,7 @@ jobs:
           mkdir ./Release
           mkdir ./Release/RetroTime
           cp retrotime.exe ./Release/RetroTime/
-          cp -R ./retrotimefs ./Release/
+          cp -R ./retrotimefs ./Release/RetroTime/
           cp ./README.md ./Release/Retrotime/
           cp ./LICENSE ./Release/Retrotime/
       - name: Copy dll libraries
