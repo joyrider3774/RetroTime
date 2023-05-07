@@ -83,6 +83,16 @@ The game can be played using keyboard and joy/gamepads. You can not however rema
 | F4 key | Immediatly Quit the game |
 | F3 key | Switch between fullscreen & windowed mode |
 
+## CommandLine Parameters
+The game has a few commandline parameters you can pass to it. you append these parameters at the end of the exe.
+For example `retrotime.exe -s -w` would run the game in software mode and startup in windowed mode.
+
+| Parameter | Meaning |
+| ------------ | ------ |
+| -s | Use Software Rendering (slow) |
+| -w | Start up game in windowed mode |
+| -f | Show FPS |
+
 ## Credits
 The game makes uses of multiple payed and free assets packs, below are the credits for them per game.
 
