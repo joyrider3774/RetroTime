@@ -36,43 +36,52 @@ jobs:
         shell: msys2 {0}
         run: |
           make
+      - name: Copy Game And Assets
+        shell: msys2 {0}
+        run: |
+          mkdir ./Release
+          mkdir ./Release/RetroTime
+          cp retrotime.exe ./Release/RetroTime/
+          cp -R ./retrotimefs ./Release/
+          cp ./README.md ./Release/Retrotime/
+          cp ./LICENSE.md ./Release/Retrotime/
       - name: Copy dll libraries
         shell: msys2 {0}
         run: |
-          cp /${{matrix.sys}}/bin/libbrotli*.dll ./
-          cp /${{matrix.sys}}/bin/libbz*.dll ./
-          cp /${{matrix.sys}}/bin/libdeflate*.dll ./
-          cp /${{matrix.sys}}/bin/libdeflate*.dll ./
-          cp /${{matrix.sys}}/bin/libfreetype*.dll ./
-          cp /${{matrix.sys}}/bin/libgcc*.dll ./
-          cp /${{matrix.sys}}/bin/libglib*.dll ./
-          cp /${{matrix.sys}}/bin/libgraphite*.dll ./        
-          cp /${{matrix.sys}}/bin/libharfbuzz*.dll ./
-          cp /${{matrix.sys}}/bin/libhwy*.dll ./
-          cp /${{matrix.sys}}/bin/libiconv*.dll ./
-          cp /${{matrix.sys}}/bin/libintl*.dll ./
-          cp /${{matrix.sys}}/bin/libjbig*.dll ./
-          cp /${{matrix.sys}}/bin/libjpeg*.dll ./
-          cp /${{matrix.sys}}/bin/libjxl*.dll ./
-          cp /${{matrix.sys}}/bin/liblcms*.dll ./
-          cp /${{matrix.sys}}/bin/libLerc*.dll ./
-          cp /${{matrix.sys}}/bin/liblzma*.dll ./
-          cp /${{matrix.sys}}/bin/libmpg123*.dll ./
-          cp /${{matrix.sys}}/bin/libogg*.dll ./
-          cp /${{matrix.sys}}/bin/libopus*.dll ./
-          cp /${{matrix.sys}}/bin/libpcre*.dll ./
-          cp /${{matrix.sys}}/bin/libpng*.dll ./          
-          cp /${{matrix.sys}}/bin/libstdc*.dll ./
-          cp /${{matrix.sys}}/bin/libtiff*.dll ./
-          cp /${{matrix.sys}}/bin/libwebp*.dll ./
-          cp /${{matrix.sys}}/bin/libzstd*.dll ./
-          cp /${{matrix.sys}}/bin/zlib*.dll ./
-          cp /${{matrix.sys}}/bin/libSDL2*.dll ./
-          cp /${{matrix.sys}}/bin/SDL2*.dll ./
-          cp /${{matrix.sys}}/bin/libsharpyuv*.dll ./
-          cp /${{matrix.sys}}/bin/libwinpthread*.dll ./
+          cp /${{matrix.sys}}/bin/libbrotli*.dll ./Release/RetroTime/
+          cp /${{matrix.sys}}/bin/libbz*.dll ./Release/RetroTime/
+          cp /${{matrix.sys}}/bin/libdeflate*.dll ./Release/RetroTime/
+          cp /${{matrix.sys}}/bin/libdeflate*.dll ./Release/RetroTime/
+          cp /${{matrix.sys}}/bin/libfreetype*.dll ./Release/RetroTime/
+          cp /${{matrix.sys}}/bin/libgcc*.dll ./Release/RetroTime/
+          cp /${{matrix.sys}}/bin/libglib*.dll ./Release/RetroTime/
+          cp /${{matrix.sys}}/bin/libgraphite*.dll ./Release/RetroTime/
+          cp /${{matrix.sys}}/bin/libharfbuzz*.dll ./Release/RetroTime/
+          cp /${{matrix.sys}}/bin/libhwy*.dll ./Release/RetroTime/
+          cp /${{matrix.sys}}/bin/libiconv*.dll ./Release/RetroTime/
+          cp /${{matrix.sys}}/bin/libintl*.dll ./Release/RetroTime/
+          cp /${{matrix.sys}}/bin/libjbig*.dll ./Release/RetroTime/
+          cp /${{matrix.sys}}/bin/libjpeg*.dll ./Release/RetroTime/
+          cp /${{matrix.sys}}/bin/libjxl*.dll ./Release/RetroTime/
+          cp /${{matrix.sys}}/bin/liblcms*.dll ./Release/RetroTime/
+          cp /${{matrix.sys}}/bin/libLerc*.dll ./Release/RetroTime/
+          cp /${{matrix.sys}}/bin/liblzma*.dll ./Release/RetroTime/
+          cp /${{matrix.sys}}/bin/libmpg123*.dll ./Release/RetroTime/
+          cp /${{matrix.sys}}/bin/libogg*.dll ./Release/RetroTime/
+          cp /${{matrix.sys}}/bin/libopus*.dll ./Release/RetroTime/
+          cp /${{matrix.sys}}/bin/libpcre*.dll ./Release/RetroTime/
+          cp /${{matrix.sys}}/bin/libpng*.dll ./Release/RetroTime/
+          cp /${{matrix.sys}}/bin/libstdc*.dll ./Release/RetroTime/
+          cp /${{matrix.sys}}/bin/libtiff*.dll ./Release/RetroTime/
+          cp /${{matrix.sys}}/bin/libwebp*.dll ./Release/RetroTime/
+          cp /${{matrix.sys}}/bin/libzstd*.dll ./Release/RetroTime/
+          cp /${{matrix.sys}}/bin/zlib*.dll ./Release/RetroTime/
+          cp /${{matrix.sys}}/bin/libSDL2*.dll ./Release/RetroTime/
+          cp /${{matrix.sys}}/bin/SDL2*.dll ./Release/RetroTime/
+          cp /${{matrix.sys}}/bin/libsharpyuv*.dll ./Release/RetroTime/
+          cp /${{matrix.sys}}/bin/libwinpthread*.dll ./Release/RetroTime/
       - name: Store build
         uses: actions/upload-artifact@v3
         with:
           name: RetroTime ${{ matrix.env }}
-          path: ./
+          path: ./Release/
