@@ -82,3 +82,119 @@ The game can be played using keyboard and joy/gamepads. You can not however rema
 | Start button or Esc Key | Confirming in menus, Pausing during gameplay |
 | F4 key | Immediatly Quit the game |
 | F3 key | Switch between fullscreen & windowed mode |
+
+## Credits
+The game makes uses of multiple payed and free assets packs, below are the credits for them per game.
+
+### Main Game User interface 
+| Asset | Asset Pack |
+| ----- | --------- |
+| Music.ogg | Created and Owned by me on [Strofe](https://www.strofe.com/) |
+| back.wav | [ Game Music Stingers And UI SFX Pack 2 by wowsounds](https://www.gamedevmarket.net/asset/game-music-stingers-and-ui-sfx-pack-2/) |
+| confirm.wav | [ Game Music Stingers And UI SFX Pack 2 by wowsounds](https://www.gamedevmarket.net/asset/game-music-stingers-and-ui-sfx-pack-2/) |
+| select.wav | [ Game Music Stingers And UI SFX Pack 2 by wowsounds](https://www.gamedevmarket.net/asset/game-music-stingers-and-ui-sfx-pack-2/) |
+| score.ogg | [8-bit Action Music & SFX by Joel Steudler](https://joelsteudler.itch.io/8-bit-action-music-sfx) |
+| medal.png | [Kenney medals](https://www.kenney.nl/assets/medals) |
+| frame.png | [Hazy Hills Battle Background ansimuz](https://ansimuz.itch.io/hazy-hills-battle-background) |
+
+
+### Shared between games
+| Asset | Asset Pack |
+| ----- | --------- |
+| die.wav | [8-bit Action Music & SFX by Joel Steudler](https://joelsteudler.itch.io/8-bit-action-music-sfx) |
+| coin.wav | [8-bit Action Music & SFX by Joel Steudler](https://joelsteudler.itch.io/8-bit-action-music-sfx) |
+| succes.wav | [8-bit Action Music & SFX by Joel Steudler](https://joelsteudler.itch.io/8-bit-action-music-sfx) |
+| one.wav | My own recorded voice with a robot filter |
+| oneminute.wav |  My own recorded voice with a robot filter |
+| readygo.wav |  My own recorded voice with a robot filter |
+| three.wav |  My own recorded voice with a robot filter |
+| timeover.wav |  My own recorded voice with a robot filter |
+| two.wav |  My own recorded voice with a robot filter |
+
+
+### Block Stacker
+| Asset | Asset Pack |
+| ----- | --------- |
+| Music.ogg | Created and Owned by me on [Strofe](https://www.strofe.com/) |
+| rotate.wav | [Game Music Stingers And UI SFX Pack 2 by wowsounds](https://www.gamedevmarket.net/asset/game-music-stingers-and-ui-sfx-pack-2/) |
+| drop.wav | [Pro Sound Collection by gamemasteraudio](https://www.gamedevmarket.net/asset/pro-sound-collection/) |
+| lineclear.ogg | [8-bit Action Music & SFX by Joel Steudler](https://joelsteudler.itch.io/8-bit-action-music-sfx) |
+| background.png | [Cyberpunk Street Environment by ansimuz](https://ansimuz.itch.io/cyberpunk-street-environment) |
+
+
+### Brick Breaker
+| Asset | Asset Pack |
+| ----- | --------- |
+| Music.ogg | Created and Owned by me on [Strofe](https://www.strofe.com/) |
+| bat.wav | [Pro Sound Collection by gamemasteraudio](https://www.gamedevmarket.net/asset/pro-sound-collection/) |
+| brick.wav | [VS-01-Cowbell004.wav from Gijs De Mik](https://stardust-audio.com/Down/GijsPerc2017.zip) |
+| background.png | [Basic breakout asset pack created by me (joyrider3774)](https://joyrider3774.itch.io/basic-breakout-asset-pack) |
+| ball.png | [Basic breakout asset pack created by me (joyrider3774)](https://joyrider3774.itch.io/basic-breakout-asset-pack) |
+| blocks.png | [Basic breakout asset pack created by me (joyrider3774)](https://joyrider3774.itch.io/basic-breakout-asset-pack) |
+| paddle.png | [Basic breakout asset pack created by me (joyrider3774)](https://joyrider3774.itch.io/basic-breakout-asset-pack) |
+
+
+### Faster Dave
+| Asset | Asset Pack |
+| ----- | --------- |
+| Music.ogg | Created and Owned by me on [Strofe](https://www.strofe.com/) |
+| Jump.wav | [VS-01-Cowbell004.wav from Gijs De Mik](https://stardust-audio.com/Down/GijsPerc2017.zip) |
+| background.png | [Pixel Art Snowy Forest by edermunizz](https://www.gamedevmarket.net/asset/pixel-art-snowy-forest-7308/) |
+| ladder.png | [Pixel Art Snowy Forest by edermunizz](https://www.gamedevmarket.net/asset/pixel-art-snowy-forest-7308/) |
+| floortileset.png | [Pixel Art Snowy Forest by edermunizz](https://www.gamedevmarket.net/asset/pixel-art-snowy-forest-7308/) |
+| key.png | [2D Painterly Tiles by Ravenmore](https://www.gamedevmarket.net/asset/painterly-platformer-pack-1126/) |
+| Character_character_climb.png | [2D Painterly Tiles by Ravenmore](https://www.gamedevmarket.net/asset/painterly-platformer-pack-1126/) |
+| Character_character_idle.png | [2D Painterly Tiles by Ravenmore](https://www.gamedevmarket.net/asset/painterly-platformer-pack-1126/) |
+| Character_character_jump_up.png | [2D Painterly Tiles by Ravenmore](https://www.gamedevmarket.net/asset/painterly-platformer-pack-1126/) |
+| Character_character_run.png | [2D Painterly Tiles by Ravenmore](https://www.gamedevmarket.net/asset/painterly-platformer-pack-1126/) |
+| enemy.png | [ PIPOYA FREE RPG Character Sprites 32x32 by Pipoya (Enemy 15-3.png)](https://pipoya.itch.io/pipoya-free-rpg-character-sprites-32x32) |
+
+
+### Bubble Buster
+| Asset | Asset Pack |
+| ----- | --------- |
+| Music.ogg | Created and Owned by me on [Strofe](https://www.strofe.com/) |
+| shoot.wav | [Medieval Fantasy SFX Pack by evil mind entertainment](https://www.gamedevmarket.net/asset/medieval-fantasy-sfx-pack-1061/) |
+| ball.png | Created and Owned by me |
+| character.png | [Master of the Wind Character Sprites by finalbossblues](http://finalbossblues.com/timefantasy/freebies/master-of-the-wind-character-sprites/) |
+| clouds.png | [country side platfformer by ansimuz](https://ansimuz.itch.io/country-side-platfformer) |
+| grass.png | [country side platfformer by ansimuz](https://ansimuz.itch.io/country-side-platfformer) |
+| tree.png | [country side platfformer by ansimuz](https://ansimuz.itch.io/country-side-platfformer) |
+| trees.png | [country side platfformer by ansimuz](https://ansimuz.itch.io/country-side-platfformer) |
+| weapon.png | [effect parts by pipoya](https://pipoya.net/sozai/assets/effects/effect-parts/) |
+
+
+### Color Invasion
+| Asset | Asset Pack |
+| ----- | --------- |
+| Music.ogg | Created and Owned by me on [Strofe](https://www.strofe.com/) |
+| hit.wav | [Game Music Stingers And UI SFX Pack 2 by wowsounds](https://www.gamedevmarket.net/asset/game-music-stingers-and-ui-sfx-pack-2/) |
+| shoot.wav | [Pro Sound Collection by gamemasteraudio](https://www.gamedevmarket.net/asset/pro-sound-collection/) |
+
+
+### Snakey
+| Asset | Asset Pack |
+| ----- | --------- |
+| Music.ogg | Created and Owned by me on [Strofe](https://www.strofe.com/) |
+| food.wav | [Pro Sound Collection by gamemasteraudio](https://www.gamedevmarket.net/asset/pro-sound-collection/) |
+
+
+### Invaders
+| Asset | Asset Pack |
+| ----- | --------- |
+| Music.ogg | Created and Owned by me on [Strofe](https://www.strofe.com/) |
+| enemydeath.wav | [Game Music Stingers And UI SFX Pack 2 by wowsound](https://www.gamedevmarket.net/asset/game-music-stingers-and-ui-sfx-pack-2/) |
+| playerdeath.wav | [Game Music Stingers And UI SFX Pack 2 by wowsound](https://www.gamedevmarket.net/asset/game-music-stingers-and-ui-sfx-pack-2/) |
+| enemyshoot.wav | [retro_laser_gun_shoot_37 modified tempo from Pro Sound Collection by gamemasteraudio](https://www.gamedevmarket.net/asset/pro-sound-collection/) |
+| playershoot.wav | [retro_laser_gun_shoot_37 modified tempo from Pro Sound Collection by gamemasteraudio](https://www.gamedevmarket.net/asset/pro-sound-collection/) |
+| asteroid-01.png | [Patreon's Top Down Collection by ansimuz](https://ansimuz.itch.io/patreons-top-down-collection) |
+| bullet.png | [Patreon's Top Down Collection by ansimuz](https://ansimuz.itch.io/patreons-top-down-collection) |
+| enemy1.png | [Patreon's Top Down Collection by ansimuz](https://ansimuz.itch.io/patreons-top-down-collection) |
+| enemy2.png | [Patreon's Top Down Collection by ansimuz](https://ansimuz.itch.io/patreons-top-down-collection) |
+| enemy3.png | [Patreon's Top Down Collection by ansimuz](https://ansimuz.itch.io/patreons-top-down-collection) |
+| explosion.png | [Patreon's Top Down Collection by ansimuz](https://ansimuz.itch.io/patreons-top-down-collection) |
+| player.png | [Patreon's Top Down Collection by ansimuz](https://ansimuz.itch.io/patreons-top-down-collection) |
+| background.png | [Space Background by ansimuz ](https://ansimuz.itch.io/space-background) |
+| parallax-space-far-planets.png | [Space Background by ansimuz ](https://ansimuz.itch.io/space-background) |
+| parallax-space-ring-planet.png | [Space Background by ansimuz ](https://ansimuz.itch.io/space-background) |
+| parallax-space-stars.png | [Space Background by ansimuz ](https://ansimuz.itch.io/space-background) |
