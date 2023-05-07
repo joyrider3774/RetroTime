@@ -10,6 +10,7 @@
 CSprites::CSprites(CImage* ACImage)
 {
     Images = ACImage;
+    ForceShowCollisionShape = false;
     needSpriteSorting = false;
     for (int i=0; i < SPR_Max; i++)
     {
@@ -23,6 +24,11 @@ CSprites::~CSprites()
     {
         RemoveSprite(Sprites[i]);
     }
+}
+
+void CSprites::SetForceShowCollisionShape(bool val)
+{
+    ForceShowCollisionShape = val;
 }
 
 CSprite* CSprites::CreateSprite()
@@ -165,22 +171,26 @@ void CSprites::DrawSprite(SDL_Renderer* Renderer, CSprite* Spr)
         int x = AnimTile - (y * Spr->tilesX);
         SDL_Rect SrcRect = {x * Spr->tileSizeX, y* Spr->tileSizeY, Spr->tileSizeX, Spr->tileSizeY};
         Images->DrawImageFuzeSrcRectTintFloat(Renderer, *Spr->imageID, &SrcRect, true, &pos, Spr->rotation, &scale, Spr->r, Spr->g, Spr->b, Spr->a);
-        SDL_SetRenderDrawColor(Renderer, 255, 0, 255, 255);            
-        switch(Spr->collisionShape)
+        if (Spr->show_collision_shape || ForceShowCollisionShape)
         {
-            case SHAPE_BOX:
+            SDL_SetRenderDrawColor(Renderer, 255, 0, 255, 255);            
+            switch(Spr->collisionShape)
             {
-                const SDL_Rect rect = {(int)(Spr->x + Spr->collisionxoffset - (Spr->collisionWidth * (Spr->xscale) / 2)), (int)(Spr->y + Spr->collisionyoffset - (Spr->collisionHeight * (Spr->yscale) / 2)), (int)(Spr->collisionWidth * (Spr->xscale)),  (int)(Spr->collisionHeight * (Spr->yscale))};
-                SDL_RenderDrawRect(Renderer, &rect);
-                break;
+                case SHAPE_BOX:
+                {
+                    const SDL_Rect rect = {(int)(Spr->x + Spr->collisionxoffset - (Spr->collisionWidth * (Spr->xscale) / 2)), (int)(Spr->y + Spr->collisionyoffset - (Spr->collisionHeight * (Spr->yscale) / 2)), (int)(Spr->collisionWidth * (Spr->xscale)),  (int)(Spr->collisionHeight * (Spr->yscale))};
+                    SDL_RenderDrawRect(Renderer, &rect);
+                    break;
+                }
+                case SHAPE_CIRCLE:
+                {
+                    if ((Spr->collisionWidth == Spr->collisionHeight) && (Spr->xscale == Spr->yscale))
+                        circleRGBA(Renderer, Spr->x + Spr->collisionxoffset, Spr->y + Spr->collisionyoffset,(int) ((Spr->collisionWidth * Spr->xscale) / 2), 255, 0, 255, 255);
+                    break;
+                }
+                default:
+                    break;
             }
-            case SHAPE_CIRCLE:
-            {
-                circleRGBA(Renderer, Spr->x + Spr->collisionxoffset, Spr->y + Spr->collisionyoffset,(int) ((Spr->collisionWidth * Spr->xscale) / 2), 255,0,255,255 );
-                break;
-            }
-            default:
-                break;
         }
     }
 }

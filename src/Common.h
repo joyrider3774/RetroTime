@@ -7,6 +7,7 @@
 using namespace std;
 
 constexpr bool debugInfo = false;
+constexpr bool debugShowCollisionShapes = false;
 
 constexpr bool titleAlphaEnabled = true;
 

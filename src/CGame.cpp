@@ -843,6 +843,7 @@ Possible options are:\n\
                 Image = new CImage(DataPath);
                 Input = new CInput();
                 Sprites = new CSprites(Image);
+                Sprites->SetForceShowCollisionShape(debugShowCollisionShapes);
                 
                 // Main game loop that loops untile the gamestate = GSQuit
                 // and calls the procedure according to the gamestate.

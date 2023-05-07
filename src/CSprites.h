@@ -52,6 +52,7 @@ class CSprite {
         float b;
         float a;
         double rotation_speed;
+        bool show_collision_shape;
 };
 
 class CSprites {
@@ -59,6 +60,7 @@ class CSprites {
 private:
     CSprite* Sprites[SPR_Max];
     CImage* Images;
+    bool ForceShowCollisionShape;
     bool needSpriteSorting;
     void SortSprites();
     bool DetectRectRectCollsion(CSprite* Spr, CSprite* SprOther);
@@ -69,6 +71,7 @@ public:
     CSprite* CreateSprite();
     void RemoveSprite(CSprite* Spr);
     Vec2F GetSpriteLocation(CSprite* Spr);
+    void SetForceShowCollisionShape(bool val);
     void UpdateSprites();
     void DrawSprite(SDL_Renderer* Renderer, CSprite* Spr);
     void DrawSprites(SDL_Renderer* Renderer);
