@@ -2,7 +2,7 @@
 
 #include <SDL.h>
 #include "../CSprites.h"
-#include "../Types.h"
+#include "../Vec2F.h"
 
 class CSpriteObject
 {

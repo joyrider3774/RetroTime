@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 #include "CImage.h"
-#include "Types.h"
+#include "Vec2F.h"
 
 constexpr int SPR_Max = 1000;
 
@@ -61,6 +61,8 @@ private:
     CImage* Images;
     bool needSpriteSorting;
     void SortSprites();
+    bool DetectRectRectCollsion(CSprite* Spr, CSprite* SprOther);
+    bool DetectRectCircleCollsion(CSprite* SprRect, CSprite* SprCircle);
 public:
     CSprites(CImage* ACImage);
     ~CSprites();

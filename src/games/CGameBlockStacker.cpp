@@ -6,7 +6,7 @@
 #include "BlockStackerBlocks.h"
 #include "../CGame.h"
 #include "../Common.h"
-#include "../Types.h"
+#include "../Vec2F.h"
 
 using namespace std;
 

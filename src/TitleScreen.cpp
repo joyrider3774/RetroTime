@@ -3,7 +3,7 @@
 #include "CGame.h"
 #include "Common.h"
 #include "TitleScreen.h"
-#include "Types.h"
+#include "Vec2F.h"
 
 int SelectedMenu  = 0;
 int CurrentMainMenu = -1;

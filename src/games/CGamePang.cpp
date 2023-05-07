@@ -5,7 +5,7 @@
 #include "CGamePang.h"
 #include "../CGame.h"
 #include "../Common.h"
-#include "../Types.h"
+#include "../Vec2F.h"
 
 using namespace std;
 
@@ -60,7 +60,8 @@ void CGamePang::createball(int size, float x, float y, float speed)
         { 
 			balls[i].spr = Game->Sprites->CreateSprite();
 			Game->Sprites->SetSpriteImage(balls[i].spr, &spritesheetball);
-			Game->Sprites->SetSpriteCollisionShape(balls[i].spr, SHAPE_BOX, 27,27,0,0,0);
+			Game->Sprites->SetSpriteCollisionShape(balls[i].spr, SHAPE_CIRCLE, 35,35,0,0,0); 
+			//Game->Sprites->SetSpriteCollisionShape(balls[i].spr, SHAPE_BOX, 27,27,0,0,0);
             Game->Sprites->SetSpriteColour(balls[i].spr, 1, 1, 1, 0.7f);
 			Vec2F Scale = ballscale;
             Scale.x = Scale.x * size;

@@ -4,7 +4,7 @@
 #include "games/CGameBase.h"
 #include "Common.h"
 #include "SubScoreScreen.h"
-#include "Types.h"
+#include "Vec2F.h"
 
 bool wasnewhighscorecarousel;
 bool wasnewhighscoregame;

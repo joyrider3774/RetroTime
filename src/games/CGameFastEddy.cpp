@@ -5,7 +5,7 @@
 #include "CGameFastEddy.h"
 #include "../CGame.h"
 #include "../Common.h"
-#include "../Types.h"
+#include "../Vec2F.h"
 
 using namespace std;
 
@@ -155,8 +155,8 @@ void CGameFastEddy::createcollectables(int ignorerow)
 				Game->Sprites->SetSpriteImage(collectables[i].spr, &spritesheetcollectable, 5, 1);
 				Game->Sprites->SetSpriteScale(collectables[i].spr, scale);
 				Game->Sprites->SetSpriteAnimation(collectables[i].spr, ((level-1) % 5), ((level-1) % 5), 0);
-				//Game->Sprites->SetSpriteCollisionShape(collectables[i].spr, SHAPE_CIRCLE, tz.x - 66, tz.y - 66,0);
-                Game->Sprites->SetSpriteCollisionShape(collectables[i].spr, SHAPE_BOX, tz.x - 66, tz.y - 66, 0, 0, 0); 
+				Game->Sprites->SetSpriteCollisionShape(collectables[i].spr, SHAPE_CIRCLE, tz.x - 66, tz.y - 66, 0, 0, 0);
+                //Game->Sprites->SetSpriteCollisionShape(collectables[i].spr, SHAPE_BOX, tz.x - 66, tz.y - 66, 0, 0, 0); 
 				collectables[i].pos.y = (row) * rowspacingsize + rowfloorsize / 2;
 				collectables[i].pos.x = ((screenright - screenleft) /7) + 
 					(rand() % (screenright - screenleft - ((screenright - screenleft) /6 )));

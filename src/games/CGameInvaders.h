@@ -10,7 +10,7 @@
 #include "../Platform.h"
 #include "../Common.h"
 #include "../CTween.h"
-#include "../Types.h"
+#include "../Vec2F.h"
 
 using namespace std;
 

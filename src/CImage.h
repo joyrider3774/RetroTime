@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 #include "Platform.h"
-#include "Types.h"
+#include "Vec2F.h"
 
 using namespace std;
 

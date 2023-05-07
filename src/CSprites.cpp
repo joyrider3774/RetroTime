@@ -1,10 +1,11 @@
 #include <SDL.h>
+#include <SDL2_gfxPrimitives.h>
 #include <stdio.h>
 #include <iostream>
 #include <string>
 #include <cmath>
 #include "CSprites.h"
-#include "Types.h"
+#include "Vec2F.h"
 
 CSprites::CSprites(CImage* ACImage)
 {
@@ -164,9 +165,23 @@ void CSprites::DrawSprite(SDL_Renderer* Renderer, CSprite* Spr)
         int x = AnimTile - (y * Spr->tilesX);
         SDL_Rect SrcRect = {x * Spr->tileSizeX, y* Spr->tileSizeY, Spr->tileSizeX, Spr->tileSizeY};
         Images->DrawImageFuzeSrcRectTintFloat(Renderer, *Spr->imageID, &SrcRect, true, &pos, Spr->rotation, &scale, Spr->r, Spr->g, Spr->b, Spr->a);
-        // const SDL_Rect rect = {(int)(Spr->x + Spr->collisionxoffset - (Spr->collisionWidth * (Spr->xscale) / 2)), (int)(Spr->y + Spr->collisionyoffset - (Spr->collisionHeight * (Spr->yscale) / 2)), (int)(Spr->collisionWidth * (Spr->xscale)),  (int)(Spr->collisionHeight * (Spr->yscale))};
-        // SDL_SetRenderDrawColor(Renderer, 255, 0, 255, 255);
-        // SDL_RenderDrawRect(Renderer, &rect);
+        SDL_SetRenderDrawColor(Renderer, 255, 0, 255, 255);            
+        switch(Spr->collisionShape)
+        {
+            case SHAPE_BOX:
+            {
+                const SDL_Rect rect = {(int)(Spr->x + Spr->collisionxoffset - (Spr->collisionWidth * (Spr->xscale) / 2)), (int)(Spr->y + Spr->collisionyoffset - (Spr->collisionHeight * (Spr->yscale) / 2)), (int)(Spr->collisionWidth * (Spr->xscale)),  (int)(Spr->collisionHeight * (Spr->yscale))};
+                SDL_RenderDrawRect(Renderer, &rect);
+                break;
+            }
+            case SHAPE_CIRCLE:
+            {
+                circleRGBA(Renderer, Spr->x + Spr->collisionxoffset, Spr->y + Spr->collisionyoffset,(int) ((Spr->collisionWidth * Spr->xscale) / 2), 255,0,255,255 );
+                break;
+            }
+            default:
+                break;
+        }
     }
 }
 
@@ -297,6 +312,47 @@ SDL_Point CSprites::TileSize(CSprite* Spr)
     return {Spr->tileSizeX, Spr->tileSizeY};
 }
 
+//https://learnopengl.com/In-Practice/2D-Game/Collisions/Collision-Detection#
+bool CSprites::DetectRectCircleCollsion(CSprite* SprRect, CSprite* SprCircle)
+{
+    Vec2F center = {SprCircle->x + SprCircle->collisionxoffset /2.0f, SprCircle->y + SprCircle->collisionyoffset / 2.0f};
+    // calculate AABB info (center, half-extents)
+    Vec2F aabb_half_extents = {abs(SprRect->collisionWidth) * abs(SprRect->xscale) / 2.0f, abs(SprRect->collisionHeight)  * abs(SprRect->yscale) / 2.0f};
+    Vec2F aabb_center = {SprRect->x + SprRect->collisionxoffset / 2.0f, SprRect->y + SprRect->collisionyoffset / 2.0f};
+
+    // get difference vector between both centers
+    Vec2F difference = center - aabb_center;
+    Vec2F clamped = clamp(difference, -aabb_half_extents, aabb_half_extents);
+    // add clamped value to AABB_center and we get the value of box closest to circle
+    Vec2F closest = aabb_center + clamped;
+    // retrieve vector between center circle and closest point AABB and check if length <= radius
+    difference = closest - center;
+
+    return length(difference) < (abs(SprCircle->collisionWidth) * abs(SprCircle->xscale) / 2.0f);
+}
+
+bool CSprites::DetectRectRectCollsion(CSprite* Spr, CSprite* SprOther)
+{
+    float widthA = (abs(Spr->collisionWidth) * abs(Spr->xscale));
+    float heightA = (abs(Spr->collisionHeight) * abs(Spr->yscale));
+    float minAx = Spr->x + Spr->collisionxoffset - (abs(Spr->collisionWidth) * abs(Spr->xscale) / 2);
+    float minAy = Spr->y + Spr->collisionyoffset - (abs(Spr->collisionHeight) * abs(Spr->yscale) / 2);
+    
+    float widthB = (abs(SprOther->collisionWidth) * abs(SprOther->xscale));
+    float heightB = (abs(SprOther->collisionHeight) * abs(SprOther->yscale));
+    float minBx = SprOther->x + SprOther->collisionxoffset - (abs(SprOther->collisionWidth) * abs(SprOther->xscale) / 2);
+    float minBy = SprOther->y + SprOther->collisionyoffset - (abs(SprOther->collisionHeight) * abs(SprOther->yscale) / 2);
+                        
+    bool xOverlap = ((minAx >= minBx) && (minAx <= minBx + widthB))  ||
+                    ((minBx >= minAx) && (minBx <= minAx + widthA));
+
+    bool yOverlap = ((minAy >= minBy) && (minAy <= minBy + heightB)) ||
+                    ((minBy >= minAy) && (minBy <= minAy + heightA));
+
+    return xOverlap && yOverlap;
+}
+
+//takes no rotations into account !
 bool CSprites::DetectSpriteCollision(CSprite* Spr, CSprite* SprOther)
 {
     if((Spr == nullptr) || (SprOther == nullptr))
@@ -309,32 +365,47 @@ bool CSprites::DetectSpriteCollision(CSprite* Spr, CSprite* SprOther)
             switch(SprOther->collisionShape)
             {
                 case SHAPE_BOX:
-                {
-                    float widthA = (abs(Spr->collisionWidth) * abs(Spr->xscale));
-                    float heightA = (abs(Spr->collisionHeight) * abs(Spr->yscale));
-                    float minAx = Spr->x + Spr->collisionxoffset - (abs(Spr->collisionWidth) * abs(Spr->xscale) / 2);
-                    float minAy = Spr->y + Spr->collisionyoffset - (abs(Spr->collisionHeight) * abs(Spr->yscale) / 2);
-                    
-                    float widthB = (abs(SprOther->collisionWidth) * abs(SprOther->xscale));
-                    float heightB = (abs(SprOther->collisionHeight) * abs(SprOther->yscale));
-                    float minBx = SprOther->x + SprOther->collisionxoffset - (abs(SprOther->collisionWidth) * abs(SprOther->xscale) / 2);
-                    float minBy = SprOther->y + SprOther->collisionyoffset - (abs(SprOther->collisionHeight) * abs(SprOther->yscale) / 2);
-                                        
-                    bool xOverlap = ((minAx >= minBx) && (minAx <= minBx + widthB))  ||
-                                    ((minBx >= minAx) && (minBx <= minAx + widthA));
-
-                    bool yOverlap = ((minAy >= minBy) && (minAy <= minBy + heightB)) ||
-                                    ((minBy >= minAy) && (minBy <= minAy + heightA));
-
-                    return xOverlap && yOverlap;
-                }
-                break;
+                    return DetectRectRectCollsion(Spr, SprOther);
+                    break;
+                case SHAPE_CIRCLE:
+                    //only works for true circles not ovals!
+                    if ((SprOther->collisionWidth == SprOther->collisionHeight) && (SprOther->xscale == SprOther->yscale))
+                    {    // check normal rect first
+                        //if (DetectRectRectCollsion(Spr, SprOther))
+                            return DetectRectCircleCollsion(Spr, SprOther);
+                        //else
+                        //    return false;
+                    }
+                    else
+                        return false;
+                    break;             
                 default:
                     return false;
-
             }
+            break;
         }
-        break;
+        case SHAPE_CIRCLE:
+        {
+            switch(SprOther->collisionShape)
+            {
+                case SHAPE_BOX:
+                    //only works for true circles not ovals!
+                    if ((Spr->collisionWidth == Spr->collisionHeight) && (Spr->xscale == Spr->yscale))
+                    {
+                        // check normal rect first
+                        //if (DetectRectRectCollsion(Spr, SprOther))
+                            return DetectRectCircleCollsion(SprOther, Spr);
+                        //else
+                        //    return false;
+                    }
+                    else
+                        return false;
+                    break;
+                default:
+                    return false;
+            }
+            break;
+        }
         default:
             return false;
     }

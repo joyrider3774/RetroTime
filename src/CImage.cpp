@@ -1,3 +1,4 @@
+#include <SDL.h>
 #include <SDL_image.h>
 #include <stdio.h>
 #include <iostream>
@@ -5,7 +6,7 @@
 #include <cmath>
 #include "CImage.h"
 #include "Platform.h"
-#include "Types.h"
+#include "Vec2F.h"
 
 using namespace std;
 

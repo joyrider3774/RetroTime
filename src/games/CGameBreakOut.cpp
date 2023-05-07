@@ -6,7 +6,7 @@
 #include "../CGame.h"
 #include "../Common.h"
 #include "../CTween.h"
-#include "../Types.h"
+#include "../Vec2F.h"
 
 using namespace std;
 
@@ -278,7 +278,7 @@ void CGameBreakOut::createball()
 	ball.spr = Game->Sprites->CreateSprite();
 	Game->Sprites->SetSpriteImage(ball.spr, &spritesheetball);
 	ball.tz = Game->Image->ImageSize(spritesheetball);
-	//Game->Sprites->SetSpriteCollisionShape(ball.spr, SHAPE_CIRCLE)
+	Game->Sprites->SetSpriteCollisionShape(ball.spr, SHAPE_CIRCLE, ball.tz.x, ball.tz.y, 0, 0, 0);
 	ball.pos = { (float)((screenright - screenleft) / 2) + 250, (float)screenbottom - 250 - 20};
 	ball.vel = {-0.5,0.5};
 	curballspeed = ballspeed;

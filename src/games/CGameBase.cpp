@@ -1,6 +1,6 @@
 #include <SDL.h>
 #include "CGameBase.h"
-#include "../Types.h"
+#include "../Vec2F.h"
 
 CGameBase::CGameBase(CGame *aGame, int aGameStateID, bool aUsesLevels, bool aScreenshotMode)
 {

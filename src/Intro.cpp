@@ -4,7 +4,7 @@
 #include "Common.h"
 #include "Intro.h"
 #include "CTween.h"
-#include "Types.h"
+#include "Vec2F.h"
 
 float alpha = 0.0f;
 int maxticks = 240;
@@ -14,7 +14,7 @@ int scene = 0;
 int sceneticks = 0;
 int tsize = 70;
 SDL_Texture* screenshot;
-		
+
 
 void Intro(CGame *Game)
 {
