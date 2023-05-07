@@ -261,15 +261,19 @@ void CGame::DrawCrt()
         ReCreateCrt();
 
     //don't put it over scorebar
-    int w2;
+    int w2, h2, y;
     float ScaleX = (float)w / (float)ScreenWidth;
     float ScaleY = (float)h / (float)ScreenHeight;
     int ScaledScoreBarHeight = (ScoreBarHeight) * ScaleY;
+    h2 = ScreenHeight * ScaleY;
     w2 = ScreenWidth * ScaleY;
     if (w2 > w)
+    {
+        h2 = ScreenHeight * ScaleX;
         ScaledScoreBarHeight = (ScoreBarHeight) * ScaleX;
-
-    SDL_Rect Rect = {0,ScaledScoreBarHeight,w,h-ScaledScoreBarHeight};
+    }
+    y = ((h - h2) / 2);
+    SDL_Rect Rect = {0,y + ScaledScoreBarHeight,w, h-(y + ScaledScoreBarHeight)};
     SDL_RenderCopy(Renderer, TexCrt, &Rect, &Rect);
 }
 

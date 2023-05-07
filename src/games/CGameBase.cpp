@@ -370,7 +370,7 @@ void CGameBase::PauseMenu()
 
 		SDL_SetRenderTarget(Game->Renderer, Game->TexScreen);
         SDL_RenderCopy(Game->Renderer, Game->TexOffScreen, NULL, NULL);
-        
+
         SDL_SetRenderTarget(Game->Renderer, NULL);
         SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 255);
         SDL_RenderClear(Game->Renderer);
