@@ -852,6 +852,10 @@ Possible options are:\n\
 
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) == 0) 
     {
+        string controllerdb = DataPath + "data/gamecontrollerdb.txt";   
+        if (SDL_GameControllerAddMappingsFromFile(controllerdb.c_str()) == -1)
+            SDL_Log("Warning: Failed to load game controller mappings: %s", SDL_GetError());
+
         Uint32 WindowFlags = SDL_WINDOW_RESIZABLE;
         if (useFullScreenAtStartup) {
             WindowFlags |= SDL_WINDOW_FULLSCREEN_DESKTOP;            
