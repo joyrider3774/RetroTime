@@ -163,13 +163,19 @@ void CGameRamIt::updateplayer()
 		return;
 	}
 	
-	if (Game->Input->Buttons.ButLeft)
+	if ((Game->Input->Buttons.ButLeft) ||
+		(Game->Input->Buttons.ButLeft2) ||
+		(Game->Input->Buttons.ButDpadLeft))
 		playerdx = -1;
 	
-	if (Game->Input->Buttons.ButRight)
+	if ((Game->Input->Buttons.ButRight) ||
+		(Game->Input->Buttons.ButRight2) ||
+		(Game->Input->Buttons.ButDpadRight))
 		playerdx = 1;
 	
-	if (Game->Input->Buttons.ButDown)
+	if ((Game->Input->Buttons.ButDown) ||
+		(Game->Input->Buttons.ButDown2) ||
+		(Game->Input->Buttons.ButDpadDown))
     {
 		if (playerpos.y + riblocksize / 2 + playerspeed < screenbottom)
 			playerpos.y += playerspeed;
@@ -177,7 +183,9 @@ void CGameRamIt::updateplayer()
 			playerpos.y = screenbottom - riblocksize / 2;
     }
 
-	if (Game->Input->Buttons.ButUp)
+	if ((Game->Input->Buttons.ButUp) ||
+		(Game->Input->Buttons.ButUp2) ||
+		(Game->Input->Buttons.ButDpadUp))
     {
 		if (playerpos.y - riblocksize / 2 - playerspeed > screentop)
 			playerpos.y -= playerspeed;

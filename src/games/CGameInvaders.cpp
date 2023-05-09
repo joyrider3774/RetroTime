@@ -573,7 +573,9 @@ void CGameInvaders::updateplayer()
     {
 		Game->Sprites->SetSpriteAnimation(player.spr, 0, 0, 0);
 
-		if (Game->Input->Buttons.ButLeft)
+		if ((Game->Input->Buttons.ButLeft) ||
+			(Game->Input->Buttons.ButLeft2) ||
+			(Game->Input->Buttons.ButDpadLeft))
         {
 			if (player.pos.x - player.tz.x / 2 - playerspeed > screenleft)
 				player.pos.x -= playerspeed;
@@ -582,7 +584,9 @@ void CGameInvaders::updateplayer()
 			Game->Sprites->SetSpriteAnimation(player.spr, 1, 1, 0);
 		}
 
-		if (Game->Input->Buttons.ButRight)
+		if ((Game->Input->Buttons.ButRight) ||
+			(Game->Input->Buttons.ButRight2) ||
+			(Game->Input->Buttons.ButDpadRight))
         {
 			if ( player.pos.x + player.tz.x / 2 + playerspeed < screenright)
 				player.pos.x += playerspeed;

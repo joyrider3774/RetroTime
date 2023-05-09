@@ -96,7 +96,9 @@ void TitleScreen(CGame *Game)
             Text =  "Use left joystick or dpad to switch between options. (A) to select and (B) for back";
             Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 15, Text, Text.length(), 380, 600, 0, {255, 255, 255, 255});
             
-            if (!Game->Input->PrevButtons.ButDown && Game->Input->Buttons.ButDown)
+            if ((!Game->Input->PrevButtons.ButDown && Game->Input->Buttons.ButDown) ||
+                (!Game->Input->PrevButtons.ButDown2 && Game->Input->Buttons.ButDown2) ||
+                (!Game->Input->PrevButtons.ButDpadDown && Game->Input->Buttons.ButDpadDown))
             {
                 Game->Audio->PlaySound(Game->SfxSelect, 0);
                 SelOptions += 1;
@@ -104,7 +106,9 @@ void TitleScreen(CGame *Game)
                     SelOptions = 0;
             }
             
-            if (!Game->Input->PrevButtons.ButUp && Game->Input->Buttons.ButUp)
+            if ((!Game->Input->PrevButtons.ButUp && Game->Input->Buttons.ButUp) ||
+                (!Game->Input->PrevButtons.ButUp2 && Game->Input->Buttons.ButUp2) ||
+                (!Game->Input->PrevButtons.ButDpadUp && Game->Input->Buttons.ButDpadUp))
             {
                 Game->Audio->PlaySound(Game->SfxSelect, 0);
 
@@ -113,7 +117,9 @@ void TitleScreen(CGame *Game)
                     SelOptions = OptionMenus - 1;
             }
             
-            if (!Game->Input->PrevButtons.ButLeft && Game->Input->Buttons.ButLeft)
+            if ((!Game->Input->PrevButtons.ButLeft && Game->Input->Buttons.ButLeft) ||
+                (!Game->Input->PrevButtons.ButLeft2 && Game->Input->Buttons.ButLeft2) ||
+                (!Game->Input->PrevButtons.ButDpadLeft && Game->Input->Buttons.ButDpadLeft))
             {
                 Game->Audio->PlaySound(Game->SfxSelect, 0);
                 bool wasplaying;
@@ -145,7 +151,9 @@ void TitleScreen(CGame *Game)
                 //savehighscoresoptions()
             }
 								
-            if (!Game->Input->PrevButtons.ButRight && Game->Input->Buttons.ButRight)
+            if ((!Game->Input->PrevButtons.ButRight && Game->Input->Buttons.ButRight) ||
+                (!Game->Input->PrevButtons.ButRight2 && Game->Input->Buttons.ButRight2) ||
+                (!Game->Input->PrevButtons.ButDpadRight && Game->Input->Buttons.ButDpadRight))
             {
                 Game->Audio->PlaySound(Game->SfxSelect, 0);
                 bool wasplaying;
@@ -332,6 +340,8 @@ void TitleScreen(CGame *Game)
             
             if ((!Game->Input->PrevButtons.ButStart && Game->Input->Buttons.ButStart) ||
                 (!Game->Input->PrevButtons.ButRight && Game->Input->Buttons.ButRight) ||
+                (!Game->Input->PrevButtons.ButRight2 && Game->Input->Buttons.ButRight2) ||
+                (!Game->Input->PrevButtons.ButDpadRight && Game->Input->Buttons.ButDpadRight) ||
                 (!Game->Input->PrevButtons.ButA && Game->Input->Buttons.ButA))
             {
                 Game->Audio->PlaySound(Game->SfxSelect, 0);
@@ -341,7 +351,9 @@ void TitleScreen(CGame *Game)
                     Game->Game = 0;   
             }
 
-             if (!Game->Input->PrevButtons.ButLeft && Game->Input->Buttons.ButLeft)
+             if ((!Game->Input->PrevButtons.ButLeft && Game->Input->Buttons.ButLeft) ||
+                 (!Game->Input->PrevButtons.ButLeft2 && Game->Input->Buttons.ButLeft2) ||
+                 (!Game->Input->PrevButtons.ButDpadLeft && Game->Input->Buttons.ButDpadLeft))
              {
                 Game->Audio->PlaySound(Game->SfxSelect, 0);
 
@@ -395,7 +407,9 @@ void TitleScreen(CGame *Game)
                 Game->Input->ResetButtons();
             }
 
-            if (!Game->Input->PrevButtons.ButLeft && Game->Input->Buttons.ButLeft)
+            if ((!Game->Input->PrevButtons.ButLeft && Game->Input->Buttons.ButLeft) ||
+                (!Game->Input->PrevButtons.ButLeft2 && Game->Input->Buttons.ButLeft2) ||
+                (!Game->Input->PrevButtons.ButDpadLeft && Game->Input->Buttons.ButDpadLeft))
             {
                 Game->Audio->PlaySound(Game->SfxSelect, 0);
 
@@ -403,7 +417,9 @@ void TitleScreen(CGame *Game)
                 if (Game->Game == -1)
                     Game->Game = Games - 1;
             }
-            if (!Game->Input->PrevButtons.ButRight && Game->Input->Buttons.ButRight)
+            if ((!Game->Input->PrevButtons.ButRight && Game->Input->Buttons.ButRight) ||
+                (!Game->Input->PrevButtons.ButRight2 && Game->Input->Buttons.ButRight2) ||
+                (!Game->Input->PrevButtons.ButDpadRight && Game->Input->Buttons.ButDpadRight))
             {
                 Game->Audio->PlaySound(Game->SfxSelect, 0);
 
@@ -435,7 +451,9 @@ void TitleScreen(CGame *Game)
             Text = "Use left joystick or dpad to switch between game modes. (A) to select and (B) for back";
             Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 15, Text, Text.length(), 330, 600, 0, {255,255,255,255});
 		
-            if (!Game->Input->PrevButtons.ButDown && Game->Input->Buttons.ButDown)
+            if ((!Game->Input->PrevButtons.ButDown && Game->Input->Buttons.ButDown) ||
+                (!Game->Input->PrevButtons.ButDown2 && Game->Input->Buttons.ButDown2) ||
+                (!Game->Input->PrevButtons.ButDpadDown && Game->Input->Buttons.ButDpadDown))
             {
                 Game->Audio->PlaySound(Game->SfxSelect, 0);
                 Game->GameMode += 1;
@@ -443,7 +461,9 @@ void TitleScreen(CGame *Game)
                     Game->GameMode = 0;
             }
 		
-		    if (!Game->Input->PrevButtons.ButUp && Game->Input->Buttons.ButUp)
+		    if ((!Game->Input->PrevButtons.ButUp && Game->Input->Buttons.ButUp) ||
+                (!Game->Input->PrevButtons.ButUp2 && Game->Input->Buttons.ButUp2) ||
+                (!Game->Input->PrevButtons.ButDpadUp && Game->Input->Buttons.ButDpadUp))
             {
 			    Game->Audio->PlaySound(Game->SfxSelect, 0);
 
@@ -495,7 +515,9 @@ void TitleScreen(CGame *Game)
                 Game->Font->WriteText(Game->Renderer, "Roboto-Regular", menutextsize, MMMainMenus[i].name, MMMainMenus[i].name.length(), 500, 200 + i * menuspacing, 0, color);    
             } 
             
-            if (!Game->Input->PrevButtons.ButDown && Game->Input->Buttons.ButDown)
+            if ((!Game->Input->PrevButtons.ButDown && Game->Input->Buttons.ButDown) ||
+                (!Game->Input->PrevButtons.ButDown2 && Game->Input->Buttons.ButDown2) ||
+                (!Game->Input->PrevButtons.ButDpadDown && Game->Input->Buttons.ButDpadDown))
             {
                 Game->Audio->PlaySound(Game->SfxSelect, 0);
                 SelectedMenu += 1;
@@ -503,7 +525,10 @@ void TitleScreen(CGame *Game)
                     SelectedMenu = 0;
             }
             
-            if (!Game->Input->PrevButtons.ButUp && Game->Input->Buttons.ButUp)
+            if ((!Game->Input->PrevButtons.ButUp && Game->Input->Buttons.ButUp) ||
+                (!Game->Input->PrevButtons.ButUp2 && Game->Input->Buttons.ButUp2) ||
+                (!Game->Input->PrevButtons.ButDpadUp && Game->Input->Buttons.ButDpadUp))
+
             {
                 Game->Audio->PlaySound(Game->SfxSelect, 0);
 

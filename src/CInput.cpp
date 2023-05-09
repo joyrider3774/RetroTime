@@ -95,6 +95,14 @@ void CInput::ResetButtons()
     Buttons.ButQuit = false;
     Buttons.ButFullscreen = false;
     Buttons.RenderReset = false;
+    Buttons.ButDpadLeft = false;
+    Buttons.ButDpadRight = false;
+    Buttons.ButDpadUp = false;
+    Buttons.ButDpadDown = false;
+    Buttons.ButLeft2 = false;
+    Buttons.ButRight2 = false;
+    Buttons.ButUp2 = false;
+    Buttons.ButDown2 = false;
     PrevButtons = Buttons;
 }
 
@@ -115,16 +123,16 @@ void CInput::HandleJoystickButtonEvent(int Button, bool Value)
             Buttons.ButRB = Value;
             break;
         case SDL_CONTROLLER_BUTTON_DPAD_UP:
-            Buttons.ButUp = Value;
+            Buttons.ButDpadUp = Value;
             break;
         case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
-            Buttons.ButDown = Value;
+            Buttons.ButDpadDown = Value;
             break;
         case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
-            Buttons.ButLeft = Value;
+            Buttons.ButDpadLeft = Value;
             break;
         case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
-            Buttons.ButRight = Value;
+            Buttons.ButDpadRight = Value;
             break;
         case SDL_CONTROLLER_BUTTON_A:
             Buttons.ButA = Value;
@@ -209,7 +217,6 @@ void CInput::HandleJoystickAxisEvent(int Axis, int Value)
 {
     switch(Axis)
     {
-        case SDL_CONTROLLER_AXIS_RIGHTX:
         case SDL_CONTROLLER_AXIS_LEFTX:
             if (abs(Value) < JoystickDeadZone)
             {
@@ -223,7 +230,6 @@ void CInput::HandleJoystickAxisEvent(int Axis, int Value)
                 Buttons.ButLeft = true;
             break;
  
-        case SDL_CONTROLLER_AXIS_RIGHTY:
         case SDL_CONTROLLER_AXIS_LEFTY:
             if (abs(Value) < JoystickDeadZone)
             {
@@ -235,6 +241,32 @@ void CInput::HandleJoystickAxisEvent(int Axis, int Value)
                 Buttons.ButUp = true;
             else
                 Buttons.ButDown = true;
+            break;
+
+        case SDL_CONTROLLER_AXIS_RIGHTX:
+            if (abs(Value) < JoystickDeadZone)
+            {
+                Buttons.ButRight2 = false;
+                Buttons.ButLeft2 = false;
+                return;
+            }
+            if(Value > 0)
+                Buttons.ButRight2 = true;
+            else
+                Buttons.ButLeft2 = true;
+            break;
+ 
+        case SDL_CONTROLLER_AXIS_RIGHTY:
+            if (abs(Value) < JoystickDeadZone)
+            {
+                Buttons.ButUp2 = false;
+                Buttons.ButDown2 = false;
+                return;
+            }
+            if(Value < 0)
+                Buttons.ButUp2 = true;
+            else
+                Buttons.ButDown2 = true;
             break;
 
         case SDL_CONTROLLER_AXIS_TRIGGERLEFT:

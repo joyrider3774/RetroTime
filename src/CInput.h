@@ -3,9 +3,12 @@
 #include <SDL.h>
 
 struct SButtons {
-    bool ButLeft, ButRight, ButUp, ButDown, ButBack, ButStart, ButA, ButB, 
-        ButX, ButY, ButLB, ButRB, ButFullscreen, ButQuit, ButRT, ButLT,
-        RenderReset;
+    bool ButLeft, ButRight, ButUp, ButDown,
+         ButDpadLeft, ButDpadRight, ButDpadUp, ButDpadDown,
+         ButLeft2, ButRight2, ButUp2, ButDown2,
+         ButBack, ButStart, ButA, ButB, 
+         ButX, ButY, ButLB, ButRB, ButFullscreen, ButQuit, ButRT, ButLT,
+         RenderReset;
 };
 
 class CInput {

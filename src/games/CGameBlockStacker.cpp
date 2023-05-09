@@ -63,15 +63,21 @@ void CGameBlockStacker::updateplayer()
 		return;
 	}
 
-	if (Game->Input->Buttons.ButLeft) 
+	if ((Game->Input->Buttons.ButLeft) ||
+		(Game->Input->Buttons.ButLeft2) ||
+		(Game->Input->Buttons.ButDpadLeft))
 		if (piecefits(currpiece, rotation, plrx - 1, plry))
 			plrx -= 1;
 	
-	if (Game->Input->Buttons.ButRight) 
+	if ((Game->Input->Buttons.ButRight) ||
+		(Game->Input->Buttons.ButRight2) ||
+		(Game->Input->Buttons.ButDpadRight))
 		if (piecefits(currpiece, rotation, plrx + 1, plry))
 			plrx += 1;
 	
-	if (Game->Input->Buttons.ButDown) 
+	if ((Game->Input->Buttons.ButDown) ||
+		(Game->Input->Buttons.ButDown2) ||
+		(Game->Input->Buttons.ButDpadDown))
 		if (piecefits(currpiece, rotation, plrx, plry + 1))
 			plry += 1;
 

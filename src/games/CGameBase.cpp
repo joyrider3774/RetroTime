@@ -185,7 +185,9 @@ void CGameBase::PauseMenu()
 
         if (Game->SubGameState == SGPauseMenu)
         {
-            if (!Game->Input->PrevButtons.ButLeft && Game->Input->Buttons.ButLeft)
+            if ((!Game->Input->PrevButtons.ButLeft && Game->Input->Buttons.ButLeft) ||
+                (!Game->Input->PrevButtons.ButLeft2 && Game->Input->Buttons.ButLeft2) ||
+                (!Game->Input->PrevButtons.ButDpadLeft && Game->Input->Buttons.ButDpadLeft))
             {
                 Game->Audio->PlaySound(Game->SfxSelect, 0);
                 
@@ -223,7 +225,9 @@ void CGameBase::PauseMenu()
                 }
             }
             
-            if (!Game->Input->PrevButtons.ButRight && Game->Input->Buttons.ButRight)
+            if ((!Game->Input->PrevButtons.ButRight && Game->Input->Buttons.ButRight) ||
+                (!Game->Input->PrevButtons.ButRight2 && Game->Input->Buttons.ButRight2) ||
+                (!Game->Input->PrevButtons.ButDpadRight && Game->Input->Buttons.ButDpadRight))
             {
                 Game->Audio->PlaySound(Game->SfxSelect, 0);
                 switch(selectedmenu)
@@ -260,7 +264,9 @@ void CGameBase::PauseMenu()
                 }
             }		
                     
-            if (!Game->Input->PrevButtons.ButDown && Game->Input->Buttons.ButDown)
+            if ((!Game->Input->PrevButtons.ButDown && Game->Input->Buttons.ButDown) ||
+                (!Game->Input->PrevButtons.ButDown2 && Game->Input->Buttons.ButDown2) ||
+                (!Game->Input->PrevButtons.ButDpadDown && Game->Input->Buttons.ButDpadDown))
             {
                 Game->Audio->PlaySound(Game->SfxSelect, 0);
 
@@ -270,7 +276,9 @@ void CGameBase::PauseMenu()
                 
             }
             
-            if (!Game->Input->PrevButtons.ButUp && Game->Input->Buttons.ButUp)
+            if ((!Game->Input->PrevButtons.ButUp && Game->Input->Buttons.ButUp) ||
+                (!Game->Input->PrevButtons.ButUp2 && Game->Input->Buttons.ButUp2) ||
+                (!Game->Input->PrevButtons.ButDpadUp && Game->Input->Buttons.ButDpadUp))
             {
                 Game->Audio->PlaySound(Game->SfxSelect, 0);
 

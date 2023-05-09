@@ -471,16 +471,24 @@ void CGameFastEddy::updateplayer()
 			if (!Game->Input->PrevButtons.ButA && Game->Input->Buttons.ButA)
 				jump = true;
 
-			if (Game->Input->Buttons.ButUp)
+			if ((Game->Input->Buttons.ButUp) ||
+				(Game->Input->Buttons.ButUp2) ||
+				(Game->Input->Buttons.ButDpadUp))
 				up = true;
 
-			if (Game->Input->Buttons.ButDown)
+			if ((Game->Input->Buttons.ButDown) ||
+				(Game->Input->Buttons.ButDown2) ||
+				(Game->Input->Buttons.ButDpadDown))
 				down = true;
 			
-            if (Game->Input->Buttons.ButLeft)
+            if ((Game->Input->Buttons.ButLeft) ||
+				(Game->Input->Buttons.ButLeft2) ||
+				(Game->Input->Buttons.ButDpadLeft))
 				left = true;
 		
-			if (Game->Input->Buttons.ButRight)
+			if ((Game->Input->Buttons.ButRight) ||
+				(Game->Input->Buttons.ButRight2) ||
+				(Game->Input->Buttons.ButDpadRight))
 				right = true;
 
 			if (jump)

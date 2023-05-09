@@ -232,7 +232,9 @@ void CGameBreakOut::updateplayer()
 		if (Game->Input->Buttons.ButA)
 			speedmultiplier = 2;
 		
-		if (Game->Input->Buttons.ButLeft)
+		if ((Game->Input->Buttons.ButLeft) ||
+			(Game->Input->Buttons.ButLeft2) ||
+			(Game->Input->Buttons.ButDpadLeft))
         {
 			if (player.pos.x - player.tz.x / 2 - (playerspeed * speedmultiplier) > screenleft)
 				player.pos.x -= playerspeed * speedmultiplier;
@@ -240,7 +242,9 @@ void CGameBreakOut::updateplayer()
 				player.pos.x = screenleft + player.tz.x / 2;
         }
 
-		if (Game->Input->Buttons.ButRight)
+		if ((Game->Input->Buttons.ButRight) ||
+			(Game->Input->Buttons.ButRight2) ||
+			(Game->Input->Buttons.ButDpadRight))
         {
 			if ( player.pos.x + player.tz.x / 2 + (playerspeed * speedmultiplier) < screenright)
 				player.pos.x += playerspeed * speedmultiplier;

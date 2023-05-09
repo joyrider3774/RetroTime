@@ -82,7 +82,9 @@ void CGameSnake::updatesnake()
 {
 	if(!ScreenshotMode)
     {
-		if (Game->Input->Buttons.ButLeft)
+		if ((Game->Input->Buttons.ButLeft) ||
+            (Game->Input->Buttons.ButLeft2) ||
+            (Game->Input->Buttons.ButDpadLeft))
         {
 			if(movedone && dir.x == 0)
             {
@@ -92,7 +94,9 @@ void CGameSnake::updatesnake()
         }
 		else
         {
-			if (Game->Input->Buttons.ButRight)
+			if ((Game->Input->Buttons.ButRight) ||
+                (Game->Input->Buttons.ButRight2) ||
+                (Game->Input->Buttons.ButDpadRight))
             {
 				if(movedone && dir.x == 0)
                 {
@@ -102,7 +106,9 @@ void CGameSnake::updatesnake()
             }
             else
             {
-				if (Game->Input->Buttons.ButUp)
+				if ((Game->Input->Buttons.ButUp) ||
+                    (Game->Input->Buttons.ButUp2) ||
+                    (Game->Input->Buttons.ButDpadUp))
                 {
 					if(movedone && dir.y == 0)
                     {
@@ -112,7 +118,9 @@ void CGameSnake::updatesnake()
                 }
 				else
                 {
-					if (Game->Input->Buttons.ButDown)
+					if ((Game->Input->Buttons.ButDown) ||
+                        (Game->Input->Buttons.ButDown2) ||
+                        (Game->Input->Buttons.ButDpadDown))
                     {
 						if(movedone && dir.y == 0)
 						{	
