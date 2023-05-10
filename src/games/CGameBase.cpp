@@ -412,7 +412,7 @@ void CGameBase::PauseMenu()
                 Text += "SPR Slots: " + to_string(Game->Sprites->SpriteSlotsUsed()) + "/" + to_string(Game->Sprites->SpriteSlotsMax()) + "\n";
             }
             int tw = Game->Font->TextWidth("RobotoMono-Bold", 16, Text, Text.length());
-            Game->Font->WriteText(Game->Renderer, "RobotoMono-Bold", 16, Text, Text.length(), ScreenWidth - tw, 0, 0, {255, 0, 255, 255});
+            Game->Font->WriteText(Game->Renderer, "RobotoMono-Bold", 16, Text, Text.length(), w - tw, 0, 0, {255, 0, 255, 255});
         }
         SDL_RenderPresent(Game->Renderer);
         

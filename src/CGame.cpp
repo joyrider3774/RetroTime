@@ -786,7 +786,7 @@ void CGame::MainLoop()
                 Text += "SPR Slots: " + to_string(Sprites->SpriteSlotsUsed()) + "/" + to_string(Sprites->SpriteSlotsMax()) + "\n";
             }
             int tw = Font->TextWidth("RobotoMono-Bold", 16, Text, Text.length());
-            Font->WriteText(Renderer, "RobotoMono-Bold", 16, Text, Text.length(), ScreenWidth - tw, 0, 0, {255, 0, 255, 255});
+            Font->WriteText(Renderer, "RobotoMono-Bold", 16, Text, Text.length(), w - tw, 0, 0, {255, 0, 255, 255});
         }
         SDL_RenderPresent(Renderer);
         
