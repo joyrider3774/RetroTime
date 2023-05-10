@@ -16,9 +16,10 @@ private:
     SDL_Texture *Images[GFX_Max];
     string DataPath;
     bool ImgEnabled;
+    bool DebugInfo;
 
 public:
-    CImage(string AssetsPath);
+    CImage(string AssetsPath, bool ADebugInfo);
     ~CImage();
     int LoadImage(SDL_Renderer* Renderer, string FileName);
     void UnLoadImage(int GFXID);

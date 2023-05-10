@@ -7,9 +7,10 @@
 
 using namespace std;
 
-CAudio::CAudio(string AssetsPath)
+CAudio::CAudio(string AssetsPath, bool ADebugInfo)
 {
     DataPath = AssetsPath;
+    DebugInfo = ADebugInfo;
     if (SDL_Init(SDL_INIT_AUDIO) == 0) 
     {
         if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 1024) < 0) 
@@ -160,8 +161,17 @@ int CAudio::LoadMusic(string FileName)
     for (int i=0; i < MUS_Max; i++)
         if(Music[i] == nullptr)
         {
-            Music[i] = Mix_LoadMUS(FullFileName.c_str());
-            return i;
+            Mix_Music* Tmp = Mix_LoadMUS(FullFileName.c_str());
+            if(!Tmp)
+                SDL_Log("Failed Loading Music %s\n", FullFileName.c_str());
+            else
+            {
+                Music[i] = Tmp;
+                if(DebugInfo)
+                    SDL_Log("Loaded Music %s\n", FullFileName.c_str());
+                return i;
+            }
+            
         }
     return -1;
 }
@@ -187,7 +197,7 @@ void CAudio::PlayMusic(int MusicID, int loops)
     if ((MusicID < 0) || (MusicID > MUS_Max) || !GlobalSoundEnabled)
         return;
 
-   // Mix_VolumeMusic(VolumeMusic);
+    // Mix_VolumeMusic(VolumeMusic);
     Mix_PlayMusic(Music[MusicID], loops);
 }
 
@@ -230,8 +240,16 @@ int CAudio::LoadSound(string FileName)
     for (int i=0; i < SND_Max; i++)
         if(Sounds[i] == nullptr)
         {
-            Sounds[i] = Mix_LoadWAV(FullFileName.c_str());
-            return i;
+            Mix_Chunk *Tmp = Mix_LoadWAV(FullFileName.c_str());
+            if(!Tmp)
+                SDL_Log("Failed Loading Sound %s\n", FullFileName.c_str());
+            else
+            {
+                Sounds[i] =  Tmp;
+                if(DebugInfo)
+                    SDL_Log("Loaded Sound %s\n", FullFileName.c_str());
+                return i;
+            }
         }
     return -1;
 }

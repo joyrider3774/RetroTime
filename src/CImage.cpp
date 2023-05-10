@@ -10,9 +10,10 @@
 
 using namespace std;
 
-CImage::CImage(string AssetsPath)
+CImage::CImage(string AssetsPath, bool ADebugInfo)
 {
     ImgEnabled = true;
+    DebugInfo = ADebugInfo;
     if (IMG_Init(IMG_INIT_PNG) == 0) 
     {
         ImgEnabled = false;
@@ -44,9 +45,19 @@ int CImage::LoadImage(SDL_Renderer* Renderer, string FileName)
         if(Images[i] == nullptr)
         {
             SDL_Surface* Img =  IMG_Load(FullFileName.c_str());
-            Images[i] = SDL_CreateTextureFromSurface(Renderer, Img);
-            SDL_FreeSurface(Img);
-            return i;
+            if(Img)
+            {
+                Images[i] = SDL_CreateTextureFromSurface(Renderer, Img);
+                SDL_FreeSurface(Img);
+                if(DebugInfo)
+                    SDL_Log("Loaded Graphic %s\n", FullFileName.c_str());
+                return i;
+            }
+            else
+            {
+                SDL_Log("Failed Loading Graphic %s\n", FullFileName.c_str());
+                return -1;
+            }
         }
     return -1;
 }

@@ -8,9 +8,10 @@
 
 using namespace std;
 
-CFont::CFont(string AssetsPath)
+CFont::CFont(string AssetsPath, bool DebugInfo)
 {
     DataPath = AssetsPath;
+    DebugInfo = DebugInfo;
     GlobalFontEnabled = (TTF_Init() == 0);
     if (GlobalFontEnabled)
         SDL_Log("Succesfully initialized TTF\n");
@@ -53,10 +54,11 @@ SDL_Point CFont::TextSize(string Font, int FontSize, string Tekst, size_t NrOfCh
         FontIn = TTF_OpenFont(Filename.c_str(), FontSize);
         if (!FontIn)
         {
-            SDL_Log("Failed loading fonts: %s\n", SDL_GetError());
+            SDL_Log("Failed Loading Font %s %d\n", SDL_GetError(), FontSize);
             return Result;
         } 
-            
+        if(DebugInfo)
+            SDL_Log("Loaded Font %s %d\n", Filename.c_str(), FontSize);
         TTF_SetFontStyle(FontIn, TTF_STYLE_NORMAL);
 
         FontCache[FontNameSize] = FontIn;
@@ -110,10 +112,11 @@ void CFont::WriteText(SDL_Renderer *Renderer, string Font, int FontSize, string 
         FontIn = TTF_OpenFont(Filename.c_str(), FontSize);
         if (!FontIn)
         {
-            SDL_Log("Failed loading fonts: %s\n", SDL_GetError());
+            SDL_Log("Failed Loading Font %s %d\n", Filename.c_str(), FontSize);
             return;
-        } 
-            
+        }
+        if(DebugInfo)
+            SDL_Log("Loaded Font %s %d\n", Filename.c_str(), FontSize);
         TTF_SetFontStyle(FontIn, TTF_STYLE_NORMAL);
 
         FontCache[FontNameSize] = FontIn;

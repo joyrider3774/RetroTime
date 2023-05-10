@@ -887,9 +887,9 @@ Possible options are:\n\
                 SDL_Log("Succesfully Created Buffer\n");
                 srand(time(NULL));
 
-                Audio = new CAudio(DataPath);
-                Font = new CFont(DataPath);
-                Image = new CImage(DataPath);
+                Audio = new CAudio(DataPath, debugInfo);
+                Font = new CFont(DataPath, debugInfo);
+                Image = new CImage(DataPath, debugInfo);
                 Input = new CInput();
                 Sprites = new CSprites(Image);
                 Sprites->SetForceShowCollisionShape(debugShowCollisionShapes);

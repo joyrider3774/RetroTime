@@ -14,6 +14,7 @@ constexpr int MUS_Max = 20;
 class CAudio {
 
 private:
+    bool DebugInfo;
     int VolumeMusic, VolumeSound;
     Mix_Chunk *Sounds[SND_Max];
     Mix_Music *Music[MUS_Max];
@@ -21,7 +22,7 @@ private:
 
 public:
     bool GlobalSoundEnabled = true;
-    CAudio(string AssetsPath);
+    CAudio(string AssetsPath, bool ADebugInfo);
     ~CAudio();
     void IncVolumeMusic();
     void DecVolumeMusic();
