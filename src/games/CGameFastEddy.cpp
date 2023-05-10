@@ -919,10 +919,7 @@ void CGameFastEddy::init()
 	createplayer();
 	if(!ScreenshotMode)
 	{
-		SfxDie = Game->Audio->LoadSound("common/die.wav");
-		SfxSucces = Game->Audio->LoadSound("common/succes.wav");
-        SfxCollect = Game->Audio->LoadSound("common/coin.wav");
-		MusMusic = Game->Audio->LoadMusic("fasterdave/music.ogg");	
+		LoadSound();
 		Game->CurrentGameMusicID = MusMusic;
 		Game->Audio->PlayMusic(MusMusic, -1);
 	}
@@ -938,17 +935,30 @@ void CGameFastEddy::deinit()
     destroyplayer();
 	if (!ScreenshotMode)
 	{
-		Game->Audio->StopMusic();
-		Game->Audio->StopSound();
-		Game->Audio->UnLoadMusic(MusMusic);
-		Game->Audio->UnLoadSound(SfxDie);
-		Game->Audio->UnLoadSound(SfxSucces);
-		Game->Audio->UnLoadSound(SfxCollect);
+		UnLoadSound();
 		Game->SubStateCounter = 0;
 		Game->SubGameState = SGNone;
 		Game->CurrentGameMusicID = -1;
 	}
 	UnloadGraphics();
+}
+
+void CGameFastEddy::LoadSound()
+{
+	SfxDie = Game->Audio->LoadSound("common/die.wav");
+	SfxSucces = Game->Audio->LoadSound("common/succes.wav");
+    SfxCollect = Game->Audio->LoadSound("common/coin.wav");
+	MusMusic = Game->Audio->LoadMusic("fasterdave/music.ogg");	
+}
+
+void CGameFastEddy::UnLoadSound()
+{
+	Game->Audio->StopMusic();
+	Game->Audio->StopSound();
+	Game->Audio->UnLoadMusic(MusMusic);
+	Game->Audio->UnLoadSound(SfxDie);
+	Game->Audio->UnLoadSound(SfxSucces);
+	Game->Audio->UnLoadSound(SfxCollect);
 }
 
 void CGameFastEddy::LoadGraphics()

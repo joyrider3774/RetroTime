@@ -472,14 +472,30 @@ void CGameBreakOut::init()
 
     if(!ScreenshotMode)
 	{
-		SfxDie = Game->Audio->LoadSound("common/die.wav");
-		SfxSucces = Game->Audio->LoadSound("common/succes.wav");
-        SfxBat = Game->Audio->LoadSound("breakout/bat.wav");
-        SfxBrick = Game->Audio->LoadSound("breakout/brick.wav");
-        MusMusic = Game->Audio->LoadMusic("breakout/music.ogg");	
+		LoadSound();
 		Game->CurrentGameMusicID = MusMusic;
 		Game->Audio->PlayMusic(MusMusic, -1);
 	}
+}
+
+void CGameBreakOut::LoadSound()
+{
+	SfxDie = Game->Audio->LoadSound("common/die.wav");
+	SfxSucces = Game->Audio->LoadSound("common/succes.wav");
+    SfxBat = Game->Audio->LoadSound("breakout/bat.wav");
+    SfxBrick = Game->Audio->LoadSound("breakout/brick.wav");
+    MusMusic = Game->Audio->LoadMusic("breakout/music.ogg");
+}
+
+void CGameBreakOut::UnLoadSound()
+{
+	Game->Audio->StopMusic();
+	Game->Audio->StopSound();
+	Game->Audio->UnLoadMusic(MusMusic);
+    Game->Audio->UnLoadSound(SfxSucces);
+    Game->Audio->UnLoadSound(SfxDie);
+    Game->Audio->UnLoadSound(SfxBrick);
+    Game->Audio->UnLoadSound(SfxBat);
 }
 
 void CGameBreakOut::deinit()
@@ -489,13 +505,7 @@ void CGameBreakOut::deinit()
 	destroyball();
 	if (!ScreenshotMode)
 	{
-		Game->Audio->StopMusic();
-		Game->Audio->StopSound();
-		Game->Audio->UnLoadMusic(MusMusic);
-        Game->Audio->UnLoadSound(SfxSucces);
-        Game->Audio->UnLoadSound(SfxDie);
-        Game->Audio->UnLoadSound(SfxBrick);
-        Game->Audio->UnLoadSound(SfxBat);
+		UnLoadSound();
 		Game->SubStateCounter = 0;
 		Game->SubGameState = SGNone;
 		Game->CurrentGameMusicID = -1;

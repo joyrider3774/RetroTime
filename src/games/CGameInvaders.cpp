@@ -664,14 +664,7 @@ void CGameInvaders::init()
 
 	if(!ScreenshotMode)
 	{
-        SfxDie = Game->Audio->LoadSound("common/die.wav");
-        SfxPlayerShoot = Game->Audio->LoadSound("invaders/playershoot.wav");
-        SfxPlayerDeath = Game->Audio->LoadSound("invaders/playerdeath.wav");
-        SfxEnemyShoot = Game->Audio->LoadSound("invaders/enemyshoot.wav");
-        SfxEnemyDeath = Game->Audio->LoadSound("invaders/enemydeath.wav");
-		SfxSucces = Game->Audio->LoadSound("common/succes.wav");
-		MusMusic = Game->Audio->LoadMusic("invaders/music.ogg");
-        //SfxExplosion = 
+		LoadSound();
 		Game->CurrentGameMusicID = MusMusic;
 		Game->Audio->PlayMusic(MusMusic, -1);
 	}
@@ -687,20 +680,36 @@ void CGameInvaders::deinit()
 	destroyallexplosion();
 	if (!ScreenshotMode)
 	{
-		Game->Audio->StopMusic();
-		Game->Audio->StopSound();
-		Game->Audio->UnLoadMusic(MusMusic);
-		Game->Audio->UnLoadSound(SfxDie);
-		Game->Audio->UnLoadSound(SfxPlayerShoot);
-		Game->Audio->UnLoadSound(SfxPlayerDeath);
-		Game->Audio->UnLoadSound(SfxEnemyShoot);
-		Game->Audio->UnLoadSound(SfxEnemyDeath);
-		Game->Audio->UnLoadSound(SfxSucces);
+		UnLoadSound();
 		Game->SubStateCounter = 0;
 		Game->SubGameState = SGNone;
 		Game->CurrentGameMusicID = -1;
 	}
 	UnloadGraphics();
+}
+
+void CGameInvaders::LoadSound()
+{
+	SfxDie = Game->Audio->LoadSound("common/die.wav");
+	SfxPlayerShoot = Game->Audio->LoadSound("invaders/playershoot.wav");
+	SfxPlayerDeath = Game->Audio->LoadSound("invaders/playerdeath.wav");
+	SfxEnemyShoot = Game->Audio->LoadSound("invaders/enemyshoot.wav");
+	SfxEnemyDeath = Game->Audio->LoadSound("invaders/enemydeath.wav");
+	SfxSucces = Game->Audio->LoadSound("common/succes.wav");
+	MusMusic = Game->Audio->LoadMusic("invaders/music.ogg");
+}
+
+void CGameInvaders::UnLoadSound()
+{
+	Game->Audio->StopMusic();
+	Game->Audio->StopSound();
+	Game->Audio->UnLoadMusic(MusMusic);
+	Game->Audio->UnLoadSound(SfxDie);
+	Game->Audio->UnLoadSound(SfxPlayerShoot);
+	Game->Audio->UnLoadSound(SfxPlayerDeath);
+	Game->Audio->UnLoadSound(SfxEnemyShoot);
+	Game->Audio->UnLoadSound(SfxEnemyDeath);
+	Game->Audio->UnLoadSound(SfxSucces);
 }
 
 void CGameInvaders::LoadGraphics()

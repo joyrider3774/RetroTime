@@ -207,9 +207,7 @@ void CGameSnake::init()
     if (!ScreenshotMode)
     {
         HealthPoints = 2;
-        SfxFood = Game->Audio->LoadSound("snakey/food.wav");
-        SfxDie = Game->Audio->LoadSound("common/die.wav");
-        MusMusic = Game->Audio->LoadMusic("snakey/music.ogg");	
+        LoadSound();
         Game->CurrentGameMusicID = MusMusic;
         Game->Audio->PlayMusic(MusMusic, -1);
     }
@@ -219,15 +217,27 @@ void CGameSnake::deinit()
 {
     if (!ScreenshotMode)
     {
-        Game->Audio->StopMusic();
-        Game->Audio->StopSound();
-        Game->Audio->UnLoadMusic(MusMusic);
-        Game->Audio->UnLoadSound(SfxFood);
-        Game->Audio->UnLoadSound(SfxDie);
+        UnLoadSound();
         Game->SubStateCounter = 0;
         Game->SubGameState = SGNone;
         Game->CurrentGameMusicID = -1;
     }
+}
+
+void CGameSnake::LoadSound()
+{
+    SfxFood = Game->Audio->LoadSound("snakey/food.wav");
+    SfxDie = Game->Audio->LoadSound("common/die.wav");
+    MusMusic = Game->Audio->LoadMusic("snakey/music.ogg");
+}
+
+void CGameSnake::UnLoadSound()
+{
+    Game->Audio->StopMusic();
+    Game->Audio->StopSound();
+    Game->Audio->UnLoadMusic(MusMusic);
+    Game->Audio->UnLoadSound(SfxFood);
+    Game->Audio->UnLoadSound(SfxDie);
 }
 
 //main loop ----------------------------------------------------------------------------------------------------------------

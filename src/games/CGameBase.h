@@ -33,5 +33,7 @@ public:
     virtual void Draw();
     virtual void LoadGraphics();
     virtual void UnloadGraphics();
+    virtual void LoadSound();
+    virtual void UnLoadSound();
     virtual SDL_Texture* screenshot();
 };

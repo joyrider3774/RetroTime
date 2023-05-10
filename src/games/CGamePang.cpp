@@ -509,14 +509,10 @@ void CGamePang::init()
 	LoadGraphics();
     level = 1;
 	if(!ScreenshotMode)
-	{        
+	{
+		LoadSound();
         createplayer();
 	    createballs();
-		SfxDie = Game->Audio->LoadSound("common/die.wav");
-		SfxSucces = Game->Audio->LoadSound("common/succes.wav");
-        SfxShoot = Game->Audio->LoadSound("pang/shoot.wav");
-        SfxPop = Game->Audio->LoadSound("pang/pop.wav");
-		MusMusic = Game->Audio->LoadMusic("pang/music.ogg");	
 		Game->CurrentGameMusicID = MusMusic;
 		Game->Audio->PlayMusic(MusMusic, -1);
 	}
@@ -529,18 +525,32 @@ void CGamePang::deinit()
 	destroybullet();
 	if (!ScreenshotMode)
 	{
-		Game->Audio->StopMusic();
-		Game->Audio->StopSound();
-		Game->Audio->UnLoadMusic(MusMusic);
-		Game->Audio->UnLoadSound(SfxDie);
-		Game->Audio->UnLoadSound(SfxSucces);
-		Game->Audio->UnLoadSound(SfxShoot);
-		Game->Audio->UnLoadSound(SfxPop);
+		UnLoadSound();
 		Game->SubStateCounter = 0;
 		Game->SubGameState = SGNone;
 		Game->CurrentGameMusicID = -1;
 	}
 	UnloadGraphics();
+}
+
+void CGamePang::LoadSound()
+{
+	SfxDie = Game->Audio->LoadSound("common/die.wav");
+	SfxSucces = Game->Audio->LoadSound("common/succes.wav");
+	SfxShoot = Game->Audio->LoadSound("pang/shoot.wav");
+	SfxPop = Game->Audio->LoadSound("pang/pop.wav");
+	MusMusic = Game->Audio->LoadMusic("pang/music.ogg");
+}
+
+void CGamePang::UnLoadSound()
+{
+	Game->Audio->StopMusic();
+	Game->Audio->StopSound();
+	Game->Audio->UnLoadMusic(MusMusic);
+	Game->Audio->UnLoadSound(SfxDie);
+	Game->Audio->UnLoadSound(SfxSucces);
+	Game->Audio->UnLoadSound(SfxShoot);
+	Game->Audio->UnLoadSound(SfxPop);
 }
 
 void CGamePang::LoadGraphics()

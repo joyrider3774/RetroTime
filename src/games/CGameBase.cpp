@@ -37,6 +37,16 @@ void CGameBase::UnloadGraphics()
 
 }
 
+void CGameBase::LoadSound()
+{
+
+}
+
+void CGameBase::UnLoadSound()
+{
+
+}
+
 void CGameBase::PauseMenu()
 {
 	int prevsubgamestate = Game->SubGameState;

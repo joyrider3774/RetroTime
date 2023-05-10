@@ -325,11 +325,7 @@ void CGameBlockStacker::init()
 	LoadGraphics();
 	if(!ScreenshotMode)
 	{
-		SfxLineClear = Game->Audio->LoadSound("blockstacker/lineclear.ogg");
-		SfxDrop = Game->Audio->LoadSound("blockbreaker/drop.wav");
-		SfxRotate = Game->Audio->LoadSound("blockstacker/rotate.wav");
-		MusMusic = Game->Audio->LoadMusic("blockstacker/music.ogg");
-		SfxDie = Game->Audio->LoadSound("common/die.wav");
+		LoadSound();
 		Game->CurrentGameMusicID = MusMusic;
 		Game->Audio->PlayMusic(MusMusic, -1);
 		HealthPoints = 1;
@@ -359,17 +355,31 @@ void CGameBlockStacker::UnloadGraphics()
 	Game->Image->UnLoadImage(background);
 }
 
+void CGameBlockStacker::LoadSound()
+{
+	SfxLineClear = Game->Audio->LoadSound("blockstacker/lineclear.ogg");
+	SfxDrop = Game->Audio->LoadSound("blockbreaker/drop.wav");
+	SfxRotate = Game->Audio->LoadSound("blockstacker/rotate.wav");
+	MusMusic = Game->Audio->LoadMusic("blockstacker/music.ogg");
+	SfxDie = Game->Audio->LoadSound("common/die.wav");
+}
+
+void CGameBlockStacker::UnLoadSound()
+{
+	Game->Audio->StopMusic();
+	Game->Audio->StopSound();
+	Game->Audio->UnLoadMusic(MusMusic);
+	Game->Audio->UnLoadSound(SfxLineClear);
+	Game->Audio->UnLoadSound(SfxDrop);
+	Game->Audio->UnLoadSound(SfxRotate);
+	Game->Audio->UnLoadSound(SfxDie);
+}
+
 void CGameBlockStacker::deinit()
 {
 	if (!ScreenshotMode)
 	{
-		Game->Audio->StopMusic();
-		Game->Audio->StopSound();
-		Game->Audio->UnLoadMusic(MusMusic);
-		Game->Audio->UnLoadSound(SfxLineClear);
-		Game->Audio->UnLoadSound(SfxDrop);
-		Game->Audio->UnLoadSound(SfxRotate);
-		Game->Audio->UnLoadSound(SfxDie);
+		UnLoadSound();
 		Game->SubStateCounter = 0;
 		Game->SubGameState = SGNone;
 		Game->CurrentGameMusicID = -1;

@@ -64,4 +64,6 @@ public:
     void deinit()  override;
     void UpdateLogic()  override;
     void Draw() override;
+    void LoadSound() override;
+    void UnLoadSound() override;
 };

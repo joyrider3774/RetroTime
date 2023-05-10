@@ -56,7 +56,7 @@ SDL_Point CFont::TextSize(string Font, int FontSize, string Tekst, size_t NrOfCh
         {
             SDL_Log("Failed Loading Font %s %d\n", SDL_GetError(), FontSize);
             return Result;
-        } 
+        }
         if(DebugInfo)
             SDL_Log("Loaded Font %s %d\n", Filename.c_str(), FontSize);
         TTF_SetFontStyle(FontIn, TTF_STYLE_NORMAL);

@@ -49,4 +49,6 @@ public:
     void Draw() override;
     void init() override;
     void deinit() override;
+    void LoadSound() override;
+    void UnLoadSound() override;
 };

@@ -384,13 +384,8 @@ void CGameRamIt::init()
 	if(!ScreenshotMode)
 	{
 		HealthPoints = 3;
-		SfxShoot = Game->Audio->LoadSound("ramit/shoot.wav");
-		SfxHit = Game->Audio->LoadSound("ramit/hit.wav");
-		SfxDie = Game->Audio->LoadSound("common/die.wav");
-		SfxSucces = Game->Audio->LoadSound("common/succes.wav");
-		MusMusic = Game->Audio->LoadMusic("ramit/music.ogg");	
+		LoadSound();
 		Game->CurrentGameMusicID = MusMusic;
-
 		Game->Audio->PlayMusic(MusMusic, -1);
 	}
 }
@@ -399,18 +394,31 @@ void CGameRamIt::deinit()
 {
 	if (!ScreenshotMode)
 	{
-		Game->Audio->StopMusic();
-		Game->Audio->StopSound();
-		Game->Audio->UnLoadMusic(MusMusic);
-		Game->Audio->UnLoadSound(SfxShoot);
-		Game->Audio->UnLoadSound(SfxHit);
-		Game->Audio->UnLoadSound(SfxDie);
-		Game->Audio->UnLoadSound(SfxSucces);
-
+		UnLoadSound();
 		Game->SubStateCounter = 0;
 		Game->SubGameState = SGNone;
 		Game->CurrentGameMusicID = -1;
 	}
+}
+
+void CGameRamIt::LoadSound()
+{
+	SfxShoot = Game->Audio->LoadSound("ramit/shoot.wav");
+	SfxHit = Game->Audio->LoadSound("ramit/hit.wav");
+	SfxDie = Game->Audio->LoadSound("common/die.wav");
+	SfxSucces = Game->Audio->LoadSound("common/succes.wav");
+	MusMusic = Game->Audio->LoadMusic("ramit/music.ogg");	
+}
+
+void CGameRamIt::UnLoadSound()
+{
+	Game->Audio->StopMusic();
+	Game->Audio->StopSound();
+	Game->Audio->UnLoadMusic(MusMusic);
+	Game->Audio->UnLoadSound(SfxShoot);
+	Game->Audio->UnLoadSound(SfxHit);
+	Game->Audio->UnLoadSound(SfxDie);
+	Game->Audio->UnLoadSound(SfxSucces);
 }
 
 SDL_Texture* CGameRamIt::screenshot()

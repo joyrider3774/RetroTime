@@ -77,4 +77,6 @@ public:
     void Draw() override;
     void UnloadGraphics() override;
     void LoadGraphics() override;
+    void LoadSound() override;
+    void UnLoadSound() override;
 };
