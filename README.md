@@ -77,8 +77,8 @@ The game can be played using keyboard and joy/gamepads. You can not however rema
 | ------------ | ------ |
 | Joystick, D-Pad, Arrow keys | Directional movement of the player, making selections in the menu's |
 | A button or Space key | Confirming in menus, the main game action |
-| B button or Esc Key | Back in menus |
-| X button or alt key | Secondary action in certain games |
+| B & Back button or Esc Key | Back in menus |
+| B button or Ctrl key | Secondary action in blockstacker game |
 | Start button or Esc Key | Confirming in menus, Pausing during gameplay |
 | F4 key | Immediatly Quit the game |
 | F3 key | Switch between fullscreen & windowed mode |

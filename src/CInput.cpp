@@ -189,13 +189,13 @@ void CInput::HandleKeyboardEvent(int Key, bool Value)
         case SDLK_c:
             Buttons.ButA = Value;
             break;
-        case SDLK_LALT:
-        case SDLK_RALT:
+        case SDLK_LCTRL:
+        case SDLK_RCTRL:
         case SDLK_v:
             Buttons.ButB = Value;
             break;
-        case SDLK_LCTRL:
-        case SDLK_RCTRL:
+        case SDLK_LALT:
+        case SDLK_RALT:
         case SDLK_d:
             Buttons.ButX = Value;
             break;
