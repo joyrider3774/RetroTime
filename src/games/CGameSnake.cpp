@@ -224,7 +224,6 @@ void CGameSnake::deinit()
         Game->Audio->UnLoadMusic(MusMusic);
         Game->Audio->UnLoadSound(SfxFood);
         Game->Audio->UnLoadSound(SfxDie);
-
         Game->SubStateCounter = 0;
         Game->SubGameState = SGNone;
         Game->CurrentGameMusicID = -1;

@@ -539,8 +539,8 @@ void CGamePang::deinit()
 		Game->SubStateCounter = 0;
 		Game->SubGameState = SGNone;
 		Game->CurrentGameMusicID = -1;
-        UnloadGraphics();
-	}   
+	}
+	UnloadGraphics();
 }
 
 void CGamePang::LoadGraphics()

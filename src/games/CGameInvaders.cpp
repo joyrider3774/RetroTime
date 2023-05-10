@@ -698,8 +698,8 @@ void CGameInvaders::deinit()
 		Game->SubStateCounter = 0;
 		Game->SubGameState = SGNone;
 		Game->CurrentGameMusicID = -1;
-        UnloadGraphics();
 	}
+	UnloadGraphics();
 }
 
 void CGameInvaders::LoadGraphics()
@@ -720,8 +720,6 @@ void CGameInvaders::LoadGraphics()
     background2tz = Game->Image->ImageSize(background2);
     background3tz = Game->Image->ImageSize(background3);
     backgrounditemtz = Game->Image->ImageSize(backgrounditem);
-
-
 }
 
 void CGameInvaders::UnloadGraphics()
