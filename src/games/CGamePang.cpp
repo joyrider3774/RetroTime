@@ -532,10 +532,14 @@ void CGamePang::deinit()
 		Game->Audio->StopMusic();
 		Game->Audio->StopSound();
 		Game->Audio->UnLoadMusic(MusMusic);
+		Game->Audio->UnLoadSound(SfxDie);
+		Game->Audio->UnLoadSound(SfxSucces);
+		Game->Audio->UnLoadSound(SfxShoot);
+		Game->Audio->UnLoadSound(SfxPop);
 		Game->SubStateCounter = 0;
 		Game->SubGameState = SGNone;
 		Game->CurrentGameMusicID = -1;
-        UnloadGraphics();       
+        UnloadGraphics();
 	}   
 }
 

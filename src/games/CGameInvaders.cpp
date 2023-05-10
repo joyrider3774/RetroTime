@@ -689,6 +689,12 @@ void CGameInvaders::deinit()
 		Game->Audio->StopMusic();
 		Game->Audio->StopSound();
 		Game->Audio->UnLoadMusic(MusMusic);
+		Game->Audio->UnLoadSound(SfxDie);
+		Game->Audio->UnLoadSound(SfxPlayerShoot);
+		Game->Audio->UnLoadSound(SfxPlayerDeath);
+		Game->Audio->UnLoadSound(SfxEnemyShoot);
+		Game->Audio->UnLoadSound(SfxEnemyDeath);
+		Game->Audio->UnLoadSound(SfxSucces);
 		Game->SubStateCounter = 0;
 		Game->SubGameState = SGNone;
 		Game->CurrentGameMusicID = -1;

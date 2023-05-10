@@ -798,6 +798,9 @@ void CGameFrog::deinit()
 		Game->Audio->StopMusic();
 		Game->Audio->StopSound();
 		Game->Audio->UnLoadMusic(MusMusic);
+		Game->Audio->UnLoadSound(SfxDie);
+		Game->Audio->UnLoadSound(SfxCollect);
+		Game->Audio->UnLoadSound(SfxPlayerMove);
 		Game->SubStateCounter = 0;
 		Game->SubGameState = SGNone;
 		Game->CurrentGameMusicID = -1;
