@@ -18,6 +18,7 @@ CGameInvaders::CGameInvaders(CGame* aGame, bool aScreenshotMode): CGameBase(aGam
     SfxPlayerDeath = -1;
     SfxEnemyShoot = -1;
     SfxEnemyDeath = -1;
+    SfxDie = -1;
     screenleft = 0;
     screenright = ScreenWidth;
     screentop = 0;
