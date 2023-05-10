@@ -229,7 +229,7 @@ void TitleScreen(CGame *Game)
                 //savehighscoresoptions()
             }
             break;
-        }							
+        }
 
 
         case MMHelp:
@@ -244,16 +244,14 @@ void TitleScreen(CGame *Game)
 		        "Some games play better with the dpad, some with the joystick. Extra actions are\n"
                 "available, using (A) and (B), depending on the game.\n"
                 "\n"
-				"During gameplay you can access the pause menu, by pressing (LB) + (RB) at the\n"
-                "same time. Pressing it again will resume gameplay.\n"
+				"During gameplay you can access the pause menu, by pressing (Start) button\n"
+                "Pressing it again will resume gameplay.\n"
                 "\n"
 				"There are 3 game modes: Retro Carousel, Time Attack and Lives mode.\n"
                 "\n";
-		    Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 17, Text, Text.length(), 320, 180, 0, {255, 255, 255, 255});
-            
-            Text = GMModes[0].description + "\n\n" + GMModes[1].description + "\n\n" + GMModes[2].description;
-            Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 17, Text, Text.length(), 320, 400, 0, {255, 255, 255, 255});
-
+		    Text += GMModes[0].description + "\n\n" + GMModes[1].description + "\n\n" + GMModes[2].description;
+            int tw = Game->Font->TextWidth("Roboto-Regular", 17, Text, Text.length());
+            Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 17, Text, Text.length(), (ScreenWidth - tw)/2, 180, 0, {255, 255, 255, 255});
 		
 		
 		    if ((!Game->Input->PrevButtons.ButA && Game->Input->Buttons.ButA) ||
@@ -273,24 +271,28 @@ void TitleScreen(CGame *Game)
             Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 60, Text, Text.length(), 540, 110, 0, {255, 255, 255, 255});
 
             Text = 
-            "Block Stacker (logic) code is heavily inspired on this video from one lone\n"
-		    "coder (javidx9) with my own adaptations and fuzification:\n"
+            "Block Stacker (logic) code is heavily inspired on this video from one lone coder (javidx9)\n"
+            "with my own adaptations:\n"
 		    "https://youtu.be/8OK8_tHeCIA\n"
 		    "\n" 
-		    "Snakey (logic) code is based on an edureka article (by Wajiha Urooj) about\n"
-		    "making snake in python:\n"
-		    "https://www.edureka.co/blog/snake-game-with-pygame/\n"
+		    "Snakey (logic) code is based on an edureka article (by Wajiha Urooj) about making snake in\n"
+            "python:\n"
+		    "https://www.edureka.co/blog/snake-game-with-pygame\n"
             "\n"
-		    "Brick Breaker ball / block collision uses a detection seen in wireframe\n"
-		    "magazine nr 11:\n"
+		    "Brick Breaker ball / block collision uses a detection seen in wireframe magazine nr 11:\n"
 		    "https://wireframe.raspberrypi.org\n"
             "\n"
-            "Toady water and grass background tiles have been created by me,\n"
-		    "Willems Davy aka joyrider3774 feel free to use them. All other assets\n"
-		    "(including music and sound) are default assets provided by the FUZE program.\n"
+            "Toady water and grass background tiles have been created by me, Willems Davy aka joyrider3774\n"
+            "feel free to use them. Music is created, payed and owned by me using Strofe:\n"
+            "https://www.strofe.com\n"
+            "\n"
+            "All other assets (including sound) come from either payed or free asset packs.\n"
+            "For a complete list of credits check the github or itch.io page:\n"
+            "https://github.com/joyrider3774/RetroTime or https://joyrider3774.itch.io/retrotime\n"
             "\n";
 
-			Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 20, Text, Text.length(), 300, 190, 0, {255, 255, 255, 255});
+            int tw = Game->Font->TextWidth("Roboto-Regular", 17, Text, Text.length());
+			Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 17, Text, Text.length(), (ScreenWidth - tw) / 2, 225, 0, {255, 255, 255, 255});
     		
             if ((!Game->Input->PrevButtons.ButA && Game->Input->Buttons.ButA) ||
                 (!Game->Input->PrevButtons.ButB && Game->Input->Buttons.ButB) ||
