@@ -892,7 +892,7 @@ void CGameFastEddy::createladders()
 
 //background ----------------------------------------------------------------------------------------------------------------
 
-void CGameFastEddy::drawbackground(bool motionblur)
+void CGameFastEddy::DrawBackground(bool motionblur)
 {
 	float alpha = 1;
 	if ((motionblur) && (Game->MotionBlur))
@@ -1001,8 +1001,7 @@ SDL_Texture* CGameFastEddy::screenshot()
 	SDL_RenderClear(Game->Renderer);
 	init();
     
-	drawbackground(false);
-	Game->Sprites->DrawSprites(Game->Renderer);
+	Draw();
 	
 	SDL_RenderPresent(Game->Renderer);
 	SDL_SetRenderTarget(Game->Renderer, prev);
@@ -1012,23 +1011,14 @@ SDL_Texture* CGameFastEddy::screenshot()
 
 //Update ----------------------------------------------------------------------------------------------------------------
 
-void CGameFastEddy::UpdateLogic()
+void CGameFastEddy::UpdateObjects(bool IsGameState)
 {
-    CGameBase::UpdateLogic();
-	if (Game->SubGameState == SGGame)
+	if (IsGameState)
 	{
 		updateplayer();
 		updateenemies();
 		updatecollectables();
 		updatekey();
-		Game->Sprites->UpdateSprites();
 	}
 }
 
-void CGameFastEddy::Draw()
-{
-	drawbackground(Game->SubGameState == SGGame);
-	Game->Sprites->DrawSprites(Game->Renderer);
-	DrawScoreBar();
-	DrawSubStateText();
-}

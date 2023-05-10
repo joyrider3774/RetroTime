@@ -451,7 +451,7 @@ void CGameBreakOut::updateball()
 	
 //background ----------------------------------------------------------------------------------------------------------------
 
-void CGameBreakOut::drawbackground(bool motionblur)
+void CGameBreakOut::DrawBackground(bool motionblur)
 {
 	float alpha = 1;
 	if ((motionblur) && (Game->MotionBlur))
@@ -539,9 +539,7 @@ SDL_Texture* CGameBreakOut::screenshot()
 	SDL_RenderClear(Game->Renderer);
 	init();
     
-    drawbackground(false);
-	Game->Sprites->DrawSprites(Game->Renderer);
-
+    Draw();
 	
 	SDL_RenderPresent(Game->Renderer);
 	SDL_SetRenderTarget(Game->Renderer, prev);
@@ -551,23 +549,12 @@ SDL_Texture* CGameBreakOut::screenshot()
 
 //Update ----------------------------------------------------------------------------------------------------------------
 
-void CGameBreakOut::UpdateLogic()
+void CGameBreakOut::UpdateObjects(bool IsGameState)
 {
-    CGameBase::UpdateLogic();
 	updateblocks();
-    if (Game->SubGameState == SGGame)
+    if (IsGameState)
 	{
         updateplayer();
         updateball();
-        Game->Sprites->UpdateSprites();
-	}
-}
-
-void CGameBreakOut::Draw()
-{
-    drawbackground(Game->SubGameState == SGGame);
-	Game->Sprites->DrawSprites(Game->Renderer);
-	
-    DrawScoreBar();
-	DrawSubStateText();
+	}	
 }

@@ -87,7 +87,6 @@ private:
     void createkey();
     void destroykey();
     void updatekey();
-    void drawbackground(bool motionblur);
     void createladders();
     void destroyladders();
     void createfloors();
@@ -110,10 +109,10 @@ public:
     SDL_Texture* screenshot() override;
     void init() override;
     void deinit() override;
-    void UpdateLogic() override;
-    void Draw() override;
     void UnloadGraphics() override;
     void LoadGraphics() override;
     void LoadSound() override;
     void UnLoadSound() override;
+    void UpdateObjects(bool IsGameState) override;
+    void DrawBackground(bool motionblur);
 };

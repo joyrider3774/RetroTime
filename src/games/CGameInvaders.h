@@ -111,17 +111,17 @@ private:
     void destroyexploison(int index);
     void destroyallexplosion();
     void checkexplosions();
-    void drawbackground(bool motionblur);
 public:
     CGameInvaders(CGame* aGame, bool aScreenshotMode = false);
     ~CGameInvaders();
     SDL_Texture* screenshot() override;
     void init() override;
     void deinit() override;
-    void UpdateLogic() override;
-    void Draw() override;
     void UnloadGraphics() override;
     void LoadGraphics() override;
     void LoadSound() override;
     void UnLoadSound() override;
+    void UpdateObjects(bool IsGameState) override;
+    bool DrawObjects() override;
+    void DrawBackground(bool motionblur);
 };

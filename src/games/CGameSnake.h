@@ -38,17 +38,16 @@ private:
 
     void createsnake();
     void drawsnake();
-    void updatesnake();
-    void drawbackground();
-    
+    void updatesnake();   
 public:
     CGameSnake(CGame* aGame, bool aScreenshotMode = false);
     ~CGameSnake();
     SDL_Texture* screenshot() override;
-    void UpdateLogic() override;
-    void Draw() override;
     void init() override;
     void deinit() override;
     void LoadSound() override;
     void UnLoadSound() override;
+    void UpdateObjects(bool IsGameState) override;
+    bool DrawObjects() override;
+    void DrawBackground(bool motionblur);
 };

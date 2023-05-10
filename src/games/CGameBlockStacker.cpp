@@ -307,7 +307,7 @@ void CGameBlockStacker::drawplayfield()
 
 //background ----------------------------------------------------------------------------------------------------------------
 
-void CGameBlockStacker::drawbackground()
+void CGameBlockStacker::DrawBackground(bool motionblur)
 {
 	SDL_Point pos = { ScreenWidth / 2, ScreenHeight / 2};
 	Vec2F scale = {(float)ScreenWidth / backgroundtz.x, (float)ScreenHeight / backgroundtz.y};
@@ -358,7 +358,7 @@ void CGameBlockStacker::UnloadGraphics()
 void CGameBlockStacker::LoadSound()
 {
 	SfxLineClear = Game->Audio->LoadSound("blockstacker/lineclear.ogg");
-	SfxDrop = Game->Audio->LoadSound("blockbreaker/drop.wav");
+	SfxDrop = Game->Audio->LoadSound("blockstacker/drop.wav");
 	SfxRotate = Game->Audio->LoadSound("blockstacker/rotate.wav");
 	MusMusic = Game->Audio->LoadMusic("blockstacker/music.ogg");
 	SfxDie = Game->Audio->LoadSound("common/die.wav");
@@ -400,8 +400,7 @@ SDL_Texture* CGameBlockStacker::screenshot()
 	for(int i = 0; i < numrows * 2; i++)
 		updateplayfield(true);
 
-	drawbackground();
-	drawplayfield();	
+	Draw();	
 
 	SDL_RenderPresent(Game->Renderer);
 	SDL_SetRenderTarget(Game->Renderer, prev);
@@ -411,21 +410,17 @@ SDL_Texture* CGameBlockStacker::screenshot()
 
 //Update ----------------------------------------------------------------------------------------------------------------
 
-void CGameBlockStacker::UpdateLogic()
+void CGameBlockStacker::UpdateObjects(bool IsGameState)
 {
-    CGameBase::UpdateLogic();
-	if (Game->SubGameState == SGGame)
-	{
-		updateplayfield(false);	
-	}
+	if(IsGameState)
+		updateplayfield(false);
 }
 
-void CGameBlockStacker::Draw()
+bool CGameBlockStacker::DrawObjects()
 {
-	drawbackground();
 	drawplayfield();
-	DrawScoreBar();
-	DrawSubStateText();
+	//don't call drawsprites
+	return false;
 }
 
 

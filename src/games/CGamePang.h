@@ -83,17 +83,17 @@ private:
     void createball(int size, float x, float y, float speed);
     void destroyball(int index, bool nocreate);
     void destroyallballs();
-    void drawbackground(bool motionblur);
 public:
     CGamePang(CGame* aGame, bool aScreenshotMode = false);
     ~CGamePang();
     SDL_Texture* screenshot() override;
     void init() override;
     void deinit() override;
-    void UpdateLogic() override;
-    void Draw() override;
     void UnloadGraphics() override;
     void LoadGraphics() override;
     void LoadSound() override;
     void UnLoadSound() override;
+    void UpdateObjects(bool IsGameState) override;
+    bool DrawObjects() override;
+    void DrawBackground(bool motionblur);
 };

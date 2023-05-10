@@ -35,18 +35,17 @@ private:
     void updateplayfield(bool force);
     void drawplayfieldcell(int x, int y, int piece);
     void drawplayfield();
-
-    void drawbackground();
 public:
     CGameBlockStacker(CGame* aGame, bool aScreenshotMode = false);
     ~CGameBlockStacker();
     SDL_Texture* screenshot() override;
+    void DrawBackground(bool motionblur) override;
     void init() override;
     void deinit() override;
-    void UpdateLogic() override;
-    void Draw() override;
     void UnloadGraphics() override;
     void LoadGraphics() override;
     void LoadSound() override;
     void UnLoadSound() override;
+    void UpdateObjects(bool IsGameState) override;
+    bool DrawObjects() override;
 };

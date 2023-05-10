@@ -441,7 +441,7 @@ void CGamePang::drawplayer()
 
 //background ----------------------------------------------------------------------------------------------------------------
 
-void CGamePang::drawbackground(bool motionblur)
+void CGamePang::DrawBackground(bool motionblur)
 {
 	float alpha = 255;
 	if ((motionblur) && (Game->MotionBlur))
@@ -599,13 +599,9 @@ SDL_Texture* CGamePang::screenshot()
 		updateballs();
 		updatebullet();
     }
-	
-    drawbackground(false);
-	drawballs();
-    drawbullet();
-	
-    drawplayer();
-    
+
+    Draw();
+
 	SDL_RenderPresent(Game->Renderer);
 	SDL_SetRenderTarget(Game->Renderer, prev);
 	deinit();	
@@ -614,26 +610,21 @@ SDL_Texture* CGamePang::screenshot()
 
 //Update ----------------------------------------------------------------------------------------------------------------
 
-void CGamePang::UpdateLogic()
+void CGamePang::UpdateObjects(bool IsGameState) 
 {
-    CGameBase::UpdateLogic();
-	if (Game->SubGameState == SGGame)
+	if (IsGameState)
 	{
         updateplayer();
 		updateballs();
-		updatebullet();			
-		Game->Sprites->UpdateSprites();
+		updatebullet();
 	}
 }
 
-void CGamePang::Draw()
+bool CGamePang::DrawObjects()
 {
-    drawbackground(Game->SubGameState == SGGame);
-
     drawballs();
 	drawbullet();
 	drawplayer();
-
-    DrawScoreBar();
-	DrawSubStateText();
+	//don't call drawsprites in base class
+	return false;
 }

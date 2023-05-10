@@ -160,7 +160,7 @@ void CGameSnake::updatesnake()
 
 //background ----------------------------------------------------------------------------------------------------------------
 
-void CGameSnake::drawbackground()
+void CGameSnake::DrawBackground(bool motionblur)
 {
     SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 255, 255);
 	SDL_RenderClear(Game->Renderer);
@@ -185,9 +185,7 @@ SDL_Texture* CGameSnake::screenshot()
     }
 	food = {screenleft + (int(cols / 2)-2) * snakesize, screentop + (int(rows / 2) -2) * snakesize};
 
-	drawbackground();
-	drawsnake();
-	drawfood();
+	Draw();
 
     SDL_RenderPresent(Game->Renderer);
     SDL_SetRenderTarget(Game->Renderer, prev);
@@ -240,18 +238,17 @@ void CGameSnake::UnLoadSound()
     Game->Audio->UnLoadSound(SfxDie);
 }
 
-//main loop ----------------------------------------------------------------------------------------------------------------
-void CGameSnake::UpdateLogic()
-{
-    CGameBase::UpdateLogic();
+//Update ----------------------------------------------------------------------------------------------------------------
 
-    if (Game->SubGameState == SGGame)
+void CGameSnake::UpdateObjects(bool IsGameState)
+{
+    if (IsGameState)
     {
         updatesnake();
         updatefood();
     }
 
-    if ((Game->SubGameState == SGGame) && playerdeath)
+    if (IsGameState && playerdeath)
     {
         Game->Audio->PlaySound(SfxDie, 0);
         if(!ScreenshotMode)
@@ -271,16 +268,12 @@ void CGameSnake::UpdateLogic()
                 if (!ScreenshotMode)
                     HealthPoints -= 1;
     }
-
-  
 }
-void CGameSnake::Draw()
+
+bool CGameSnake::DrawObjects()
 {
-	// SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 255);
-    // SDL_RenderClear(Game->Renderer);
-    drawbackground();
     drawfood();
     drawsnake();
-    DrawScoreBar();
-    DrawSubStateText();    
+    //don't call drawsprites in base object
+	return false;
 }

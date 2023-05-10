@@ -361,7 +361,7 @@ void CGameRamIt::drawplayfield()
 
 //background ----------------------------------------------------------------------------------------------------------------
 
-void CGameRamIt::drawbackground()
+void CGameRamIt::DrawBackground(bool motionblur)
 {
 	SDL_SetRenderDrawColor(Game->Renderer, 150, 150, 150, 255);
     SDL_RenderClear(Game->Renderer);
@@ -374,7 +374,6 @@ void CGameRamIt::drawbackground()
 
 void CGameRamIt::init()
 {
-    
 	bulletalive = false;
 	speed = ticksidle;
 	level = 1;
@@ -437,10 +436,7 @@ SDL_Texture* CGameRamIt::screenshot()
 	updatebullet();
 	updatebullet();
 
-	drawbackground();
-	drawbullet();
-	drawplayer();
-	drawplayfield();
+	Draw();
 
 	SDL_RenderPresent(Game->Renderer);
 	SDL_SetRenderTarget(Game->Renderer, prev);
@@ -450,10 +446,9 @@ SDL_Texture* CGameRamIt::screenshot()
 
 //Update ----------------------------------------------------------------------------------------------------------------
 
-void CGameRamIt::UpdateLogic()
+void CGameRamIt::UpdateObjects(bool IsGameState)
 {
-	CGameBase::UpdateLogic();
-    if (Game->SubGameState == SGGame)
+    if (IsGameState)
     {
         updateplayer();
         updateplayfield(false);
@@ -476,16 +471,13 @@ void CGameRamIt::UpdateLogic()
 	}
 }
 
-void CGameRamIt::Draw()
+bool CGameRamIt::DrawObjects()
 {
-	// SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 255);
-    // SDL_RenderClear(Game->Renderer);
-    drawbackground();
-    drawbullet();
+	drawbullet();
     drawplayer();
     drawplayfield();
-    DrawScoreBar();
-	DrawSubStateText();
+	//don't call drawsprites in base class
+	return false;
 }
 
 

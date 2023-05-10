@@ -155,7 +155,6 @@ private:
     void destroyobject(int index);
     void destroyallobjects();
     void createobjects(bool initialize);
-    void drawbackground();
     void OnGameStart() override;
 public:
     CGameFrog(CGame* aGame, bool aScreenshotMode = false);
@@ -169,4 +168,5 @@ public:
     void LoadGraphics() override;
     void LoadSound() override;
     void UnLoadSound() override;
+    void DrawBackground(bool motionblur);
 };

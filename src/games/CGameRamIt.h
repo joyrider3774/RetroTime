@@ -52,9 +52,6 @@ private:
     void createplayfield();
     void updateplayfield(bool force);
     void drawplayfield();
-
-    void drawbackground();
-
 public:
     CGameRamIt(CGame* aGame, bool aScreenshotMode = false);
     ~CGameRamIt();
@@ -62,8 +59,9 @@ public:
     SDL_Texture* screenshot() override;   
     void init()  override;
     void deinit()  override;
-    void UpdateLogic()  override;
-    void Draw() override;
     void LoadSound() override;
     void UnLoadSound() override;
+    void UpdateObjects(bool IsGameState) override;
+    bool DrawObjects() override;
+    void DrawBackground(bool motionblur);
 };

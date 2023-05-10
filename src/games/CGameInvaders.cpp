@@ -612,7 +612,7 @@ void CGameInvaders::updateplayer()
 
 //background ----------------------------------------------------------------------------------------------------------------
 
-void CGameInvaders::drawbackground(bool motionblur)
+void CGameInvaders::DrawBackground(bool motionblur)
 {
 	float alpha = 1;
 	if ((motionblur) && (Game->MotionBlur))
@@ -756,8 +756,7 @@ SDL_Texture* CGameInvaders::screenshot()
 	SDL_RenderClear(Game->Renderer);
 	init();
     
-	drawbackground(false);
-	Game->Sprites->DrawSprites(Game->Renderer);
+	Draw();
 	
 	SDL_RenderPresent(Game->Renderer);
 	SDL_SetRenderTarget(Game->Renderer, prev);
@@ -767,26 +766,22 @@ SDL_Texture* CGameInvaders::screenshot()
 
 //Update ----------------------------------------------------------------------------------------------------------------
 
-void CGameInvaders::UpdateLogic()
-{
-    CGameBase::UpdateLogic();
+void CGameInvaders::UpdateObjects(bool IsGameState)
+{    
 	updateinvaders();
-    if (Game->SubGameState == SGGame)
+    if (IsGameState)
 	{
         updateenemybullet();
 		updateplayer();
 		updatebullet();
 		updateasteroids();
-		Game->Sprites->UpdateSprites();
 	}
 }
 
-void CGameInvaders::Draw()
+bool CGameInvaders::DrawObjects()
 {
-    drawbackground(Game->SubGameState == SGGame);
-    Game->Sprites->DrawSprites(Game->Renderer);
     //need todo this here so last frame is also drawn
     checkexplosions();
-	DrawScoreBar();
-	DrawSubStateText();
+	//call drawsprites in base class
+	return true;
 }

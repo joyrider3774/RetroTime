@@ -748,7 +748,7 @@ void CGameFrog::updateplayer()
 
 //background ----------------------------------------------------------------------------------------------------------------
 
-void CGameFrog::drawbackground()
+void CGameFrog::DrawBackground(bool motionblur)
 {
     Vec2F Scale = {(float)ScreenWidth / backgroundtz.x, (float)ScreenHeight / backgroundtz.x};
 	SDL_Point Pos = { 0, 0};
@@ -868,8 +868,7 @@ SDL_Texture* CGameFrog::screenshot()
 		updateobjects();
 		Game->Sprites->UpdateSprites();
 	}	
-	Game->Sprites->DrawSprites(Game->Renderer);
-	drawbackground();
+	Draw();
 	
 	SDL_RenderPresent(Game->Renderer);
 	SDL_SetRenderTarget(Game->Renderer, prev);
@@ -930,7 +929,10 @@ void CGameFrog::UpdateLogic()
 void CGameFrog::Draw()
 {
 	Game->Sprites->DrawSprites(Game->Renderer);
-	drawbackground();
-	DrawScoreBar();
-	DrawSubStateText();
+	DrawBackground(false);
+	 if(!ScreenshotMode)
+    {
+		DrawScoreBar();
+		DrawSubStateText();
+	}
 }

@@ -31,9 +31,12 @@ public:
     virtual void deinit();
     virtual void UpdateLogic();
     virtual void Draw();
+    virtual void DrawBackground(bool motionblur);
     virtual void LoadGraphics();
     virtual void UnloadGraphics();
     virtual void LoadSound();
     virtual void UnLoadSound();
+    virtual void UpdateObjects(bool IsGameState);
+    virtual bool DrawObjects();
     virtual SDL_Texture* screenshot();
 };

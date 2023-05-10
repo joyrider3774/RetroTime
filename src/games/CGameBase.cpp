@@ -47,6 +47,11 @@ void CGameBase::UnLoadSound()
 
 }
 
+void CGameBase::UpdateObjects(bool IsGameState)
+{
+
+}
+
 void CGameBase::PauseMenu()
 {
 	int prevsubgamestate = Game->SubGameState;
@@ -510,6 +515,7 @@ void CGameBase::UpdateLogic()
 
     SubStateText = "";    
     if (Game->SubGameState != SGFadeIn)
+    {
 		if ((Game->SubGameState == SGReadyGo)||
 			(Game->SubGameState == SGTimeUp))
         {
@@ -566,10 +572,31 @@ void CGameBase::UpdateLogic()
                 }
 			}
         }
-
+    }
+    UpdateObjects(Game->SubGameState == SGGame);
+    if(Game->SubGameState == SGGame)
+        Game->Sprites->UpdateSprites();
 }
 
 void CGameBase::Draw()
+{
+    DrawBackground((Game->SubGameState == SGGame) && !ScreenshotMode);
+    if (DrawObjects())
+        Game->Sprites->DrawSprites(Game->Renderer);
+    if(!ScreenshotMode)
+    {
+        DrawScoreBar();
+	    DrawSubStateText();
+    }
+}
+
+bool CGameBase::DrawObjects()
+{
+    //call drawsprites
+    return true;
+}
+
+void CGameBase::DrawBackground(bool motionblur)
 {
 
 }
