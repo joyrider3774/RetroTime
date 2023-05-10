@@ -112,41 +112,41 @@ constexpr int OptionMenus = 6;
 constexpr int Crts = 6;
 
 struct ModeDesc {
-    int mode;
-    string name;
-    string description;
+	int mode;
+	string name;
+	string description;
 };
 
 struct GameDesc {
-    int state;
-    string name;
-    string description;
-    string shortdescription;
+	int state;
+	string name;
+	string description;
+	string shortdescription;
 };
 
 struct PauseMenuDesc {
-    int menu;
-    string name;
+	int menu;
+	string name;
 };
 
 struct GPGamePauseMenusDesc {
-    int game;
-    int menus[7];
+	int game;
+	int menus[7];
 };
 
 struct MainMenusDesc {
-    int menu;
-    string name;
+	int menu;
+	string name;
 };
 
 struct OptionMenusDesc {
-    int menu;
-    string name;
+	int menu;
+	string name;
 };
 
 struct CrtOptDesc {
-    int crt;
-    string name;
+	int crt;
+	string name;
 };
 
 extern GameDesc GSGames[Games];
@@ -165,8 +165,8 @@ extern SDL_Colour UintToColor(Uint32 colour);
 template <typename T>
 std::string to_string_with_precision(const T a_value, const int n = 6)
 {
-    std::ostringstream out;
-    out.precision(n);
-    out << std::fixed << a_value;
-    return out.str();
+	std::ostringstream out;
+	out.precision(n);
+	out << std::fixed << a_value;
+	return out.str();
 }

@@ -12,21 +12,24 @@ using namespace std;
 
 CGameBlockStacker::CGameBlockStacker(CGame* aGame, bool aScreenshotMode): CGameBase(aGame, GSTetris, true, aScreenshotMode)
 {
-    Game = aGame;
+	Game = aGame;
 	MusMusic = -1;
 	SfxDie = -1;
 	SfxLineClear = -1;
 	SfxDrop = -1;
 	SfxRotate = -1;
-    playfieldwidth = numcols * blocksize;
-    playfieldheight = numrows * blocksize;
+	playfieldwidth = numcols * blocksize;
+	playfieldheight = numrows * blocksize;
 	screenleft = (ScreenWidth - playfieldwidth) / 2;
 	screenright = screenleft + playfieldwidth;
 	screentop = (ScreenHeight - playfieldheight) / 2;
 	screenbottom = screentop + playfieldheight;
 }
 
-CGameBlockStacker::~CGameBlockStacker() {};
+CGameBlockStacker::~CGameBlockStacker()
+{
+
+}
 
 //helper funcs ----------------------------------------------------------------------------------------------------------------
 
@@ -39,8 +42,8 @@ bool CGameBlockStacker::piecefits(int tetrimo, int rotation, int posx, int posy)
 		{
 			int piece = y * 4 + x;
 			int field = (posy + y) * numcols + posx + x;
-			
-			if ((posx + x >= 0)  && (posx + x < numcols) &&
+
+			if ((posx + x >= 0) && (posx + x < numcols) &&
 				(posy + y >= 0) && (posy + y < numrows) &&
 				(tstetrimos[tetrimo][rotation % 4][piece] && (playfield[field] != -1)))
 			{
@@ -68,20 +71,20 @@ void CGameBlockStacker::updateplayer()
 		(Game->Input->Buttons.ButDpadLeft))
 		if (piecefits(currpiece, rotation, plrx - 1, plry))
 			plrx -= 1;
-	
+
 	if ((Game->Input->Buttons.ButRight) ||
 		(Game->Input->Buttons.ButRight2) ||
 		(Game->Input->Buttons.ButDpadRight))
 		if (piecefits(currpiece, rotation, plrx + 1, plry))
 			plrx += 1;
-	
+
 	if ((Game->Input->Buttons.ButDown) ||
 		(Game->Input->Buttons.ButDown2) ||
 		(Game->Input->Buttons.ButDpadDown))
 		if (piecefits(currpiece, rotation, plrx, plry + 1))
 			plry += 1;
 
-	if (Game->Input->Buttons.ButA) 
+	if (Game->Input->Buttons.ButA)
 	{
 		if (rotateblock && piecefits(currpiece, rotation +1, plrx, plry))
 		{
@@ -93,7 +96,7 @@ void CGameBlockStacker::updateplayer()
 	else
 		rotateblock = true;
 
-	if (Game->Input->Buttons.ButB) 
+	if (Game->Input->Buttons.ButB)
 	{
 		if (dropblock)
 		{
@@ -122,7 +125,7 @@ void CGameBlockStacker::createplayfield()
 void CGameBlockStacker::updateplayfield(bool force)
 {
 
-    if (lineclear > -1)
+	if (lineclear > -1)
 	{
 		lineclear -= 1;
 
@@ -148,11 +151,11 @@ void CGameBlockStacker::updateplayfield(bool force)
 				}
 				y -=1;
 			}
-		}   
+		}
 	}
 	else
 	{
-    	speedcount += 1;
+		speedcount += 1;
 
 		if (speedcount % ticksinputidle == 0)
 			updateplayer();
@@ -161,15 +164,14 @@ void CGameBlockStacker::updateplayfield(bool force)
 		{
 			speedcount = 0;
 			piececount += 1;
-									
 			//level increase
 			if (piececount % 40 == 0)
-				if (speed >= 5) 
+				if (speed >= 5)
 				{
 					speed -= 1;
 					level += 1;
-				}	
-		
+				}
+
 			//can we move the piece down ?
 			if (piecefits(currpiece, rotation, plrx, plry +1))
 				plry += 1;
@@ -177,7 +179,7 @@ void CGameBlockStacker::updateplayfield(bool force)
 			{
 				if(!force)
 					Game->Audio->PlaySound(SfxDrop, 0);
-				
+
 
 				//lock it in place
 				for(int x = 0; x < 4; x++)
@@ -187,7 +189,7 @@ void CGameBlockStacker::updateplayfield(bool force)
 						if (tstetrimos[currpiece][rotation % 4][piece])
 							playfield[(plry + y) * numcols + plrx + x] = currpiece;
 					}
-			
+
 				//check for lines
 				int numlines = 0;
 				bool linedone = true;
@@ -198,12 +200,12 @@ void CGameBlockStacker::updateplayfield(bool force)
 						linedone = true;
 						for(int x = 1; x < numcols -1; x++)
 							linedone = linedone && (playfield[(plry + y) * numcols + x] > -1);
-					
+
 						if (linedone)
 						{
 							numlines += 1;
 							for(int x = 1; x < numcols -1; x++)
-								playfield[(plry + y) * numcols + x] = -3;	
+								playfield[(plry + y) * numcols + x] = -3;
 						}
 					}
 				}
@@ -217,12 +219,12 @@ void CGameBlockStacker::updateplayfield(bool force)
 					lineclear = 30;
 					Game->Audio->PlaySound(SfxLineClear, 0);
 				}
-			
+
 				plrx = numcols / 2 -2;
 				plry = 0;
 				rotation = 0;
 				currpiece = rand() % 7;
-			
+
 				if (!piecefits(currpiece, rotation, plrx, plry))
 				{
 					Game->Audio->PlaySound(SfxDie, 0);
@@ -266,16 +268,16 @@ void CGameBlockStacker::drawplayfieldcell(int x, int y, int piece)
 
 		if (piece == 5)
 			color = {0xA5, 0x2A, 0x2A, 255};
-		
+
 		if (piece == 6)
 			color = {255, 0, 255, 255};
 
 		if (piece == -2)
 			color = {128, 128, 128, 255};
-		
-		if (piece == -3) 
+
+		if (piece == -3)
 			color = {255, 255, 255, 255};
-		
+
 		SDL_Rect r = {screenleft + x * blocksize, screentop + y * blocksize, blocksize, blocksize};
 		SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 255);
 		SDL_RenderFillRect(Game->Renderer, &r);
@@ -292,17 +294,17 @@ void CGameBlockStacker::drawplayfield()
 		for(int y = 0; y < numrows; y++)
 		{
 			int piece = playfield[y * numcols + x];
-			drawplayfieldcell(x,y, piece);	
+			drawplayfieldcell(x,y, piece);
 		}
-	
+
 	for(int x = 0; x < 4; x++)
 		for(int y = 0; y < 4; y++)
 		{
 			int piece = y * 4 + x;
 			if(tstetrimos[currpiece][rotation % 4][piece])
 				drawplayfieldcell(plrx + x, plry + y, currpiece);
-			
-		}				
+
+		}
 }
 
 //background ----------------------------------------------------------------------------------------------------------------
@@ -341,7 +343,7 @@ void CGameBlockStacker::init()
 	dropblock = true;
 	level = 1;
 	lineclear = 0;
-	createplayfield();	
+	createplayfield();
 }
 
 void CGameBlockStacker::LoadGraphics()
@@ -386,13 +388,13 @@ void CGameBlockStacker::deinit()
 	}
 	UnloadGraphics();
 }
-	
+
 
 SDL_Texture* CGameBlockStacker::screenshot()
 {
 	SDL_Texture* prev = SDL_GetRenderTarget(Game->Renderer);
 	SDL_Texture* image = SDL_CreateTexture(Game->Renderer, PixelFormat, SDL_TEXTUREACCESS_TARGET, ScreenWidth, ScreenHeight);
-    SDL_SetRenderTarget(Game->Renderer, image);
+	SDL_SetRenderTarget(Game->Renderer, image);
 	SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 255);
 	SDL_RenderClear(Game->Renderer);
 	init();
@@ -400,7 +402,7 @@ SDL_Texture* CGameBlockStacker::screenshot()
 	for(int i = 0; i < numrows * 2; i++)
 		updateplayfield(true);
 
-	Draw();	
+	Draw();
 
 	SDL_RenderPresent(Game->Renderer);
 	SDL_SetRenderTarget(Game->Renderer, prev);

@@ -2,12 +2,12 @@
 
 enum TweenFunc
 {
-    funcsmoothstart = 0,
-    funcsmoothstop = 1,
-    funcsmoothstartflip = 3,
-    funcsmoothstopflip = 4,
-    funcsmoothstep = 5,
-    funcarchstep = 6
+	funcsmoothstart = 0,
+	funcsmoothstop = 1,
+	funcsmoothstartflip = 3,
+	funcsmoothstopflip = 4,
+	funcsmoothstep = 5,
+	funcarchstep = 6
 };
 
 class CTweenInfo

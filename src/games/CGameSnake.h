@@ -13,41 +13,41 @@ using namespace std;
 class CGameSnake: public CGameBase {
 
 private:
-    static const int snakesize = 35;
-    static const int rows = int(ScreenHeight / snakesize) -1;
-    static const int cols = int(ScreenWidth / snakesize) -1;
-    static const int updateticks = 8;
-    
-    const SDL_Color snakeheadcolor = {255, 0, 0, 255};
-    const SDL_Color snakebodycolor = {255, 255, 255, 255};
-    const SDL_Color snakefoodcolor = {0, 255 ,0, 255};
+	static const int snakesize = 35;
+	static const int rows = int(ScreenHeight / snakesize) -1;
+	static const int cols = int(ScreenWidth / snakesize) -1;
+	static const int updateticks = 8;
 
-    bool movedone = true;
+	const SDL_Color snakeheadcolor = {255, 0, 0, 255};
+	const SDL_Color snakebodycolor = {255, 255, 255, 255};
+	const SDL_Color snakefoodcolor = {0, 255 ,0, 255};
+
+	bool movedone = true;
 	int snakelength;
 	int ticks;
 	SDL_Point head;
 	SDL_Point body[rows*cols+1];
 	SDL_Point dir;
-	SDL_Point food;	
+	SDL_Point food;
 	int playerdeath;
-    int MusMusic, SfxFood, SfxDie;
-    
-    void createfood();
-    void drawfood();
-    void updatefood();
+	int MusMusic, SfxFood, SfxDie;
 
-    void createsnake();
-    void drawsnake();
-    void updatesnake();   
+	void createfood();
+	void drawfood();
+	void updatefood();
+
+	void createsnake();
+	void drawsnake();
+	void updatesnake();
 public:
-    CGameSnake(CGame* aGame, bool aScreenshotMode = false);
-    ~CGameSnake();
-    SDL_Texture* screenshot() override;
-    void init() override;
-    void deinit() override;
-    void LoadSound() override;
-    void UnLoadSound() override;
-    void UpdateObjects(bool IsGameState) override;
-    bool DrawObjects() override;
-    void DrawBackground(bool motionblur);
+	CGameSnake(CGame* aGame, bool aScreenshotMode = false);
+	~CGameSnake();
+	SDL_Texture* screenshot() override;
+	void init() override;
+	void deinit() override;
+	void LoadSound() override;
+	void UnLoadSound() override;
+	void UpdateObjects(bool IsGameState) override;
+	bool DrawObjects() override;
+	void DrawBackground(bool motionblur);
 };

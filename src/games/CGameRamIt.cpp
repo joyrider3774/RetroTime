@@ -10,8 +10,8 @@ using namespace std;
 
 CGameRamIt::CGameRamIt(CGame* aGame, bool aScreenshotMode): CGameBase(aGame, GSRamIt, true, aScreenshotMode)
 {
-    Game = aGame;
-    speed = 0;
+	Game = aGame;
+	speed = 0;
 	speedcount = 0;
 	SfxShoot = -1;
 	SfxHit = -1;
@@ -19,14 +19,14 @@ CGameRamIt::CGameRamIt(CGame* aGame, bool aScreenshotMode): CGameBase(aGame, GSR
 	SfxSucces = -1;
 	MusMusic = -1;
 	riblocksize = int(ScreenHeight / (numblocks+1)) - 2 * blockspacing;
-    riblocksizespacing = riblocksize + 2 * blockspacing;
+	riblocksizespacing = riblocksize + 2 * blockspacing;
 	playfieldwidth = ScreenWidth - 1 * riblocksize;
-    segmentwidth = int(((playfieldwidth / 2) / blocksegments));
-    playfieldheight = numblocks * riblocksizespacing;
-    screenleft = (ScreenWidth - playfieldwidth) / 2;
-    screenright = screenleft + playfieldwidth;
-    screentop = (ScreenHeight - playfieldheight) / 2;
-    screenbottom = screentop + playfieldheight;   
+	segmentwidth = int(((playfieldwidth / 2) / blocksegments));
+	playfieldheight = numblocks * riblocksizespacing;
+	screenleft = (ScreenWidth - playfieldwidth) / 2;
+	screenright = screenleft + playfieldwidth;
+	screentop = (ScreenHeight - playfieldheight) / 2;
+	screenbottom = screentop + playfieldheight;
 }
 
 CGameRamIt::~CGameRamIt() {}
@@ -34,15 +34,15 @@ CGameRamIt::~CGameRamIt() {}
 bool CGameRamIt::createbullet()
 {
 	bool result = false;
-	if (!bulletalive) 
-    {
+	if (!bulletalive)
+	{
 		bulletalive = true;
 		bulletpos = playerpos;
 		bulletvel.x = playerdx * bulletspeed;
-        bulletvel.y = 0;
+		bulletvel.y = 0;
 		result = true;
-    }
-    return result;
+	}
+	return result;
 }
 
 //BULLET ----------------------------------------------------------------------------------------------------------------
@@ -50,81 +50,81 @@ bool CGameRamIt::createbullet()
 void CGameRamIt::updatebullet()
 {
 	if (bulletalive)
-    {
+	{
 		bool destroybullet = false;
 		bool playaudiobullet = false;
 		for(int steps = 0; steps < bulletsteps; steps++)
-        {
+		{
 			bulletpos.x += bulletvel.x;
-            bulletpos.y += bulletvel.y;
+			bulletpos.y += bulletvel.y;
 			if (bulletpos.x + riblocksize / 2 < screenleft)
 				destroybullet = true;
 			if (bulletpos.x - riblocksize / 2 > screenright)
 				destroybullet = true;
-		
+
 			for (int side = 0; side < sides; side++)
-            {
+			{
 				for (int block = 0; block < numblocks; block++)
-                {
+				{
 					if (playfield[side][block].segments > 0)
-                    {
-						if ((bulletpos.y + riblocksize / 6 >= screentop + 
+					{
+						if ((bulletpos.y + riblocksize / 6 >= screentop +
 							block * riblocksizespacing + blockspacing) &&
-							(bulletpos.y - riblocksize / 6 <= screentop + 
+							(bulletpos.y - riblocksize / 6 <= screentop +
 							block * riblocksizespacing + blockspacing + riblocksize))
-                        {
-						    if (side == 0)
-                            {
-								if ((bulletpos.x - riblocksize / 2) <= screenleft + 
+						{
+							if (side == 0)
+							{
+								if ((bulletpos.x - riblocksize / 2) <= screenleft +
 									playfield[side][block].segments * segmentwidth)
-                                {
+								{
 									playfield[side][block].segments -= 1;
 									if (playfield[side][block].segments == 0)
 										if(!ScreenshotMode)
-									    	Game->AddToScore((level + 1) * 2*playfield[side][block].maxsegments);
+											Game->AddToScore((level + 1) * 2*playfield[side][block].maxsegments);
 
 									playaudiobullet = true;
 									destroybullet = true;
-                                }
-                            }
+								}
+							}
 							else
-                            {
+							{
 								if ((bulletpos.x - riblocksize / 2) >= screenright -
 									playfield[side][block].segments * segmentwidth)
-                                {
+								{
 									playfield[side][block].segments -= 1;
 									if (playfield[side][block].segments == 0)
 										if(!ScreenshotMode)
-									    	Game->AddToScore((level + 2) * 2 * playfield[side][block].maxsegments);
+											Game->AddToScore((level + 2) * 2 * playfield[side][block].maxsegments);
 
 									playaudiobullet = true;
 									destroybullet = true;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-	
-			if(destroybullet) 
-            {
-				if (playaudiobullet) 
+								}
+							}
+						}
+					}
+				}
+			}
+
+			if(destroybullet)
+			{
+				if (playaudiobullet)
 					Game->Audio->PlaySound(SfxHit, 0);
 				bulletalive = false;
 				break;
-            }
-        }
-    }
+			}
+		}
+	}
 }
 
 void CGameRamIt::drawbullet()
 {
 	if (bulletalive)
-    {
+	{
 		SDL_Rect r = {bulletpos.x - riblocksize / 2, bulletpos.y - riblocksize / 6, riblocksize, riblocksize / 3};
 		SDL_SetRenderDrawColor(Game->Renderer, 255, 255, 255, 255);
 		SDL_RenderFillRect(Game->Renderer, &r);
-    }
+	}
 }
 
 //PLAYER ----------------------------------------------------------------------------------------------------------------
@@ -132,27 +132,27 @@ void CGameRamIt::drawbullet()
 void CGameRamIt::createplayer()
 {
 	playerpos.x = screenleft + (screenright - screenleft) / 2;
-    playerpos.y = screentop + (screenbottom - screentop) / 2;
+	playerpos.y = screentop + (screenbottom - screentop) / 2;
 	playerdx = 1;
 }
 
 void CGameRamIt::drawplayer()
 {
 	SDL_Rect r;
-	
+
 	SDL_SetRenderDrawColor(Game->Renderer, 128, 128, 128, 255);
-	r =  {screenleft + (screenright - screenleft -playerrailwidth) / 2, screentop, playerrailwidth, screenbottom - screentop };  
+	r = {screenleft + (screenright - screenleft -playerrailwidth) / 2, screentop, playerrailwidth, screenbottom - screentop };
 	SDL_RenderFillRect(Game->Renderer, &r);
-		
+
 	SDL_SetRenderDrawColor(Game->Renderer, 255, 255, 255, 255);
 	r = {playerpos.x - riblocksize / 2, playerpos.y - riblocksize / 2, riblocksize, riblocksize};
-	SDL_RenderFillRect(Game->Renderer, &r);	
+	SDL_RenderFillRect(Game->Renderer, &r);
 
 	SDL_SetRenderDrawColor(Game->Renderer, 255, 0, 0, 255);
 	if (playerdx == 1)
 		r ={playerpos.x + riblocksize / 2, playerpos.y - riblocksize / 4, riblocksize / 2, riblocksize / 2};
-    else
-		r ={playerpos.x - riblocksize, playerpos.y - riblocksize / 4, riblocksize / 2,  riblocksize / 2};
+	else
+		r ={playerpos.x - riblocksize, playerpos.y - riblocksize / 4, riblocksize / 2, riblocksize / 2};
 	SDL_RenderFillRect(Game->Renderer, &r);
 }
 
@@ -162,42 +162,42 @@ void CGameRamIt::updateplayer()
 	{
 		return;
 	}
-	
+
 	if ((Game->Input->Buttons.ButLeft) ||
 		(Game->Input->Buttons.ButLeft2) ||
 		(Game->Input->Buttons.ButDpadLeft))
 		playerdx = -1;
-	
+
 	if ((Game->Input->Buttons.ButRight) ||
 		(Game->Input->Buttons.ButRight2) ||
 		(Game->Input->Buttons.ButDpadRight))
 		playerdx = 1;
-	
+
 	if ((Game->Input->Buttons.ButDown) ||
 		(Game->Input->Buttons.ButDown2) ||
 		(Game->Input->Buttons.ButDpadDown))
-    {
+	{
 		if (playerpos.y + riblocksize / 2 + playerspeed < screenbottom)
 			playerpos.y += playerspeed;
 		else
 			playerpos.y = screenbottom - riblocksize / 2;
-    }
+	}
 
 	if ((Game->Input->Buttons.ButUp) ||
 		(Game->Input->Buttons.ButUp2) ||
 		(Game->Input->Buttons.ButDpadUp))
-    {
+	{
 		if (playerpos.y - riblocksize / 2 - playerspeed > screentop)
 			playerpos.y -= playerspeed;
 		else
 			playerpos.y = screentop + riblocksize / 2;
-    }
+	}
 
 	if (Game->Input->Buttons.ButA && !Game->Input->PrevButtons.ButA)
 		if (createbullet())
-        {
+		{
 			Game->Audio->PlaySound(SfxShoot, 0);
-        }
+		}
 }
 
 //playfield ----------------------------------------------------------------------------------------------------------------
@@ -208,14 +208,14 @@ void CGameRamIt::createplayfield()
 	int piece = -1;
 	SDL_Color color;
 	for (int side = 0 ; side < sides; side++)
-    {
+	{
 		for (int block = 0; block < numblocks; block++)
-        {
+		{
 			while(prevpiece == piece)
 				piece = rand() % 17;
 
 			prevpiece = piece;
-			
+
 			if (piece == 0)
 				color = {0x00, 0x00, 0xFF, 0xFF};
 
@@ -230,7 +230,7 @@ void CGameRamIt::createplayfield()
 
 			if (piece == 4)
 				color = {0xA0, 0x20, 0xF0, 0xFF};
-                
+
 			if (piece == 5)
 				color = {0xA5, 0x2A, 0x2A, 0xFF};
 
@@ -271,7 +271,7 @@ void CGameRamIt::createplayfield()
 			playfield[side][block].segments = 2;
 			playfield[side][block].maxsegments = 2;
 		}
-    }
+	}
 }
 
 void CGameRamIt::updateplayfield(bool force)
@@ -279,64 +279,63 @@ void CGameRamIt::updateplayfield(bool force)
 	speedcount += 1;
 
 	if (force || (speedcount >= speed - ((level-1) * tickslevelmul)))
-    {
+	{
 		speedcount = 0;
-		int stageclear = true;		
+		int stageclear = true;
 		int numalive = 0;
-        int side;
-        int block;
+		int side;
+		int block;
 		for (side = 0; side < sides; side++)
 			for(block = 0; block < numblocks; block++)
 				if (playfield[side][block].segments != 0)
-                {
+				{
 					stageclear = false;
 					numalive += 1;
-                }
-		
+				}
+
 		if (stageclear)
-        {
+		{
 			Game->Audio->PlaySound(SfxSucces, 0);
 			createplayfield();
 			level += 1;
 			if(!ScreenshotMode)
 				Game->AddToScore((level-1) * 100);
-        }
-		
+		}
+
 		if (!stageclear)
-        {			
+		{
 			int r = 1;
 			if (numalive <= 5)
 				r = rand() % 2;
 
 			if (r == 1)
-            {
+			{
 				side = rand() % sides;
 				block = rand() % numblocks;
 				while (playfield[side][block].segments == 0)
-                {
+				{
 					side = rand() % sides;
-				    block = rand() % numblocks;
-                }
+					block = rand() % numblocks;
+				}
 				playfield[side][block].segments += 2;
 				if (playfield[side][block].segments > blocksegments)
 					playfield[side][block].segments = blocksegments;
-	
+
 				if (playfield[side][block].segments > playfield[side][block].maxsegments)
 					playfield[side][block].maxsegments = playfield[side][block].segments;
-			
+
 				//death
 				for (side = 0; side < sides; side++)
 					for (block = 0; block < numblocks; block++)
 						if (playfield[side][block].segments == blocksegments)
-                        {
+						{
 							playerdeath = true;
 							break;
-                        }
-					
-            }
-        }
-    }
-}	
+						}
+			}
+		}
+	}
+}
 
 void CGameRamIt::drawplayfield()
 {
@@ -345,15 +344,15 @@ void CGameRamIt::drawplayfield()
 		{
 			SDL_Rect r;
 			if (side == 0)
-				r = {screenleft, screentop + block * riblocksizespacing + blockspacing, 
-					playfield[side][block].segments * segmentwidth, 
+				r = {screenleft, screentop + block * riblocksizespacing + blockspacing,
+					playfield[side][block].segments * segmentwidth,
 					riblocksize};
 			else
-				r = { screenright - playfield[side][block].segments * segmentwidth , 
-					screentop + block * riblocksizespacing + blockspacing, 
-					playfield[side][block].segments * segmentwidth, 
-					riblocksize};			
-			SDL_SetRenderDrawColor(Game->Renderer, playfield[side][block].color.r, playfield[side][block].color.g,  playfield[side][block].color.b,  
+				r = { screenright - playfield[side][block].segments * segmentwidth ,
+					screentop + block * riblocksizespacing + blockspacing,
+					playfield[side][block].segments * segmentwidth,
+					riblocksize};
+			SDL_SetRenderDrawColor(Game->Renderer, playfield[side][block].color.r, playfield[side][block].color.g, playfield[side][block].color.b,
 					playfield[side][block].color.a);
 			SDL_RenderFillRect(Game->Renderer, &r);
 		}
@@ -364,7 +363,7 @@ void CGameRamIt::drawplayfield()
 void CGameRamIt::DrawBackground(bool motionblur)
 {
 	SDL_SetRenderDrawColor(Game->Renderer, 150, 150, 150, 255);
-    SDL_RenderClear(Game->Renderer);
+	SDL_RenderClear(Game->Renderer);
 	SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 255);
 	SDL_Rect r = {screenleft, screentop, playfieldwidth, playfieldheight};
 	SDL_RenderFillRect(Game->Renderer, &r);
@@ -406,7 +405,7 @@ void CGameRamIt::LoadSound()
 	SfxHit = Game->Audio->LoadSound("ramit/hit.wav");
 	SfxDie = Game->Audio->LoadSound("common/die.wav");
 	SfxSucces = Game->Audio->LoadSound("common/succes.wav");
-	MusMusic = Game->Audio->LoadMusic("ramit/music.ogg");	
+	MusMusic = Game->Audio->LoadMusic("ramit/music.ogg");
 }
 
 void CGameRamIt::UnLoadSound()
@@ -424,7 +423,7 @@ SDL_Texture* CGameRamIt::screenshot()
 {
 	SDL_Texture* prev = SDL_GetRenderTarget(Game->Renderer);
 	SDL_Texture* image = SDL_CreateTexture(Game->Renderer, PixelFormat, SDL_TEXTUREACCESS_TARGET, ScreenWidth, ScreenHeight);
-    SDL_SetRenderTarget(Game->Renderer, image);
+	SDL_SetRenderTarget(Game->Renderer, image);
 	SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 255);
 	SDL_RenderClear(Game->Renderer);
 	init();
@@ -440,7 +439,7 @@ SDL_Texture* CGameRamIt::screenshot()
 
 	SDL_RenderPresent(Game->Renderer);
 	SDL_SetRenderTarget(Game->Renderer, prev);
-	deinit();	
+	deinit();
 	return image;
 }
 
@@ -448,34 +447,34 @@ SDL_Texture* CGameRamIt::screenshot()
 
 void CGameRamIt::UpdateObjects(bool IsGameState)
 {
-    if (IsGameState)
-    {
-        updateplayer();
-        updateplayfield(false);
-        updatebullet();
+	if (IsGameState)
+	{
+		updateplayer();
+		updateplayfield(false);
+		updatebullet();
 
 		if (playerdeath)
-        {
+		{
 			Game->Audio->PlaySound(SfxDie, 0);
 			if (Game->GameMode == GMGame)
 				if (!ScreenshotMode)
 					HealthPoints -= 1;
-			
+
 			if (HealthPoints > 0)
 			{
-            	SDL_Delay(500);
+				SDL_Delay(500);
 				createplayfield();
-            }
+			}
 			playerdeath = false;
-        }
+		}
 	}
 }
 
 bool CGameRamIt::DrawObjects()
 {
 	drawbullet();
-    drawplayer();
-    drawplayfield();
+	drawplayer();
+	drawplayfield();
 	//don't call drawsprites in base class
 	return false;
 }
