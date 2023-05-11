@@ -103,7 +103,7 @@ void CGameInvaders::createnemybullet(Vec2F pos)
 		{
 			enemybullets[i].spr = Game->Sprites->CreateSprite();
 			Game->Sprites->SetSpriteImage(enemybullets[i].spr, &spritesheetBullet, 2, 1);
-			Game->Sprites->SetSpriteColour(enemybullets[i].spr, 1,0,0,1);
+			Game->Sprites->SetSpriteColour(enemybullets[i].spr, 0.75,0.65,0.65,1);
 			Game->Sprites->SetSpriteAnimation(enemybullets[i].spr, 1, 1, 0);
 			Game->Sprites->SetSpriteScale(enemybullets[i].spr, enemyscale);
 			Game->Sprites->SetSpriteDepth(enemybullets[i].spr, -1);

@@ -62,9 +62,9 @@ void CGameBase::PauseMenu()
 	//global.substatecounter = 10.6
 	int selected = 0;
 	int selectedmenu = 0;
-	int maxmenus = 7;
-	int menutextsize = 45;
-	int menuspacing = 55;
+	int maxmenus = 10;
+	int menutextsize = 34;
+	int menuspacing = 44;
 	Game->Input->ResetButtons();
 
 	Uint64 TotalFrames = 0;
@@ -131,6 +131,19 @@ void CGameBase::PauseMenu()
 						Text = PMPauseMenus[menu].name + CrtOptions[Game->Crt].name;
 						Game->Font->WriteText(Game->Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 300, 180 + i * menuspacing, 0, color);
 						break;
+					case PMColorModR:
+						Text = PMPauseMenus[menu].name + " " + to_string((int)Game->ColorModR * 100 / 255) + "%";
+						Game->Font->WriteText(Game->Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 300, 180 + i * menuspacing, 0, color);
+						break;
+					case PMColorModG:
+						Text = PMPauseMenus[menu].name + " " + to_string((int)Game->ColorModG * 100 / 255) + "%";
+						Game->Font->WriteText(Game->Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 300, 180 + i * menuspacing, 0, color);
+						break;
+					case PMColorModB:
+						Text = PMPauseMenus[menu].name + " " + to_string((int)Game->ColorModB * 100 / 255) + "%";
+						Game->Font->WriteText(Game->Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 300, 180 + i * menuspacing, 0, color);
+						break;
+					
 					default:
 						Game->Font->WriteText(Game->Renderer, "Roboto-Regular", menutextsize, PMPauseMenus[menu].name, PMPauseMenus[menu].name.length(), 300, 180 + i * menuspacing, 0, color);
 						break;
@@ -237,6 +250,30 @@ void CGameBase::PauseMenu()
 						Game->ReCreateCrt();
 						break;
 					}
+
+					case PMColorModR:
+					{
+						Game->ColorModR -= 5;
+						if(Game->ColorModR < 15)
+							Game->ColorModR = 15;
+						break;
+					}
+
+					case PMColorModG:
+					{
+						Game->ColorModG -= 5;
+						if(Game->ColorModG < 15)
+							Game->ColorModG = 15;
+						break;
+					}
+
+					case PMColorModB:
+					{
+						Game->ColorModB -= 5;
+						if(Game->ColorModB < 15)
+							Game->ColorModB = 15;
+						break;
+					}
 				}
 			}
 
@@ -274,6 +311,30 @@ void CGameBase::PauseMenu()
 						if (Game->Crt == Crts)
 							Game->Crt = 0;
 						Game->ReCreateCrt();
+						break;
+					}
+
+					case PMColorModR:
+					{
+						Game->ColorModR += 5;
+						if(Game->ColorModR > 255)
+							Game->ColorModR = 255;
+						break;
+					}
+
+					case PMColorModG:
+					{
+						Game->ColorModG += 5;
+						if(Game->ColorModG > 255)
+							Game->ColorModG = 255;
+						break;
+					}
+
+					case PMColorModB:
+					{
+						Game->ColorModB += 5;
+						if(Game->ColorModB > 255)
+							Game->ColorModB = 255;
 						break;
 					}
 				}
@@ -370,6 +431,30 @@ void CGameBase::PauseMenu()
 						Game->Input->ResetButtons();
 						break;
 					}
+
+					case PMColorModR:
+					{
+						Game->ColorModR += 5;
+						if(Game->ColorModR > 255)
+							Game->ColorModR = 15;
+						break;
+					}
+
+					case PMColorModG:
+					{
+						Game->ColorModG += 5;
+						if(Game->ColorModG > 255)
+							Game->ColorModG = 15;
+						break;
+					}
+
+					case PMColorModB:
+					{
+						Game->ColorModB += 5;
+						if(Game->ColorModB > 255)
+							Game->ColorModB = 15;
+						break;
+					}
 				}
 			}
 		}
@@ -391,6 +476,8 @@ void CGameBase::PauseMenu()
 
 		SDL_SetRenderTarget(Game->Renderer, Game->TexScreen);
 		SDL_RenderCopy(Game->Renderer, Game->TexOffScreen, NULL, NULL);
+
+		SDL_SetTextureColorMod(Game->TexScreen, Game->ColorModR, Game->ColorModG, Game->ColorModB);
 
 		SDL_SetRenderTarget(Game->Renderer, NULL);
 		SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 255);

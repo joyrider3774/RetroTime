@@ -140,15 +140,15 @@ void CGameRamIt::drawplayer()
 {
 	SDL_Rect r;
 
-	SDL_SetRenderDrawColor(Game->Renderer, 128, 128, 128, 255);
+	SDL_SetRenderDrawColor(Game->Renderer, 0x80, 0x80, 0x80, 0xFF);
 	r = {screenleft + (screenright - screenleft -playerrailwidth) / 2, screentop, playerrailwidth, screenbottom - screentop };
 	SDL_RenderFillRect(Game->Renderer, &r);
 
-	SDL_SetRenderDrawColor(Game->Renderer, 255, 255, 255, 255);
+	SDL_SetRenderDrawColor(Game->Renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 	r = {playerpos.x - riblocksize / 2, playerpos.y - riblocksize / 2, riblocksize, riblocksize};
 	SDL_RenderFillRect(Game->Renderer, &r);
 
-	SDL_SetRenderDrawColor(Game->Renderer, 255, 0, 0, 255);
+	SDL_SetRenderDrawColor(Game->Renderer, 0xFF, 0x40, 0x40, 0xFF);
 	if (playerdx == 1)
 		r ={playerpos.x + riblocksize / 2, playerpos.y - riblocksize / 4, riblocksize / 2, riblocksize / 2};
 	else
@@ -217,16 +217,16 @@ void CGameRamIt::createplayfield()
 			prevpiece = piece;
 
 			if (piece == 0)
-				color = {0x00, 0x00, 0xFF, 0xFF};
+				color = {0x65, 0x65, 0xFF, 0xFF};
 
 			if (piece == 1)
-				color = {0xFF, 0xFF, 0x00, 0xFF};
+				color = {0xFF, 0xFF, 0x65, 0xFF};
 
 			if (piece == 2)
-				color = {0x00, 0xFF, 0x00, 0xFF};
+				color = {0x65, 0xFF, 0x65, 0xFF};
 
 			if (piece == 3)
-				color = {0x00, 0x00, 0xFF, 0xFF};
+				color = {0x65, 0x65, 0xFF, 0xFF};
 
 			if (piece == 4)
 				color = {0xA0, 0x20, 0xF0, 0xFF};
@@ -235,7 +235,7 @@ void CGameRamIt::createplayfield()
 				color = {0xA5, 0x2A, 0x2A, 0xFF};
 
 			if (piece == 6)
-				color = {0xFF, 0x00, 0xFF, 0xFF};
+				color = {0xFF, 0x65, 0xFF, 0xFF};
 
 			if (piece == 7)
 				color = {0xFF, 0xFF, 0xFF, 0xFF};
@@ -244,28 +244,28 @@ void CGameRamIt::createplayfield()
 				color = {0x9B, 0x9B, 0x9B, 0xFF};
 
 			if (piece == 9)
-				color = {0xFF, 0xE4, 0xC4, 0xFF};
+				color = {0xDD, 0xE4, 0xC4, 0xFF};
 
 			if (piece == 10)
-				color = {0xED, 0x70, 0x14, 0xFF};
+				color = {0xED, 0x70, 0x24, 0xFF};
 
 			if (piece == 11)
 				color = {0xCC, 0xCC, 0xFF, 0xFF};
 
 			if (piece == 12)
-				color = {0xBF, 0xFF, 0x00, 0xFF};
+				color = {0xBF, 0xDD, 0x65, 0xFF};
 
 			if (piece == 13)
-				color = {0x00, 0x80, 0x80, 0xFF};
+				color = {0x65, 0x80, 0x80, 0xFF};
 
 			if (piece == 14)
-				color = {0x00, 0xFF, 0xFF, 0xFF};
+				color = {0x65, 0xFF, 0xFF, 0xFF};
 
 			if (piece == 15)
 				color = {0x8A, 0x9A, 0x5B, 0xFF};
 
 			if (piece == 16)
-				color = {0xE9, 0x96, 0x7A, 0xFF};
+				color = {0xD9, 0x96, 0x7A, 0xFF};
 
 			playfield[side][block].color = color;
 			playfield[side][block].segments = 2;

@@ -82,9 +82,13 @@ constexpr int PMMusicVol = 2;
 constexpr int PMSoundVol = 3;
 constexpr int PMMotionBlur = 4;
 constexpr int PMGameHelp = 5;
-constexpr int PMCrt = 6;
+constexpr int PMColorModR = 6;
+constexpr int PMColorModG = 7;
+constexpr int PMColorModB = 8;
+constexpr int PMCrt = 9;
 
-constexpr int PauseMenus = 7;
+
+constexpr int PauseMenus = 10;
 
 //main menus
 constexpr int MMStart = 0;
@@ -104,9 +108,12 @@ constexpr int OMMusicVol = 0;
 constexpr int OMSoundVol = 1;
 constexpr int OMMotionBlur = 2;
 constexpr int OMCrt = 3;
-constexpr int OMResetHighScores = 4;
-constexpr int OMBack = 5;
-constexpr int OptionMenus = 6;
+constexpr int OMColorModR = 4;
+constexpr int OMColorModG = 5;
+constexpr int OMColorModB = 6;
+constexpr int OMResetHighScores = 7;
+constexpr int OMBack = 8;
+constexpr int OptionMenus = 9;
 
 //CRTS
 constexpr int Crts = 6;
@@ -131,7 +138,7 @@ struct PauseMenuDesc {
 
 struct GPGamePauseMenusDesc {
 	int game;
-	int menus[7];
+	int menus[10];
 };
 
 struct MainMenusDesc {

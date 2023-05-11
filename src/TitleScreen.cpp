@@ -42,8 +42,8 @@ void TitleScreen(CGame *Game)
 		case MMOptions:
 		{
 			int selectedmenu = 0;
-			int menutextsize = 50;
-			int menuspacing = 65;
+			int menutextsize = 35;
+			int menuspacing = 45;
 
 			selectedmenu = OMOptionMenus[SelOptions].menu;
 			Text = "Options";
@@ -83,6 +83,18 @@ void TitleScreen(CGame *Game)
 						break;
 					case OMCrt:
 						Text = OMOptionMenus[menu].name + CrtOptions[Game->Crt].name;
+						Game->Font->WriteText(Game->Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 400, 185 + i * menuspacing, 0, color);
+						break;
+					case OMColorModR:
+						Text = OMOptionMenus[menu].name + " " + to_string((int)Game->ColorModR * 100 / 255) + "%";
+						Game->Font->WriteText(Game->Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 400, 185 + i * menuspacing, 0, color);
+						break;
+					case OMColorModG:
+						Text = OMOptionMenus[menu].name + " " + to_string((int)Game->ColorModG * 100 / 255) + "%";
+						Game->Font->WriteText(Game->Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 400, 185 + i * menuspacing, 0, color);
+						break;
+					case OMColorModB:
+						Text = OMOptionMenus[menu].name + " " + to_string((int)Game->ColorModB * 100 / 255) + "%";
 						Game->Font->WriteText(Game->Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 400, 185 + i * menuspacing, 0, color);
 						break;
 					default:
@@ -144,6 +156,24 @@ void TitleScreen(CGame *Game)
 							Game->Crt = Crts -1;
 						Game->ReCreateCrt();
 						break;
+
+					case OMColorModR:
+						Game->ColorModR -= 5;
+						if(Game->ColorModR < 15)
+							Game->ColorModR = 15;
+						break;
+
+					case OMColorModG:
+						Game->ColorModG -= 5;
+						if(Game->ColorModG < 15)
+							Game->ColorModG = 15;
+						break;
+
+					case OMColorModB:
+						Game->ColorModB -= 5;
+						if(Game->ColorModB < 15)
+							Game->ColorModB = 15;
+						break;
 				}
 				//createcrt(global.crt)
 				//savehighscoresoptions()
@@ -175,6 +205,24 @@ void TitleScreen(CGame *Game)
 						if(Game->Crt == Crts)
 							Game->Crt = 0;
 						Game->ReCreateCrt();
+						break;
+
+					case OMColorModR:
+						Game->ColorModR += 5;
+						if(Game->ColorModR > 255)
+							Game->ColorModR = 255;
+						break;
+
+					case OMColorModG:
+						Game->ColorModG += 5;
+						if(Game->ColorModG > 255)
+							Game->ColorModG = 255;
+						break;
+
+					case OMColorModB:
+						Game->ColorModB += 5;
+						if(Game->ColorModB > 255)
+							Game->ColorModB = 255;
 						break;
 				}
 					//createcrt(global.crt)
@@ -221,6 +269,24 @@ void TitleScreen(CGame *Game)
 						if (Game->Crt == Crts)
 							Game->Crt = 0;
 						Game->ReCreateCrt();
+						break;
+
+					case OMColorModR:
+						Game->ColorModR += 5;
+						if(Game->ColorModR > 255)
+							Game->ColorModR = 15;
+						break;
+
+					case OMColorModG:
+						Game->ColorModG += 5;
+						if(Game->ColorModG > 255)
+							Game->ColorModG = 15;
+						break;
+
+					case OMColorModB:
+						Game->ColorModB += 5;
+						if(Game->ColorModB > 255)
+							Game->ColorModB = 15;
 						break;
 				}
 				//createcrt(global.crt)

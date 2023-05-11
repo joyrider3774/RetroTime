@@ -494,10 +494,13 @@ void CGame::LoadSettings()
 	if (SettingsFile)
 	{
 		int VolumeMusic, VolumeSound, aMotionBlur;
-		fscanf(SettingsFile, "VolumeMusic=%d\nVolumeSound=%d\nCrt=%d\nSpriteGhosting=%d\n", &VolumeMusic, &VolumeSound, &Crt, &aMotionBlur);
+		int ret = fscanf(SettingsFile, "VolumeMusic=%d\nVolumeSound=%d\nCrt=%d\nSpriteGhosting=%d\nColorModR=%d\nColorModG=%d\nColorModB=%d\n", 
+			&VolumeMusic, &VolumeSound, &Crt, &aMotionBlur, &ColorModR, &ColorModG, &ColorModB);
 		MotionBlur = (aMotionBlur == 1);
-		Audio->SetVolumeSound(VolumeSound);
-		Audio->SetVolumeMusic(VolumeMusic);
+		if(ret > 0)
+			Audio->SetVolumeMusic(VolumeMusic);
+		if(ret > 1)
+			Audio->SetVolumeSound(VolumeSound);
 		fclose(SettingsFile);
 	}
 	else
@@ -529,7 +532,8 @@ void CGame::SaveSettings()
 	{
 		int VolumeMusic = Audio->GetVolumeMusic();
 		int VolumeSound = Audio->GetVolumeSound();
-		fprintf(SettingsFile, "VolumeMusic=%d\nVolumeSound=%d\nCrt=%d\nSpriteGhosting=%d\n", VolumeMusic, VolumeSound, Crt, MotionBlur?1:0);
+		fprintf(SettingsFile, "VolumeMusic=%d\nVolumeSound=%d\nCrt=%d\nSpriteGhosting=%d\nColorModR=%d\nColorModG=%d\nColorModB=%d\n",
+			VolumeMusic, VolumeSound, Crt, MotionBlur?1:0, ColorModR, ColorModG, ColorModB);
 		fclose(SettingsFile);
 	}
 }
@@ -758,6 +762,8 @@ void CGame::MainLoop()
 		SDL_SetRenderTarget(Renderer, NULL);
 		SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
 		SDL_RenderClear(Renderer);
+
+		SDL_SetTextureColorMod(TexScreen, ColorModR, ColorModG, ColorModB);
 
 		int w, h, w2, h2, x, y;
 		SDL_GetWindowSize(SdlWindow, &w , &h);

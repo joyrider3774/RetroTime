@@ -18,9 +18,9 @@ private:
 	static const int cols = int(ScreenWidth / snakesize) -1;
 	static const int updateticks = 8;
 
-	const SDL_Color snakeheadcolor = {255, 0, 0, 255};
-	const SDL_Color snakebodycolor = {255, 255, 255, 255};
-	const SDL_Color snakefoodcolor = {0, 255 ,0, 255};
+	const SDL_Color snakeheadcolor = {0xFF, 0x65, 0x65, 0xFF};
+	const SDL_Color snakebodycolor = {0xFF, 0xFF, 0xFF, 0xFF};
+	const SDL_Color snakefoodcolor = {0x65, 0xFF, 0x65, 0xFF};
 
 	bool movedone = true;
 	int snakelength;

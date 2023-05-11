@@ -161,7 +161,7 @@ void CGameSnake::updatesnake()
 
 void CGameSnake::DrawBackground(bool motionblur)
 {
-	SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 255, 255);
+	SDL_SetRenderDrawColor(Game->Renderer, 0x65, 0x65, 0xFF, 0xFF);
 	SDL_RenderClear(Game->Renderer);
 	SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 255);
 	SDL_Rect r = {screenleft, screentop, playfieldwidth, playfieldheight};

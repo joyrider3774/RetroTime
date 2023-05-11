@@ -252,31 +252,31 @@ void CGameBlockStacker::drawplayfieldcell(int x, int y, int piece)
 	if (piece != -1)
 	{
 		if(piece == 0)
-			color = {0, 0, 255, 255};
+			color = {0x65, 0x65, 0xFF, 0xFF};
 
 		if (piece == 1)
-			color = {255, 255, 0, 255};
+			color = {0xFF, 0xFF, 0x65, 0xFF};
 
 		if (piece == 2)
-			color = {0, 255, 0, 255};
+			color = {0x30, 0xFF, 0x65, 0xFF};
 
 		if (piece == 3)
-			color = {255, 0, 0, 255};
+			color = {0xFF, 0x65, 0x65, 0xFF};
 
 		if (piece == 4)
-			color = {0xA0, 0x20, 0xF0, 255};
+			color = {0xA0, 0x40, 0xF0, 0xFF};
 
 		if (piece == 5)
-			color = {0xA5, 0x2A, 0x2A, 255};
+			color = {0xA5, 0x3A, 0x3A, 0xFF};
 
 		if (piece == 6)
-			color = {255, 0, 255, 255};
+			color = {0xFF, 0x65, 0xFF, 0xFF};
 
 		if (piece == -2)
-			color = {128, 128, 128, 255};
+			color = {0x80, 0x80, 0x80, 0xFF};
 
 		if (piece == -3)
-			color = {255, 255, 255, 255};
+			color = {0xFF, 0xFF, 0xFF, 0xFF};
 
 		SDL_Rect r = {screenleft + x * blocksize, screentop + y * blocksize, blocksize, blocksize};
 		SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 255);

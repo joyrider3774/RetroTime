@@ -139,19 +139,22 @@ PauseMenuDesc PMPauseMenus[PauseMenus] =
 	{PMSoundVol,	"Sound Volume: "},
 	{PMMotionBlur,	"Sprite Ghosting Effect: "},
 	{PMGameHelp,	"Game Help"},
+	{PMColorModR,	"Color Mod Red: "},
+	{PMColorModG,	"Color Mod Green: "},
+	{PMColorModB,	"Color Mod Blue: "},
 	{PMCrt, 		"Crt Effect: "}
 };
 
 //GamePauseMenus
 GPGamePauseMenusDesc GPGamePauseMenus[Games] = {
-	{GSSpaceInvaders,	{PMContinue, PMGameHelp, PMMotionBlur, PMCrt, PMMusicVol, PMSoundVol, PMQuit}},
-	{GSBreakout,		{PMContinue, PMGameHelp, PMMotionBlur, PMCrt, PMMusicVol, PMSoundVol, PMQuit}},
-	{GSFrog,			{PMContinue, PMGameHelp, PMMotionBlur, PMCrt, PMMusicVol, PMSoundVol, PMQuit}},
-	{GSSnake,			{PMContinue, PMGameHelp, PMMotionBlur, PMCrt, PMMusicVol, PMSoundVol, PMQuit}},
-	{GSPang,			{PMContinue, PMGameHelp, PMMotionBlur, PMCrt, PMMusicVol, PMSoundVol, PMQuit}},
-	{GSTetris,			{PMContinue, PMGameHelp, PMMotionBlur, PMCrt, PMMusicVol, PMSoundVol, PMQuit}},
-	{GSRamIt,			{PMContinue, PMGameHelp, PMMotionBlur, PMCrt, PMMusicVol, PMSoundVol, PMQuit}},
-	{GSEddy,			{PMContinue, PMGameHelp, PMMotionBlur, PMCrt, PMMusicVol, PMSoundVol, PMQuit}}
+	{GSSpaceInvaders,	{PMContinue, PMGameHelp, PMMotionBlur, PMCrt, PMMusicVol, PMSoundVol, PMColorModR, PMColorModG, PMColorModB, PMQuit}},
+	{GSBreakout,		{PMContinue, PMGameHelp, PMMotionBlur, PMCrt, PMMusicVol, PMSoundVol, PMColorModR, PMColorModG, PMColorModB, PMQuit}},
+	{GSFrog,			{PMContinue, PMGameHelp, PMMotionBlur, PMCrt, PMMusicVol, PMSoundVol, PMColorModR, PMColorModG, PMColorModB, PMQuit}},
+	{GSSnake,			{PMContinue, PMGameHelp, PMMotionBlur, PMCrt, PMMusicVol, PMSoundVol, PMColorModR, PMColorModG, PMColorModB, PMQuit}},
+	{GSPang,			{PMContinue, PMGameHelp, PMMotionBlur, PMCrt, PMMusicVol, PMSoundVol, PMColorModR, PMColorModG, PMColorModB, PMQuit}},
+	{GSTetris,			{PMContinue, PMGameHelp, PMMotionBlur, PMCrt, PMMusicVol, PMSoundVol, PMColorModR, PMColorModG, PMColorModB, PMQuit}},
+	{GSRamIt,			{PMContinue, PMGameHelp, PMMotionBlur, PMCrt, PMMusicVol, PMSoundVol, PMColorModR, PMColorModG, PMColorModB, PMQuit}},
+	{GSEddy,			{PMContinue, PMGameHelp, PMMotionBlur, PMCrt, PMMusicVol, PMSoundVol, PMColorModR, PMColorModG, PMColorModB, PMQuit}}
 };
 
 //MainMenus
@@ -172,8 +175,11 @@ OptionMenusDesc OMOptionMenus[OptionMenus] =
 	{OMSoundVol,		"Sound Volume: "},
 	{OMMotionBlur,		"Sprite Ghosting Effect: "},
 	{OMCrt, 			"Crt Effect: "},
+	{OMColorModR,		"Color Mod Red: "},
+	{OMColorModG,		"Color Mod Green: "},
+	{OMColorModB,		"Color Mod Blue: "},
 	{OMResetHighScores, "Reset Highscores"},
-	{OMBack,			"Back"}
+	{OMBack,			"Back"},
 };
 
 //CrtOptions

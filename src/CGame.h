@@ -68,6 +68,7 @@ public:
 	bool MotionBlur;
 	int GFXFrameID, GFXMedal;
 	int CurrentGameMusicID;
+	int ColorModR=255, ColorModG=255, ColorModB=255;
 	CGame();
 	~CGame();
 
