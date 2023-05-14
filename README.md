@@ -1,4 +1,6 @@
 # RetroTime
+![DownloadCountTotal](https://img.shields.io/github/downloads/joyrider3774/RetroTime/total?label=total%20downloads&style=plastic) ![DownloadCountLatest](https://img.shields.io/github/downloads/joyrider3774/RetroTime/latest/total?style=plastic) ![LatestVersion](https://img.shields.io/github/v/tag/joyrider3774/RetroTime?label=Latest%20version&style=plastic) ![License](https://img.shields.io/github/license/joyrider3774/RetroTime?style=plastic)
+
 <img width="384" height="206" src="metadata/retrotime.png">
 
 RetroTime is a game containing 8 retro based games playable in 3 game modes being Retro Carousel, Time Attack and Lives mode. The game is a port from my competetion entry for Fuze 4 for Nintendo switch, in colleboration Wireframe magazine. 
