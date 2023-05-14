@@ -107,7 +107,7 @@ The game makes uses of multiple payed and free assets packs, below are the credi
 | back.wav | [ Game Music Stingers And UI SFX Pack 2 by wowsounds](https://www.gamedevmarket.net/asset/game-music-stingers-and-ui-sfx-pack-2/) | [Gamedev market pro-licence](https://static.gamedevmarket.net/terms-conditions/#pro-licence) |
 | confirm.wav | [ Game Music Stingers And UI SFX Pack 2 by wowsounds](https://www.gamedevmarket.net/asset/game-music-stingers-and-ui-sfx-pack-2/) | [Gamedev market pro-licence](https://static.gamedevmarket.net/terms-conditions/#pro-licence) |
 | select.wav | [ Game Music Stingers And UI SFX Pack 2 by wowsounds](https://www.gamedevmarket.net/asset/game-music-stingers-and-ui-sfx-pack-2/) | [Gamedev market pro-licence](https://static.gamedevmarket.net/terms-conditions/#pro-licence) |
-| score.ogg | [8-bit Action Music & SFX by Joel Steudler](https://joelsteudler.itch.io/8-bit-action-music-sfx) | [HUMBLE SOFTWARE BUNDLE: FRESH START GAME DEV ASSETS BUNDLE License](https://cdn.humblebundle.com/misc/files/hashed/97e53bc6fa248bd5eff48b074b09f21649401cbb.pdf) |
+| score.ogg | [8-bit Action Music & SFX by Joel Steudler](https://joelsteudler.itch.io/8-bit-action-music-sfx) | [HUMBLE SOFTWARE BUNDLE: FRESH START GAME DEV ASSETS BUNDLE License - if you own the bundle](https://cdn.humblebundle.com/misc/files/hashed/97e53bc6fa248bd5eff48b074b09f21649401cbb.pdf) |
 | medal.png | [Kenney medals](https://www.kenney.nl/assets/medals) | [Creative Commons CC0](https://creativecommons.org/share-your-work/public-domain/cc0/) |
 | frame.png | [Hazy Hills Battle Background ansimuz](https://ansimuz.itch.io/hazy-hills-battle-background) | [Creative Commons Attribution v4.0 International](https://creativecommons.org/licenses/by/4.0/ ) |
 
@@ -115,9 +115,9 @@ The game makes uses of multiple payed and free assets packs, below are the credi
 ### Shared between games
 | Asset | Asset Pack | License |
 | ----- | --------- | -------- |
-| die.wav | [8-bit Action Music & SFX by Joel Steudler](https://joelsteudler.itch.io/8-bit-action-music-sfx) | [HUMBLE SOFTWARE BUNDLE: FRESH START GAME DEV ASSETS BUNDLE License](https://cdn.humblebundle.com/misc/files/hashed/97e53bc6fa248bd5eff48b074b09f21649401cbb.pdf) |
-| coin.wav | [8-bit Action Music & SFX by Joel Steudler](https://joelsteudler.itch.io/8-bit-action-music-sfx) | [HUMBLE SOFTWARE BUNDLE: FRESH START GAME DEV ASSETS BUNDLE License](https://cdn.humblebundle.com/misc/files/hashed/97e53bc6fa248bd5eff48b074b09f21649401cbb.pdf) |
-| succes.wav | [8-bit Action Music & SFX by Joel Steudler](https://joelsteudler.itch.io/8-bit-action-music-sfx) | [HUMBLE SOFTWARE BUNDLE: FRESH START GAME DEV ASSETS BUNDLE License](https://cdn.humblebundle.com/misc/files/hashed/97e53bc6fa248bd5eff48b074b09f21649401cbb.pdf) |
+| die.wav | [8-bit Action Music & SFX by Joel Steudler](https://joelsteudler.itch.io/8-bit-action-music-sfx) | [HUMBLE SOFTWARE BUNDLE: FRESH START GAME DEV ASSETS BUNDLE License - if you own the bundle](https://cdn.humblebundle.com/misc/files/hashed/97e53bc6fa248bd5eff48b074b09f21649401cbb.pdf) |
+| coin.wav | [8-bit Action Music & SFX by Joel Steudler](https://joelsteudler.itch.io/8-bit-action-music-sfx) | [HUMBLE SOFTWARE BUNDLE: FRESH START GAME DEV ASSETS BUNDLE License - if you own the bundle](https://cdn.humblebundle.com/misc/files/hashed/97e53bc6fa248bd5eff48b074b09f21649401cbb.pdf) |
+| succes.wav | [8-bit Action Music & SFX by Joel Steudler](https://joelsteudler.itch.io/8-bit-action-music-sfx) | [HUMBLE SOFTWARE BUNDLE: FRESH START GAME DEV ASSETS BUNDLE License - if you own the bundle](https://cdn.humblebundle.com/misc/files/hashed/97e53bc6fa248bd5eff48b074b09f21649401cbb.pdf) |
 | one.wav | My own recorded voice with a robot filter | [Creative Commons Attribution v4.0 International](https://creativecommons.org/licenses/by/4.0/) |
 | oneminute.wav |  My own recorded voice with a robot filter | [Creative Commons Attribution v4.0 International](https://creativecommons.org/licenses/by/4.0/) |
 | readygo.wav |  My own recorded voice with a robot filter | [Creative Commons Attribution v4.0 International](https://creativecommons.org/licenses/by/4.0/) |
@@ -132,7 +132,7 @@ The game makes uses of multiple payed and free assets packs, below are the credi
 | Music.ogg | Created and Owned by me on [Strofe](https://www.strofe.com/) |
 | rotate.wav | [Game Music Stingers And UI SFX Pack 2 by wowsounds](https://www.gamedevmarket.net/asset/game-music-stingers-and-ui-sfx-pack-2/) | [Gamedev market pro-licence](https://static.gamedevmarket.net/terms-conditions/#pro-licence) |
 | drop.wav | [Pro Sound Collection by gamemasteraudio](https://www.gamedevmarket.net/asset/pro-sound-collection/) | [Gamedev market pro-licence](https://static.gamedevmarket.net/terms-conditions/#pro-licence) |
-| lineclear.ogg | [8-bit Action Music & SFX by Joel Steudler](https://joelsteudler.itch.io/8-bit-action-music-sfx) | [HUMBLE SOFTWARE BUNDLE: FRESH START GAME DEV ASSETS BUNDLE License](https://cdn.humblebundle.com/misc/files/hashed/97e53bc6fa248bd5eff48b074b09f21649401cbb.pdf) |
+| lineclear.ogg | [8-bit Action Music & SFX by Joel Steudler](https://joelsteudler.itch.io/8-bit-action-music-sfx) | [HUMBLE SOFTWARE BUNDLE: FRESH START GAME DEV ASSETS BUNDLE License - if you own the bundle](https://cdn.humblebundle.com/misc/files/hashed/97e53bc6fa248bd5eff48b074b09f21649401cbb.pdf) |
 | background.png | [Cyberpunk Street Environment by ansimuz](https://ansimuz.itch.io/cyberpunk-street-environment) | [CC0 1.0 Universal (CC0 1.0)](https://creativecommons.org/publicdomain/zero/1.0/)
 
 
@@ -226,7 +226,7 @@ The game makes uses of multiple payed and free assets packs, below are the credi
 | taxi.png | [isometric vehicles by kenny](https://kenney.nl/assets/isometric-vehicles-1) |  [Creative Commons CC0]( https://creativecommons.org/share-your-work/public-domain/cc0/) |
 | garbagetruck.png | [isometric vehicls by kenny](https://kenney.nl/assets/isometric-vehicles-1) | [Creative Commons CC0]( https://creativecommons.org/share-your-work/public-domain/cc0/) |
 | ambulance.png | [isometric vehicles by kenny](https://kenney.nl/assets/isometric-vehicles-1) | [Creative Commons CC0]( https://creativecommons.org/share-your-work/public-domain/cc0/) |
-| player.png | [Tyler Warren RPG Battlers – 7th 50 - Time Fantasy Tribute](https://tylerjwarren.itch.io/7th-50-time-fantasy-tribute) | [HUMBLE SOFTWARE BUNDLE: FRESH START GAME DEV ASSETS BUNDLE License](https://cdn.humblebundle.com/misc/files/hashed/97e53bc6fa248bd5eff48b074b09f21649401cbb.pdf) |
+| player.png | [Tyler Warren RPG Battlers – 7th 50 - Time Fantasy Tribute](https://tylerjwarren.itch.io/7th-50-time-fantasy-tribute) | [HUMBLE SOFTWARE BUNDLE: FRESH START GAME DEV ASSETS BUNDLE License - if you own the bundle](https://cdn.humblebundle.com/misc/files/hashed/97e53bc6fa248bd5eff48b074b09f21649401cbb.pdf) |
 | waterplant.png | [Open RPG Fantasy Tilesets by finalbossblue](https://finalbossblues.itch.io/openrtp-tiles) | [CC0 1.0 Universal (CC0 1.0)](https://creativecommons.org/publicdomain/zero/1.0/) |
 | apple.png | [Small Fruit Assets 16x16 by dantepixels](https://dantepixels.itch.io/small-fruits-asset-16x16) [@pixelahead](https://twitter.com/Pixelahead)| [free in your personal or commercial projects](https://dantepixels.itch.io/small-fruits-asset-16x16) |
 | cherry.png | [Small Fruit Assets 16x16 by dantepixels](https://dantepixels.itch.io/small-fruits-asset-16x16) [@pixelahead](https://twitter.com/Pixelahead)| [free in your personal or commercial projects](https://dantepixels.itch.io/small-fruits-asset-16x16) |
