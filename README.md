@@ -98,7 +98,7 @@ For example `retrotime.exe -s -w` would run the game in software mode and startu
 ## Credits
 The game makes uses of multiple payed and free assets packs, below are the credits for them per game.
 > **Warning**
-> The Project's code is MIT but the assets are not, they all use different licenses, some are free some are Creative Commons and some i even payed for and can only be used with my project. so you can not re-use those as you wish. I tried 
+> The Project's code is MIT but the assets are not, they all use different licenses, some are free some are Creative Commons and some i even payed for and can only be used with my project. so you can not re-use those as you wish. 
 
 ### Main Game User interface 
 | Asset | Asset Pack | License |
