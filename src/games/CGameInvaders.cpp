@@ -7,8 +7,6 @@
 #include "../Common.h"
 #include "../Vec2F.h"
 
-using namespace std;
-
 CGameInvaders::CGameInvaders(CGame* aGame, bool aScreenshotMode): CGameBase(aGame, GSSpaceInvaders, false, aScreenshotMode)
 {
 	Game = aGame;
@@ -72,7 +70,7 @@ void CGameInvaders::createexplosion(Vec2F pos)
 			Game->Sprites->SetSpriteAnimation(explosions[i].spr,2, 6, 15);
 			Game->Sprites->SetSpriteLocation(explosions[i].spr, pos);
 			explosions[i].alive = true;
-			Game->Audio->PlaySound(SfxPlayerDeath, 0);
+			Game->Audio->PlaySnd(SfxPlayerDeath, 0);
 			break;
 		}
 	}
@@ -113,7 +111,7 @@ void CGameInvaders::createnemybullet(Vec2F pos)
 			enemybullets[i].pos = pos;
 			enemybullets[i].vel = {0, bulletspeed};
 			enemybullets[i].alive = true;
-			Game->Audio->PlaySound(SfxEnemyShoot, 0);
+			Game->Audio->PlaySnd(SfxEnemyShoot, 0);
 			break;
 		}
 	}
@@ -169,7 +167,7 @@ void CGameInvaders::updateenemybullet()
 					Game->AddToScore(-150);
 					deaths += 1;
 					HealthPoints -= 1;
-					Game->Audio->PlaySound(SfxDie, 0);
+					Game->Audio->PlaySnd(SfxDie, 0);
 				}
 			}
 
@@ -257,7 +255,7 @@ void CGameInvaders::createbullet()
 		bullet.pos = player.pos ;
 		bullet.vel = {0, -bulletspeed};
 		bullet.alive = true;
-		Game->Audio->PlaySound(SfxPlayerShoot, 0);
+		Game->Audio->PlaySnd(SfxPlayerShoot, 0);
 	}
 }
 
@@ -298,7 +296,7 @@ void CGameInvaders::updatebullet()
 							else
 								Game->AddToScore(10);
 						}
-						enemyvel.x += enemyvel.x / abs(enemyvel.x) * enemyspeedinc;
+						enemyvel.x += enemyvel.x / fabsf(enemyvel.x) * enemyspeedinc;
 					}
 				}
 			}
@@ -451,7 +449,7 @@ void CGameInvaders::updateinvaders()
 		createinvaders(false);
 		destroybullet();
 		destroyallenemybullet();
-		Game->Audio->PlaySound(SfxSucces, 0);
+		Game->Audio->PlaySnd(SfxSucces, 0);
 	}
 
 	bool btweenactive = tweenactive(tweenenemypositions);
@@ -539,7 +537,7 @@ void CGameInvaders::updateinvaders()
 		destroybullet();
 		destroyallenemybullet();
 		HealthPoints -= 1;
-		Game->Audio->PlaySound(SfxDie, 0);
+		Game->Audio->PlaySnd(SfxDie, 0);
 	}
 }
 
@@ -666,7 +664,7 @@ void CGameInvaders::init()
 	{
 		LoadSound();
 		Game->CurrentGameMusicID = MusMusic;
-		Game->Audio->PlayMusic(MusMusic, -1);
+		Game->Audio->PlayMus(MusMusic, -1);
 	}
 }
 
@@ -690,12 +688,12 @@ void CGameInvaders::deinit()
 
 void CGameInvaders::LoadSound()
 {
-	SfxDie = Game->Audio->LoadSound("common/die.wav");
-	SfxPlayerShoot = Game->Audio->LoadSound("invaders/playershoot.wav");
-	SfxPlayerDeath = Game->Audio->LoadSound("invaders/playerdeath.wav");
-	SfxEnemyShoot = Game->Audio->LoadSound("invaders/enemyshoot.wav");
-	SfxEnemyDeath = Game->Audio->LoadSound("invaders/enemydeath.wav");
-	SfxSucces = Game->Audio->LoadSound("common/succes.wav");
+	SfxDie = Game->Audio->LoadSnd("common/die.wav");
+	SfxPlayerShoot = Game->Audio->LoadSnd("invaders/playershoot.wav");
+	SfxPlayerDeath = Game->Audio->LoadSnd("invaders/playerdeath.wav");
+	SfxEnemyShoot = Game->Audio->LoadSnd("invaders/enemyshoot.wav");
+	SfxEnemyDeath = Game->Audio->LoadSnd("invaders/enemydeath.wav");
+	SfxSucces = Game->Audio->LoadSnd("common/succes.wav");
 	MusMusic = Game->Audio->LoadMusic("invaders/music.ogg");
 }
 
@@ -714,17 +712,17 @@ void CGameInvaders::UnLoadSound()
 
 void CGameInvaders::LoadGraphics()
 {
-	spritesheetBullet = Game->Image->LoadImage(Game->Renderer, "invaders/bullet.png");
-	spritesheetExplosion = Game->Image->LoadImage(Game->Renderer, "invaders/explosion.png");
-	spritesheetAsteroid = Game->Image->LoadImage(Game->Renderer, "invaders/asteroid-01.png");
-	spritesheetEnemy1 = Game->Image->LoadImage(Game->Renderer, "invaders/enemy1.png"); //bottom
-	spritesheetEnemy2 = Game->Image->LoadImage(Game->Renderer, "invaders/enemy2.png"); //middle
-	spritesheetEnemy3 = Game->Image->LoadImage(Game->Renderer, "invaders/enemy3.png"); //top
-	spritesheetPlayer = Game->Image->LoadImage(Game->Renderer, "invaders/player.png"); //top
-	background = Game->Image->LoadImage(Game->Renderer, "invaders/background.png");
-	background2 = Game->Image->LoadImage(Game->Renderer, "invaders/parallax-space-stars.png");
-	background3 = Game->Image->LoadImage(Game->Renderer, "invaders/parallax-space-far-planets.png");
-	backgrounditem = Game->Image->LoadImage(Game->Renderer, "invaders/parallax-space-ring-planet.png"),
+	spritesheetBullet = Game->Image->LoadImg(Game->Renderer, "invaders/bullet.png");
+	spritesheetExplosion = Game->Image->LoadImg(Game->Renderer, "invaders/explosion.png");
+	spritesheetAsteroid = Game->Image->LoadImg(Game->Renderer, "invaders/asteroid-01.png");
+	spritesheetEnemy1 = Game->Image->LoadImg(Game->Renderer, "invaders/enemy1.png"); //bottom
+	spritesheetEnemy2 = Game->Image->LoadImg(Game->Renderer, "invaders/enemy2.png"); //middle
+	spritesheetEnemy3 = Game->Image->LoadImg(Game->Renderer, "invaders/enemy3.png"); //top
+	spritesheetPlayer = Game->Image->LoadImg(Game->Renderer, "invaders/player.png"); //top
+	background = Game->Image->LoadImg(Game->Renderer, "invaders/background.png");
+	background2 = Game->Image->LoadImg(Game->Renderer, "invaders/parallax-space-stars.png");
+	background3 = Game->Image->LoadImg(Game->Renderer, "invaders/parallax-space-far-planets.png");
+	backgrounditem = Game->Image->LoadImg(Game->Renderer, "invaders/parallax-space-ring-planet.png"),
 
 	backgroundtz = Game->Image->ImageSize(background);
 	background2tz = Game->Image->ImageSize(background2);
@@ -734,17 +732,17 @@ void CGameInvaders::LoadGraphics()
 
 void CGameInvaders::UnloadGraphics()
 {
-	Game->Image->UnLoadImage(spritesheetBullet);
-	Game->Image->UnLoadImage(spritesheetExplosion);
-	Game->Image->UnLoadImage(spritesheetAsteroid);
-	Game->Image->UnLoadImage(spritesheetEnemy1);
-	Game->Image->UnLoadImage(spritesheetEnemy2);
-	Game->Image->UnLoadImage(spritesheetEnemy3);
-	Game->Image->UnLoadImage(spritesheetPlayer);
-	Game->Image->UnLoadImage(background);
-	Game->Image->UnLoadImage(background2);
-	Game->Image->UnLoadImage(background3);
-	Game->Image->UnLoadImage(backgrounditem);
+	Game->Image->UnLoadImg(spritesheetBullet);
+	Game->Image->UnLoadImg(spritesheetExplosion);
+	Game->Image->UnLoadImg(spritesheetAsteroid);
+	Game->Image->UnLoadImg(spritesheetEnemy1);
+	Game->Image->UnLoadImg(spritesheetEnemy2);
+	Game->Image->UnLoadImg(spritesheetEnemy3);
+	Game->Image->UnLoadImg(spritesheetPlayer);
+	Game->Image->UnLoadImg(background);
+	Game->Image->UnLoadImg(background2);
+	Game->Image->UnLoadImg(background3);
+	Game->Image->UnLoadImg(backgrounditem);
 }
 
 SDL_Texture* CGameInvaders::screenshot()

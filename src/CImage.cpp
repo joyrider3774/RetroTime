@@ -8,9 +8,9 @@
 #include "Platform.h"
 #include "Vec2F.h"
 
-using namespace std;
+#include "Common.h"
 
-CImage::CImage(string AssetsPath, bool ADebugInfo)
+CImage::CImage(std::string AssetsPath, bool ADebugInfo)
 {
 	ImgEnabled = true;
 	DebugInfo = ADebugInfo;
@@ -35,12 +35,12 @@ CImage::~CImage()
 	IMG_Quit();
 }
 
-int CImage::LoadImage(SDL_Renderer* Renderer, string FileName)
+int CImage::LoadImg(SDL_Renderer* Renderer, std::string FileName)
 {
 	if(!ImgEnabled)
 		return -1;
 
-	string FullFileName = DataPath + "graphics/" + FileName;
+	std::string FullFileName = DataPath + "graphics/" + FileName;
 	for (int i=0; i < GFX_Max; i++)
 		if(Images[i] == nullptr)
 		{
@@ -62,7 +62,7 @@ int CImage::LoadImage(SDL_Renderer* Renderer, string FileName)
 	return -1;
 }
 
-void CImage::UnLoadImage(int GFXID)
+void CImage::UnLoadImg(int GFXID)
 {
 	if(!ImgEnabled)
 		return;
@@ -80,7 +80,7 @@ void CImage::UnLoadImage(int GFXID)
 void CImage::UnloadImages()
 {
 	for (int i=0; i < GFX_Max; i++)
-		UnLoadImage(i);
+		UnLoadImg(i);
 }
 
 void CImage::DrawImage(SDL_Renderer* Renderer, int GFXID, SDL_Rect* Src, SDL_Rect* Dst)
@@ -169,15 +169,15 @@ void CImage::DrawImageFuze(SDL_Renderer* Renderer, SDL_Texture *Texture, SDL_Rec
 
 	if(SrcRect)
 	{
-		dstW = (SrcRect->w * abs(Scale->x));
-		dstH = (SrcRect->h * abs(Scale->y));
+		dstW = (SrcRect->w * fabsf(Scale->x));
+		dstH = (SrcRect->h * fabsf(Scale->y));
 	}
 	else
 	{
 
 		SDL_Point ImageTz = ImageSize(Texture);
-		dstW = (ImageTz.x * abs(Scale->x));
-		dstH = (ImageTz.y * abs(Scale->y));
+		dstW = (ImageTz.x * fabsf(Scale->x));
+		dstH = (ImageTz.y * fabsf(Scale->y));
 	}
 	SDL_Rect Dst;
 	if(CenterImagePos)
@@ -215,6 +215,7 @@ void CImage::DrawImageFuze(SDL_Renderer* Renderer, SDL_Texture *Texture, SDL_Rec
 
 	//Draw
 	SDL_RenderCopyEx(Renderer, Texture, SrcRect, &Dst, Angle, NULL, flip);
+
 
 	//restore values
 	SDL_SetTextureBlendMode(Texture, Mode);

@@ -7,8 +7,6 @@
 #include "../Common.h"
 #include "../Vec2F.h"
 
-using namespace std;
-
 CGameFastEddy::CGameFastEddy(CGame* aGame, bool aScreenshotMode): CGameBase(aGame, GSEddy, true, aScreenshotMode)
 {
 	Game = aGame;
@@ -80,7 +78,7 @@ void CGameFastEddy::updatekey()
 
 		if (Game->Sprites->DetectSpriteCollision(key.spr, player.spr))
 		{
-			Game->Audio->PlaySound(SfxSucces, 0);
+			Game->Audio->PlaySnd(SfxSucces, 0);
 			Game->AddToScore(200);
 			SDL_Delay(500);
 			level += 1;
@@ -194,7 +192,7 @@ void CGameFastEddy::updatecollectables()
 
 			if (Game->Sprites->DetectSpriteCollision(collectables[i].spr, player.spr))
 			{
-				Game->Audio->PlaySound(SfxCollect, 0);
+				Game->Audio->PlaySnd(SfxCollect, 0);
 				int ignorerow = collectables[i].row;
 				destroycollectable(i);
 				collecteditems += 1;
@@ -398,7 +396,7 @@ void CGameFastEddy::updateenemies()
 					(player.state != playerstateunknown)) ||
 					(enemies[i].row == 0))
 				{
-					Game->Audio->PlaySound(SfxDie, 0);
+					Game->Audio->PlaySnd(SfxDie, 0);
 					if (Game->GameMode == GMGame)
 						HealthPoints -= 1;
 
@@ -612,7 +610,7 @@ void CGameFastEddy::updateplayer()
 							{
 								Game->Sprites->SetSpriteImage(player.spr, &spritesheetplayerrun, 1, 7);
 								Game->Sprites->SetSpriteAnimation(player.spr, 0, 6, 10);
-								player.spr->xscale = -(abs(player.spr->xscale));
+								player.spr->xscale = -(fabsf(player.spr->xscale));
 								player.state = playerstateleft;
 							}
 						}
@@ -624,7 +622,7 @@ void CGameFastEddy::updateplayer()
 								{
 									Game->Sprites->SetSpriteImage(player.spr, &spritesheetplayerrun, 1, 7);
 									Game->Sprites->SetSpriteAnimation(player.spr, 0, 6, 10);
-									player.spr->xscale = (abs(player.spr->xscale));
+									player.spr->xscale = (fabsf(player.spr->xscale));
 									player.state = playerstateright;
 								}
 							}
@@ -750,7 +748,7 @@ void CGameFastEddy::updateplayer()
 				}
 			}
 
-			if (player.spr->xscale / abs(player.spr->xscale) == 1)
+			if (player.spr->xscale / fabsf(player.spr->xscale) == 1)
 			{
 				if ( player.pos.x + player.tz.x / 2 + playerspeed < screenright)
 					player.pos.x += playerspeed ;
@@ -924,7 +922,7 @@ void CGameFastEddy::init()
 	{
 		LoadSound();
 		Game->CurrentGameMusicID = MusMusic;
-		Game->Audio->PlayMusic(MusMusic, -1);
+		Game->Audio->PlayMus(MusMusic, -1);
 	}
 }
 
@@ -948,9 +946,9 @@ void CGameFastEddy::deinit()
 
 void CGameFastEddy::LoadSound()
 {
-	SfxDie = Game->Audio->LoadSound("common/die.wav");
-	SfxSucces = Game->Audio->LoadSound("common/succes.wav");
-	SfxCollect = Game->Audio->LoadSound("common/coin.wav");
+	SfxDie = Game->Audio->LoadSnd("common/die.wav");
+	SfxSucces = Game->Audio->LoadSnd("common/succes.wav");
+	SfxCollect = Game->Audio->LoadSnd("common/coin.wav");
 	MusMusic = Game->Audio->LoadMusic("fasterdave/music.ogg");
 }
 
@@ -966,33 +964,33 @@ void CGameFastEddy::UnLoadSound()
 
 void CGameFastEddy::LoadGraphics()
 {
-	background = Game->Image->LoadImage(Game->Renderer, "fasterdave/background.png");
+	background = Game->Image->LoadImg(Game->Renderer, "fasterdave/background.png");
 	backgroundtz = Game->Image->ImageSize(background);
 
-	spritesheet = Game->Image->LoadImage(Game->Renderer, "fasterdave/floortileset.png");
-	spritesheetladder = Game->Image->LoadImage(Game->Renderer, "fasterdave/ladder.png");
+	spritesheet = Game->Image->LoadImg(Game->Renderer, "fasterdave/floortileset.png");
+	spritesheetladder = Game->Image->LoadImg(Game->Renderer, "fasterdave/ladder.png");
 
-	spritesheetplayerclimb = Game->Image->LoadImage(Game->Renderer, "fasterdave/Character_character_climb.png");
-	spritesheetplayerrun = Game->Image->LoadImage(Game->Renderer, "fasterdave/Character_character_run.png");
-	spritesheetplayeridle = Game->Image->LoadImage(Game->Renderer, "fasterdave/Character_character_idle.png");
-	spritesheetplayerjump = Game->Image->LoadImage(Game->Renderer, "fasterdave/Character_character_jump_up.png");
-	spritesheetenemy = Game->Image->LoadImage(Game->Renderer, "fasterdave/enemy.png");
-	spritesheetcollectable = Game->Image->LoadImage(Game->Renderer, "fasterdave/orbs.png");
-	spritesheetkey = Game->Image->LoadImage(Game->Renderer, "fasterdave/key.png");
+	spritesheetplayerclimb = Game->Image->LoadImg(Game->Renderer, "fasterdave/Character_character_climb.png");
+	spritesheetplayerrun = Game->Image->LoadImg(Game->Renderer, "fasterdave/Character_character_run.png");
+	spritesheetplayeridle = Game->Image->LoadImg(Game->Renderer, "fasterdave/Character_character_idle.png");
+	spritesheetplayerjump = Game->Image->LoadImg(Game->Renderer, "fasterdave/Character_character_jump_up.png");
+	spritesheetenemy = Game->Image->LoadImg(Game->Renderer, "fasterdave/enemy.png");
+	spritesheetcollectable = Game->Image->LoadImg(Game->Renderer, "fasterdave/orbs.png");
+	spritesheetkey = Game->Image->LoadImg(Game->Renderer, "fasterdave/key.png");
 }
 
 void CGameFastEddy::UnloadGraphics()
 {
-	Game->Image->UnLoadImage(background);
-	Game->Image->UnLoadImage(spritesheet);
-	Game->Image->UnLoadImage(spritesheetladder);
-	Game->Image->UnLoadImage(spritesheetplayerclimb);
-	Game->Image->UnLoadImage(spritesheetplayerrun);
-	Game->Image->UnLoadImage(spritesheetplayeridle);
-	Game->Image->UnLoadImage(spritesheetplayerjump);
-	Game->Image->UnLoadImage(spritesheetenemy);
-	Game->Image->UnLoadImage(spritesheetcollectable);
-	Game->Image->UnLoadImage(spritesheetkey);
+	Game->Image->UnLoadImg(background);
+	Game->Image->UnLoadImg(spritesheet);
+	Game->Image->UnLoadImg(spritesheetladder);
+	Game->Image->UnLoadImg(spritesheetplayerclimb);
+	Game->Image->UnLoadImg(spritesheetplayerrun);
+	Game->Image->UnLoadImg(spritesheetplayeridle);
+	Game->Image->UnLoadImg(spritesheetplayerjump);
+	Game->Image->UnLoadImg(spritesheetenemy);
+	Game->Image->UnLoadImg(spritesheetcollectable);
+	Game->Image->UnLoadImg(spritesheetkey);
 }
 
 SDL_Texture* CGameFastEddy::screenshot()

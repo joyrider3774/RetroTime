@@ -6,9 +6,6 @@
 #include "../Common.h"
 #include "../Vec2F.h"
 
-using namespace std;
-
-
 CGameFrog::CGameFrog(CGame* aGame, bool aScreenshotMode): CGameBase(aGame, GSFrog, true, aScreenshotMode)
 {
 	Game = aGame;
@@ -503,7 +500,7 @@ void CGameFrog::updateobjects()
 							{
 								Game->AddToScore(lemonscore);
 								destroyobject(i);
-								Game->Audio->PlaySound(SfxCollect, 0);
+								Game->Audio->PlaySnd(SfxCollect, 0);
 							}
 							else
 							{
@@ -511,7 +508,7 @@ void CGameFrog::updateobjects()
 								{
 									Game->AddToScore(applescore);
 									destroyobject(i);
-									Game->Audio->PlaySound(SfxCollect, 0);
+									Game->Audio->PlaySnd(SfxCollect, 0);
 								}
 								else
 								{
@@ -519,7 +516,7 @@ void CGameFrog::updateobjects()
 									{
 										Game->AddToScore(cherryscore);
 										destroyobject(i);
-										Game->Audio->PlaySound(SfxCollect, 0);
+										Game->Audio->PlaySnd(SfxCollect, 0);
 									}
 								}
 							}
@@ -669,7 +666,7 @@ void CGameFrog::updateplayer()
 				if ((player.pos.x - player.tz.x / 2) - playerspeed >= 0)
 				{
 					player.pos.x -= playerspeed;
-					Game->Audio->PlaySound(SfxPlayerMove, 0);
+					Game->Audio->PlaySnd(SfxPlayerMove, 0);
 				}
 			}
 		}
@@ -685,7 +682,7 @@ void CGameFrog::updateplayer()
 				if ((player.pos.x + player.tz.x / 2) + playerspeed <= ScreenWidth)
 				{
 					player.pos.x += playerspeed;
-					Game->Audio->PlaySound(SfxPlayerMove, 0);
+					Game->Audio->PlaySnd(SfxPlayerMove, 0);
 				}
 			}
 		}
@@ -707,7 +704,7 @@ void CGameFrog::updateplayer()
 						Game->AddToScore(20);
 						playermaxrow = playerrow;
 					}
-					Game->Audio->PlaySound(SfxPlayerMove, 0);
+					Game->Audio->PlaySnd(SfxPlayerMove, 0);
 				}
 			}
 		}
@@ -725,7 +722,7 @@ void CGameFrog::updateplayer()
 					player.pos.y += playerspeed;
 					playerrow -= 1;
 				}
-				Game->Audio->PlaySound(SfxPlayerMove, 0);
+				Game->Audio->PlaySnd(SfxPlayerMove, 0);
 			}
 		}
 
@@ -783,7 +780,7 @@ void CGameFrog::init()
 	{
 		LoadSound();
 		Game->CurrentGameMusicID = MusMusic;
-		Game->Audio->PlayMusic(MusMusic, -1);
+		Game->Audio->PlayMus(MusMusic, -1);
 	}
 }
 
@@ -803,9 +800,9 @@ void CGameFrog::deinit()
 
 void CGameFrog::LoadSound()
 {
-	SfxDie = Game->Audio->LoadSound("common/die.wav");
-	SfxCollect = Game->Audio->LoadSound("common/coin.wav");
-	SfxPlayerMove = Game->Audio->LoadSound("frog/move.wav");
+	SfxDie = Game->Audio->LoadSnd("common/die.wav");
+	SfxCollect = Game->Audio->LoadSnd("common/coin.wav");
+	SfxPlayerMove = Game->Audio->LoadSnd("frog/move.wav");
 	MusMusic = Game->Audio->LoadMusic("frog/music.ogg");
 }
 
@@ -821,36 +818,36 @@ void CGameFrog::UnLoadSound()
 
 void CGameFrog::LoadGraphics()
 {
-	background = Game->Image->LoadImage(Game->Renderer, "frog/background.png");
+	background = Game->Image->LoadImg(Game->Renderer, "frog/background.png");
 	backgroundtz = Game->Image->ImageSize(background);
-	spritesheetfrog = Game->Image->LoadImage(Game->Renderer, "frog/player.png");
-	spritesheetbackground = Game->Image->LoadImage(Game->Renderer, "frog/watergrass.png");
-	spritesheetcar1 = Game->Image->LoadImage(Game->Renderer, "frog/carblue.png");
-	spritesheetcar2 = Game->Image->LoadImage(Game->Renderer, "frog/garbagetruck.png");
-	spritesheetcar3 = Game->Image->LoadImage(Game->Renderer, "frog/ambulance.png");
-	spritesheetcar4 = Game->Image->LoadImage(Game->Renderer, "frog/taxi.png");
-	spritesheetcar5 = Game->Image->LoadImage(Game->Renderer, "frog/police.png");
+	spritesheetfrog = Game->Image->LoadImg(Game->Renderer, "frog/player.png");
+	spritesheetbackground = Game->Image->LoadImg(Game->Renderer, "frog/watergrass.png");
+	spritesheetcar1 = Game->Image->LoadImg(Game->Renderer, "frog/carblue.png");
+	spritesheetcar2 = Game->Image->LoadImg(Game->Renderer, "frog/garbagetruck.png");
+	spritesheetcar3 = Game->Image->LoadImg(Game->Renderer, "frog/ambulance.png");
+	spritesheetcar4 = Game->Image->LoadImg(Game->Renderer, "frog/taxi.png");
+	spritesheetcar5 = Game->Image->LoadImg(Game->Renderer, "frog/police.png");
 
-	spritesheetplant = Game->Image->LoadImage(Game->Renderer, "frog/waterplant.png");
-	spritesheetfruit1 = Game->Image->LoadImage(Game->Renderer, "frog/apple.png");
-	spritesheetfruit2 = Game->Image->LoadImage(Game->Renderer, "frog/lemon.png");
-	spritesheetfruit3 = Game->Image->LoadImage(Game->Renderer, "frog/cherry.png");
+	spritesheetplant = Game->Image->LoadImg(Game->Renderer, "frog/waterplant.png");
+	spritesheetfruit1 = Game->Image->LoadImg(Game->Renderer, "frog/apple.png");
+	spritesheetfruit2 = Game->Image->LoadImg(Game->Renderer, "frog/lemon.png");
+	spritesheetfruit3 = Game->Image->LoadImg(Game->Renderer, "frog/cherry.png");
 }
 
 void CGameFrog::UnloadGraphics()
 {
-	Game->Image->UnLoadImage(background);
-	Game->Image->UnLoadImage(spritesheetfrog);
-	Game->Image->UnLoadImage(spritesheetbackground);
-	Game->Image->UnLoadImage(spritesheetcar1);
-	Game->Image->UnLoadImage(spritesheetcar2);
-	Game->Image->UnLoadImage(spritesheetcar3);
-	Game->Image->UnLoadImage(spritesheetcar4);
-	Game->Image->UnLoadImage(spritesheetcar5);
-	Game->Image->UnLoadImage(spritesheetplant);
-	Game->Image->UnLoadImage(spritesheetfruit1);
-	Game->Image->UnLoadImage(spritesheetfruit2);
-	Game->Image->UnLoadImage(spritesheetfruit3);
+	Game->Image->UnLoadImg(background);
+	Game->Image->UnLoadImg(spritesheetfrog);
+	Game->Image->UnLoadImg(spritesheetbackground);
+	Game->Image->UnLoadImg(spritesheetcar1);
+	Game->Image->UnLoadImg(spritesheetcar2);
+	Game->Image->UnLoadImg(spritesheetcar3);
+	Game->Image->UnLoadImg(spritesheetcar4);
+	Game->Image->UnLoadImg(spritesheetcar5);
+	Game->Image->UnLoadImg(spritesheetplant);
+	Game->Image->UnLoadImg(spritesheetfruit1);
+	Game->Image->UnLoadImg(spritesheetfruit2);
+	Game->Image->UnLoadImg(spritesheetfruit3);
 }
 
 SDL_Texture* CGameFrog::screenshot()
@@ -909,7 +906,7 @@ void CGameFrog::UpdateLogic()
 
 		if (playerdeath)
 		{
-			Game->Audio->PlaySound(SfxDie, 0);
+			Game->Audio->PlaySnd(SfxDie, 0);
 			Game->AddToScore(-150);
 			if(HealthPoints > 1)
 			{

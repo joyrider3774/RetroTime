@@ -10,8 +10,6 @@
 #include "../Platform.h"
 #include "../Common.h"
 
-using namespace std;
-
 class CGameFastEddy: public CGameBase {
 
 private:

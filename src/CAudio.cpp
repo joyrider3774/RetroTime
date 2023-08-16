@@ -1,13 +1,10 @@
 #include <SDL_mixer.h>
-#include <stdio.h>
 #include <iostream>
 #include <string>
 #include "CAudio.h"
 #include "Platform.h"
 
-using namespace std;
-
-CAudio::CAudio(string AssetsPath, bool ADebugInfo)
+CAudio::CAudio(std::string AssetsPath, bool ADebugInfo)
 {
 	DataPath = AssetsPath;
 	DebugInfo = ADebugInfo;
@@ -41,7 +38,10 @@ CAudio::~CAudio()
 	UnloadSounds();
 	UnloadMusics();
 	if (GlobalSoundEnabled)
+	{
 		Mix_CloseAudio();
+		SDL_QuitSubSystem(SDL_INIT_AUDIO);
+	}
 }
 
 // set the volume of the music
@@ -152,12 +152,12 @@ void CAudio::UnloadMusics()
 		UnLoadMusic(i);
 }
 
-int CAudio::LoadMusic(string FileName)
+int CAudio::LoadMusic(std::string FileName)
 {
 	if(!GlobalSoundEnabled)
 		return -1;
 
-	string FullFileName= DataPath + "music/" + FileName;
+	std::string FullFileName= DataPath + "music/" + FileName;
 	for (int i=0; i < MUS_Max; i++)
 		if(Music[i] == nullptr)
 		{
@@ -192,7 +192,7 @@ int CAudio::MusicSlotsMax()
 	return MUS_Max;
 }
 
-void CAudio::PlayMusic(int MusicID, int loops)
+void CAudio::PlayMus(int MusicID, int loops)
 {
 	if ((MusicID < 0) || (MusicID > MUS_Max) || !GlobalSoundEnabled)
 		return;
@@ -223,7 +223,7 @@ int CAudio::SoundSlotsMax()
 }
 
 
-void CAudio::PlaySound(int SoundID, int loops)
+void CAudio::PlaySnd(int SoundID, int loops)
 {
 	if ((SoundID < 0) || (SoundID > SND_Max) || !GlobalSoundEnabled)
 		return;
@@ -231,12 +231,12 @@ void CAudio::PlaySound(int SoundID, int loops)
 	Mix_PlayChannel(-1, Sounds[SoundID], loops);
 }
 
-int CAudio::LoadSound(string FileName)
+int CAudio::LoadSnd(std::string FileName)
 {
 	if(!GlobalSoundEnabled)
 		return -1;
 
-	string FullFileName = DataPath + "sound/" + FileName;
+	std::string FullFileName = DataPath + "sound/" + FileName;
 	for (int i=0; i < SND_Max; i++)
 		if(Sounds[i] == nullptr)
 		{

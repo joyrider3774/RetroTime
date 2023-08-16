@@ -7,9 +7,6 @@
 #include "../CGame.h"
 #include "../Common.h"
 
-using namespace std;
-
-
 class CGameSnake: public CGameBase {
 
 private:

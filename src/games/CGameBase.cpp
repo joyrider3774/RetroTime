@@ -57,7 +57,7 @@ void CGameBase::PauseMenu()
 	int prevsubgamestate = Game->SubGameState;
 	int prevsubstatecounter = Game->SubStateCounter;
 	Game->SubGameState = SGPauseMenu;
-	Game->Audio->PlaySound(Game->SfxConfirm, 0);
+	Game->Audio->PlaySnd(Game->SfxConfirm, 0);
 	//subgamestate = sgframe;
 	//global.substatecounter = 10.6
 	int selected = 0;
@@ -98,7 +98,7 @@ void CGameBase::PauseMenu()
 
 		if (Game->SubGameState == SGPauseMenu)
 		{
-			string Text = "Paused";
+			std::string Text = "Paused";
 			Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 60, Text, Text.length(), 530, 110, 0, {255,255,255,255});
 			int menu;
 			SDL_Color color;
@@ -120,11 +120,11 @@ void CGameBase::PauseMenu()
 						Game->Font->WriteText(Game->Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 300, 180 + i * menuspacing, 0, color);
 						break;
 					case PMSoundVol:
-						Text = PMPauseMenus[menu].name + to_string(((int)(Game->Audio->GetVolumeSound()*100/128))) + "%";
+						Text = PMPauseMenus[menu].name + std::to_string(((int)(Game->Audio->GetVolumeSound()*100/128))) + "%";
 						Game->Font->WriteText(Game->Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 300, 180 + i * menuspacing, 0, color);
 						break;
 					case PMMusicVol:
-						Text = PMPauseMenus[menu].name + to_string((int)(Game->Audio->GetVolumeMusic()*100/128)) + "%";
+						Text = PMPauseMenus[menu].name + std::to_string((int)(Game->Audio->GetVolumeMusic()*100/128)) + "%";
 						Game->Font->WriteText(Game->Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 300, 180 + i * menuspacing, 0, color);
 						break;
 					case PMCrt:
@@ -132,15 +132,15 @@ void CGameBase::PauseMenu()
 						Game->Font->WriteText(Game->Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 300, 180 + i * menuspacing, 0, color);
 						break;
 					case PMColorModR:
-						Text = PMPauseMenus[menu].name + " " + to_string((int)Game->ColorModR * 100 / 255) + "%";
+						Text = PMPauseMenus[menu].name + " " + std::to_string((int)Game->ColorModR * 100 / 255) + "%";
 						Game->Font->WriteText(Game->Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 300, 180 + i * menuspacing, 0, color);
 						break;
 					case PMColorModG:
-						Text = PMPauseMenus[menu].name + " " + to_string((int)Game->ColorModG * 100 / 255) + "%";
+						Text = PMPauseMenus[menu].name + " " + std::to_string((int)Game->ColorModG * 100 / 255) + "%";
 						Game->Font->WriteText(Game->Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 300, 180 + i * menuspacing, 0, color);
 						break;
 					case PMColorModB:
-						Text = PMPauseMenus[menu].name + " " + to_string((int)Game->ColorModB * 100 / 255) + "%";
+						Text = PMPauseMenus[menu].name + " " + std::to_string((int)Game->ColorModB * 100 / 255) + "%";
 						Game->Font->WriteText(Game->Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 300, 180 + i * menuspacing, 0, color);
 						break;
 					
@@ -155,7 +155,7 @@ void CGameBase::PauseMenu()
 
 		if (Game->SubGameState == SGGameHelp)
 		{
-			string Text = "Game Help";
+			std::string Text = "Game Help";
 			Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 60, Text, Text.length(), 505, 110, 0, {255,255,255,255});
 
 			Text = GSGames[Game->Game].name;
@@ -169,7 +169,7 @@ void CGameBase::PauseMenu()
 			SDL_Rect Src = {0, 0, ScreenWidth, ScreenHeight};
 			SDL_RenderCopy(Game->Renderer, Game->GameScreenShots[Game->Game], &Src, &Dst);
 
-			Text = GMModes[Game->GameMode].name + " High Score: " + to_string(Game->HighScores[Game->Game][Game->GameMode]);
+			Text = GMModes[Game->GameMode].name + " High Score: " + std::to_string(Game->HighScores[Game->Game][Game->GameMode]);
 			Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 20, Text, Text.length(), 300, 410, 0, {255,255,255,255});
 
 			Text = GSGames[Game->Game].description;
@@ -205,7 +205,7 @@ void CGameBase::PauseMenu()
 				(!Game->Input->PrevButtons.ButBack && Game->Input->Buttons.ButBack) ||
 				(!Game->Input->PrevButtons.ButStart && Game->Input->Buttons.ButStart))
 			{
-				Game->Audio->PlaySound(Game->SfxBack, 0);
+				Game->Audio->PlaySnd(Game->SfxBack, 0);
 				Game->SubGameState = SGPauseMenu;
 				Game->Input->ResetButtons();
 			}
@@ -217,7 +217,7 @@ void CGameBase::PauseMenu()
 				(!Game->Input->PrevButtons.ButLeft2 && Game->Input->Buttons.ButLeft2) ||
 				(!Game->Input->PrevButtons.ButDpadLeft && Game->Input->Buttons.ButDpadLeft))
 			{
-				Game->Audio->PlaySound(Game->SfxSelect, 0);
+				Game->Audio->PlaySnd(Game->SfxSelect, 0);
 
 				switch(selectedmenu)
 				{
@@ -232,7 +232,7 @@ void CGameBase::PauseMenu()
 						bool wasplaying = Game->Audio->IsMusicPlaying();
 						Game->Audio->DecVolumeMusic();
 						if (!wasplaying)
-							Game->Audio->PlayMusic(Game->CurrentGameMusicID, -1);
+							Game->Audio->PlayMus(Game->CurrentGameMusicID, -1);
 						break;
 					}
 
@@ -281,7 +281,7 @@ void CGameBase::PauseMenu()
 				(!Game->Input->PrevButtons.ButRight2 && Game->Input->Buttons.ButRight2) ||
 				(!Game->Input->PrevButtons.ButDpadRight && Game->Input->Buttons.ButDpadRight))
 			{
-				Game->Audio->PlaySound(Game->SfxSelect, 0);
+				Game->Audio->PlaySnd(Game->SfxSelect, 0);
 				switch(selectedmenu)
 				{
 					case PMSoundVol:
@@ -295,7 +295,7 @@ void CGameBase::PauseMenu()
 						bool wasplaying = Game->Audio->IsMusicPlaying();
 						Game->Audio->IncVolumeMusic();
 						if (!wasplaying)
-							Game->Audio->PlayMusic(Game->CurrentGameMusicID, -1);
+							Game->Audio->PlayMus(Game->CurrentGameMusicID, -1);
 						break;
 					}
 
@@ -344,7 +344,7 @@ void CGameBase::PauseMenu()
 				(!Game->Input->PrevButtons.ButDown2 && Game->Input->Buttons.ButDown2) ||
 				(!Game->Input->PrevButtons.ButDpadDown && Game->Input->Buttons.ButDpadDown))
 			{
-				Game->Audio->PlaySound(Game->SfxSelect, 0);
+				Game->Audio->PlaySnd(Game->SfxSelect, 0);
 
 				selected += 1;
 				if (selected == maxmenus)
@@ -355,7 +355,7 @@ void CGameBase::PauseMenu()
 				(!Game->Input->PrevButtons.ButUp2 && Game->Input->Buttons.ButUp2) ||
 				(!Game->Input->PrevButtons.ButDpadUp && Game->Input->Buttons.ButDpadUp))
 			{
-				Game->Audio->PlaySound(Game->SfxSelect, 0);
+				Game->Audio->PlaySnd(Game->SfxSelect, 0);
 
 				selected -= 1;
 				if (selected == -1)
@@ -364,7 +364,7 @@ void CGameBase::PauseMenu()
 
 			if (!Game->Input->PrevButtons.ButBack && Game->Input->Buttons.ButBack)
 			{
-				Game->Audio->PlaySound(Game->SfxConfirm, 0);
+				Game->Audio->PlaySnd(Game->SfxConfirm, 0);
 
 				Game->SubGameState = prevsubgamestate;
 				Game->SubStateCounter = prevsubstatecounter;
@@ -373,7 +373,7 @@ void CGameBase::PauseMenu()
 			if ((!Game->Input->PrevButtons.ButA && Game->Input->Buttons.ButA) ||
 				(!Game->Input->PrevButtons.ButStart && Game->Input->Buttons.ButStart))
 			{
-				Game->Audio->PlaySound(Game->SfxConfirm, 0);
+				Game->Audio->PlaySnd(Game->SfxConfirm, 0);
 
 				switch(selectedmenu)
 				{
@@ -406,7 +406,7 @@ void CGameBase::PauseMenu()
 						bool wasplaying = Game->Audio->IsMusicPlaying();
 						Game->Audio->IncVolumeMusic();
 						if(!wasplaying)
-							Game->Audio->PlayMusic(Game->CurrentGameMusicID, -1);
+							Game->Audio->PlayMus(Game->CurrentGameMusicID, -1);
 						break;
 					}
 
@@ -502,14 +502,14 @@ void CGameBase::PauseMenu()
 
 		if (debugInfo || Game->ShowFPS)
 		{
-			string Text = "FPS: " + to_string(Fps) + "\n";
+			std::string Text = "FPS: " + std::to_string(Fps) + "\n";
 			if(debugInfo)
 			{
-				Text += "FrameTime: " + to_string(AvgFrameTime) + "\n";
-				Text += "GFX Slots: " + to_string(Game->Image->ImageSlotsUsed()) + "/" + to_string(Game->Image->ImageSlotsMax()) + "\n";
-				Text += "SND Slots: " + to_string(Game->Audio->SoundSlotsUsed()) + "/" + to_string(Game->Audio->SoundSlotsMax()) + "\n";
-				Text += "MUS Slots: " + to_string(Game->Audio->MusicSlotsUsed()) + "/" + to_string(Game->Audio->MusicSlotsMax()) + "\n";
-				Text += "SPR Slots: " + to_string(Game->Sprites->SpriteSlotsUsed()) + "/" + to_string(Game->Sprites->SpriteSlotsMax()) + "\n";
+				Text += "FrameTime: " + std::to_string(AvgFrameTime) + "\n";
+				Text += "GFX Slots: " + std::to_string(Game->Image->ImageSlotsUsed()) + "/" + std::to_string(Game->Image->ImageSlotsMax()) + "\n";
+				Text += "SND Slots: " + std::to_string(Game->Audio->SoundSlotsUsed()) + "/" + std::to_string(Game->Audio->SoundSlotsMax()) + "\n";
+				Text += "MUS Slots: " + std::to_string(Game->Audio->MusicSlotsUsed()) + "/" + std::to_string(Game->Audio->MusicSlotsMax()) + "\n";
+				Text += "SPR Slots: " + std::to_string(Game->Sprites->SpriteSlotsUsed()) + "/" + std::to_string(Game->Sprites->SpriteSlotsMax()) + "\n";
 			}
 			int tw = Game->Font->TextWidth("RobotoMono-Bold", 16, Text, Text.length());
 			Game->Font->WriteText(Game->Renderer, "RobotoMono-Bold", 16, Text, Text.length(), w - tw, 0, 0, {255, 0, 255, 255});
@@ -542,25 +542,37 @@ void CGameBase::DrawScoreBar()
 	SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 100);
 	SDL_Rect r = {0, 0, ScreenWidth, ScoreBarHeight};
 	SDL_RenderFillRect(Game->Renderer, &r);
-	string Text = "";
+	std::string Text = "";
 	if(UsesLevels)
-		Text = "Level: " + to_string(level) + " ";
+		Text = "Level: " + std::to_string(level) + " ";
 
 	if (Game->GameMode == GMGame)
-		Text += "Lives: " + to_string(HealthPoints) + " Score:" + to_string(Game->Scores[Game->Game][Game->GameMode]) +
-			" High Score: " + to_string(Game->HighScores[Game->Game][Game->GameMode]);
+		Text += "Lives: " + std::to_string(HealthPoints) + " Score:" + std::to_string(Game->Scores[Game->Game][Game->GameMode]) +
+			" High Score: " + std::to_string(Game->HighScores[Game->Game][Game->GameMode]);
 	else
 	{
 		if(Game->GameMode == GMRetroCarousel)
 		{
-			Text += "Timer: " + to_string_with_precision(Game->Timer, 2) + " Total Score:" + to_string(Game->RetroCarouselScore +
-				Game->Scores[Game->Game][Game->GameMode]) + " Score: " + to_string(Game->Scores[Game->Game][Game->GameMode]) +
-				" Previous Total high score: " + to_string(Game->RetroCarouselHighScore) +
-				" Previous High Score: " + to_string(Game->HighScores[Game->Game][Game->GameMode]);
+			if((Game->GameState == GSSubScore))
+			{
+				//in this case Game->Scores[Game->Game][Game->GameMode] was already added to Game->RetroCarouselScore
+				//so we only need to display Game->RetroCarouselScore
+				Text += "Timer: " + to_string_with_precision(Game->Timer, 2) + " Total Score:" + std::to_string(Game->RetroCarouselScore) + 
+					" Score: " + std::to_string(Game->Scores[Game->Game][Game->GameMode]) +
+					" Previous Total high score: " + std::to_string(Game->RetroCarouselHighScore) +
+					" Previous High Score: " + std::to_string(Game->HighScores[Game->Game][Game->GameMode]);
+			}
+			else
+			{
+				Text += "Timer: " + to_string_with_precision(Game->Timer, 2) + " Total Score:" + std::to_string(Game->RetroCarouselScore +
+					Game->Scores[Game->Game][Game->GameMode]) + " Score: " + std::to_string(Game->Scores[Game->Game][Game->GameMode]) +
+					" Previous Total high score: " + std::to_string(Game->RetroCarouselHighScore) +
+					" Previous High Score: " + std::to_string(Game->HighScores[Game->Game][Game->GameMode]);
+			}
 		}
 		else
-			Text += "Timer: " + to_string_with_precision(Game->Timer, 2) + " Score:" + to_string(Game->Scores[Game->Game][Game->GameMode]) +
-				" Previous High Score: " + to_string(Game->HighScores[Game->Game][Game->GameMode]);
+			Text += "Timer: " + to_string_with_precision(Game->Timer, 2) + " Score:" + std::to_string(Game->Scores[Game->Game][Game->GameMode]) +
+				" Previous High Score: " + std::to_string(Game->HighScores[Game->Game][Game->GameMode]);
 	}
 	Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 20, Text, Text.length(), 0, 0, 0, {255,255,255,255});
 }
@@ -608,10 +620,10 @@ void CGameBase::UpdateLogic()
 			{
 				if (Game->SubStateCounter >= 0)
 				{
-					SubStateText = to_string((int)Game->SubStateCounter);
+					SubStateText = std::to_string((int)Game->SubStateCounter);
 					if(Game->SubStateCounter == 2)
 					{
-						Game->Audio->PlaySound(Game->SfxReadyGo, 0);
+						Game->Audio->PlaySnd(Game->SfxReadyGo, 0);
 					}
 
 					if (Game->SubStateCounter == 0)
@@ -666,9 +678,10 @@ void CGameBase::UpdateLogic()
 void CGameBase::Draw()
 {
 	DrawBackground((Game->SubGameState == SGGame) && !ScreenshotMode);
+	//DrawBackground(false);
 	if (DrawObjects())
-		Game->Sprites->DrawSprites(Game->Renderer);
-	if(!ScreenshotMode)
+      Game->Sprites->DrawSprites(Game->Renderer);
+	if(false && !ScreenshotMode)
 	{
 		DrawScoreBar();
 		DrawSubStateText();

@@ -1,5 +1,5 @@
 #include <algorithm>
-#include <math.h>
+#include <cmath>
 #include "Vec2F.h"
 
 float clamp(float value, float min, float max)
@@ -14,5 +14,5 @@ Vec2F clamp(Vec2F value, Vec2F min, Vec2F max)
 
 float length(Vec2F value)
 {
-	return sqrt(value.x*value.x + value.y*value.y);
+	return std::sqrt(value.x*value.x + value.y*value.y);
 }

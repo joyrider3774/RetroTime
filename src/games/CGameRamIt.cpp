@@ -6,8 +6,6 @@
 #include "../CGame.h"
 #include "../Common.h"
 
-using namespace std;
-
 CGameRamIt::CGameRamIt(CGame* aGame, bool aScreenshotMode): CGameBase(aGame, GSRamIt, true, aScreenshotMode)
 {
 	Game = aGame;
@@ -109,7 +107,7 @@ void CGameRamIt::updatebullet()
 			if(destroybullet)
 			{
 				if (playaudiobullet)
-					Game->Audio->PlaySound(SfxHit, 0);
+					Game->Audio->PlaySnd(SfxHit, 0);
 				bulletalive = false;
 				break;
 			}
@@ -196,7 +194,7 @@ void CGameRamIt::updateplayer()
 	if (Game->Input->Buttons.ButA && !Game->Input->PrevButtons.ButA)
 		if (createbullet())
 		{
-			Game->Audio->PlaySound(SfxShoot, 0);
+			Game->Audio->PlaySnd(SfxShoot, 0);
 		}
 }
 
@@ -295,7 +293,7 @@ void CGameRamIt::updateplayfield(bool force)
 
 		if (stageclear)
 		{
-			Game->Audio->PlaySound(SfxSucces, 0);
+			Game->Audio->PlaySnd(SfxSucces, 0);
 			createplayfield();
 			level += 1;
 			if(!ScreenshotMode)
@@ -384,7 +382,7 @@ void CGameRamIt::init()
 		HealthPoints = 3;
 		LoadSound();
 		Game->CurrentGameMusicID = MusMusic;
-		Game->Audio->PlayMusic(MusMusic, -1);
+		Game->Audio->PlayMus(MusMusic, -1);
 	}
 }
 
@@ -401,10 +399,10 @@ void CGameRamIt::deinit()
 
 void CGameRamIt::LoadSound()
 {
-	SfxShoot = Game->Audio->LoadSound("ramit/shoot.wav");
-	SfxHit = Game->Audio->LoadSound("ramit/hit.wav");
-	SfxDie = Game->Audio->LoadSound("common/die.wav");
-	SfxSucces = Game->Audio->LoadSound("common/succes.wav");
+	SfxShoot = Game->Audio->LoadSnd("ramit/shoot.wav");
+	SfxHit = Game->Audio->LoadSnd("ramit/hit.wav");
+	SfxDie = Game->Audio->LoadSnd("common/die.wav");
+	SfxSucces = Game->Audio->LoadSnd("common/succes.wav");
 	MusMusic = Game->Audio->LoadMusic("ramit/music.ogg");
 }
 
@@ -455,7 +453,7 @@ void CGameRamIt::UpdateObjects(bool IsGameState)
 
 		if (playerdeath)
 		{
-			Game->Audio->PlaySound(SfxDie, 0);
+			Game->Audio->PlaySnd(SfxDie, 0);
 			if (Game->GameMode == GMGame)
 				if (!ScreenshotMode)
 					HealthPoints -= 1;

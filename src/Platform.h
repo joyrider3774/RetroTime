@@ -1,4 +1,4 @@
-#include <limits.h>
+#include <limits>
 
 #ifdef WIN32
 #include <windows.h>

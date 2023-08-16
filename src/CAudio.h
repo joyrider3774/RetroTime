@@ -6,7 +6,6 @@
 #include <string>
 #include "Platform.h"
 
-using namespace std;
 
 constexpr int SND_Max = 100;
 constexpr int MUS_Max = 20;
@@ -18,11 +17,11 @@ private:
 	int VolumeMusic, VolumeSound;
 	Mix_Chunk *Sounds[SND_Max];
 	Mix_Music *Music[MUS_Max];
-	string DataPath;
+	std::string DataPath;
 
 public:
 	bool GlobalSoundEnabled = true;
-	CAudio(string AssetsPath, bool ADebugInfo);
+	CAudio(std::string AssetsPath, bool ADebugInfo);
 	~CAudio();
 	void IncVolumeMusic();
 	void DecVolumeMusic();
@@ -34,8 +33,8 @@ public:
 	void SetVolumeSound(const int VolumeIn);
 	int GetVolumeSound();
 
-	int LoadMusic(string FileName);
-	int LoadSound(string FileName);
+	int LoadMusic(std::string FileName);
+	int LoadSnd(std::string FileName);
 	int MusicSlotsUsed();
 	int MusicSlotsMax();
 	int SoundSlotsUsed();
@@ -44,8 +43,8 @@ public:
 	void UnLoadSound(int SoundID);
 	void UnloadSounds();
 	void UnloadMusics();
-	void PlayMusic(int MusicID, int loops);
-	void PlaySound(int SoundID, int loops);
+	void PlayMus(int MusicID, int loops);
+	void PlaySnd(int SoundID, int loops);
 	bool IsMusicPlaying();
 	void StopMusic();
 	void StopSound();

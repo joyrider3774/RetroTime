@@ -45,7 +45,7 @@ void CGameSnake::updatefood()
 {
 	if ((head.x == food.x) && (head.y == food.y))
 	{
-		Game->Audio->PlaySound(SfxFood, 0);
+		Game->Audio->PlaySnd(SfxFood, 0);
 		snakelength += 1;
 		createfood();
 		if(!ScreenshotMode)
@@ -206,7 +206,7 @@ void CGameSnake::init()
 		HealthPoints = 2;
 		LoadSound();
 		Game->CurrentGameMusicID = MusMusic;
-		Game->Audio->PlayMusic(MusMusic, -1);
+		Game->Audio->PlayMus(MusMusic, -1);
 	}
 }
 
@@ -223,8 +223,8 @@ void CGameSnake::deinit()
 
 void CGameSnake::LoadSound()
 {
-	SfxFood = Game->Audio->LoadSound("snakey/food.wav");
-	SfxDie = Game->Audio->LoadSound("common/die.wav");
+	SfxFood = Game->Audio->LoadSnd("snakey/food.wav");
+	SfxDie = Game->Audio->LoadSnd("common/die.wav");
 	MusMusic = Game->Audio->LoadMusic("snakey/music.ogg");
 }
 
@@ -249,7 +249,7 @@ void CGameSnake::UpdateObjects(bool IsGameState)
 
 	if (IsGameState && playerdeath)
 	{
-		Game->Audio->PlaySound(SfxDie, 0);
+		Game->Audio->PlaySnd(SfxDie, 0);
 		if(!ScreenshotMode)
 			Game->AddToScore(-50);
 

@@ -95,7 +95,21 @@ For example `retrotime.exe -s -w` would run the game in software mode and startu
 | -w | Start up game in windowed mode |
 | -f | Show FPS |
 
+
 ## Credits
+
+### Libraries used
+The game makes uses of multiple libraries, below are the ones most needed to compile the game (you might need to grab some of the dependencies of the libs below as well). 
+
+* SDL2
+* SDL2_image (+ png)
+* SDL2_ttf (+ freetype)
+* SDL2_mixer
+* SDL2_gfx
+* curl (+ openssl)
+* jsoncpp
+
+### Assets
 The game makes uses of multiple payed and free assets packs, below are the credits for them per game.
 > **Warning**
 > The Project's code is MIT but the assets are not, they all use different licenses, some are free some are Creative Commons and some i even payed for and can only be used with my project. so you can not re-use those as you wish. 

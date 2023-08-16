@@ -6,23 +6,21 @@
 #include "Platform.h"
 #include "Vec2F.h"
 
-using namespace std;
-
 constexpr int GFX_Max = 100;
 
 class CImage {
 
 private:
 	SDL_Texture *Images[GFX_Max];
-	string DataPath;
+	std::string DataPath;
 	bool ImgEnabled;
 	bool DebugInfo;
 
 public:
-	CImage(string AssetsPath, bool ADebugInfo);
+	CImage(std::string AssetsPath, bool ADebugInfo);
 	~CImage();
-	int LoadImage(SDL_Renderer* Renderer, string FileName);
-	void UnLoadImage(int GFXID);
+	int LoadImg(SDL_Renderer* Renderer, std::string FileName);
+	void UnLoadImg(int GFXID);
 	void UnloadImages();
 	void DrawImage(SDL_Renderer* Renderer, int GFXID, SDL_Rect* Src, SDL_Rect* Dst);
 	void DrawImage(SDL_Renderer* Renderer, SDL_Texture*, SDL_Rect* Src, SDL_Rect* Dst);

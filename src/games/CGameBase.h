@@ -6,15 +6,12 @@
 #include "../CGame.h"
 #include "../Common.h"
 
-using namespace std;
-
-
 
 class CGameBase {
 
 protected:
 	CGame *Game;
-	string SubStateText;
+	std::string SubStateText;
 	bool ScreenshotMode;
 	bool UsesLevels;
 	int level;

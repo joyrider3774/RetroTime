@@ -9,9 +9,6 @@
 #include "../Platform.h"
 #include "../Common.h"
 
-
-using namespace std;
-
 struct ramitblock
 {
 	int maxsegments;

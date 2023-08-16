@@ -3,12 +3,13 @@
 #include <SDL2_gfxPrimitives.h>
 #include <SDL_image.h>
 #include <fstream>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/stat.h>
-#include <time.h>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+
+//for getopt
 #include <unistd.h>
-#include <inttypes.h>
+
 #include "games/CGameBase.h"
 #include "games/CGameFrog.h"
 #include "games/CGameFastEddy.h"
@@ -18,13 +19,16 @@
 #include "games/CGameBreakOut.h"
 #include "games/CGamePang.h"
 #include "games/CGameInvaders.h"
+#include "scoresubmit/scoresubmit.h"
+#include "scoresubmit/urlencode.h"
+
 #include "CGame.h"
 #include "Common.h"
 #include "TitleScreen.h"
 #include "SubScoreScreen.h"
 #include "Intro.h"
+#include "CHttp.h"
 
-using namespace std;
 
 CGame::CGame()
 {
@@ -38,6 +42,7 @@ CGame::~CGame()
 
 void CGame::DeInit()
 {
+	delete http;
 	if (ActiveGame != nullptr)
 	{
 		ActiveGame->deinit();
@@ -50,6 +55,8 @@ void CGame::DeInit()
 
 void CGame::Init()
 {
+	http = new CHttp();
+	//http->AddRequest(GetSubmitScoreUrl("E7LL=K67sZIBEXspsi9yry3t=3?Fd%sO",17, 4294967295, "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW").c_str(), true);
 	//Main State Variables and such
 	CurrentGameMusicID = -1;
 	GameState = GSIntroInit;
@@ -165,7 +172,7 @@ void CGame::UnLoadGraphics()
 
 void CGame::DrawTitleBackground(bool k)
 {
-	string msg = "Happy Easter (egg) to everyone on Fuze Arena and thanks to the FUZE Team and Wireframe magazine for doing this competition!!!!";
+	std::string msg = "Happy Easter (egg) to everyone on Fuze Arena and thanks to the FUZE Team and Wireframe magazine for doing this competition!!!!";
 	menubackgroundx += menubackgrounddx;
 	menubackgroundy += menubackgrounddy;
 	if ((menubackgroundx == 0) || (menubackgroundx == ScreenWidth))
@@ -193,7 +200,7 @@ void CGame::DrawTitleBackground(bool k)
 		for(size_t i = 0; i < msg.length(); i++)
 		{
 			SDL_Color color = {255, Uint8(128 + (sin(i*25 % 360))*127), 0, 64*3};
-			string T = msg.substr(i, 1);
+			std::string T = msg.substr(i, 1);
 			Font->WriteText(Renderer, "Roboto-Regular", 100, T, T.length(), pinc + i * 75, ((ScreenHeight / 2) -100) + (sin((((pinc + (i*15)) % 360)*3.14159265/180)) * 200), 0, color);
 		}
 		pinc = pinc- 3;
@@ -374,16 +381,16 @@ void CGame::ReCreateCrt()
 
 void CGame::LoadSound()
 {
-	SfxTimeOver = Audio->LoadSound("common/timeover.wav");
-	SfxReadyGo = Audio->LoadSound("common/readygo.wav");
-	SfxOne = Audio->LoadSound("common/one.wav");
-	SfxTwo = Audio->LoadSound("common/two.wav");
-	SfxThree = Audio->LoadSound("common/three.wav");
-	SfxOneMinute = Audio->LoadSound("common/oneminute.wav");
-	SfxConfirm = Audio->LoadSound("main/confirm.wav");
-	SfxBack = Audio->LoadSound("main/back.wav");
-	SfxSelect = Audio->LoadSound("main/select.wav");
-	SfxScore = Audio->LoadSound("main/score.ogg");
+	SfxTimeOver = Audio->LoadSnd("common/timeover.wav");
+	SfxReadyGo = Audio->LoadSnd("common/readygo.wav");
+	SfxOne = Audio->LoadSnd("common/one.wav");
+	SfxTwo = Audio->LoadSnd("common/two.wav");
+	SfxThree = Audio->LoadSnd("common/three.wav");
+	SfxOneMinute = Audio->LoadSnd("common/oneminute.wav");
+	SfxConfirm = Audio->LoadSnd("main/confirm.wav");
+	SfxBack = Audio->LoadSnd("main/back.wav");
+	SfxSelect = Audio->LoadSnd("main/select.wav");
+	SfxScore = Audio->LoadSnd("main/score.ogg");
 }
 
 void CGame::UnLoadSound()
@@ -393,8 +400,8 @@ void CGame::UnLoadSound()
 
 void CGame::LoadGraphics()
 {
-	GFXFrameID = Image->LoadImage(Renderer, "main/frame.png");
-	GFXMedal = Image->LoadImage(Renderer, "main/medal.png");
+	GFXFrameID = Image->LoadImg(Renderer, "main/frame.png");
+	GFXMedal = Image->LoadImg(Renderer, "main/medal.png");
 }
 
 void CGame::ToggleFullscreen()
@@ -422,17 +429,17 @@ void CGame::ToggleFullscreen()
 void CGame::LoadHighScores()
 {
 	FILE *ScoreFile;
-	string FileName = "./.retrotimesscores";
+	std::string FileName = "./.retrotimesscores";
 
 	char *EnvHome = getenv("HOME");
 	char *EnvHomeDrive = getenv("HOMEDRIVE");
 	char *EnvHomePath = getenv("HOMEPATH");
 
 	if (EnvHome) //linux systems normally
-		FileName = string(EnvHome) + "/.retrotimesscores";
+		FileName = std::string(EnvHome) + "/.retrotimesscores";
 	else
 		if(EnvHomeDrive && EnvHomePath) //windows systems normally
-			FileName = string(EnvHomeDrive) + string(EnvHomePath) + "/.retrotimesscores";
+			FileName = std::string(EnvHomeDrive) + std::string(EnvHomePath) + "/.retrotimesscores";
 
 	ScoreFile = fopen(FileName.c_str(), "r");
 	if (ScoreFile)
@@ -440,7 +447,7 @@ void CGame::LoadHighScores()
 		fscanf(ScoreFile, "RetroCarousel=%llu\n", &RetroCarouselHighScore);
 		for (int i = 0; i < Games; i++)
 			for (int j = 0; j < Modes; j++)
-				fscanf(ScoreFile, string("Game_" + to_string(i) + "_Mode_" + to_string(j) + "=%llu\n").c_str(), &HighScores[i][j]);
+				fscanf(ScoreFile, std::string("Game_" + std::to_string(i) + "_Mode_" + std::to_string(j) + "=%llu\n").c_str(), &HighScores[i][j]);
 		fclose(ScoreFile);
 	}
 	else
@@ -452,17 +459,17 @@ void CGame::LoadHighScores()
 void CGame::SaveHighScores()
 {
 	FILE *ScoreFile;
-	string FileName = "./.retrotimesscores";
+	std::string FileName = "./.retrotimesscores";
 
 	char *EnvHome = getenv("HOME");
 	char *EnvHomeDrive = getenv("HOMEDRIVE");
 	char *EnvHomePath = getenv("HOMEPATH");
 
 	if (EnvHome) //linux systems normally
-		FileName = string(EnvHome) + "/.retrotimesscores";
+		FileName = std::string(EnvHome) + "/.retrotimesscores";
 	else
 		if(EnvHomeDrive && EnvHomePath) //windows systems normally
-			FileName = string(EnvHomeDrive) + string(EnvHomePath) + "/.retrotimesscores";
+			FileName = std::string(EnvHomeDrive) + std::string(EnvHomePath) + "/.retrotimesscores";
 
 	ScoreFile = fopen(FileName.c_str(), "w");
 	if (ScoreFile)
@@ -470,7 +477,7 @@ void CGame::SaveHighScores()
 		fprintf(ScoreFile, "RetroCarousel=%llu\n", RetroCarouselHighScore);
 		for (int i = 0; i < Games; i++)
 			for (int j = 0; j < Modes; j++)
-				fprintf(ScoreFile, string("Game_" + to_string(i) + "_Mode_" + to_string(j) + "=%llu\n").c_str(), HighScores[i][j]);
+				fprintf(ScoreFile, std::string("Game_" + std::to_string(i) + "_Mode_" + std::to_string(j) + "=%llu\n").c_str(), HighScores[i][j]);
 		fclose(ScoreFile);
 	}
 }
@@ -478,29 +485,32 @@ void CGame::SaveHighScores()
 void CGame::LoadSettings()
 {
 	FILE *SettingsFile;
-	string FileName = "./.retrotimesettings";
+	std::string FileName = "./.retrotimesettings";
 
 	char *EnvHome = getenv("HOME");
 	char *EnvHomeDrive = getenv("HOMEDRIVE");
 	char *EnvHomePath = getenv("HOMEPATH");
 
 	if (EnvHome) //linux systems normally
-		FileName = string(EnvHome) + "/.retrotimesettings";
+		FileName = std::string(EnvHome) + "/.retrotimesettings";
 	else
 		if(EnvHomeDrive && EnvHomePath) //windows systems normally
-			FileName = string(EnvHomeDrive) + string(EnvHomePath) + "/.retrotimesettings";
-
+			FileName = std::string(EnvHomeDrive) + std::string(EnvHomePath) + "/.retrotimesettings";
+	
+	strcpy(HighScoreName, "Anonymous");
+	printf("%15s\n", HighScoreName);
 	SettingsFile = fopen(FileName.c_str(), "r");
 	if (SettingsFile)
 	{
 		int VolumeMusic, VolumeSound, aMotionBlur;
-		int ret = fscanf(SettingsFile, "VolumeMusic=%d\nVolumeSound=%d\nCrt=%d\nSpriteGhosting=%d\nColorModR=%d\nColorModG=%d\nColorModB=%d\n", 
-			&VolumeMusic, &VolumeSound, &Crt, &aMotionBlur, &ColorModR, &ColorModG, &ColorModB);
+		int ret = fscanf(SettingsFile, "VolumeMusic=%d\nVolumeSound=%d\nCrt=%d\nSpriteGhosting=%d\nColorModR=%d\nColorModG=%d\nColorModB=%d\nHighScoreName=%15s\n", 
+			&VolumeMusic, &VolumeSound, &Crt, &aMotionBlur, &ColorModR, &ColorModG, &ColorModB, HighScoreName);
 		MotionBlur = (aMotionBlur == 1);
 		if(ret > 0)
 			Audio->SetVolumeMusic(VolumeMusic);
 		if(ret > 1)
 			Audio->SetVolumeSound(VolumeSound);
+		printf("%d %15s\n", ret, HighScoreName);
 		fclose(SettingsFile);
 	}
 	else
@@ -509,31 +519,34 @@ void CGame::LoadSettings()
 		Audio->SetVolumeSound(128);
 		MotionBlur = false;
 		Crt = 0;
+		ColorModB = 255;
+		ColorModR = 255;
+		ColorModG = 255;
 	}
 }
 
 void CGame::SaveSettings()
 {
 	FILE *SettingsFile;
-	string FileName = "./.retrotimesettings";
+	std::string FileName = "./.retrotimesettings";
 
 	char *EnvHome = getenv("HOME");
 	char *EnvHomeDrive = getenv("HOMEDRIVE");
 	char *EnvHomePath = getenv("HOMEPATH");
 
 	if (EnvHome) //linux systems normally
-		FileName = string(EnvHome) + "/.retrotimesettings";
+		FileName = std::string(EnvHome) + "/.retrotimesettings";
 	else
 		if(EnvHomeDrive && EnvHomePath) //windows systems normally
-			FileName = string(EnvHomeDrive) + string(EnvHomePath) + "/.retrotimesettings";
+			FileName = std::string(EnvHomeDrive) + std::string(EnvHomePath) + "/.retrotimesettings";
 
 	SettingsFile = fopen(FileName.c_str(), "w");
 	if (SettingsFile)
 	{
 		int VolumeMusic = Audio->GetVolumeMusic();
 		int VolumeSound = Audio->GetVolumeSound();
-		fprintf(SettingsFile, "VolumeMusic=%d\nVolumeSound=%d\nCrt=%d\nSpriteGhosting=%d\nColorModR=%d\nColorModG=%d\nColorModB=%d\n",
-			VolumeMusic, VolumeSound, Crt, MotionBlur?1:0, ColorModR, ColorModG, ColorModB);
+		fprintf(SettingsFile, "VolumeMusic=%d\nVolumeSound=%d\nCrt=%d\nSpriteGhosting=%d\nColorModR=%d\nColorModG=%d\nColorModB=%d\nHighScoreName=%s\n",
+			VolumeMusic, VolumeSound, Crt, MotionBlur?1:0, ColorModR, ColorModG, ColorModB, HighScoreName);
 		fclose(SettingsFile);
 	}
 }
@@ -549,10 +562,10 @@ void CGame::StartCrossFade(int SetGameState, int SetNextSubState, int SetNextSub
 	NextSubStateCounter = SetNextSubStateCounter;
 }
 
-string CGame::GetFilePath(string InputFile)
+std::string CGame::GetFilePath(std::string InputFile)
 {
 	int Teller, Pos = 0;
-	string Result = InputFile;
+	std::string Result = InputFile;
 	for (Teller = InputFile.length() - 1; Teller >= 0; Teller--)
 		if ((InputFile[Teller] == '/') || (InputFile[Teller] == '\\'))
 		{
@@ -591,21 +604,21 @@ void CGame::UpdateTimer()
 				Timer -= 0.25f;
 
 				if (Timer == 60)
-					Audio->PlaySound(SfxOneMinute, 0);
+					Audio->PlaySnd(SfxOneMinute, 0);
 
 				if (Timer == 3)
-					Audio->PlaySound(SfxThree, 0);
+					Audio->PlaySnd(SfxThree, 0);
 
 				if (Timer == 2)
-					Audio->PlaySound(SfxTwo, 0);
+					Audio->PlaySnd(SfxTwo, 0);
 
 				if (Timer == 1)
-					Audio->PlaySound(SfxOne, 0);
+					Audio->PlaySnd(SfxOne, 0);
 
 
 				if (Timer <= 0)
 				{
-					Audio->PlaySound(SfxTimeOver, 0);
+					Audio->PlaySnd(SfxTimeOver, 0);
 					SubGameState = SGTimeUp;
 					SubStateTime = SDL_GetTicks() + 750;
 					SubStateCounter = 0;
@@ -663,6 +676,9 @@ void CGame::MainLoop()
 	Uint32 Fps = 0;
 	double AvgFrameTime = 0.0f;
 	Uint32 Ticks = SDL_GetTicks();
+	uint8_t wtrs = 128;
+	uint8_t ver = 2;
+
 	while (GameState != GSQuit)
 	{
 		TotalFrames++;
@@ -684,6 +700,44 @@ void CGame::MainLoop()
 			ReCreateCrt();
 		}
 
+		if(Input->Buttons.ButLB && !Input->PrevButtons.ButLB)
+			wtrs -= 1;
+		
+		if(Input->Buttons.ButRB && !Input->PrevButtons.ButRB)
+			wtrs += 1;
+
+		if(Input->Buttons.ButLT && !Input->PrevButtons.ButLT)
+		{
+			if(ver == 2)
+			{
+				ver = 8;
+			}
+			else
+			{
+				if(ver == 8)
+					ver = 4;
+				else
+					ver = 2;
+			}
+		}
+
+		if(Input->Buttons.ButRT && !Input->PrevButtons.ButRT)
+		{
+			if(ver == 2)
+			{
+				ver = 4;
+			}
+			else
+			{
+				if(ver == 4)
+					ver = 8;
+				else
+					ver = 2;
+			}
+		}
+
+
+
 		if(Input->Buttons.ButFullscreen && !Input->PrevButtons.ButFullscreen)
 			ToggleFullscreen();
 
@@ -691,6 +745,7 @@ void CGame::MainLoop()
 			GameState = GSQuit;
 
 		SDL_SetRenderTarget(Renderer, TexOffScreen);
+		SDL_RenderClear(Renderer);
 
 		switch (GameState)
 		{
@@ -742,7 +797,7 @@ void CGame::MainLoop()
 		if (Alpha < MaxAlpha)
 		{
 			Alpha = trunc(MaxAlpha * ((double)(SDL_GetTicks() - AlphaTimer) / MaxAlphaTime));
-			if (Alpha + AlphaIncrease >= MaxAlpha)
+			if (Alpha >= MaxAlpha)
 			{
 				//SDL_SetTextureBlendMode(TexOffScreen, SDL_BLENDMODE_NONE);
 				Alpha = MaxAlpha;
@@ -764,7 +819,31 @@ void CGame::MainLoop()
 		SDL_RenderClear(Renderer);
 
 		SDL_SetTextureColorMod(TexScreen, ColorModR, ColorModG, ColorModB);
-
+		
+		// switch(GameState)
+		// {
+		// 	// case GSFrog:
+		// 	// case GSFrogInit:
+		// 	// 	wtrs = 160;
+		// 	// 	break;
+		// 	// case GSEddy:
+		// 	case GSEddyInit:
+		// 		wtrs = 120;
+		// 		break;
+		// 	// case GSSnake:
+		// 	// case GSSnakeInit:
+		// 	// case GSTetris:
+		// 	// case GSTetrisInit:
+		// 	// case GSRamIt:
+		// 	// case GSRamItInit:
+		// 	 case GSPangInit:
+		// 	 case GSPang:
+		// 	 	wtrs = 192;
+		// 	 	break;
+		// 	default:
+		// 		wtrs = 115;
+		// 		break;
+		// }
 		int w, h, w2, h2, x, y;
 		SDL_GetWindowSize(SdlWindow, &w , &h);
 		float ScaleX = (float)w / (float)ScreenWidth;
@@ -780,26 +859,39 @@ void CGame::MainLoop()
 		y = ((h - h2) / 2);
 
 		SDL_Rect Rect = { x, y, w2, h2};
+		SDL_Rect DithRect = { x, y, w2, h2};
+
+		SDL_SetRenderTarget(Renderer, NULL);
+
 		SDL_RenderCopy(Renderer, TexScreen, NULL, &Rect);
+		ditherTarget(Renderer, SDL_GetRenderTarget(Renderer), &DithRect, ver, wtrs);
+
+		std::string Text = "wtrs: " + std::to_string(wtrs) + "ver: " + std::to_string(ver) + "\n";
+		Font->WriteText(Renderer, "RobotoMono-Bold", 16, Text, Text.length(), 0, 0, 0, {255, 0, 255, 255});
+
+
 
 		if((ActiveGame != nullptr) && (GameState != GSSubScore) && (GameState != GSTitleScreenInit))
 			DrawCrt();
 
 		if (debugInfo || ShowFPS)
 		{
-			string Text = "FPS: " + to_string(Fps) + "\n";
+			std::string Text = "FPS: " + std::to_string(Fps) + "\n";
 			if(debugInfo)
 			{
-				Text += "FrameTime: " + to_string(AvgFrameTime) + "\n";
-				Text += "GFX Slots: " + to_string(Image->ImageSlotsUsed()) + "/" + to_string(Image->ImageSlotsMax()) + "\n";
-				Text += "SND Slots: " + to_string(Audio->SoundSlotsUsed()) + "/" + to_string(Audio->SoundSlotsMax()) + "\n";
-				Text += "MUS Slots: " + to_string(Audio->MusicSlotsUsed()) + "/" + to_string(Audio->MusicSlotsMax()) + "\n";
-				Text += "SPR Slots: " + to_string(Sprites->SpriteSlotsUsed()) + "/" + to_string(Sprites->SpriteSlotsMax()) + "\n";
+				Text += "FrameTime: " + std::to_string(AvgFrameTime) + "\n";
+				Text += "GFX Slots: " + std::to_string(Image->ImageSlotsUsed()) + "/" + std::to_string(Image->ImageSlotsMax()) + "\n";
+				Text += "SND Slots: " + std::to_string(Audio->SoundSlotsUsed()) + "/" + std::to_string(Audio->SoundSlotsMax()) + "\n";
+				Text += "MUS Slots: " + std::to_string(Audio->MusicSlotsUsed()) + "/" + std::to_string(Audio->MusicSlotsMax()) + "\n";
+				Text += "SPR Slots: " + std::to_string(Sprites->SpriteSlotsUsed()) + "/" + std::to_string(Sprites->SpriteSlotsMax()) + "\n";
 			}
 			int tw = Font->TextWidth("RobotoMono-Bold", 16, Text, Text.length());
 			Font->WriteText(Renderer, "RobotoMono-Bold", 16, Text, Text.length(), w - tw, 0, 0, {255, 0, 255, 255});
 		}
 		SDL_RenderPresent(Renderer);
+		
+		//SDL_Log("Running requests %d\n", http->Update());
+		http->Update();
 
 		Uint64 FrameEndPerf = SDL_GetPerformanceCounter();
 		Uint64 FramePerf = FrameEndPerf - FrameStartPerf;
@@ -828,7 +920,7 @@ void CGame::Run(int argc, char *argv[])
 	bool useLinear = false; //causes issues in for example frog from scaling textures and then bleeding into each other
 	bool useVsync = false;
 	bool useFullScreenAtStartup = true;
-	string StartPath = GetFilePath(string(argv[0]));
+	std::string StartPath = GetFilePath(std::string(argv[0]));
 	DataPath = StartPath + "retrotimefs/";
 	int c;
 	while ((c = getopt(argc, argv, "?dsfw")) != -1)
@@ -863,7 +955,7 @@ Possible options are:\n\
 
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) == 0)
 	{
-		string controllerdb = DataPath + "data/gamecontrollerdb.txt";
+		std::string controllerdb = DataPath + "data/gamecontrollerdb.txt";
 		if (SDL_GameControllerAddMappingsFromFile(controllerdb.c_str()) == -1)
 			SDL_Log("Warning: Failed to load game controller mappings: %s", SDL_GetError());
 
@@ -873,7 +965,7 @@ Possible options are:\n\
 			WindowFlags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 		}
 
-		SdlWindow = SDL_CreateWindow("RetroTime", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, ScreenWidth, ScreenHeight, WindowFlags);
+		SdlWindow = SDL_CreateWindow("RetroTime", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WindowWidth, WindowHeight, WindowFlags);
 
 		if (SdlWindow)
 		{
@@ -885,7 +977,7 @@ Possible options are:\n\
 			if (useVsync)
 				flags |= SDL_RENDERER_PRESENTVSYNC;
 
-			SDL_Log("Succesfully Set %dx%d\n", ScreenWidth, ScreenHeight);
+			SDL_Log("Succesfully Set %dx%d\n", WindowWidth, WindowHeight);
 			Renderer = SDL_CreateRenderer(SdlWindow, -1, flags);
 			if (Renderer)
 			{
@@ -897,7 +989,7 @@ Possible options are:\n\
 					SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 
 				SDL_Log("Succesfully Created Buffer\n");
-				srand(time(NULL));
+				srand(std::time(NULL));
 
 				Audio = new CAudio(DataPath, debugInfo);
 				Font = new CFont(DataPath, debugInfo);
@@ -971,6 +1063,7 @@ Possible options are:\n\
 			SDL_Log("Failed to Set Videomode (%dx%d): %s\n", ScreenWidth, ScreenHeight, SDL_GetError());
 		}
 		SDL_DestroyWindow(SdlWindow);
+		SDL_QuitSubSystem(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER);
 		SDL_Quit();
 	}
 	else

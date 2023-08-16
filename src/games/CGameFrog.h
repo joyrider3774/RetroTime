@@ -10,8 +10,6 @@
 #include "../Platform.h"
 #include "../Common.h"
 
-using namespace std;
-
 #define CEILING(x,y) (((x) + (y) + 1) / (y));
 #define FLOORING(x,y) (((x) + (y) - 1) / (y));
 

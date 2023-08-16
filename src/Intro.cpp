@@ -1,5 +1,5 @@
 #include <SDL.h>
-#include <string.h>
+#include <string>
 #include "CGame.h"
 #include "Common.h"
 #include "Intro.h"
@@ -24,7 +24,7 @@ void Intro(CGame *Game)
 	}
 
 	SDL_Color ClWhite = {255, 255, 255, 255};
-	string s;
+	std::string s;
 	int w,h;
 
 	SDL_SetRenderTarget(Game->Renderer, Game->TexTmp);
@@ -53,11 +53,11 @@ void Intro(CGame *Game)
 		w = Game->Font->TextWidth("Roboto-Regular", tsize, s, s.length());
 		Game->Font->WriteText(Game->Renderer, "Roboto-Regular", tsize, s, s.length(),(ScreenWidth - w) / 2, (ScreenHeight - 3 * (tsize + 10)) /2, tsize, ClWhite);
 
-		s = to_string(Games) + " retro based games";
+		s = std::to_string(Games) + " retro based games";
 		w = Game->Font->TextWidth("Roboto-Regular", tsize, s, s.length());
 		Game->Font->WriteText(Game->Renderer, "Roboto-Regular", tsize, s, s.length(), (ScreenWidth - w) / 2, (ScreenHeight - 1 * (tsize + 10)) / 2, tsize, ClWhite);
 
-		s = "playable in " + to_string(Modes) + " game modes";
+		s = "playable in " + std::to_string(Modes) + " game modes";
 		w = Game->Font->TextWidth("Roboto-Regular", tsize, s, s.length());
 		Game->Font->WriteText(Game->Renderer, "Roboto-Regular", tsize, s, s.length(), (ScreenWidth - w) / 2, (ScreenHeight + 1 * (tsize + 10)) /2, tsize, ClWhite);
 	}
@@ -72,7 +72,7 @@ void Intro(CGame *Game)
 		SDL_Rect DstRect = {(ScreenWidth - swidth) / 2, sy, swidth, sheight};
 		Game->Image->DrawImage(Game->Renderer, Game->GameScreenShots[scene -2], NULL, &DstRect);
 
-		s = string(GSGames[scene -2].name) + " " + string(GSGames[scene -2].shortdescription);
+		s = std::string(GSGames[scene -2].name) + " " + std::string(GSGames[scene -2].shortdescription);
 		w = Game->Font->TextWidth("Roboto-Regular", tsize, s, s.length());
 		Game->Font->WriteText(Game->Renderer, "Roboto-Regular", tsize, s, s.length(), (ScreenWidth - w) / 2, sy + sheight + 15 + tsize/2, tsize, ClWhite);
 	}

@@ -1,6 +1,6 @@
 DEBUG=0
 SRC_DIR = src
-SRC_SUBDIR = games
+SRC_SUBDIR = games scoresubmit
 OBJ_DIR = obj
 DAT_DIR = retrotimefs
 EXE=retrotime
@@ -13,9 +13,9 @@ CXX ?= g++
 DESTDIR ?=
 PREFIX ?= /usr
 OPT_LEVEL ?= -O2
-CPPFLAGS ?= -Wall -Wextra -std=c++11 `sdl2-config --cflags`
+CPPFLAGS ?= -Wall -Wextra -std=c++17 `sdl2-config --cflags` `curl-config --cflags` `pkg-config --cflags jsoncpp`
 LDFLAGS ?= -L$(PREFIX)/lib -g
-LDLIBS ?= `sdl2-config --libs` -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lSDL2 -lSDL2_gfx -lstdc++
+LDLIBS ?= `sdl2-config --libs` `curl-config --libs` `pkg-config --libs jsoncpp` -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lSDL2 -lSDL2_gfx -lstdc++
 
 ifeq ($(DEBUG), 1)
 ifeq ($(OS),Windows_NT)

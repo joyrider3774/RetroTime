@@ -11,8 +11,6 @@
 #include "../Platform.h"
 #include "../Common.h"
 
-using namespace std;
-
 struct sblockinfo
 {
 	int mostleft;

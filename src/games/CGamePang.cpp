@@ -7,8 +7,6 @@
 #include "../Common.h"
 #include "../Vec2F.h"
 
-using namespace std;
-
 CGamePang::CGamePang(CGame* aGame, bool aScreenshotMode): CGameBase(aGame, GSPang, true, aScreenshotMode)
 {
 	Game = aGame;
@@ -78,7 +76,7 @@ void CGamePang::createball(int size, float x, float y, float speed)
 			Game->Sprites->SetSpriteLocation(balls[i].spr, balls[i].pos);
 			balls[i].alive = true;
 			balls[i].speed = speed*0.1;
-			balls[i].force = -abs(speed);
+			balls[i].force = -fabsf(speed);
 			balls[i].curforce = balls[i].force/3;
 			balls[i].id = size;
 			break;
@@ -97,14 +95,14 @@ void CGamePang::updateballs()
 			if (balls[i].pos.x + balls[i].speed > screenright)
 			{
 				if (balls[i].speed > 0)
-					balls[i].speed = -abs(balls[i].speed);
+					balls[i].speed = -fabsf(balls[i].speed);
 
 			}
 
 			if (balls[i].pos.x + balls[i].speed < screenleft)
 			{
 				if (balls[i].speed < 0)
-					balls[i].speed = abs(balls[i].speed);
+					balls[i].speed = fabsf(balls[i].speed);
 			}
 
 
@@ -146,7 +144,7 @@ void CGamePang::updateballs()
 				addplayerstate(playerstatereviving);
 				remplayerstate(playerstateshoot);
 				player.stateticks = 90;
-				Game->Audio->PlaySound(SfxDie, 0);
+				Game->Audio->PlaySnd(SfxDie, 0);
 			}
 
 			if (bullet.alive && (bullet.freeze == 0))
@@ -157,7 +155,7 @@ void CGamePang::updateballs()
 					destroyball(i, false);
 					bullet.freeze = 4;
 					Game->Sprites->SetSpriteAnimation(bullet.spr, 0, 1, 10);
-					Game->Audio->PlaySound(SfxPop, 0);
+					Game->Audio->PlaySnd(SfxPop, 0);
 				}
 			}
 		}
@@ -166,7 +164,7 @@ void CGamePang::updateballs()
 	{
 		if (level < maxbigballs)
 			level += 1;
-		Game->Audio->PlaySound(SfxSucces, 0);
+		Game->Audio->PlaySnd(SfxSucces, 0);
 		Game->AddToScore(100);
 		createballs();
 	}
@@ -412,7 +410,7 @@ void CGamePang::updateplayer()
 					Game->Sprites->SetSpriteAnimation(player.spr, 37, 37, 10);
 					player.stateticks = 15;
 					createbullet();
-					Game->Audio->PlaySound(SfxShoot, 0);
+					Game->Audio->PlaySnd(SfxShoot, 0);
 				}
 			}
 			Game->Sprites->SetSpriteLocation(player.spr, player.pos);
@@ -515,7 +513,7 @@ void CGamePang::init()
 		createplayer();
 		createballs();
 		Game->CurrentGameMusicID = MusMusic;
-		Game->Audio->PlayMusic(MusMusic, -1);
+		Game->Audio->PlayMus(MusMusic, -1);
 	}
 }
 
@@ -536,10 +534,10 @@ void CGamePang::deinit()
 
 void CGamePang::LoadSound()
 {
-	SfxDie = Game->Audio->LoadSound("common/die.wav");
-	SfxSucces = Game->Audio->LoadSound("common/succes.wav");
-	SfxShoot = Game->Audio->LoadSound("pang/shoot.wav");
-	SfxPop = Game->Audio->LoadSound("pang/pop.wav");
+	SfxDie = Game->Audio->LoadSnd("common/die.wav");
+	SfxSucces = Game->Audio->LoadSnd("common/succes.wav");
+	SfxShoot = Game->Audio->LoadSnd("pang/shoot.wav");
+	SfxPop = Game->Audio->LoadSnd("pang/pop.wav");
 	MusMusic = Game->Audio->LoadMusic("pang/music.ogg");
 }
 
@@ -556,13 +554,13 @@ void CGamePang::UnLoadSound()
 
 void CGamePang::LoadGraphics()
 {
-	spritesheetplayer = Game->Image->LoadImage(Game->Renderer, "pang/character.png");
-	spritesheetbullet = Game->Image->LoadImage(Game->Renderer, "pang/weapon.png");
-	spritesheetball = Game->Image->LoadImage(Game->Renderer, "pang/ball.png");
-	backgroundgrass = Game->Image->LoadImage(Game->Renderer, "pang/grass.png");
-	backgroundcloud = Game->Image->LoadImage(Game->Renderer, "pang/clouds.png");
-	backgroundtrees = Game->Image->LoadImage(Game->Renderer, "pang/trees.png");
-	backgroundtree = Game->Image->LoadImage(Game->Renderer, "pang/tree.png");
+	spritesheetplayer = Game->Image->LoadImg(Game->Renderer, "pang/character.png");
+	spritesheetbullet = Game->Image->LoadImg(Game->Renderer, "pang/weapon.png");
+	spritesheetball = Game->Image->LoadImg(Game->Renderer, "pang/ball.png");
+	backgroundgrass = Game->Image->LoadImg(Game->Renderer, "pang/grass.png");
+	backgroundcloud = Game->Image->LoadImg(Game->Renderer, "pang/clouds.png");
+	backgroundtrees = Game->Image->LoadImg(Game->Renderer, "pang/trees.png");
+	backgroundtree = Game->Image->LoadImg(Game->Renderer, "pang/tree.png");
 	backgroundgrasstz = Game->Image->ImageSize(backgroundgrass);
 	backgroundcloudtz = Game->Image->ImageSize(backgroundcloud);
 	backgroundtreestz = Game->Image->ImageSize(backgroundtrees);
@@ -572,13 +570,13 @@ void CGamePang::LoadGraphics()
 
 void CGamePang::UnloadGraphics()
 {
-	Game->Image->UnLoadImage(spritesheetplayer);
-	Game->Image->UnLoadImage(spritesheetbullet);
-	Game->Image->UnLoadImage(spritesheetball);
-	Game->Image->UnLoadImage(backgroundgrass);
-	Game->Image->UnLoadImage(backgroundcloud);
-	Game->Image->UnLoadImage(backgroundtrees);
-	Game->Image->UnLoadImage(backgroundtree);
+	Game->Image->UnLoadImg(spritesheetplayer);
+	Game->Image->UnLoadImg(spritesheetbullet);
+	Game->Image->UnLoadImg(spritesheetball);
+	Game->Image->UnLoadImg(backgroundgrass);
+	Game->Image->UnLoadImg(backgroundcloud);
+	Game->Image->UnLoadImg(backgroundtrees);
+	Game->Image->UnLoadImg(backgroundtree);
 }
 
 SDL_Texture* CGamePang::screenshot()

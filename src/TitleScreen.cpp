@@ -1,23 +1,50 @@
 #include <SDL.h>
-#include <string.h>
+#include <json/json.h>
+#include <iomanip>
+#include <string>
 #include "CGame.h"
 #include "Common.h"
 #include "TitleScreen.h"
 #include "Vec2F.h"
+#include "CHttp.h"
 
 int SelectedMenu = 0;
 int CurrentMainMenu = -1;
 int SelMenu = 0;
 int SelOptions = 0;
+int OnlineScoreMode = 0;
+int OnlineScoreGame = Games;
+HttpData *OnlineScoreData = NULL;
+Json::Value OnlineScoreJson = Json::nullValue;
+int OnlineScoreStart = 0;
+constexpr int OnlineScoreMaxHighScores = 100;
+constexpr int OnlineScoreMaxHighScoresPerPage = 10;
 
 constexpr int menutextsize = 50;
-constexpr int menuspacing = 65;
+constexpr int menuspacing = 60;
 constexpr int rcolor = 64;
 constexpr int rdcolor = 1;
 
+void RequestScoresOnline(CGame *Game, int GameNr, int GameMode)
+{
+	if(OnlineScoreData)
+	{
+		if(!OnlineScoreData->done)
+		{
+			Game->http->CancelRequest(OnlineScoreData);
+		}
+
+		Game->http->DestroyData(&OnlineScoreData);
+	}
+	std::string Url = "Https://scores.joyrider3774.xyz/leaderboard.json?score_limit=" + std::to_string(OnlineScoreMaxHighScores) +"&game=" + std::to_string(LeaderBoardIds[GameNr][GameMode]);
+	OnlineScoreData = Game->http->AddRequest(Url.c_str(), false);
+	OnlineScoreJson = Json::nullValue;
+	OnlineScoreStart = 0;
+}
+
 void InitTitleScreen(CGame *Game)
 {
-	Game->Audio->PlayMusic(Game->MusMenu, -1);
+	Game->Audio->PlayMus(Game->MusMenu, -1);
 	Game->StartCrossFade(Game->GameState, SGNone, 0, 0);
 }
 
@@ -36,7 +63,7 @@ void TitleScreen(CGame *Game)
 	Vec2F FrameScale = {10.6f / 4, 10.6f};
 	Game->Image->DrawImageFuze(Game->Renderer, Game->GFXFrameID, true, &FramePos, 0, &FrameScale, 255, 255, 255, 240);
 
-	string Text = "";
+	std::string Text = "";
 	switch (CurrentMainMenu)
 	{
 		case MMOptions:
@@ -74,11 +101,11 @@ void TitleScreen(CGame *Game)
 						}
 						break;
 					case OMSoundVol:
-						Text = OMOptionMenus[menu].name + to_string((int)(Game->Audio->GetVolumeSound()*100/128)) + "%";
+						Text = OMOptionMenus[menu].name + std::to_string((int)(Game->Audio->GetVolumeSound()*100/128)) + "%";
 						Game->Font->WriteText(Game->Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 400, 185 + i * menuspacing, 0, color);
 						break;
 					case OMMusicVol:
-						Text = OMOptionMenus[menu].name + to_string((int)(Game->Audio->GetVolumeMusic()*100/128)) + "%";
+						Text = OMOptionMenus[menu].name + std::to_string((int)(Game->Audio->GetVolumeMusic()*100/128)) + "%";
 						Game->Font->WriteText(Game->Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 400, 185 + i * menuspacing, 0, color);
 						break;
 					case OMCrt:
@@ -86,15 +113,15 @@ void TitleScreen(CGame *Game)
 						Game->Font->WriteText(Game->Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 400, 185 + i * menuspacing, 0, color);
 						break;
 					case OMColorModR:
-						Text = OMOptionMenus[menu].name + " " + to_string((int)Game->ColorModR * 100 / 255) + "%";
+						Text = OMOptionMenus[menu].name + " " + std::to_string((int)Game->ColorModR * 100 / 255) + "%";
 						Game->Font->WriteText(Game->Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 400, 185 + i * menuspacing, 0, color);
 						break;
 					case OMColorModG:
-						Text = OMOptionMenus[menu].name + " " + to_string((int)Game->ColorModG * 100 / 255) + "%";
+						Text = OMOptionMenus[menu].name + " " + std::to_string((int)Game->ColorModG * 100 / 255) + "%";
 						Game->Font->WriteText(Game->Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 400, 185 + i * menuspacing, 0, color);
 						break;
 					case OMColorModB:
-						Text = OMOptionMenus[menu].name + " " + to_string((int)Game->ColorModB * 100 / 255) + "%";
+						Text = OMOptionMenus[menu].name + " " + std::to_string((int)Game->ColorModB * 100 / 255) + "%";
 						Game->Font->WriteText(Game->Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 400, 185 + i * menuspacing, 0, color);
 						break;
 					default:
@@ -110,7 +137,7 @@ void TitleScreen(CGame *Game)
 				(!Game->Input->PrevButtons.ButDown2 && Game->Input->Buttons.ButDown2) ||
 				(!Game->Input->PrevButtons.ButDpadDown && Game->Input->Buttons.ButDpadDown))
 			{
-				Game->Audio->PlaySound(Game->SfxSelect, 0);
+				Game->Audio->PlaySnd(Game->SfxSelect, 0);
 				SelOptions += 1;
 				if (SelOptions == OptionMenus)
 					SelOptions = 0;
@@ -120,7 +147,7 @@ void TitleScreen(CGame *Game)
 				(!Game->Input->PrevButtons.ButUp2 && Game->Input->Buttons.ButUp2) ||
 				(!Game->Input->PrevButtons.ButDpadUp && Game->Input->Buttons.ButDpadUp))
 			{
-				Game->Audio->PlaySound(Game->SfxSelect, 0);
+				Game->Audio->PlaySnd(Game->SfxSelect, 0);
 
 				SelOptions -= 1;
 				if( SelOptions == -1)
@@ -131,7 +158,7 @@ void TitleScreen(CGame *Game)
 				(!Game->Input->PrevButtons.ButLeft2 && Game->Input->Buttons.ButLeft2) ||
 				(!Game->Input->PrevButtons.ButDpadLeft && Game->Input->Buttons.ButDpadLeft))
 			{
-				Game->Audio->PlaySound(Game->SfxSelect, 0);
+				Game->Audio->PlaySnd(Game->SfxSelect, 0);
 				bool wasplaying;
 				switch (selectedmenu)
 				{
@@ -143,7 +170,7 @@ void TitleScreen(CGame *Game)
 						wasplaying = Game->Audio->IsMusicPlaying();
 						Game->Audio->DecVolumeMusic();
 						if (!wasplaying)
-							Game->Audio->PlayMusic(Game->MusMenu, -1);
+							Game->Audio->PlayMus(Game->MusMenu, -1);
 						break;
 
 					case OMMotionBlur:
@@ -183,7 +210,7 @@ void TitleScreen(CGame *Game)
 				(!Game->Input->PrevButtons.ButRight2 && Game->Input->Buttons.ButRight2) ||
 				(!Game->Input->PrevButtons.ButDpadRight && Game->Input->Buttons.ButDpadRight))
 			{
-				Game->Audio->PlaySound(Game->SfxSelect, 0);
+				Game->Audio->PlaySnd(Game->SfxSelect, 0);
 				bool wasplaying;
 				switch (selectedmenu)
 				{
@@ -195,7 +222,7 @@ void TitleScreen(CGame *Game)
 						wasplaying = Game->Audio->IsMusicPlaying();
 						Game->Audio->IncVolumeMusic();
 						if (!wasplaying)
-							Game->Audio->PlayMusic(Game->MusMenu, -1);
+							Game->Audio->PlayMus(Game->MusMenu, -1);
 						break;
 					case OMMotionBlur:
 						Game->MotionBlur = !Game->MotionBlur;
@@ -233,7 +260,7 @@ void TitleScreen(CGame *Game)
 			if ((!Game->Input->PrevButtons.ButBack && Game->Input->Buttons.ButBack) ||
 				(!Game->Input->PrevButtons.ButB && Game->Input->Buttons.ButB))
 			{
-				Game->Audio->PlaySound(Game->SfxBack, 0);
+				Game->Audio->PlaySnd(Game->SfxBack, 0);
 
 				CurrentMainMenu = -1;
 			}
@@ -241,7 +268,7 @@ void TitleScreen(CGame *Game)
 			if ((!Game->Input->PrevButtons.ButStart && Game->Input->Buttons.ButStart) ||
 				(!Game->Input->PrevButtons.ButA && Game->Input->Buttons.ButA))
 			{
-				Game->Audio->PlaySound(Game->SfxSelect, 0);
+				Game->Audio->PlaySnd(Game->SfxSelect, 0);
 				bool wasplaying;
 				switch(selectedmenu)
 				{
@@ -259,7 +286,7 @@ void TitleScreen(CGame *Game)
 						wasplaying = Game->Audio->IsMusicPlaying();
 						Game->Audio->IncVolumeMusic();
 						if(!wasplaying)
-							Game->Audio->PlayMusic(Game->MusMenu, -1);
+							Game->Audio->PlayMus(Game->MusMenu, -1);
 						break;
 					case OMMotionBlur:
 						Game->MotionBlur = !Game->MotionBlur;
@@ -322,7 +349,7 @@ void TitleScreen(CGame *Game)
 				(!Game->Input->PrevButtons.ButBack && Game->Input->Buttons.ButBack) ||
 				(!Game->Input->PrevButtons.ButStart && Game->Input->Buttons.ButStart))
 			{
-				Game->Audio->PlaySound(Game->SfxBack, 0);
+				Game->Audio->PlaySnd(Game->SfxBack, 0);
 
 				CurrentMainMenu = -1;
 			}
@@ -362,18 +389,208 @@ void TitleScreen(CGame *Game)
 				(!Game->Input->PrevButtons.ButBack && Game->Input->Buttons.ButBack) ||
 				(!Game->Input->PrevButtons.ButStart && Game->Input->Buttons.ButStart))
 			{
-				Game->Audio->PlaySound(Game->SfxBack, 0);
+				Game->Audio->PlaySnd(Game->SfxBack, 0);
 
 				CurrentMainMenu = -1;
 			}
 			break;
 		}
-		case MMHighScores:
-		{
-			Text = "High Scores";
-			Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 60, Text, Text.length(), 485, 110, 0, {255, 255, 255, 255});
 
-			Text = "Retro Carousel Total highscore: " + to_string(Game->RetroCarouselHighScore);
+		case MMOnlineHighScores:
+		{
+			if ((!Game->Input->PrevButtons.ButDown && Game->Input->Buttons.ButDown) ||
+				(!Game->Input->PrevButtons.ButDown2 && Game->Input->Buttons.ButDown2) ||
+				(!Game->Input->PrevButtons.ButDpadDown && Game->Input->Buttons.ButDpadDown))
+			{
+				Game->Audio->PlaySnd(Game->SfxSelect, 0);
+				if(OnlineScoreStart < OnlineScoreMaxHighScores - OnlineScoreMaxHighScoresPerPage)
+					OnlineScoreStart+=OnlineScoreMaxHighScoresPerPage;
+				
+			}
+
+			if ((!Game->Input->PrevButtons.ButUp && Game->Input->Buttons.ButUp) ||
+				(!Game->Input->PrevButtons.ButUp2 && Game->Input->Buttons.ButUp2) ||
+				(!Game->Input->PrevButtons.ButDpadUp && Game->Input->Buttons.ButDpadUp))
+			{
+				Game->Audio->PlaySnd(Game->SfxSelect, 0);
+				if(OnlineScoreStart > 0)
+					OnlineScoreStart-=OnlineScoreMaxHighScoresPerPage;
+				
+			}
+
+			if ((!Game->Input->PrevButtons.ButLeft && Game->Input->Buttons.ButLeft) ||
+				(!Game->Input->PrevButtons.ButLeft2 && Game->Input->Buttons.ButLeft2) ||
+				(!Game->Input->PrevButtons.ButDpadLeft && Game->Input->Buttons.ButDpadLeft))
+			{
+				Game->Audio->PlaySnd(Game->SfxSelect, 0);
+				if(OnlineScoreGame == Games)
+				{
+					OnlineScoreGame = Games-1;
+					OnlineScoreMode = Modes-1;
+				}
+				else
+				{
+					OnlineScoreMode--;
+					if(OnlineScoreMode == -1)
+					{
+						OnlineScoreMode = Modes-1;
+						OnlineScoreGame--;
+						if(OnlineScoreGame == -1)
+						{
+							OnlineScoreGame = Games;
+						}
+					}
+				}
+				RequestScoresOnline(Game, OnlineScoreGame, OnlineScoreMode);
+			}
+
+			if ((!Game->Input->PrevButtons.ButRight && Game->Input->Buttons.ButRight) ||
+				(!Game->Input->PrevButtons.ButRight2 && Game->Input->Buttons.ButRight2) ||
+				(!Game->Input->PrevButtons.ButDpadRight && Game->Input->Buttons.ButDpadRight))
+			{
+				Game->Audio->PlaySnd(Game->SfxSelect, 0);
+				if(OnlineScoreGame == Games)
+				{
+					OnlineScoreGame = 0;
+					OnlineScoreMode = 0;
+				}
+				else
+				{
+					OnlineScoreMode++;
+					if(OnlineScoreMode == Modes)
+					{
+						OnlineScoreMode = 0;
+						OnlineScoreGame++;
+					}
+				}
+				RequestScoresOnline(Game, OnlineScoreGame, OnlineScoreMode);
+			}
+
+			if ((!Game->Input->PrevButtons.ButBack && Game->Input->Buttons.ButBack) ||
+				(!Game->Input->PrevButtons.ButB && Game->Input->Buttons.ButB))
+			{
+				Game->Audio->PlaySnd(Game->SfxBack, 0);
+				if(OnlineScoreData)
+				{
+					if(!OnlineScoreData->done)
+					{
+						Game->http->CancelRequest(OnlineScoreData);
+					}
+
+					Game->http->DestroyData(&OnlineScoreData);
+					OnlineScoreJson = Json::nullValue;
+				}
+				CurrentMainMenu = -1;
+			}
+
+			if ((!Game->Input->PrevButtons.ButStart && Game->Input->Buttons.ButStart) ||
+				(!Game->Input->PrevButtons.ButA && Game->Input->Buttons.ButA))
+			{
+				if(OnlineScoreGame == Games)
+				{
+					OnlineScoreGame = 0;
+					OnlineScoreMode = 0;
+				}
+				else
+				{
+					OnlineScoreMode++;
+					if(OnlineScoreMode == Modes)
+					{
+						OnlineScoreMode = 0;
+						OnlineScoreGame++;
+					}
+				}
+				RequestScoresOnline(Game, OnlineScoreGame, OnlineScoreMode);
+				Game->Audio->PlaySnd(Game->SfxSelect, 0);
+			}
+			
+			Text = "Online High Scores";
+			int w = Game->Font->TextWidth("Roboto-Regular", 60, Text, Text.length());
+			Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 60, Text, Text.length(), (ScreenWidth>>1) - (w >> 1) , 110, 0, {255, 255, 255, 255});
+			if(OnlineScoreGame == Games)
+				Text = "Retro Carousel - Total Score";
+			else
+				Text = GSGames[OnlineScoreGame].name + " - " + GMModes[OnlineScoreMode].name;
+			w = Game->Font->TextWidth("Roboto-Regular", 30, Text, Text.length());
+			Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 30, Text, Text.length(), (ScreenWidth>>1) - (w >> 1), 190, 0, {255, 255, 255, 255});
+			
+			if(!OnlineScoreData && (CurrentMainMenu == MMOnlineHighScores))
+				RequestScoresOnline(Game, OnlineScoreGame, OnlineScoreMode);
+			if(OnlineScoreData)
+			{
+				if(!OnlineScoreData->done)
+				{
+					Text = "Loading ...";
+					w = Game->Font->TextWidth("Roboto-Regular", 30, Text, Text.length());
+					Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 30, Text, Text.length(), (ScreenWidth>>1) - (w >> 1), (ScreenHeight >> 1) , 0, {255, 255, 255, 255});			
+				}
+				else
+				{
+					if(OnlineScoreData->responsecode == 200)
+					{
+						if(OnlineScoreJson == Json::nullValue)
+						{
+							Json::Value json;
+							std::stringstream(std::string(OnlineScoreData->memory)) >> json;
+							Json::Value tmp;
+							tmp = json.get("games", Json::nullValue);
+							if(tmp != Json::nullValue)
+							{
+							 	if(tmp.size() == 1)
+							 	{
+							 		tmp = tmp[0];
+							 		tmp = tmp.get("scores", Json::nullValue); 
+							 		if(tmp != Json::nullValue)
+							 		{
+							 			OnlineScoreJson = tmp;
+							 		}
+								}
+							}
+						}
+
+						if(OnlineScoreJson != Json::nullValue)
+						{
+							
+							for(int i = OnlineScoreStart; i < std::min(OnlineScoreStart + 10, (int)OnlineScoreJson.size()); i++ )
+							{
+								Text = std::to_string(i+1) + ".";
+								w = Game->Font->TextWidth("Roboto-Regular", 30, Text, Text.length());
+								Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 30, Text, Text.length(), 350, 240 + ((i-OnlineScoreStart) * 35), 0, {255, 255, 255, 255});
+
+							
+								Text = OnlineScoreJson[i]["name"].asString().substr(0,15);
+								w = Game->Font->TextWidth("Roboto-Regular", 30, Text, Text.length());
+								Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 30, Text, Text.length(), 420, 240 + ((i-OnlineScoreStart) * 35), 0, {255, 255, 255, 255});
+
+								Text = OnlineScoreJson[i]["score"].asString();
+								w = Game->Font->TextWidth("Roboto-Regular", 30, Text, Text.length());
+								Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 30, Text, Text.length(), 1000-w, 240 + ((i-OnlineScoreStart) * 35), 0, {255, 255, 255, 255});
+							}
+						}
+						else
+						{
+							Text = "Failed Receiving Scores";
+							w = Game->Font->TextWidth("Roboto-Regular", 30, Text, Text.length());
+							Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 30, Text, Text.length(), (ScreenWidth>>1) - (w >> 1), (ScreenHeight >> 1) , 0, {255, 255, 255, 255});								
+						}
+					}
+					else
+					{
+						Text = "Failed Receiving Scores";
+						w = Game->Font->TextWidth("Roboto-Regular", 30, Text, Text.length());
+						Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 30, Text, Text.length(), (ScreenWidth>>1) - (w >> 1), (ScreenHeight >> 1) , 0, {255, 255, 255, 255});								
+					}
+				}
+			}
+			break;
+		}
+
+		case MMLocalHighScores:
+		{
+			Text = "Local High Scores";
+			Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 60, Text, Text.length(), 465, 110, 0, {255, 255, 255, 255});
+
+			Text = "Retro Carousel Total highscore: " + std::to_string(Game->RetroCarouselHighScore);
 			Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 20, Text, Text.length(), 300, 195, 0, {255, 255, 255, 255});
 
 			Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 30, GSGames[Game->Game].name, GSGames[Game->Game].name.length(), 300, 240, 0, {255, 255, 255, 255});
@@ -388,7 +605,7 @@ void TitleScreen(CGame *Game)
 
 			for(int mode = 0; mode < Modes; mode++)
 			{
-				Text = GMModes[mode].name + ": " + to_string(Game->HighScores[Game->Game][mode]);
+				Text = GMModes[mode].name + ": " + std::to_string(Game->HighScores[Game->Game][mode]);
 				Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 20, Text, Text.length(), 300, 470 + mode * 25, 0, {255, 255, 255, 255});
 			}
 
@@ -398,7 +615,7 @@ void TitleScreen(CGame *Game)
 			 if ((!Game->Input->PrevButtons.ButBack && Game->Input->Buttons.ButBack) ||
 				(!Game->Input->PrevButtons.ButB && Game->Input->Buttons.ButB))
 			 {
-				Game->Audio->PlaySound(Game->SfxBack, 0);
+				Game->Audio->PlaySnd(Game->SfxBack, 0);
 
 				CurrentMainMenu = -1;
 			 }
@@ -409,7 +626,7 @@ void TitleScreen(CGame *Game)
 				(!Game->Input->PrevButtons.ButDpadRight && Game->Input->Buttons.ButDpadRight) ||
 				(!Game->Input->PrevButtons.ButA && Game->Input->Buttons.ButA))
 			{
-				Game->Audio->PlaySound(Game->SfxSelect, 0);
+				Game->Audio->PlaySnd(Game->SfxSelect, 0);
 
 				Game->Game += 1;
 				if (Game->Game == Games)
@@ -420,7 +637,7 @@ void TitleScreen(CGame *Game)
 				 (!Game->Input->PrevButtons.ButLeft2 && Game->Input->Buttons.ButLeft2) ||
 				 (!Game->Input->PrevButtons.ButDpadLeft && Game->Input->Buttons.ButDpadLeft))
 			 {
-				Game->Audio->PlaySound(Game->SfxSelect, 0);
+				Game->Audio->PlaySnd(Game->SfxSelect, 0);
 
 				Game->Game -= 1;
 				if (Game->Game == -1)
@@ -444,7 +661,7 @@ void TitleScreen(CGame *Game)
 			SDL_Rect Src = {0, 0, ScreenWidth, ScreenHeight};
 			SDL_RenderCopy(Game->Renderer, Game->GameScreenShots[Game->Game], &Src, &Dst);
 
-			Text = GMModes[Game->GameMode].name + " High Score: " + to_string(Game->HighScores[Game->Game][Game->GameMode]);
+			Text = GMModes[Game->GameMode].name + " High Score: " + std::to_string(Game->HighScores[Game->Game][Game->GameMode]);
 			Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 20, Text, Text.length(), 300, 410, 0, {255, 255, 255, 255});
 
 			Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 20, GSGames[Game->Game].description, GSGames[Game->Game].description.length(), 300, 440, 2, {255, 255, 255, 255});
@@ -455,14 +672,14 @@ void TitleScreen(CGame *Game)
 			if ((!Game->Input->PrevButtons.ButBack && Game->Input->Buttons.ButBack) ||
 				(!Game->Input->PrevButtons.ButB && Game->Input->Buttons.ButB))
 			{
-				Game->Audio->PlaySound(Game->SfxBack, 0);
+				Game->Audio->PlaySnd(Game->SfxBack, 0);
 				CurrentMainMenu = MMSelectGameMode;
 			}
 
 			if ((!Game->Input->PrevButtons.ButStart && Game->Input->Buttons.ButStart) ||
 				(!Game->Input->PrevButtons.ButA && Game->Input->Buttons.ButA))
 			{
-				Game->Audio->PlaySound(Game->SfxConfirm, 0);
+				Game->Audio->PlaySnd(Game->SfxConfirm, 0);
 
 				Game->GameState = gamestate;
 				Game->ResetScores();
@@ -474,7 +691,7 @@ void TitleScreen(CGame *Game)
 				(!Game->Input->PrevButtons.ButLeft2 && Game->Input->Buttons.ButLeft2) ||
 				(!Game->Input->PrevButtons.ButDpadLeft && Game->Input->Buttons.ButDpadLeft))
 			{
-				Game->Audio->PlaySound(Game->SfxSelect, 0);
+				Game->Audio->PlaySnd(Game->SfxSelect, 0);
 
 				Game->Game -= 1;
 				if (Game->Game == -1)
@@ -484,7 +701,7 @@ void TitleScreen(CGame *Game)
 				(!Game->Input->PrevButtons.ButRight2 && Game->Input->Buttons.ButRight2) ||
 				(!Game->Input->PrevButtons.ButDpadRight && Game->Input->Buttons.ButDpadRight))
 			{
-				Game->Audio->PlaySound(Game->SfxSelect, 0);
+				Game->Audio->PlaySnd(Game->SfxSelect, 0);
 
 				Game->Game += 1;
 				if (Game->Game == Games)
@@ -494,7 +711,7 @@ void TitleScreen(CGame *Game)
 		}
 		case MMSelectGameMode:
 		{
-			string Text = "Select Game Mode";
+			std::string Text = "Select Game Mode";
 			Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 60, Text, Text.length(), 385, 110, 0, {255, 255, 255, 255});
 
 			int ModeIterator;
@@ -518,7 +735,7 @@ void TitleScreen(CGame *Game)
 				(!Game->Input->PrevButtons.ButDown2 && Game->Input->Buttons.ButDown2) ||
 				(!Game->Input->PrevButtons.ButDpadDown && Game->Input->Buttons.ButDpadDown))
 			{
-				Game->Audio->PlaySound(Game->SfxSelect, 0);
+				Game->Audio->PlaySnd(Game->SfxSelect, 0);
 				Game->GameMode += 1;
 				if (Game->GameMode == Modes)
 					Game->GameMode = 0;
@@ -528,7 +745,7 @@ void TitleScreen(CGame *Game)
 				(!Game->Input->PrevButtons.ButUp2 && Game->Input->Buttons.ButUp2) ||
 				(!Game->Input->PrevButtons.ButDpadUp && Game->Input->Buttons.ButDpadUp))
 			{
-				Game->Audio->PlaySound(Game->SfxSelect, 0);
+				Game->Audio->PlaySnd(Game->SfxSelect, 0);
 
 				Game->GameMode -= 1;
 				if (Game->GameMode == -1)
@@ -538,14 +755,14 @@ void TitleScreen(CGame *Game)
 			if ((!Game->Input->PrevButtons.ButB && Game->Input->Buttons.ButB) ||
 				(!Game->Input->PrevButtons.ButBack && Game->Input->Buttons.ButBack))
 			{
-				Game->Audio->PlaySound(Game->SfxBack, 0);
+				Game->Audio->PlaySnd(Game->SfxBack, 0);
 				CurrentMainMenu = -1;
 			}
 
 			if ((!Game->Input->PrevButtons.ButStart && Game->Input->Buttons.ButStart) ||
 				(!Game->Input->PrevButtons.ButA && Game->Input->Buttons.ButA))
 			{
-				Game->Audio->PlaySound(Game->SfxConfirm, 0);
+				Game->Audio->PlaySnd(Game->SfxConfirm, 0);
 
 				if (Game->GameMode == GMRetroCarousel)
 				{
@@ -563,7 +780,7 @@ void TitleScreen(CGame *Game)
 		{
 			SelMenu = MMMainMenus[SelectedMenu].menu;
 
-			string Text = "Retro Time";
+			std::string Text = "Retro Time";
 			Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 60, Text, Text.length(), 485, 110, 0, {255, 255, 255, 255});
 
 			int MenuIterator;
@@ -582,7 +799,7 @@ void TitleScreen(CGame *Game)
 				(!Game->Input->PrevButtons.ButDown2 && Game->Input->Buttons.ButDown2) ||
 				(!Game->Input->PrevButtons.ButDpadDown && Game->Input->Buttons.ButDpadDown))
 			{
-				Game->Audio->PlaySound(Game->SfxSelect, 0);
+				Game->Audio->PlaySnd(Game->SfxSelect, 0);
 				SelectedMenu += 1;
 				if (SelectedMenu == MainMenus)
 					SelectedMenu = 0;
@@ -593,7 +810,7 @@ void TitleScreen(CGame *Game)
 				(!Game->Input->PrevButtons.ButDpadUp && Game->Input->Buttons.ButDpadUp))
 
 			{
-				Game->Audio->PlaySound(Game->SfxSelect, 0);
+				Game->Audio->PlaySnd(Game->SfxSelect, 0);
 
 				SelectedMenu -= 1;
 				if(SelectedMenu == -1)
@@ -604,12 +821,13 @@ void TitleScreen(CGame *Game)
 				(!Game->Input->PrevButtons.ButA && Game->Input->Buttons.ButA))
 			{
 				CurrentMainMenu = SelMenu;
-				Game->Audio->PlaySound(Game->SfxConfirm, 0);
+				Game->Audio->PlaySnd(Game->SfxConfirm, 0);
 				if (SelMenu == MMQuit)
 					Game->GameState = GSQuit;
 
 				if (SelMenu == MMStart)
 					CurrentMainMenu = MMSelectGameMode;
+				
 			}
 		}
 	}

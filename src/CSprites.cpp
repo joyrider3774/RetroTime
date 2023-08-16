@@ -1,6 +1,5 @@
 #include <SDL.h>
 #include <SDL2_gfxPrimitives.h>
-#include <stdio.h>
 #include <iostream>
 #include <string>
 #include <cmath>
@@ -309,12 +308,12 @@ void CSprites::SetSpriteDepth(CSprite* Spr, int depth)
 
 int CSprites::GetSpriteAnimFrameCount(CSprite* Spr)
 {
-	return max(Spr->animEndTile, Spr->animStartTile) - min(Spr->animEndTile, Spr->animStartTile) + 1;
+	return std::max(Spr->animEndTile, Spr->animStartTile) - std::min(Spr->animEndTile, Spr->animStartTile) + 1;
 }
 
 int CSprites::GetSpriteAnimFrame(CSprite* Spr)
 {
-	return Spr->animTile - min(Spr->animEndTile, Spr->animStartTile);
+	return Spr->animTile - std::min(Spr->animEndTile, Spr->animStartTile);
 }
 
 SDL_Point CSprites::TileSize(CSprite* Spr)
@@ -327,7 +326,7 @@ bool CSprites::DetectRectCircleCollsion(CSprite* SprRect, CSprite* SprCircle)
 {
 	Vec2F center = {SprCircle->x + SprCircle->collisionxoffset /2.0f, SprCircle->y + SprCircle->collisionyoffset / 2.0f};
 	// calculate AABB info (center, half-extents)
-	Vec2F aabb_half_extents = {abs(SprRect->collisionWidth) * abs(SprRect->xscale) / 2.0f, abs(SprRect->collisionHeight) * abs(SprRect->yscale) / 2.0f};
+	Vec2F aabb_half_extents = {fabsf(SprRect->collisionWidth) * fabsf(SprRect->xscale) / 2.0f, fabsf(SprRect->collisionHeight) * fabsf(SprRect->yscale) / 2.0f};
 	Vec2F aabb_center = {SprRect->x + SprRect->collisionxoffset / 2.0f, SprRect->y + SprRect->collisionyoffset / 2.0f};
 
 	// get difference vector between both centers
@@ -338,20 +337,20 @@ bool CSprites::DetectRectCircleCollsion(CSprite* SprRect, CSprite* SprCircle)
 	// retrieve vector between center circle and closest point AABB and check if length <= radius
 	difference = closest - center;
 
-	return length(difference) < (abs(SprCircle->collisionWidth) * abs(SprCircle->xscale) / 2.0f);
+	return length(difference) < (fabsf(SprCircle->collisionWidth) * fabsf(SprCircle->xscale) / 2.0f);
 }
 
 bool CSprites::DetectRectRectCollsion(CSprite* Spr, CSprite* SprOther)
 {
-	float widthA = (abs(Spr->collisionWidth) * abs(Spr->xscale));
-	float heightA = (abs(Spr->collisionHeight) * abs(Spr->yscale));
-	float minAx = Spr->x + Spr->collisionxoffset - (abs(Spr->collisionWidth) * abs(Spr->xscale) / 2);
-	float minAy = Spr->y + Spr->collisionyoffset - (abs(Spr->collisionHeight) * abs(Spr->yscale) / 2);
+	float widthA = (fabsf(Spr->collisionWidth) * fabsf(Spr->xscale));
+	float heightA = (fabsf(Spr->collisionHeight) * fabsf(Spr->yscale));
+	float minAx = Spr->x + Spr->collisionxoffset - (fabsf(Spr->collisionWidth) * fabsf(Spr->xscale) / 2);
+	float minAy = Spr->y + Spr->collisionyoffset - (fabsf(Spr->collisionHeight) * fabsf(Spr->yscale) / 2);
 
-	float widthB = (abs(SprOther->collisionWidth) * abs(SprOther->xscale));
-	float heightB = (abs(SprOther->collisionHeight) * abs(SprOther->yscale));
-	float minBx = SprOther->x + SprOther->collisionxoffset - (abs(SprOther->collisionWidth) * abs(SprOther->xscale) / 2);
-	float minBy = SprOther->y + SprOther->collisionyoffset - (abs(SprOther->collisionHeight) * abs(SprOther->yscale) / 2);
+	float widthB = (fabsf(SprOther->collisionWidth) * fabsf(SprOther->xscale));
+	float heightB = (fabsf(SprOther->collisionHeight) * fabsf(SprOther->yscale));
+	float minBx = SprOther->x + SprOther->collisionxoffset - (fabsf(SprOther->collisionWidth) * fabsf(SprOther->xscale) / 2);
+	float minBy = SprOther->y + SprOther->collisionyoffset - (fabsf(SprOther->collisionHeight) * fabsf(SprOther->yscale) / 2);
 
 	bool xOverlap = ((minAx >= minBx) && (minAx <= minBx + widthB)) ||
 					((minBx >= minAx) && (minBx <= minAx + widthA));

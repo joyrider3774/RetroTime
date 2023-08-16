@@ -8,8 +8,6 @@
 #include "../Common.h"
 #include "../Vec2F.h"
 
-using namespace std;
-
 CGameBlockStacker::CGameBlockStacker(CGame* aGame, bool aScreenshotMode): CGameBase(aGame, GSTetris, true, aScreenshotMode)
 {
 	Game = aGame;
@@ -88,7 +86,7 @@ void CGameBlockStacker::updateplayer()
 	{
 		if (rotateblock && piecefits(currpiece, rotation +1, plrx, plry))
 		{
-			Game->Audio->PlaySound(SfxRotate, 0);
+			Game->Audio->PlaySnd(SfxRotate, 0);
 			rotation += 1;
 			rotateblock = false;
 		}
@@ -178,7 +176,7 @@ void CGameBlockStacker::updateplayfield(bool force)
 			else
 			{
 				if(!force)
-					Game->Audio->PlaySound(SfxDrop, 0);
+					Game->Audio->PlaySnd(SfxDrop, 0);
 
 
 				//lock it in place
@@ -217,7 +215,7 @@ void CGameBlockStacker::updateplayfield(bool force)
 					if(!ScreenshotMode)
 						Game->AddToScore((1 << numlines) * 20);
 					lineclear = 30;
-					Game->Audio->PlaySound(SfxLineClear, 0);
+					Game->Audio->PlaySnd(SfxLineClear, 0);
 				}
 
 				plrx = numcols / 2 -2;
@@ -227,7 +225,7 @@ void CGameBlockStacker::updateplayfield(bool force)
 
 				if (!piecefits(currpiece, rotation, plrx, plry))
 				{
-					Game->Audio->PlaySound(SfxDie, 0);
+					Game->Audio->PlaySnd(SfxDie, 0);
 					if(Game->GameMode == GMGame)
 					{
 						if(!ScreenshotMode)
@@ -329,7 +327,7 @@ void CGameBlockStacker::init()
 	{
 		LoadSound();
 		Game->CurrentGameMusicID = MusMusic;
-		Game->Audio->PlayMusic(MusMusic, -1);
+		Game->Audio->PlayMus(MusMusic, -1);
 		HealthPoints = 1;
 	}
 	currpiece = rand() % 7;
@@ -348,22 +346,22 @@ void CGameBlockStacker::init()
 
 void CGameBlockStacker::LoadGraphics()
 {
-	background = Game->Image->LoadImage(Game->Renderer, "blockstacker/background.png");
+	background = Game->Image->LoadImg(Game->Renderer, "blockstacker/background.png");
 	backgroundtz = Game->Image->ImageSize(background);
 }
 
 void CGameBlockStacker::UnloadGraphics()
 {
-	Game->Image->UnLoadImage(background);
+	Game->Image->UnLoadImg(background);
 }
 
 void CGameBlockStacker::LoadSound()
 {
-	SfxLineClear = Game->Audio->LoadSound("blockstacker/lineclear.ogg");
-	SfxDrop = Game->Audio->LoadSound("blockstacker/drop.wav");
-	SfxRotate = Game->Audio->LoadSound("blockstacker/rotate.wav");
+	SfxLineClear = Game->Audio->LoadSnd("blockstacker/lineclear.ogg");
+	SfxDrop = Game->Audio->LoadSnd("blockstacker/drop.wav");
+	SfxRotate = Game->Audio->LoadSnd("blockstacker/rotate.wav");
 	MusMusic = Game->Audio->LoadMusic("blockstacker/music.ogg");
-	SfxDie = Game->Audio->LoadSound("common/die.wav");
+	SfxDie = Game->Audio->LoadSnd("common/die.wav");
 }
 
 void CGameBlockStacker::UnLoadSound()

@@ -1,10 +1,8 @@
 #pragma once
 
 #include <SDL.h>
-#include <string.h>
+#include <string>
 #include <sstream>
-
-using namespace std;
 
 constexpr bool debugInfo = false;
 constexpr bool debugShowCollisionShapes = false;
@@ -17,6 +15,8 @@ constexpr int MaxAlphaTime = 750;
 
 constexpr int ScreenWidth=1280;
 constexpr int ScreenHeight=720;
+constexpr int WindowWidth=400;
+constexpr int WindowHeight=240;
 
 constexpr Uint32 PixelFormat = SDL_PIXELFORMAT_ARGB8888;
 
@@ -62,9 +62,10 @@ constexpr int SGGame = 2;
 constexpr int SGTimeUp = 3;
 constexpr int SGFrame = 4;
 constexpr int SGCalcScore = 5;
-constexpr int SGFadeIn = 6;
-constexpr int SGPauseMenu = 7;
-constexpr int SGGameHelp = 8;
+constexpr int SGSubmitScore = 6;
+constexpr int SGFadeIn = 7;
+constexpr int SGPauseMenu = 8;
+constexpr int SGGameHelp = 9;
 
 //GameModes
 constexpr int Modes = 3;
@@ -92,16 +93,17 @@ constexpr int PauseMenus = 10;
 
 //main menus
 constexpr int MMStart = 0;
-constexpr int MMHighScores = 1;
-constexpr int MMHelp = 2;
-constexpr int MMQuit = 3;
-constexpr int MMOptions = 4;
-constexpr int MMCredits = 5;
+constexpr int MMLocalHighScores = 1;
+constexpr int MMOnlineHighScores = 2;
+constexpr int MMHelp = 3;
+constexpr int MMQuit = 4;
+constexpr int MMOptions = 5;
+constexpr int MMCredits = 6;
 //Sub Main Menus
-constexpr int MMSelectGameMode = 7;
-constexpr int MMSelectGame = 8;
-//6 because only fist 6 are real main menu
-constexpr int MainMenus = 6;
+constexpr int MMSelectGameMode = 8;
+constexpr int MMSelectGame = 9;
+//7 because only fist 7 are real main menu
+constexpr int MainMenus = 7;
 
 //options menu
 constexpr int OMMusicVol = 0;
@@ -120,20 +122,20 @@ constexpr int Crts = 6;
 
 struct ModeDesc {
 	int mode;
-	string name;
-	string description;
+	std::string name;
+	std::string description;
 };
 
 struct GameDesc {
 	int state;
-	string name;
-	string description;
-	string shortdescription;
+	std::string name;
+	std::string description;
+	std::string shortdescription;
 };
 
 struct PauseMenuDesc {
 	int menu;
-	string name;
+	std::string name;
 };
 
 struct GPGamePauseMenusDesc {
@@ -143,17 +145,17 @@ struct GPGamePauseMenusDesc {
 
 struct MainMenusDesc {
 	int menu;
-	string name;
+	std::string name;
 };
 
 struct OptionMenusDesc {
 	int menu;
-	string name;
+	std::string name;
 };
 
 struct CrtOptDesc {
 	int crt;
-	string name;
+	std::string name;
 };
 
 extern GameDesc GSGames[Games];
@@ -164,9 +166,15 @@ extern GPGamePauseMenusDesc GPGamePauseMenus[Games];
 extern PauseMenuDesc PMPauseMenus[PauseMenus];
 extern OptionMenusDesc OMOptionMenus[OptionMenus];
 extern CrtOptDesc CrtOptions[Crts];
+extern int LeaderBoardIds[Games+1][Modes];
 
 extern Uint32 ColorToUint(int R, int G, int B);
 extern SDL_Colour UintToColor(Uint32 colour);
+
+extern void ditherTarget(SDL_Renderer* aRenderer, SDL_Texture *Tex, SDL_Rect* Rect,uint8_t bayerver, uint8_t whiteThreasHold);
+extern void ditherSurface(SDL_Surface* Surface, SDL_Rect* Rect, uint8_t bayerver, uint8_t whiteThreasHold);
+extern Uint32 GetPixel(SDL_Surface *surface, int x, int y);
+extern void PutPixel(SDL_Surface *surface, int x, int y, Uint32 pixel);
 
 //https://stackoverflow.com/questions/16605967/set-precision-of-stdto-string-when-converting-floating-point-values
 template <typename T>

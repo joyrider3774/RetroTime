@@ -11,8 +11,6 @@
 #include "../Common.h"
 #include "../Vec2F.h"
 
-using namespace std;
-
 class CGamePang: public CGameBase {
 
 private:

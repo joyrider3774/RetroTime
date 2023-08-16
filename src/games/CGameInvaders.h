@@ -12,8 +12,6 @@
 #include "../CTween.h"
 #include "../Vec2F.h"
 
-using namespace std;
-
 struct senemyinfo
 {
 	int mostleft;

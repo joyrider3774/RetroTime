@@ -6,12 +6,11 @@
 #include "CFont.h"
 #include "Platform.h"
 
-using namespace std;
 
-CFont::CFont(string AssetsPath, bool DebugInfo)
+CFont::CFont(std::string AssetsPath, bool ADebugInfo)
 {
 	DataPath = AssetsPath;
-	DebugInfo = DebugInfo;
+	DebugInfo = ADebugInfo;
 	GlobalFontEnabled = (TTF_Init() == 0);
 	if (GlobalFontEnabled)
 		SDL_Log("Succesfully initialized TTF\n");
@@ -23,34 +22,34 @@ CFont::~CFont()
 {
 	if(GlobalFontEnabled)
 	{
-		map<std::string, TTF_Font*>::iterator i;
+		std::map<std::string, TTF_Font*>::iterator i;
 		for (i = FontCache.begin(); i != FontCache.end(); i++)
 			TTF_CloseFont(i->second);
 		TTF_Quit();
 	}
 }
 
-int CFont::TextWidth(string Font, int FontSize, string Tekst, size_t NrOfChars)
+int CFont::TextWidth(std::string Font, int FontSize, std::string Tekst, size_t NrOfChars)
 {
 	SDL_Point Tmp = TextSize(Font, FontSize, Tekst, NrOfChars, 0);
 	return Tmp.x;
 }
 
-SDL_Point CFont::TextSize(string Font, int FontSize, string Tekst, size_t NrOfChars, int YSpacing)
+SDL_Point CFont::TextSize(std::string Font, int FontSize, std::string Tekst, size_t NrOfChars, int YSpacing)
 {
 	SDL_Point Result = {0,0};
 	if(!GlobalFontEnabled || (NrOfChars == 0))
 		return Result;
 
 	TTF_Font *FontIn;
-	map<std::string, TTF_Font*>::iterator i;
-	string FontNameSize = string(Font) + to_string(FontSize);
+	std::map<std::string, TTF_Font*>::iterator i;
+	std::string FontNameSize = std::string(Font) + std::to_string(FontSize);
 	i = FontCache.find(FontNameSize);
 	if (i != FontCache.end())
 		FontIn = i->second;
 	else
 	{
-		string Filename = DataPath + "fonts/" + Font + ".ttf";
+		std::string Filename = DataPath + "fonts/" + Font + ".ttf";
 		FontIn = TTF_OpenFont(Filename.c_str(), FontSize);
 		if (!FontIn)
 		{
@@ -96,19 +95,19 @@ SDL_Point CFont::TextSize(string Font, int FontSize, string Tekst, size_t NrOfCh
 	return Result;
 }
 
-void CFont::WriteText(SDL_Renderer *Renderer, string Font, int FontSize, string Tekst, size_t NrOfChars, int X, int Y, int YSpacing, SDL_Color ColorIn)
+void CFont::WriteText(SDL_Renderer *Renderer, std::string Font, int FontSize, std::string Tekst, size_t NrOfChars, int X, int Y, int YSpacing, SDL_Color ColorIn)
 {
 	if(!GlobalFontEnabled || (NrOfChars == 0))
 		return;
 	TTF_Font *FontIn;
-	map<std::string, TTF_Font*>::iterator i;
-	string FontNameSize = string(Font) + to_string(FontSize);
+	std::map<std::string, TTF_Font*>::iterator i;
+	std::string FontNameSize = std::string(Font) + std::to_string(FontSize);
 	i = FontCache.find(FontNameSize);
 	if (i != FontCache.end())
 		FontIn = i->second;
 	else
 	{
-		string Filename = DataPath + "fonts/" + Font + ".ttf";
+		std::string Filename = DataPath + "fonts/" + Font + ".ttf";
 		FontIn = TTF_OpenFont(Filename.c_str(), FontSize);
 		if (!FontIn)
 		{

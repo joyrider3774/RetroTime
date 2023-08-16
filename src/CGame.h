@@ -6,15 +6,13 @@
 #include <iostream>
 #include <string>
 #include "Platform.h"
+#include "Common.h"
 #include "CAudio.h"
 #include "CInput.h"
 #include "CFont.h"
 #include "CImage.h"
 #include "CSprites.h"
-#include "Common.h"
-
-
-using namespace std;
+#include "CHttp.h"
 
 class CGameRamIt;
 class CGameSnake;
@@ -24,14 +22,13 @@ class CGameBase;
 class CGame {
 
 private:
-	string DataPath;
+	std::string DataPath;
 
 	Uint8 Alpha = 0;
 	Uint32 AlphaTimer;
 	Uint32 TimerTicks;
 	Uint64 Score;
 	int NextSubStateCounter, NextSubState, NextSubStateTimeAdd;
-
 	//for main (menu) background drawing
 	int menubackground, menubackgroundcounter, menubackgroundx, menubackgroundy, menubackgrounddx, menubackgrounddy;
 	int pinc;
@@ -45,6 +42,7 @@ private:
 	void CreateCrt(int type);
 	void CreateActiveGame();
 public:
+	CHttp *http;
 	SDL_Window *SdlWindow;
 	bool ShowFPS = false;
 	CGameBase *ActiveGame;
@@ -60,6 +58,7 @@ public:
 	long long int HighScores[Games][Modes];
 	long long int Scores[Games][Modes];
 	int GameState, SubGameState, GameMode, Game, Crt;
+	char HighScoreName[16];
 	float SubStateCounter;
 	int MusMenu;
 	int SfxConfirm, SfxBack, SfxSelect, SfxScore, SfxOne, SfxTwo, SfxThree, SfxTimeOver, SfxReadyGo, SfxOneMinute;
@@ -89,7 +88,7 @@ public:
 	void ResetHighScores();
 	void AddToScore(long long int Value);
 	void DrawTitleBackground(bool k);
-	string GetFilePath(string InputFile);
+	std::string GetFilePath(std::string InputFile);
 	void DrawCrt();
 	void Run(int argc, char **argv);
 	void ReCreateCrt();

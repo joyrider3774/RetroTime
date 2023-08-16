@@ -8,8 +8,6 @@
 #include "../CTween.h"
 #include "../Vec2F.h"
 
-using namespace std;
-
 CGameBreakOut::CGameBreakOut(CGame* aGame, bool aScreenshotMode): CGameBase(aGame, GSBreakout, false, aScreenshotMode)
 {
 	Game = aGame;
@@ -194,7 +192,7 @@ void CGameBreakOut::updateblocks()
 	{
 		Game->AddToScore(500);
 		createblocks(false);
-		Game->Audio->PlaySound(SfxSucces, 0);
+		Game->Audio->PlaySnd(SfxSucces, 0);
 	}
 }
 
@@ -333,7 +331,7 @@ void CGameBreakOut::updateball()
 					ball.freeze = 45;
 					HealthPoints -= 1;
 					Game->AddToScore(-100);
-					Game->Audio->PlaySound(SfxDie, 0);
+					Game->Audio->PlaySnd(SfxDie, 0);
 				}
 
 				for (int k = 0; k < numblocks; k++)
@@ -346,15 +344,15 @@ void CGameBreakOut::updateball()
 							//calculates but seems to work more or less ok
 							float dx = (ball.pos.x - blocks[k].pos.x) / blocks[k].tz.x;
 							float dy = (ball.pos.y - blocks[k].pos.y) / blocks[k].tz.y;
-							if (abs(dx) > abs(dy))
-								ball.vel.x = abs(ball.vel.x) * dx / abs(dx);
+							if (fabsf(dx) > fabsf(dy))
+								ball.vel.x = fabsf(ball.vel.x) * dx / fabsf(dx);
 							else
-								ball.vel.y = abs(ball.vel.y) * dy / abs(dy);
+								ball.vel.y = fabsf(ball.vel.y) * dy / fabsf(dy);
 
 							Game->AddToScore(20);
 							//inc ballspeed
 							curballspeed += ballspeedinc;
-							Game->Audio->PlaySound(SfxBrick, 0);
+							Game->Audio->PlaySnd(SfxBrick, 0);
 							blocks[k].state = blockstatedeath;
 							Game->Sprites->SetSpriteDepth(blocks[k].spr, 5);
 							tweens[k][tweenblockdeath] = createtween(tweenblockdeath, 1, funcsmoothstep, 1, true, DesiredFps);
@@ -442,7 +440,7 @@ void CGameBreakOut::updateball()
 							Game->Sprites->SetSpriteLocation(ball.spr, ball.pos);
 						}
 
-						Game->Audio->PlaySound(SfxBat, 0);
+						Game->Audio->PlaySnd(SfxBat, 0);
 					}
 				}
 			}
@@ -475,16 +473,16 @@ void CGameBreakOut::init()
 	{
 		LoadSound();
 		Game->CurrentGameMusicID = MusMusic;
-		Game->Audio->PlayMusic(MusMusic, -1);
+		Game->Audio->PlayMus(MusMusic, -1);
 	}
 }
 
 void CGameBreakOut::LoadSound()
 {
-	SfxDie = Game->Audio->LoadSound("common/die.wav");
-	SfxSucces = Game->Audio->LoadSound("common/succes.wav");
-	SfxBat = Game->Audio->LoadSound("breakout/bat.wav");
-	SfxBrick = Game->Audio->LoadSound("breakout/brick.wav");
+	SfxDie = Game->Audio->LoadSnd("common/die.wav");
+	SfxSucces = Game->Audio->LoadSnd("common/succes.wav");
+	SfxBat = Game->Audio->LoadSnd("breakout/bat.wav");
+	SfxBrick = Game->Audio->LoadSnd("breakout/brick.wav");
 	MusMusic = Game->Audio->LoadMusic("breakout/music.ogg");
 }
 
@@ -516,19 +514,19 @@ void CGameBreakOut::deinit()
 
 void CGameBreakOut::LoadGraphics()
 {
-	background = Game->Image->LoadImage(Game->Renderer, "breakout/background.png");
+	background = Game->Image->LoadImg(Game->Renderer, "breakout/background.png");
 	backgroundtz = Game->Image->ImageSize(background);
-	spritesheetblocks = Game->Image->LoadImage(Game->Renderer, "breakout/blocks.png");
-	spritesheetbat = Game->Image->LoadImage(Game->Renderer, "breakout/paddle.png");
-	spritesheetball = Game->Image->LoadImage(Game->Renderer, "breakout/ball.png");
+	spritesheetblocks = Game->Image->LoadImg(Game->Renderer, "breakout/blocks.png");
+	spritesheetbat = Game->Image->LoadImg(Game->Renderer, "breakout/paddle.png");
+	spritesheetball = Game->Image->LoadImg(Game->Renderer, "breakout/ball.png");
 }
 
 void CGameBreakOut::UnloadGraphics()
 {
-	Game->Image->UnLoadImage(background);
-	Game->Image->UnLoadImage(spritesheetblocks);
-	Game->Image->UnLoadImage(spritesheetbat);
-	Game->Image->UnLoadImage(spritesheetball);
+	Game->Image->UnLoadImg(background);
+	Game->Image->UnLoadImg(spritesheetblocks);
+	Game->Image->UnLoadImg(spritesheetbat);
+	Game->Image->UnLoadImg(spritesheetball);
 }
 
 SDL_Texture* CGameBreakOut::screenshot()

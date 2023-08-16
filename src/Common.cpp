@@ -1,8 +1,20 @@
 #include <SDL.h>
-#include <inttypes.h>
-#include <string.h>
-#include <iostream>
+#include <string>
 #include "Common.h"
+
+int LeaderBoardIds[Games+1][Modes] = 
+{
+	{37,38,39}, //invaders
+	{40,18,19}, //breakout
+	{20,25,23}, //Frog
+	{26,22,24}, //snake
+	{34,21,31}, //pang
+	{32,27,41}, //tetris
+	{33,28,35}, //color invasion
+	{29,36,30}, //faster dave
+	{17,17,17}, //retro carousel total score
+	
+};
 
 //Modes
 ModeDesc GMModes[Modes] = {
@@ -160,12 +172,13 @@ GPGamePauseMenusDesc GPGamePauseMenus[Games] = {
 //MainMenus
 MainMenusDesc MMMainMenus[MainMenus] =
 {
-	{MMStart,		"Start Game"},
-	{MMHighScores,	"High Scores"},
-	{MMOptions,		"Options"},
-	{MMHelp,		"Help"},
-	{MMCredits,		"Credits"},
-	{MMQuit,		"Quit"}
+	{MMStart,				"Start Game"},
+	{MMLocalHighScores,		"Local High Scores"},
+	{MMOnlineHighScores,	"Online High Scores"},
+	{MMOptions,				"Options"},
+	{MMHelp,				"Help"},
+	{MMCredits,				"Credits"},
+	{MMQuit,				"Quit"}
 };
 
 //OptionsMenus
@@ -206,4 +219,192 @@ SDL_Color UintToColour(Uint32 colour)
 	tempcol.g = (colour >> 8) & 0xFF;
 	tempcol.b = colour & 0xFF;
 	return tempcol;
+}
+
+void PutPixel(SDL_Surface *surface, int x, int y, Uint32 pixel)
+{
+    int bpp = surface->format->BytesPerPixel;
+    /* Here p is the address to the pixel we want to set */
+    Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch + x * bpp;
+
+    switch(bpp) {
+    case 1:
+        *p = pixel;
+        break;
+
+    case 2:
+        *(Uint16 *)p = pixel;
+        break;
+
+    case 3:
+        if(SDL_BYTEORDER == SDL_BIG_ENDIAN) {
+            p[0] = (pixel >> 16) & 0xff;
+            p[1] = (pixel >> 8) & 0xff;
+            p[2] = pixel & 0xff;
+        } else {
+            p[0] = pixel & 0xff;
+            p[1] = (pixel >> 8) & 0xff;
+            p[2] = (pixel >> 16) & 0xff;
+        }
+        break;
+
+    case 4:
+        *(Uint32 *)p = pixel;
+        break;
+    }
+}
+
+/*
+ * Return the pixel value at (x, y)
+ * NOTE: The surface must be locked before calling this!
+ */
+Uint32 GetPixel(SDL_Surface *surface, int x, int y)
+{
+    int bpp = surface->format->BytesPerPixel;
+    /* Here p is the address to the pixel we want to retrieve */
+    Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch + x * bpp;
+
+    switch(bpp) {
+    case 1:
+        return *p;
+
+    case 2:
+        return *(Uint16 *)p;
+
+    case 3:
+        if(SDL_BYTEORDER == SDL_BIG_ENDIAN)
+            return p[0] << 16 | p[1] << 8 | p[2];
+        else
+            return p[0] | p[1] << 8 | p[2] << 16;
+
+    case 4:
+        return *(Uint32 *)p;
+
+    default:
+        return 0;       /* shouldn't happen, but avoids warnings */
+    }
+}
+
+void ditherSurface(SDL_Surface* Surface, SDL_Rect* Rect, uint8_t bayerver, uint8_t whiteThreasHold)
+{
+
+	static const uint8_t bayer2[2][2] = {
+		{0, 3},
+		{2, 1}
+	};
+
+	static const uint8_t bayer4[4][4] = {
+		{0, 8, 2 ,10},
+		{12, 4, 14, 6},
+		{3, 11, 1, 9},
+		{15, 7, 13, 5}
+	};
+
+	static const uint8_t bayer8[8][8] = {
+		{0, 32, 8, 40 ,2 ,34 ,10 , 42},
+		{48, 16, 56, 24, 50, 18, 58, 26},
+		{12, 44, 4, 36, 14, 46, 6, 38},
+		{60, 28, 52, 20, 62, 30, 54, 22},
+		{3, 35, 11, 43, 1, 33, 9, 41},
+		{51, 19, 59, 27, 49, 17, 57, 25},
+		{15, 47, 7, 39, 13, 45, 5, 37},
+		{63, 31, 55, 23, 61, 29, 53, 21}
+	};
+	int x, y;
+
+
+	SDL_Rect tmp;
+	tmp.x = 0;
+	tmp.y = 0;
+	tmp.w = Surface->w;
+	tmp.h = Surface->h;
+	if(Rect)
+	{
+		tmp.x = Rect->x;
+		tmp.y = Rect->y;
+		tmp.w = Rect->w;
+		tmp.h = Rect->h;
+	}
+	for(y = tmp.y; y < tmp.h; ++y) 
+	{
+		for(x = tmp.x; x < tmp.w; ++x) 
+		{
+			uint32_t pix = GetPixel(Surface, x, y);
+			uint8_t r, g, b, a;
+			SDL_GetRGBA(pix, Surface->format, &r, &g, &b, &a);
+			
+
+			// Convert the pixel value to grayscale i.e. intensity
+			float lum = 0.212671f  *r + 0.715160f  * g + 0.072169f  *b;
+
+			if (bayerver >= 8)
+			{
+				lum = lum + lum* bayer8[y % 8][x % 8] / 64;
+			}
+			else
+			{
+				if (bayerver >= 4)
+				{
+					lum = lum + lum* bayer4[y % 4][x % 4] / 16;
+				}
+				else
+				{
+					lum = lum + lum* bayer2[y % 2][x % 2] / 4;
+				}
+			}
+
+			if(lum >=  whiteThreasHold)
+				lum = 255;
+			else
+				lum = 0;
+
+			// Put the pixel back in the image
+			PutPixel(Surface, x, y, SDL_MapRGBA(Surface->format, lum, lum, lum, a));
+
+		}
+	}
+}
+
+void ditherTarget(SDL_Renderer* aRenderer, SDL_Texture *Tex, SDL_Rect* Rect, uint8_t bayerver, uint8_t whiteThreasHold)
+{
+    SDL_Texture* tmptarget = SDL_GetRenderTarget(aRenderer);
+	SDL_SetRenderTarget(aRenderer, Tex);
+	SDL_Texture* streamingTexture = NULL;
+    int w = ScreenWidth;
+	int h = ScreenHeight;
+	uint32_t f = PixelFormat;
+	if (Tex != NULL)
+		SDL_QueryTexture(Tex, &f, NULL, &w, &h);
+	SDL_Rect tmp;
+	tmp.x = 0;
+	tmp.y = 0;
+	tmp.w = w;
+	tmp.h = h;
+	if(Rect)
+	{
+		tmp.x = Rect->x;
+		tmp.y = Rect->y;
+		tmp.w = Rect->w;
+		tmp.h = Rect->h;
+	}
+
+	//get Streaming Texture from drawTarget
+    streamingTexture = SDL_CreateTexture( aRenderer, f, SDL_TEXTUREACCESS_STREAMING, tmp.w, tmp.h );
+    //SDL_SetTextureBlendMode(streamingTextureDrawTarget, SDL_BLENDMODE_BLEND);
+    void* streamingPixelsDrawTarget;
+    int streamingPitchDrawTarget;
+    SDL_LockTexture(streamingTexture, NULL, &streamingPixelsDrawTarget, &streamingPitchDrawTarget );
+    SDL_RenderReadPixels(aRenderer, &tmp, f, streamingPixelsDrawTarget, streamingPitchDrawTarget);
+    SDL_UnlockTexture(streamingTexture);
+	SDL_Surface *Surface;
+	SDL_LockTextureToSurface(streamingTexture, NULL, &Surface);
+
+	ditherSurface(Surface, NULL, bayerver, whiteThreasHold);
+
+	SDL_UnlockTexture(streamingTexture);
+
+	SDL_SetRenderTarget(aRenderer, Tex);
+	SDL_RenderCopy(aRenderer, streamingTexture, NULL, Rect);
+	SDL_DestroyTexture(streamingTexture);
+	SDL_SetRenderTarget(aRenderer, tmptarget);
 }
