@@ -411,6 +411,15 @@ void SDL_SaveBMPTextureScaled(SDL_Renderer *Renderer, const char *File, SDL_Text
 	SDL_Texture *TmpR = SDL_GetRenderTarget(Renderer);
 	
 	SDL_SetRenderTarget(Renderer, Tmp);
+
+	//clear with transparant color
+	uint8_t r,g,b,a;
+	SDL_GetRenderDrawColor(Renderer, &r,&g,&b,&a);
+	SDL_SetRenderDrawColor(Renderer,0,0,0,0);
+	SDL_RenderClear(Renderer);
+	SDL_SetRenderDrawColor(Renderer, r,g,b,a);
+
+	
 	SDL_Rect Dst;
 	Dst.x = 0;
 	Dst.y = 0;
