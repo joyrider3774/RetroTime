@@ -303,7 +303,7 @@ void CSprites::UpdateImage(SDL_Renderer* renderer, CSprite* Spr)
 		SDL_DestroyTexture(Spr->Img);
 
     // Create a new texture with the same properties as the one we are duplicating
-    Spr->Img = SDL_CreateTexture(renderer, format, SDL_TEXTUREACCESS_TARGET, w, h);
+    Spr->Img = SDL_CreateTexture(renderer, format, SDL_TEXTUREACCESS_TARGET, w* abs(Spr->xscale), h * abs(Spr->yscale));
 
     // Set its blending mode and make it the render target
     SDL_SetTextureBlendMode(Spr->Img, SDL_BLENDMODE_NONE);
