@@ -17,13 +17,13 @@ class CGamePang: public CGameBase {
 
 private:
 	static const int backgroundcopyheight = 30;
-	Vec2F playerscale = {2,2};
-	Vec2F bulletscale = {1,0.8};
-	Vec2F ballscale = {1.5,1.5};
+	Vec2F playerscale = {2*yscale,2*yscale};
+	Vec2F bulletscale = {1*yscale,0.8*yscale};
+	Vec2F ballscale = {1.5*yscale,1.5*yscale};
 
-	static const int enemyspeed = 1;
-	static const int playerspeed = 8;
-	static const int bulletspeed = 10;
+	static constexpr float enemyspeed = 1*yscale;
+	static constexpr float playerspeed = 8*xscale;
+	static constexpr float bulletspeed = 10*yscale;
 
 	static const int playerstateidle = 0;
 	static const int playerstatemoveleft = 2;
@@ -44,17 +44,9 @@ private:
 	int spritesheetplayer;
 	int spritesheetbullet;
 	int spritesheetball;
-	int backgroundgrass;
-	int backgroundcloud;
-	int backgroundtrees;
-	int backgroundtree;
 
 
 	SDL_Point backgroundtz;
-	SDL_Point backgroundgrasstz;
-	SDL_Point backgroundcloudtz;
-	SDL_Point backgroundtreestz;
-	SDL_Point backgroundtreetz;
 	SDL_Point spritesheetballtz;
 
 	int deaths = 0;

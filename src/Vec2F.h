@@ -65,6 +65,13 @@ struct Vec2F {
 			return false;
 	}
 
+	inline bool operator!=(Vec2F a) {
+		if ((a.x - x < epsilion) && (a.y - y < epsilion))
+			return false;
+		else
+			return true;
+	}
+
 };
 typedef struct Vec2F Vec2F;
 

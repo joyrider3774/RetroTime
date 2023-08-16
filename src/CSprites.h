@@ -18,12 +18,15 @@ typedef enum ECollisionShape ECollisionShape;
 
 class CSprite {
 	public:
+		SDL_Texture *Img;
 		int animInc;
 		Uint32 animTimer;
 		int index;
 		int* imageID;
 		float x;
 		float y;
+		float prevxscale;
+		float prevyscale;
 		float xscale;
 		float yscale;
 		float xspeed;
@@ -52,7 +55,7 @@ class CSprite {
 		float b;
 		float a;
 		double rotation_speed;
-		bool show_collision_shape;
+		bool show_collision_shape;		
 };
 
 class CSprites {
@@ -60,6 +63,7 @@ class CSprites {
 private:
 	CSprite* Sprites[SPR_Max];
 	CImage* Images;
+	int UpdateImageResets;
 	bool ForceShowCollisionShape;
 	bool needSpriteSorting;
 	void SortSprites();
@@ -68,19 +72,21 @@ private:
 public:
 	CSprites(CImage* ACImage);
 	~CSprites();
+	void ResetDrawTargets();
+	void UpdateImage(SDL_Renderer* renderer, CSprite* Spr);
 	CSprite* CreateSprite();
 	void RemoveSprite(CSprite* Spr);
 	Vec2F GetSpriteLocation(CSprite* Spr);
 	void SetForceShowCollisionShape(bool val);
-	void UpdateSprites();
+	void UpdateSprites(SDL_Renderer* renderer);
 	void DrawSprite(SDL_Renderer* Renderer, CSprite* Spr);
 	void DrawSprites(SDL_Renderer* Renderer);
 	int GetSpriteAnimFrame(CSprite* Spr);
 	int GetSpriteAnimFrameCount(CSprite* Spr);
-	void SetSpriteImage(CSprite* Spr, int *AImageID);
-	void SetSpriteImage(CSprite* Spr, int *AImageID, int TilesX, int TilesY);
+	void SetSpriteImage(SDL_Renderer* renderer, CSprite* Spr, int *AImageID);
+	void SetSpriteImage(SDL_Renderer* renderer, CSprite* Spr, int *AImageID, int TilesX, int TilesY);
 	void SetSpriteRotation(CSprite* Spr, double AAngle);
-	void SetSpriteScale(CSprite* Spr, Vec2F AScale);
+	void SetSpriteScale(SDL_Renderer* renderer, CSprite* Spr, Vec2F AScale);
 	void SetSpriteAnimation(CSprite* Spr, int StartTile, int EndTile, int animSpeed);
 	void SetSpriteCollisionShape(CSprite* Spr, ECollisionShape shape, double width, double height, double rotation, float xoffset, float yoffset);
 	void SetSpriteLocation(CSprite* Spr, Vec2F pos );
@@ -92,4 +98,5 @@ public:
 	SDL_Point TileSize(CSprite* Spr);
 	int SpriteSlotsUsed();
 	int SpriteSlotsMax();
+	int UpdateImageResetsCount();
 };

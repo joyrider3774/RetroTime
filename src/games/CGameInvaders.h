@@ -32,20 +32,20 @@ private:
 
 	static const int enemyrows = 5;
 	static const int enemycols = 7;
-	static const int enemystartxoffset = 50;
-	static const int enemystartyoffset = 50;
-	static const int enemyspacing = 60;
-	static const int enemyhorzspacing = 50;
-	Vec2F enemyscale = {1.5,1.5};
-	static const int enemyspeed = 1;
-	static constexpr float enemyspeedinc = 0.15;
-	static const int playerspeed = 8;
-	static const int bulletspeed = 10;
-	static const int asteroidsoffset = 150;
-	static const int endscreenconstant = 45 + asteroidsoffset;
+	static const int enemystartxoffset = 50*xscale;
+	static const int enemystartyoffset = 50*yscale;
+	static const int enemyspacing = 60*yscale;
+	static const int enemyhorzspacing = 50*xscale;
+	Vec2F enemyscale = {1.5*xscale,1.5*yscale};
+	static constexpr float enemyspeed = 1*xscale;
+	static constexpr float enemyspeedinc = 0.15*xscale;
+	static constexpr float playerspeed = 8*xscale;
+	static constexpr float bulletspeed = 10*yscale;
+	static const int asteroidsoffset = 150*xscale;
+	static const int endscreenconstant = 45*xscale + asteroidsoffset;
 	static const int maxexplosion = 10;
 	static const int maxasteroids = 6;
-	static constexpr float asteroidscale = 2.5;
+	static constexpr float asteroidscale = 2.5*xscale;
 	static const int asteroidmaxhealthpoints = 50;
 	static const int maxenemybullets = 5;
 	static const int enemybulletrandomizer = 100;
@@ -68,9 +68,6 @@ private:
 	CTweenInfo tweens[enemycols * enemycols][2];
 
 	int background;
-	int background2;
-	int background3;
-	int backgrounditem;
 
 	int spritesheetBullet;
 	int spritesheetExplosion;
@@ -81,9 +78,6 @@ private:
 	int spritesheetPlayer;
 
 	SDL_Point backgroundtz;
-	SDL_Point background2tz;
-	SDL_Point background3tz;
-	SDL_Point backgrounditemtz;
 
 	int MusMusic, SfxPlayerShoot, SfxPlayerDeath, SfxEnemyShoot, SfxEnemyDeath, SfxSucces, SfxDie;
 

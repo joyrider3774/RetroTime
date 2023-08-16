@@ -18,6 +18,7 @@
 #include "games/CGameBreakOut.h"
 #include "games/CGamePang.h"
 #include "games/CGameInvaders.h"
+
 #include "CGame.h"
 #include "Common.h"
 #include "TitleScreen.h"
@@ -25,6 +26,9 @@
 #include "Intro.h"
 
 using namespace std;
+
+#undef LoadImage
+#undef PlaySound
 
 CGame::CGame()
 {
@@ -395,6 +399,14 @@ void CGame::LoadGraphics()
 {
 	GFXFrameID = Image->LoadImage(Renderer, "main/frame.png");
 	GFXMedal = Image->LoadImage(Renderer, "main/medal.png");
+
+	//SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/main/frame.bmp", Image->GetImage(GFXFrameID), 1,1, true, 0, 40);
+	//SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/main/medal.bmp", Image->GetImage(GFXMedal), 1,1, true, 0, 160);
+	Image->UnLoadImage(GFXFrameID);
+	Image->UnLoadImage(GFXMedal);
+
+	GFXFrameID = Image->LoadImage(Renderer, "main/frame.bmp");
+	GFXMedal = Image->LoadImage(Renderer, "main/medal.bmp");
 }
 
 void CGame::ToggleFullscreen()
@@ -509,6 +521,9 @@ void CGame::LoadSettings()
 		Audio->SetVolumeSound(128);
 		MotionBlur = false;
 		Crt = 0;
+		ColorModB = 255;
+		ColorModR = 255;
+		ColorModG = 255;
 	}
 }
 
@@ -663,6 +678,12 @@ void CGame::MainLoop()
 	Uint32 Fps = 0;
 	double AvgFrameTime = 0.0f;
 	Uint32 Ticks = SDL_GetTicks();
+	uint8_t wtrs = 128;
+	uint8_t ver = 2;
+	
+	string Text = "wtrs: " + std::to_string(wtrs) + "ver: " + std::to_string(ver) + "\n";
+	printf("%s\n", Text.c_str());
+		
 	while (GameState != GSQuit)
 	{
 		TotalFrames++;
@@ -682,7 +703,60 @@ void CGame::MainLoop()
 				ActiveGame->LoadGraphics();
 			CreateScreenshotsAndBackground();
 			ReCreateCrt();
+			Sprites->ResetDrawTargets();
 		}
+
+		if(Input->Buttons.ButLB && !Input->PrevButtons.ButLB)
+		{
+
+			wtrs -= 1;
+			Text = "wtrs: " + std::to_string(wtrs) + "ver: " + std::to_string(ver) + "\n";
+			printf("%s\n", Text.c_str());
+		}
+
+		if(Input->Buttons.ButRB && !Input->PrevButtons.ButRB)
+		{
+			wtrs += 1;
+			Text = "wtrs: " + std::to_string(wtrs) + "ver: " + std::to_string(ver) + "\n";
+			printf("%s\n", Text.c_str());
+
+		}
+
+		if(Input->Buttons.ButLT && !Input->PrevButtons.ButLT)
+		{
+			if(ver == 2)
+			{
+				ver = 8;
+			}
+			else
+			{
+				if(ver == 8)
+					ver = 4;
+				else
+					ver = 2;
+			}
+			Text = "wtrs: " + std::to_string(wtrs) + "ver: " + std::to_string(ver) + "\n";
+			printf("%s\n", Text.c_str());
+		}
+
+		if(Input->Buttons.ButRT && !Input->PrevButtons.ButRT)
+		{
+			if(ver == 2)
+			{
+				ver = 4;
+			}
+			else
+			{
+				if(ver == 4)
+					ver = 8;
+				else
+					ver = 2;
+			}
+			Text = "wtrs: " + std::to_string(wtrs) + "ver: " + std::to_string(ver) + "\n";
+			printf("%s\n", Text.c_str());
+		}
+
+
 
 		if(Input->Buttons.ButFullscreen && !Input->PrevButtons.ButFullscreen)
 			ToggleFullscreen();
@@ -742,7 +816,7 @@ void CGame::MainLoop()
 		if (Alpha < MaxAlpha)
 		{
 			Alpha = trunc(MaxAlpha * ((double)(SDL_GetTicks() - AlphaTimer) / MaxAlphaTime));
-			if (Alpha + AlphaIncrease >= MaxAlpha)
+			if (Alpha >= MaxAlpha)
 			{
 				//SDL_SetTextureBlendMode(TexOffScreen, SDL_BLENDMODE_NONE);
 				Alpha = MaxAlpha;
@@ -780,14 +854,24 @@ void CGame::MainLoop()
 		y = ((h - h2) / 2);
 
 		SDL_Rect Rect = { x, y, w2, h2};
+		SDL_Rect DithRect = { x, y, w2, h2};
+
+		SDL_SetRenderTarget(Renderer, NULL);
+
 		SDL_RenderCopy(Renderer, TexScreen, NULL, &Rect);
+		//ditherTarget(Renderer, SDL_GetRenderTarget(Renderer), &DithRect, ver, wtrs);
+
+		//string Text = "wtrs: " + std::to_string(wtrs) + "ver: " + std::to_string(ver) + "\n";
+		//Font->WriteText(Renderer, "RobotoMono-Bold", 16, Text, Text.length(), 0, 0, 0, {255, 0, 255, 255});
+
+
 
 		if((ActiveGame != nullptr) && (GameState != GSSubScore) && (GameState != GSTitleScreenInit))
 			DrawCrt();
 
 		if (debugInfo || ShowFPS)
 		{
-			string Text = "FPS: " + to_string(Fps) + "\n";
+			Text = "FPS: " + to_string(Fps) + "\n";
 			if(debugInfo)
 			{
 				Text += "FrameTime: " + to_string(AvgFrameTime) + "\n";
@@ -795,6 +879,7 @@ void CGame::MainLoop()
 				Text += "SND Slots: " + to_string(Audio->SoundSlotsUsed()) + "/" + to_string(Audio->SoundSlotsMax()) + "\n";
 				Text += "MUS Slots: " + to_string(Audio->MusicSlotsUsed()) + "/" + to_string(Audio->MusicSlotsMax()) + "\n";
 				Text += "SPR Slots: " + to_string(Sprites->SpriteSlotsUsed()) + "/" + to_string(Sprites->SpriteSlotsMax()) + "\n";
+				Text += "SPR Resets: " + to_string(Sprites->UpdateImageResetsCount()) + "\n";
 			}
 			int tw = Font->TextWidth("RobotoMono-Bold", 16, Text, Text.length());
 			Font->WriteText(Renderer, "RobotoMono-Bold", 16, Text, Text.length(), w - tw, 0, 0, {255, 0, 255, 255});
@@ -873,7 +958,7 @@ Possible options are:\n\
 			WindowFlags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 		}
 
-		SdlWindow = SDL_CreateWindow("RetroTime", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, ScreenWidth, ScreenHeight, WindowFlags);
+		SdlWindow = SDL_CreateWindow("RetroTime", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WindowWidth, WindowHeight, WindowFlags);
 
 		if (SdlWindow)
 		{
@@ -885,7 +970,7 @@ Possible options are:\n\
 			if (useVsync)
 				flags |= SDL_RENDERER_PRESENTVSYNC;
 
-			SDL_Log("Succesfully Set %dx%d\n", ScreenWidth, ScreenHeight);
+			SDL_Log("Succesfully Set %dx%d\n", WindowWidth, WindowHeight);
 			Renderer = SDL_CreateRenderer(SdlWindow, -1, flags);
 			if (Renderer)
 			{
@@ -971,6 +1056,7 @@ Possible options are:\n\
 			SDL_Log("Failed to Set Videomode (%dx%d): %s\n", ScreenWidth, ScreenHeight, SDL_GetError());
 		}
 		SDL_DestroyWindow(SdlWindow);
+		SDL_QuitSubSystem(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER);
 		SDL_Quit();
 	}
 	else

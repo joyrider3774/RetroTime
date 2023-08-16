@@ -1,12 +1,10 @@
 #pragma once
 
 #include <SDL.h>
-#include <string.h>
+#include <string>
 #include <sstream>
 
-using namespace std;
-
-constexpr bool debugInfo = false;
+constexpr bool debugInfo = true;
 constexpr bool debugShowCollisionShapes = false;
 
 constexpr bool titleAlphaEnabled = true;
@@ -15,8 +13,12 @@ constexpr int MaxAlpha = 245;
 constexpr int AlphaIncrease = 5;
 constexpr int MaxAlphaTime = 750;
 
-constexpr int ScreenWidth=1280;
-constexpr int ScreenHeight=720;
+constexpr int ScreenWidth=400;
+constexpr int ScreenHeight=240;
+constexpr int WindowWidth=400;
+constexpr int WindowHeight=240;
+constexpr float xscale = ScreenWidth / 1280.0f;
+constexpr float yscale = ScreenHeight / 720.0f;
 
 constexpr Uint32 PixelFormat = SDL_PIXELFORMAT_ARGB8888;
 
@@ -80,12 +82,7 @@ constexpr int PMContinue = 0;
 constexpr int PMQuit = 1;
 constexpr int PMMusicVol = 2;
 constexpr int PMSoundVol = 3;
-constexpr int PMMotionBlur = 4;
-constexpr int PMGameHelp = 5;
-constexpr int PMColorModR = 6;
-constexpr int PMColorModG = 7;
-constexpr int PMColorModB = 8;
-constexpr int PMCrt = 9;
+constexpr int PMGameHelp = 4;
 
 
 constexpr int PauseMenus = 10;
@@ -106,14 +103,11 @@ constexpr int MainMenus = 6;
 //options menu
 constexpr int OMMusicVol = 0;
 constexpr int OMSoundVol = 1;
-constexpr int OMMotionBlur = 2;
-constexpr int OMCrt = 3;
-constexpr int OMColorModR = 4;
-constexpr int OMColorModG = 5;
-constexpr int OMColorModB = 6;
-constexpr int OMResetHighScores = 7;
-constexpr int OMBack = 8;
-constexpr int OptionMenus = 9;
+constexpr int OMResetHighScores = 2;
+constexpr int OMBack = 3;
+constexpr int OptionMenus = 4;
+
+using namespace std;
 
 //CRTS
 constexpr int Crts = 6;
@@ -138,7 +132,7 @@ struct PauseMenuDesc {
 
 struct GPGamePauseMenusDesc {
 	int game;
-	int menus[10];
+	int menus[5];
 };
 
 struct MainMenusDesc {
@@ -168,6 +162,12 @@ extern CrtOptDesc CrtOptions[Crts];
 extern Uint32 ColorToUint(int R, int G, int B);
 extern SDL_Colour UintToColor(Uint32 colour);
 
+extern void ditherTarget(SDL_Renderer* aRenderer, SDL_Texture *Tex, SDL_Rect* Rect,uint8_t bayerver, uint8_t whiteThreasHold);
+extern void ditherSurface(SDL_Surface* Surface, SDL_Rect* Rect, uint8_t bayerver, uint8_t whiteThreasHold);
+extern Uint32 GetPixel(SDL_Surface *surface, int x, int y);
+extern void PutPixel(SDL_Surface *surface, int x, int y, Uint32 pixel);
+extern void SDL_SaveBMPTextureScaled(SDL_Renderer *Renderer, const char *File, SDL_Texture* Tex, float ScaleX, float ScaleY, bool ApplyDither,int ditherversion, int whiteThresHold);
+extern void SDL_SaveBMPTextureScaled(SDL_Renderer *Renderer, string File, SDL_Texture* Tex, float ScaleX, float ScaleY, bool ApplyDither, int ditherversion, int whiteThresHold);
 //https://stackoverflow.com/questions/16605967/set-precision-of-stdto-string-when-converting-floating-point-values
 template <typename T>
 std::string to_string_with_precision(const T a_value, const int n = 6)

@@ -8,6 +8,7 @@
 
 using namespace std;
 
+
 constexpr int GFX_Max = 100;
 
 class CImage {
@@ -31,6 +32,8 @@ public:
 	//tint & alpha value between 0.0 & 1.0
 	void DrawImageFuzeSrcRectTintFloat(SDL_Renderer* Renderer, int GFXID, SDL_Rect *SrcRect, bool CenterImagePos, SDL_Point* Pos, double Angle, Vec2F* Scale,
 		float TintR, float TintG, float TintB, float Alpha);
+	void DrawImageFuzeSrcRectTintFloat(SDL_Renderer* Renderer, SDL_Texture* Texture, SDL_Rect *SrcRect, bool CenterImagePos, SDL_Point* Pos, double Angle, Vec2F* Scale, 
+		float TintR, float TintG, float TintB, float Alpha);
 	//tint & alpha value between 0.0 & 1.0
 	void DrawImageFuzeTintFloat(SDL_Renderer* Renderer, SDL_Texture *Texture, bool CenterImagePos, SDL_Point* Pos, double Angle, Vec2F* Scale,
 		float TintR, float TintG, float TintB, float Alpha);
@@ -45,5 +48,6 @@ public:
 	SDL_Point ImageSize(SDL_Texture *Texture);
 	int ImageSlotsUsed();
 	int ImageSlotsMax();
+	SDL_Texture* GetImage(int GFXID);
 
 };

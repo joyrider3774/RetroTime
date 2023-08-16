@@ -42,8 +42,8 @@ class CGameFrog: public CGameBase {
 private:
 
 	static const int debugmode = false;
-	static constexpr float playerspeed = 16*3;
-	static constexpr float globalworldspeed = 0.5;
+	static constexpr float playerspeed = 16.0f*3.0f*yscale;
+	static constexpr float globalworldspeed = 0.5f*yscale;
 
 	static const int rowtypewater = 0;
 	static const int rowtyperoad = 1;
@@ -74,7 +74,7 @@ private:
 	static const int cherryscore = 50;
 
 	static const int lenlevelincspeeds = 5;
-	float levelincspeeds[lenlevelincspeeds] = {0, 0.25, 0.5, 1.0, 1.5};
+	float levelincspeeds[lenlevelincspeeds] = {0, 0.25*yscale, 0.5*yscale, 1.0*yscale, 1.5*yscale};
 	int levelincspawns[lenlevelincspeeds] = {30, 90, 240, 570, 0};
 
 	static const int numcols = 14;
@@ -84,7 +84,7 @@ private:
 	static const int numrows = visiblerows + generatorrows;
 	static const int playerstartrow = (int)FLOORING(visiblerows, 2)
 
-	static constexpr float speeddeviation = 0.25;
+	static constexpr float speeddeviation = 0.25f*yscale;
 
 	static const int rowtypewaterstart = 0;
 	static const int rowtypewaterend = 2;
@@ -95,17 +95,17 @@ private:
 	static const int lenrowtypes = 9;
 
 	SRowType rowtypes[lenrowtypes] = {
-	{rowtypewater, 6, 10, true, idenemyplant, 1, 2, 4},
-	{rowtypewater, 6, 10, true, idenemyplant, 2, 3, 2},
-	{rowtypewater, 6, 10, true, idenemyplant, 3, 4, 3},
+	{rowtypewater, 6, 10, true, idenemyplant, 1.0f*yscale, 2, 4},
+	{rowtypewater, 6, 10, true, idenemyplant, 2.0f*yscale, 3, 2},
+	{rowtypewater, 6, 10, true, idenemyplant, 3.0f*yscale, 4, 3},
 
-	{rowtyperoad, 0, 0, false, idenemycar1, 2, 4, 2}, //ambulance
-	{rowtyperoad, 0, 0, false, idenemycar2, 1, 3, 2}, //truck
-	{rowtyperoad, 0, 0, false, idenemycar3, 7, numrows, 1}, //formula 1
-	{rowtyperoad, 0, 0, false, idenemycar4, 1.5, 4, 2}, //dumptruck
-	{rowtyperoad, 0, 0, false, idenemycar5, 2.5, 3, 2}, //jeep
+	{rowtyperoad, 0, 0, false, idenemycar1, 2.0f*yscale, 4, 2}, //ambulance
+	{rowtyperoad, 0, 0, false, idenemycar2, 1.0f*yscale, 3, 2}, //truck
+	{rowtyperoad, 0, 0, false, idenemycar3, 7.0f*yscale, numrows, 1}, //formula 1
+	{rowtyperoad, 0, 0, false, idenemycar4, 1.5f*yscale, 4, 2}, //dumptruck
+	{rowtyperoad, 0, 0, false, idenemycar5, 2.5f*yscale, 3, 2}, //jeep
 
-	{rowtypesafety, 12, 12,false, idnone, 2, 2, 2}
+	{rowtypesafety, 12, 12,false, idnone, 2.0f*yscale, 2, 2}
 	};
 
 

@@ -23,13 +23,13 @@ class CGameRamIt: public CGameBase {
 
 private:
 	static const int bulletsteps = 8;
-	static const int playerrailwidth = 10;
-	static const int playerspeed = 10;
-	static const int bulletspeed = 5;
+	static const int playerrailwidth = 10*xscale;
+	static constexpr float playerspeed = 10*xscale;
+	static constexpr float bulletspeed = 5*xscale;
 	static const int numblocks = 16;
 	static const int blocksegments = 20;
 	static const int sides = 2;
-	static const int blockspacing = 5;
+	static const int blockspacing = 5*yscale;
 	static const int ticksidle = 50;
 	static const int tickslevelmul = 5;
 

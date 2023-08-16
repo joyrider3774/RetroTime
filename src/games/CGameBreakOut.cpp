@@ -92,14 +92,14 @@ void CGameBreakOut::createblocks(bool setlocation)
 			blocks[x + y * blockcols].spr = Game->Sprites->CreateSprite();
 			blocks[x + y * blockcols].state = 0;
 			blocks[x + y * blockcols].alive = true;
-			Game->Sprites->SetSpriteImage(blocks[x + y * blockcols].spr, &spritesheetblocks, 6, 1);
+			Game->Sprites->SetSpriteImage(Game->Renderer,blocks[x + y * blockcols].spr, &spritesheetblocks, 6, 1);
 			SDL_Point tz = Game->Sprites->TileSize(blocks[x + y * blockcols].spr);
 			tz.x = tz.x * blockspritecale.x;
 			tz.y = tz.y * blockspritecale.y;
 			blocks[x + y * blockcols].tz = tz;
 			Game->Sprites->SetSpriteAnimation(blocks[x + y * blockcols].spr, y % 6, y % 6, 0);
 
-			Game->Sprites->SetSpriteScale(blocks[x + y * blockcols].spr, blockspritecale);
+			Game->Sprites->SetSpriteScale(Game->Renderer,blocks[x + y * blockcols].spr, blockspritecale);
 			blocks[x + y * blockcols].pos = { screenleft + blockxoffset + (x * tz.x), screentop + blockyoffset + y * tz.y};
 			if (setlocation)
 				Game->Sprites->SetSpriteLocation(blocks[x + y * blockcols].spr, blocks[x + y * blockcols].pos);
@@ -212,12 +212,12 @@ void CGameBreakOut::destroyplayer()
 void CGameBreakOut::createplayer()
 {
 	player.spr = Game->Sprites->CreateSprite();
-	Game->Sprites->SetSpriteImage(player.spr, &spritesheetbat);
-	Game->Sprites->SetSpriteScale(player.spr, spritescale);
+	Game->Sprites->SetSpriteImage(Game->Renderer,player.spr, &spritesheetbat);
+	Game->Sprites->SetSpriteScale(Game->Renderer,player.spr, spritescale);
 	player.tz = Game->Image->ImageSize(spritesheetbat);
 	player.tz.x = player.tz.x * spritescale.x;
 	player.tz.y = player.tz.y * spritescale.y;
-	player.pos = { (float)(screenright - screenleft) / 2,(float)screenbottom - 20 - (player.tz.y / 2)};
+	player.pos = { (float)(screenright - screenleft) / 2,(float)screenbottom - 20*yscale - (player.tz.y / 2)};
 	HealthPoints = 5;
 	Game->Sprites->SetSpriteLocation(player.spr, player.pos);
 	player.alive = true;
@@ -281,10 +281,14 @@ void CGameBreakOut::destroyball()
 void CGameBreakOut::createball()
 {
 	ball.spr = Game->Sprites->CreateSprite();
-	Game->Sprites->SetSpriteImage(ball.spr, &spritesheetball);
+	Game->Sprites->SetSpriteImage(Game->Renderer,ball.spr, &spritesheetball);
+	Game->Sprites->SetSpriteScale(Game->Renderer,ball.spr, {xscale,yscale});
 	ball.tz = Game->Image->ImageSize(spritesheetball);
-	Game->Sprites->SetSpriteCollisionShape(ball.spr, SHAPE_CIRCLE, ball.tz.x, ball.tz.y, 0, 0, 0);
-	ball.pos = { (float)((screenright - screenleft) / 2) + 250, (float)screenbottom - 250 - 20};
+	ball.tz.x = ball.tz.x * xscale;
+	ball.tz.y = ball.tz.y * yscale;
+	
+	Game->Sprites->SetSpriteCollisionShape(ball.spr, SHAPE_BOX, 4/xscale, 4/yscale, 0, 0, 0);
+	ball.pos = { (float)((screenright - screenleft) / 2) + 250*xscale, (float)screenbottom - 250*yscale - 20*yscale};
 	ball.vel = {-0.5,0.5};
 	curballspeed = ballspeed;
 	ball.alive = true;
@@ -454,12 +458,7 @@ void CGameBreakOut::updateball()
 
 void CGameBreakOut::DrawBackground(bool motionblur)
 {
-	float alpha = 1;
-	if ((motionblur) && (Game->MotionBlur))
-		alpha = 0.3;
-	SDL_Point Pos = { ScreenWidth / 2, ScreenHeight / 2};
-	Vec2F Scale = {(float)ScreenWidth / backgroundtz.x, (float)ScreenHeight / backgroundtz.y};
-	Game->Image->DrawImageFuzeTintFloat(Game->Renderer, background, true, &Pos, 0, &Scale, 1, 1, 1, alpha);
+	Game->Image->DrawImage(Game->Renderer, background, NULL, NULL);
 }
 
 //init - deinit ----------------------------------------------------------------------------------------------------------------
@@ -521,6 +520,17 @@ void CGameBreakOut::LoadGraphics()
 	spritesheetblocks = Game->Image->LoadImage(Game->Renderer, "breakout/blocks.png");
 	spritesheetbat = Game->Image->LoadImage(Game->Renderer, "breakout/paddle.png");
 	spritesheetball = Game->Image->LoadImage(Game->Renderer, "breakout/ball.png");
+
+	SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/breakout/blocks.bmp", Game->Image->GetImage(spritesheetblocks), 1,1, true,8, 128); //0 80
+	SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/breakout/paddle.bmp", Game->Image->GetImage(spritesheetbat), 1,1, true,0, 128); //173
+	SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/breakout/ball.bmp", Game->Image->GetImage(spritesheetball), 1,1, true,0, 128); //173
+
+	UnloadGraphics();
+	background = Game->Image->LoadImage(Game->Renderer, "breakout/background.png");
+	backgroundtz = Game->Image->ImageSize(background);
+	spritesheetblocks = Game->Image->LoadImage(Game->Renderer, "breakout/blocks.bmp");
+	spritesheetbat = Game->Image->LoadImage(Game->Renderer, "breakout/paddle.bmp");
+	spritesheetball = Game->Image->LoadImage(Game->Renderer, "breakout/ball.bmp");
 }
 
 void CGameBreakOut::UnloadGraphics()

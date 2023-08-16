@@ -62,9 +62,9 @@ void CGameBase::PauseMenu()
 	//global.substatecounter = 10.6
 	int selected = 0;
 	int selectedmenu = 0;
-	int maxmenus = 10;
-	int menutextsize = 34;
-	int menuspacing = 44;
+	int maxmenus = 5;
+	int menutextsize = 60*yscale;
+	int menuspacing = 85*yscale;
 	Game->Input->ResetButtons();
 
 	Uint64 TotalFrames = 0;
@@ -90,16 +90,16 @@ void CGameBase::PauseMenu()
 		// SDL_RenderFillRect(Game->Renderer, NULL);
 
 		 //draw everything to offscreen surface
-		SDL_SetRenderDrawColor(Game->Renderer, 25, 25, 255, 235);
+		SDL_SetRenderDrawColor(Game->Renderer, 255,255, 255, 255);
 		//so we can can copy the transparant part with the blue and text from this image
 		SDL_Point FramePos = {ScreenWidth / 2, ScreenHeight / 2};
-		Vec2F FrameScale = {10.6f / 4, 10.6f};
-		Game->Image->DrawImageFuze(Game->Renderer, Game->GFXFrameID, true, &FramePos, 0, &FrameScale, 255, 255, 255, 240);
+		Vec2F FrameScale = {16.0f / 4 * xscale, 12.8f *yscale};
+		Game->Image->DrawImageFuze(Game->Renderer, Game->GFXFrameID, true, &FramePos, 0, &FrameScale, 255, 255, 255, 255);
 
 		if (Game->SubGameState == SGPauseMenu)
 		{
 			string Text = "Paused";
-			Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 60, Text, Text.length(), 530, 110, 0, {255,255,255,255});
+			Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 80*yscale, Text, Text.length(), 510*xscale, 50*yscale, 0, {255,255,255,255});
 			int menu;
 			SDL_Color color;
 			for(int i = 0; i < maxmenus; i++)
@@ -112,71 +112,40 @@ void CGameBase::PauseMenu()
 
 				switch(menu)
 				{
-					case PMMotionBlur:
-						if (Game->MotionBlur)
-							Text = PMPauseMenus[menu].name + "Yes";
-						else
-							Text = PMPauseMenus[menu].name + "No";
-						Game->Font->WriteText(Game->Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 300, 180 + i * menuspacing, 0, color);
-						break;
 					case PMSoundVol:
-						Text = PMPauseMenus[menu].name + to_string(((int)(Game->Audio->GetVolumeSound()*100/128))) + "%";
-						Game->Font->WriteText(Game->Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 300, 180 + i * menuspacing, 0, color);
+						Text = PMPauseMenus[menu].name + to_string((int)(Game->Audio->GetVolumeSound()*100/128)) + "%";
+						Game->Font->WriteText(Game->Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 300*xscale, 185*yscale + i * menuspacing, 0, color);
 						break;
 					case PMMusicVol:
 						Text = PMPauseMenus[menu].name + to_string((int)(Game->Audio->GetVolumeMusic()*100/128)) + "%";
-						Game->Font->WriteText(Game->Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 300, 180 + i * menuspacing, 0, color);
+						Game->Font->WriteText(Game->Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 300*xscale, 185*yscale + i * menuspacing, 0, color);
 						break;
-					case PMCrt:
-						Text = PMPauseMenus[menu].name + CrtOptions[Game->Crt].name;
-						Game->Font->WriteText(Game->Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 300, 180 + i * menuspacing, 0, color);
-						break;
-					case PMColorModR:
-						Text = PMPauseMenus[menu].name + " " + to_string((int)Game->ColorModR * 100 / 255) + "%";
-						Game->Font->WriteText(Game->Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 300, 180 + i * menuspacing, 0, color);
-						break;
-					case PMColorModG:
-						Text = PMPauseMenus[menu].name + " " + to_string((int)Game->ColorModG * 100 / 255) + "%";
-						Game->Font->WriteText(Game->Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 300, 180 + i * menuspacing, 0, color);
-						break;
-					case PMColorModB:
-						Text = PMPauseMenus[menu].name + " " + to_string((int)Game->ColorModB * 100 / 255) + "%";
-						Game->Font->WriteText(Game->Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 300, 180 + i * menuspacing, 0, color);
-						break;
-					
 					default:
-						Game->Font->WriteText(Game->Renderer, "Roboto-Regular", menutextsize, PMPauseMenus[menu].name, PMPauseMenus[menu].name.length(), 300, 180 + i * menuspacing, 0, color);
+						Game->Font->WriteText(Game->Renderer, "Roboto-Regular", menutextsize, PMPauseMenus[menu].name, PMPauseMenus[menu].name.length(), 300*xscale,
+							185*yscale + i * menuspacing, 0, color);
 						break;
 				}
 			}
-			Text = "Press (A) to select, Left joystick or dpad change values";
-			Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 15, Text, Text.length(), 330, 635, 0, {1,1,1,1});
+			Text = "Use dpad to switch between options. (A) to select and (B) for back";
+			Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 34*yscale, Text, Text.length(), 90*xscale, 630*yscale, 0, {255, 255, 255, 255});
 		}
 
 		if (Game->SubGameState == SGGameHelp)
 		{
 			string Text = "Game Help";
-			Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 60, Text, Text.length(), 505, 110, 0, {255,255,255,255});
+			Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 80*yscale, Text, Text.length(), 485*xscale, 50*yscale, 0, {255,255,255,255});
 
 			Text = GSGames[Game->Game].name;
-			Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 30, Text, Text.length(), 300, 180, 0, {255,255,255,255});
-
-			SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 255);
-			SDL_Rect r = {300, 215, int(ScreenWidth * 0.25) + 4, int(ScreenHeight * 0.25) + 4};
-			SDL_RenderFillRect(Game->Renderer, &r);
-
-			SDL_Rect Dst = {302, 217, int(ScreenWidth * 0.25), int(ScreenHeight * 0.25)};
-			SDL_Rect Src = {0, 0, ScreenWidth, ScreenHeight};
-			SDL_RenderCopy(Game->Renderer, Game->GameScreenShots[Game->Game], &Src, &Dst);
+			Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 50*yscale, Text, Text.length(), 75*xscale, 150*yscale, 0, {255,255,255,255});
 
 			Text = GMModes[Game->GameMode].name + " High Score: " + to_string(Game->HighScores[Game->Game][Game->GameMode]);
-			Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 20, Text, Text.length(), 300, 410, 0, {255,255,255,255});
+			Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 38*yscale, Text, Text.length(), 75*xscale, 210*yscale, 0, {255,255,255,255});
 
 			Text = GSGames[Game->Game].description;
-			Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 20, Text, Text.length(), 300, 440, 0, {255,255,255,255});
+			Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 38*yscale, Text, Text.length(), 75*xscale, 255*yscale, 0, {255,255,255,255});
 
-			Text = "Use (A) or (B) for back";
-			Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 15, Text, Text.length(), 580, 635, 0, {255,255,255,255});
+			Text = "Press (A) or (B) for back";
+			Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 34*yscale, Text, Text.length(), 485*xscale, 630*yscale, 0, {255, 255, 255, 255});
 		}
 
 		Game->Input->Update();
@@ -236,44 +205,6 @@ void CGameBase::PauseMenu()
 						break;
 					}
 
-					case PMMotionBlur:
-					{
-						Game->MotionBlur = !Game->MotionBlur;
-						break;
-					}
-
-					case PMCrt:
-					{
-						Game->Crt -= 1;
-						if (Game->Crt < 0)
-							Game->Crt = Crts -1;
-						Game->ReCreateCrt();
-						break;
-					}
-
-					case PMColorModR:
-					{
-						Game->ColorModR -= 5;
-						if(Game->ColorModR < 15)
-							Game->ColorModR = 15;
-						break;
-					}
-
-					case PMColorModG:
-					{
-						Game->ColorModG -= 5;
-						if(Game->ColorModG < 15)
-							Game->ColorModG = 15;
-						break;
-					}
-
-					case PMColorModB:
-					{
-						Game->ColorModB -= 5;
-						if(Game->ColorModB < 15)
-							Game->ColorModB = 15;
-						break;
-					}
 				}
 			}
 
@@ -296,45 +227,6 @@ void CGameBase::PauseMenu()
 						Game->Audio->IncVolumeMusic();
 						if (!wasplaying)
 							Game->Audio->PlayMusic(Game->CurrentGameMusicID, -1);
-						break;
-					}
-
-					case PMMotionBlur:
-					{
-						Game->MotionBlur = !Game->MotionBlur;
-						break;
-					}
-
-					case PMCrt:
-					{
-						Game->Crt += 1;
-						if (Game->Crt == Crts)
-							Game->Crt = 0;
-						Game->ReCreateCrt();
-						break;
-					}
-
-					case PMColorModR:
-					{
-						Game->ColorModR += 5;
-						if(Game->ColorModR > 255)
-							Game->ColorModR = 255;
-						break;
-					}
-
-					case PMColorModG:
-					{
-						Game->ColorModG += 5;
-						if(Game->ColorModG > 255)
-							Game->ColorModG = 255;
-						break;
-					}
-
-					case PMColorModB:
-					{
-						Game->ColorModB += 5;
-						if(Game->ColorModB > 255)
-							Game->ColorModB = 255;
 						break;
 					}
 				}
@@ -410,74 +302,19 @@ void CGameBase::PauseMenu()
 						break;
 					}
 
-					case PMMotionBlur:
-					{
-						Game->MotionBlur = ! Game->MotionBlur;
-						break;
-					}
-
-					case PMCrt:
-					{
-						Game->Crt += 1;
-						if (Game->Crt == Crts)
-							Game->Crt = 0;
-						Game->ReCreateCrt();
-						break;
-					}
-
 					case PMGameHelp:
 					{
 						Game->SubGameState = SGGameHelp;
 						Game->Input->ResetButtons();
 						break;
 					}
-
-					case PMColorModR:
-					{
-						Game->ColorModR += 5;
-						if(Game->ColorModR > 255)
-							Game->ColorModR = 15;
-						break;
-					}
-
-					case PMColorModG:
-					{
-						Game->ColorModG += 5;
-						if(Game->ColorModG > 255)
-							Game->ColorModG = 15;
-						break;
-					}
-
-					case PMColorModB:
-					{
-						Game->ColorModB += 5;
-						if(Game->ColorModB > 255)
-							Game->ColorModB = 15;
-						break;
-					}
 				}
 			}
 		}
 
-		SDL_Rect SrcRect = {230,85,820,550};
-		//grab transparant part of frame + menu
-		SDL_Texture *Tmp = SDL_CreateTexture(Game->Renderer, PixelFormat, SDL_TEXTUREACCESS_TARGET, SrcRect.w, SrcRect.h);
-		SDL_Texture *TmpRender = SDL_GetRenderTarget(Game->Renderer);
-		SDL_SetRenderTarget(Game->Renderer, Tmp);
-		Game->Image->DrawImage(Game->Renderer, Game->TexOffScreen, &SrcRect, NULL);
-
-		//draw the frame again without transparancy
-		SDL_SetRenderTarget(Game->Renderer, TmpRender);
-		Game->Image->DrawImageFuze(Game->Renderer, Game->GFXFrameID, true, &FramePos, 0, &FrameScale, 255, 255, 255, 255);
-
-		//and then draw the transparant part over it now
-		Game->Image->DrawImage(Game->Renderer, Tmp, NULL, &SrcRect);
-		SDL_DestroyTexture(Tmp);
-
 		SDL_SetRenderTarget(Game->Renderer, Game->TexScreen);
 		SDL_RenderCopy(Game->Renderer, Game->TexOffScreen, NULL, NULL);
 
-		SDL_SetTextureColorMod(Game->TexScreen, Game->ColorModR, Game->ColorModG, Game->ColorModB);
 
 		SDL_SetRenderTarget(Game->Renderer, NULL);
 		SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 255);
@@ -660,7 +497,7 @@ void CGameBase::UpdateLogic()
 	}
 	UpdateObjects(Game->SubGameState == SGGame);
 	if(Game->SubGameState == SGGame)
-		Game->Sprites->UpdateSprites();
+		Game->Sprites->UpdateSprites(Game->Renderer);
 }
 
 void CGameBase::Draw()

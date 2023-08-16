@@ -16,17 +16,17 @@ CGameFastEddy::CGameFastEddy(CGame* aGame, bool aScreenshotMode): CGameBase(aGam
 	SfxSucces = -1;
 	SfxDie = -1;
 
-	playfieldwidth = 1280;
-	playfieldheight = 720;
+	playfieldwidth = ScreenWidth;
+	playfieldheight = ScreenHeight;
 	screenleft = (ScreenWidth - playfieldwidth) / 2;
 	screenright = screenleft + playfieldwidth;
 	screentop = (ScreenHeight - playfieldheight) / 2;
 	screenbottom = screentop + playfieldheight;
-	numfloortilesperrow = playfieldwidth / rowfloorsize;
+	numfloortilesperrow = playfieldwidth / rowfloorsizex;
 	maxfloortiles = numfloortilesperrow * rows;
 	rowspacingsize = playfieldheight / rows;
 	ladderwidth = playfieldwidth / laddersfitrows;
-	rowsize = rowspacingsize - rowfloorsize;
+	rowsize = rowspacingsize - rowfloorsizey;
 	playerheight = rowsize * 3 / 4;
 	enemyheight = rowsize * 2 / 5;
 	playerjumpheight = rowsize * 2/ 4;
@@ -52,8 +52,8 @@ void CGameFastEddy::createkey()
 	Vec2F scale = {keyheight / tz.y, keyheight / tz.y};
 	key.tz.x = tz.x * scale.x;
 	key.tz.y = tz.y * scale.y;
-	Game->Sprites->SetSpriteImage(key.spr, &spritesheetkey, 1, 1);
-	Game->Sprites->SetSpriteScale(key.spr, scale);
+	Game->Sprites->SetSpriteImage(Game->Renderer,key.spr, &spritesheetkey, 1, 1);
+	Game->Sprites->SetSpriteScale(Game->Renderer,key.spr, scale);
 	Game->Sprites->SetSpriteAnimation(key.spr, 0, 0, 0);
 	Game->Sprites->SetSpriteCollisionShape(key.spr, SHAPE_BOX, tz.x - 20, tz.y, 0, 0, 0);
 	key.pos.y = enemies[rowzeroenemyindex].pos.y - enemies[rowzeroenemyindex].tz.y;
@@ -155,12 +155,12 @@ void CGameFastEddy::createcollectables(int ignorerow)
 				Vec2F scale = {collectableheight / tz.y, collectableheight / tz.y};
 				collectables[i].tz.x = tz.x * scale.x;
 				collectables[i].tz.y = tz.y * scale.y;
-				Game->Sprites->SetSpriteImage(collectables[i].spr, &spritesheetcollectable, 5, 1);
-				Game->Sprites->SetSpriteScale(collectables[i].spr, scale);
+				Game->Sprites->SetSpriteImage(Game->Renderer,collectables[i].spr, &spritesheetcollectable, 5, 1);
+				Game->Sprites->SetSpriteScale(Game->Renderer,collectables[i].spr, scale);
 				Game->Sprites->SetSpriteAnimation(collectables[i].spr, ((level-1) % 5), ((level-1) % 5), 0);
 				Game->Sprites->SetSpriteCollisionShape(collectables[i].spr, SHAPE_CIRCLE, tz.x - 66, tz.y - 66, 0, 0, 0);
 				//Game->Sprites->SetSpriteCollisionShape(collectables[i].spr, SHAPE_BOX, tz.x - 66, tz.y - 66, 0, 0, 0);
-				collectables[i].pos.y = (row) * rowspacingsize + rowfloorsize / 2;
+				collectables[i].pos.y = (row) * rowspacingsize + rowfloorsizey / 2;
 				collectables[i].pos.x = ((screenright - screenleft) /7) +
 					(rand() % (screenright - screenleft - ((screenright - screenleft) /6 )));
 				Game->Sprites->SetSpriteLocation(collectables[i].spr, collectables[i].pos);
@@ -228,8 +228,8 @@ void CGameFastEddy::enemyenablelevelend()
 	Vec2F scale = {enemyheight / tz.y, enemyheight / tz.y};
 	enemies[index].tz.x = tz.x * scale.x;
 	enemies[index].tz.y = tz.y * scale.y;
-	enemies[index].pos.y = (0 + 1) * rowspacingsize - rowfloorsize / 2 - enemies[index].tz.y / 2;
-	Game->Sprites->SetSpriteScale(enemies[index].spr, scale);
+	enemies[index].pos.y = (0 + 1) * rowspacingsize - rowfloorsizey / 2 - enemies[index].tz.y / 2;
+	Game->Sprites->SetSpriteScale(Game->Renderer,enemies[index].spr, scale);
 	Game->Sprites->SetSpriteCollisionShape(enemies[index].spr, SHAPE_BOX, tz.x - 10, tz.y-10,0, 0, 0);
 	Game->Sprites->SetSpriteLocation(enemies[index].spr, enemies[index].pos);
 }
@@ -251,8 +251,8 @@ void CGameFastEddy::createenemy(int row, float x, int state, int group, int mult
 			Vec2F scale = {enemyheight / tz.y * multiply, enemyheight / tz.y * multiply};
 			enemies[i].tz.x = tz.x * scale.x;
 			enemies[i].tz.y = tz.y * scale.y;
-			Game->Sprites->SetSpriteImage(enemies[i].spr, &spritesheetenemy, 3, 4);
-			Game->Sprites->SetSpriteScale(enemies[i].spr, scale);
+			Game->Sprites->SetSpriteImage(Game->Renderer,enemies[i].spr, &spritesheetenemy, 3, 4);
+			Game->Sprites->SetSpriteScale(Game->Renderer,enemies[i].spr, scale);
 			if (enemies[i].state == enemystatemoveright)
 				Game->Sprites->SetSpriteAnimation(enemies[i].spr, 6, 8, 10);
 
@@ -269,7 +269,7 @@ void CGameFastEddy::createenemy(int row, float x, int state, int group, int mult
 			}
 
 			Game->Sprites->SetSpriteCollisionShape(enemies[i].spr, SHAPE_BOX, tz.x - 10, tz.y-10,0, 0, 0);
-			enemies[i].pos.y = (row + 1) * rowspacingsize - rowfloorsize / 2 - enemies[i].tz.y / 2;
+			enemies[i].pos.y = (row + 1) * rowspacingsize - rowfloorsizey / 2 - enemies[i].tz.y / 2;
 			enemies[i].pos.x = x;
 			Game->Sprites->SetSpriteLocation(enemies[i].spr, enemies[i].pos);
 			break;
@@ -443,11 +443,11 @@ void CGameFastEddy::createplayer()
 	player.tz.y = tz.y * scale.y;
 	player.state = playerstateunknown;
 	Game->Sprites->SetSpriteDepth(player.spr, 5);
-	Game->Sprites->SetSpriteImage(player.spr, &spritesheetplayeridle, 1, 15);
-	Game->Sprites->SetSpriteScale(player.spr, scale);
+	Game->Sprites->SetSpriteImage(Game->Renderer,player.spr, &spritesheetplayeridle, 1, 15);
+	Game->Sprites->SetSpriteScale(Game->Renderer,player.spr, scale);
 	Game->Sprites->SetSpriteAnimation(player.spr, 0, 14, 10);
 	Game->Sprites->SetSpriteCollisionShape(player.spr, SHAPE_BOX, tz.x - 120, tz.y-30,0,0,0);
-	player.pos = { (float)(screenright - screenleft) / 2, 5 * rowspacingsize - rowfloorsize / 2 - player.tz.y / 2};
+	player.pos = { (float)(screenright - screenleft) / 2, 5 * rowspacingsize - rowfloorsizey / 2 - player.tz.y / 2};
 	Game->Sprites->SetSpriteLocation(player.spr, player.pos);
 }
 
@@ -500,7 +500,7 @@ void CGameFastEddy::updateplayer()
 				{
 					if (player.state != playerstateleftjump)
 					{
-						Game->Sprites->SetSpriteImage(player.spr, &spritesheetplayerjump, 1, 6);
+						Game->Sprites->SetSpriteImage(Game->Renderer,player.spr, &spritesheetplayerjump, 1, 6);
 						Game->Sprites->SetSpriteAnimation(player.spr, 3, 3, 10);
 
 						player.state = playerstateleftjump;
@@ -515,7 +515,7 @@ void CGameFastEddy::updateplayer()
 					{
 						if (player.state != playerstaterightjump)
 						{
-							Game->Sprites->SetSpriteImage(player.spr, &spritesheetplayerjump, 1, 6);
+							Game->Sprites->SetSpriteImage(Game->Renderer,player.spr, &spritesheetplayerjump, 1, 6);
 							Game->Sprites->SetSpriteAnimation(player.spr, 3, 3, 10);
 
 							player.floory = player.pos.y;
@@ -528,7 +528,7 @@ void CGameFastEddy::updateplayer()
 					{
 						if(player.state != playerstatejump)
 						{
-							Game->Sprites->SetSpriteImage(player.spr, &spritesheetplayerjump, 1, 6);
+							Game->Sprites->SetSpriteImage(Game->Renderer,player.spr, &spritesheetplayerjump, 1, 6);
 							Game->Sprites->SetSpriteAnimation(player.spr, 3, 3, 10);
 							player.floory = player.pos.y;
 							player.state = playerstatejump;
@@ -549,7 +549,7 @@ void CGameFastEddy::updateplayer()
 					{
 						if (Game->Sprites->DetectSpriteCollision(player.spr, ladders[i].spr))
 						{
-							Game->Sprites->SetSpriteImage(player.spr, &spritesheetplayerclimb, 1, 15);
+							Game->Sprites->SetSpriteImage(Game->Renderer,player.spr, &spritesheetplayerclimb, 1, 15);
 							Game->Sprites->SetSpriteAnimation(player.spr, 0, 14, 20);
 
 							player.pos.x = ladders[i].pos.x;
@@ -565,7 +565,7 @@ void CGameFastEddy::updateplayer()
 					{
 						if (player.state != playerstateidle)
 						{
-							Game->Sprites->SetSpriteImage(player.spr, &spritesheetplayeridle, 1, 15);
+							Game->Sprites->SetSpriteImage(Game->Renderer,player.spr, &spritesheetplayeridle, 1, 15);
 							Game->Sprites->SetSpriteAnimation(player.spr, 0, 14, 10);
 							player.state = playerstateidle;
 						}
@@ -582,7 +582,7 @@ void CGameFastEddy::updateplayer()
 						{
 							if (Game->Sprites->DetectSpriteCollision(player.spr, ladders[i].spr))
 							{
-								Game->Sprites->SetSpriteImage(player.spr, &spritesheetplayerclimb, 1, 15);
+								Game->Sprites->SetSpriteImage(Game->Renderer,player.spr, &spritesheetplayerclimb, 1, 15);
 								Game->Sprites->SetSpriteAnimation(player.spr, 14, 0, 20);
 
 								player.pos.x = ladders[i].pos.x;
@@ -598,7 +598,7 @@ void CGameFastEddy::updateplayer()
 						{
 							if (player.state != playerstateidle)
 							{
-								Game->Sprites->SetSpriteImage(player.spr, &spritesheetplayeridle, 1, 15);
+								Game->Sprites->SetSpriteImage(Game->Renderer,player.spr, &spritesheetplayeridle, 1, 15);
 								Game->Sprites->SetSpriteAnimation(player.spr, 0, 14, 10);
 								player.state = playerstateidle;
 							}
@@ -610,7 +610,7 @@ void CGameFastEddy::updateplayer()
 						{
 							if (player.state != playerstateleft)
 							{
-								Game->Sprites->SetSpriteImage(player.spr, &spritesheetplayerrun, 1, 7);
+								Game->Sprites->SetSpriteImage(Game->Renderer,player.spr, &spritesheetplayerrun, 1, 7);
 								Game->Sprites->SetSpriteAnimation(player.spr, 0, 6, 10);
 								player.spr->xscale = -(abs(player.spr->xscale));
 								player.state = playerstateleft;
@@ -622,7 +622,7 @@ void CGameFastEddy::updateplayer()
 							{
 								if (player.state != playerstateright)
 								{
-									Game->Sprites->SetSpriteImage(player.spr, &spritesheetplayerrun, 1, 7);
+									Game->Sprites->SetSpriteImage(Game->Renderer,player.spr, &spritesheetplayerrun, 1, 7);
 									Game->Sprites->SetSpriteAnimation(player.spr, 0, 6, 10);
 									player.spr->xscale = (abs(player.spr->xscale));
 									player.state = playerstateright;
@@ -632,7 +632,7 @@ void CGameFastEddy::updateplayer()
 							{
 								if (player.state != playerstateidle)
 								{
-									Game->Sprites->SetSpriteImage(player.spr, &spritesheetplayeridle, 1, 15);
+									Game->Sprites->SetSpriteImage(Game->Renderer,player.spr, &spritesheetplayeridle, 1, 15);
 									Game->Sprites->SetSpriteAnimation(player.spr, 0, 14, 10);
 									player.state = playerstateidle;
 								}
@@ -831,16 +831,18 @@ void CGameFastEddy::createfloors()
 	int tilenr = 0;
 	int i = 0;
 	//SDL_Point tz = {64,64};
-	SDL_Point tz = Game->Image->ImageSize(spritesheetladder);
+	SDL_Point tz = Game->Image->ImageSize(spritesheet);
+	tz.x /= 9*4;
+	tz.y /= 10/2;
 	for (int y = 0; y < rows; y++)
 	{
 		for (int x = 0; x < numfloortilesperrow; x++)
 		{
 			floors[i].spr = Game->Sprites->CreateSprite();
 			floors[i].alive = true;
-			Game->Sprites->SetSpriteImage(floors[i].spr, &spritesheet, 9, 10);
-			Game->Sprites->SetSpriteLocation(floors[i].spr, {(float)x * rowfloorsize + rowfloorsize / 2, (float)(y + 1) * rowspacingsize - rowfloorsize / 2});
-			Game->Sprites->SetSpriteScale(floors[i].spr, {(float)rowfloorsize / tz.x , (float)rowfloorsize / tz.y});
+			Game->Sprites->SetSpriteImage(Game->Renderer,floors[i].spr, &spritesheet, 9, 10);
+			Game->Sprites->SetSpriteLocation(floors[i].spr, {(float)x * rowfloorsizex + rowfloorsizex / 2, (float)(y + 1) * rowspacingsize - rowfloorsizey / 2});
+			Game->Sprites->SetSpriteScale(Game->Renderer,floors[i].spr, {(float)rowfloorsizex / tz.x , (float)rowfloorsizey / tz.y});
 			if (x == 0)
 				tilenr = 36;
 			else
@@ -873,22 +875,22 @@ void CGameFastEddy::createladders()
 		int x1 = 1 + rand() % (int(laddersfitrows / 2)-1);
 		ladders[i].spr = Game->Sprites->CreateSprite();
 		ladders[i].alive = true;
-		ladders[i].pos = {x1 * ladderwidth + ladderwidth / 2 , y * rowspacingsize + rowspacingsize / 2 - rowfloorsize / 2};
-		Game->Sprites->SetSpriteImage(ladders[i].spr, &spritesheetladder);
+		ladders[i].pos = {x1 * ladderwidth + ladderwidth / 2 , y * rowspacingsize + rowspacingsize / 2 - rowfloorsizey / 2};
+		Game->Sprites->SetSpriteImage(Game->Renderer,ladders[i].spr, &spritesheetladder);
 		Game->Sprites->SetSpriteCollisionShape(ladders[i].spr, SHAPE_BOX, tz.x - 20, tz.y-10,0,0,0);
 
 		Game->Sprites->SetSpriteLocation(ladders[i].spr, ladders[i].pos );
-		Game->Sprites->SetSpriteScale(ladders[i].spr, {ladderwidth / tz.x , (rowspacingsize + rowfloorsize/2) / tz.y});
+		Game->Sprites->SetSpriteScale(Game->Renderer,ladders[i].spr, {ladderwidth / tz.x , (rowspacingsize + rowfloorsizey/2) / tz.y});
 
 		i += 1;
 		int x2 = x1 + int(laddersfitrows / 2);
 		ladders[i].spr = Game->Sprites->CreateSprite();
 		ladders[i].alive = true;
-		ladders[i].pos = {x2 * ladderwidth + ladderwidth / 2 , y * rowspacingsize + rowspacingsize / 2 - rowfloorsize / 2};
-		Game->Sprites->SetSpriteImage(ladders[i].spr, &spritesheetladder);
+		ladders[i].pos = {x2 * ladderwidth + ladderwidth / 2 , y * rowspacingsize + rowspacingsize / 2 - rowfloorsizey / 2};
+		Game->Sprites->SetSpriteImage(Game->Renderer,ladders[i].spr, &spritesheetladder);
 		Game->Sprites->SetSpriteCollisionShape(ladders[i].spr, SHAPE_BOX, tz.x - 20, tz.y-10,0,0,0);
 		Game->Sprites->SetSpriteLocation(ladders[i].spr, ladders[i].pos );
-		Game->Sprites->SetSpriteScale(ladders[i].spr, {ladderwidth / tz.x , (rowspacingsize + rowfloorsize/2) / tz.y});
+		Game->Sprites->SetSpriteScale(Game->Renderer,ladders[i].spr, {ladderwidth / tz.x , (rowspacingsize + rowfloorsizey/2) / tz.y});
 		i += 1;
 	}
 }
@@ -897,12 +899,7 @@ void CGameFastEddy::createladders()
 
 void CGameFastEddy::DrawBackground(bool motionblur)
 {
-	float alpha = 1;
-	if ((motionblur) && (Game->MotionBlur))
-		alpha = 0.3;
-	SDL_Point Pos = { ScreenWidth / 2, ScreenHeight / 2};
-	Vec2F Scale = {(float)ScreenWidth / backgroundtz.x, (float)ScreenHeight / backgroundtz.y};
-	Game->Image->DrawImageFuzeTintFloat(Game->Renderer, background, true, &Pos, 0, &Scale, 1, 1, 1, alpha);
+	Game->Image->DrawImage(Game->Renderer, background, NULL, NULL);
 }
 
 //init - deinit ----------------------------------------------------------------------------------------------------------------
@@ -911,7 +908,7 @@ void CGameFastEddy::init()
 {
 	collecteditems = 0;
 	collectedcreated = 0;
-	level = 1;
+	level = 21;
 	HealthPoints = 3;
 	LoadGraphics();
 	createfloors();
@@ -967,11 +964,8 @@ void CGameFastEddy::UnLoadSound()
 void CGameFastEddy::LoadGraphics()
 {
 	background = Game->Image->LoadImage(Game->Renderer, "fasterdave/background.png");
-	backgroundtz = Game->Image->ImageSize(background);
-
 	spritesheet = Game->Image->LoadImage(Game->Renderer, "fasterdave/floortileset.png");
 	spritesheetladder = Game->Image->LoadImage(Game->Renderer, "fasterdave/ladder.png");
-
 	spritesheetplayerclimb = Game->Image->LoadImage(Game->Renderer, "fasterdave/Character_character_climb.png");
 	spritesheetplayerrun = Game->Image->LoadImage(Game->Renderer, "fasterdave/Character_character_run.png");
 	spritesheetplayeridle = Game->Image->LoadImage(Game->Renderer, "fasterdave/Character_character_idle.png");
@@ -979,6 +973,31 @@ void CGameFastEddy::LoadGraphics()
 	spritesheetenemy = Game->Image->LoadImage(Game->Renderer, "fasterdave/enemy.png");
 	spritesheetcollectable = Game->Image->LoadImage(Game->Renderer, "fasterdave/orbs.png");
 	spritesheetkey = Game->Image->LoadImage(Game->Renderer, "fasterdave/key.png");
+
+    SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/fasterdave/ladder.bmp", Game->Image->GetImage(spritesheetladder), 1,1, true,0, 128);
+	SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/fasterdave/floortileset.bmp", Game->Image->GetImage(spritesheet), 1,1, true,0, 128);
+	SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/fasterdave/Character_character_climb.bmp", Game->Image->GetImage(spritesheetplayerclimb), 1,1, true,0, 128);
+	SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/fasterdave/Character_character_run.bmp", Game->Image->GetImage(spritesheetplayerrun), 1,1, true,0, 128);
+	SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/fasterdave/Character_character_idle.bmp", Game->Image->GetImage(spritesheetplayeridle), 1,1, true,0, 128);
+	SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/fasterdave/Character_character_jump_up.bmp", Game->Image->GetImage(spritesheetplayerjump), 1,1, true,0, 128);
+	SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/fasterdave/enemy.bmp", Game->Image->GetImage(spritesheetenemy), 1,1, true, 0, 128);
+	SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/fasterdave/orbs.bmp", Game->Image->GetImage(spritesheetcollectable), 1,1, true,0, 128);
+	SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/fasterdave/key.bmp", Game->Image->GetImage(spritesheetkey), 1,1, true,0, 128);
+
+    UnloadGraphics();
+	background = Game->Image->LoadImage(Game->Renderer, "fasterdave/background.png");	
+	spritesheetladder = Game->Image->LoadImage(Game->Renderer, "fasterdave/ladder.bmp");
+	spritesheet = Game->Image->LoadImage(Game->Renderer, "fasterdave/floortileset.bmp");
+	spritesheetplayerclimb = Game->Image->LoadImage(Game->Renderer, "fasterdave/Character_character_climb.bmp");
+	spritesheetplayerrun = Game->Image->LoadImage(Game->Renderer, "fasterdave/Character_character_run.bmp");
+	spritesheetplayeridle = Game->Image->LoadImage(Game->Renderer, "fasterdave/Character_character_idle.bmp");
+	spritesheetplayerjump = Game->Image->LoadImage(Game->Renderer, "fasterdave/Character_character_jump_up.bmp");
+	spritesheetenemy = Game->Image->LoadImage(Game->Renderer, "fasterdave/enemy.bmp");
+	spritesheetcollectable = Game->Image->LoadImage(Game->Renderer, "fasterdave/orbs.bmp");
+	spritesheetkey = Game->Image->LoadImage(Game->Renderer, "fasterdave/key.bmp");
+
+	
+
 }
 
 void CGameFastEddy::UnloadGraphics()

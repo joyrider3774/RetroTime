@@ -44,8 +44,8 @@ void CGamePang::destroyball(int index, bool nocreate)
 	{
 		if (balls[index].id > ballsmall)
 		{
-			createball(balls[index].id - 1, balls[index].pos.x - 25, balls[index].pos.y, -10);
-			createball(balls[index].id - 1, balls[index].pos.x + 25, balls[index].pos.y, 10);
+			createball(balls[index].id - 1, balls[index].pos.x - 25*yscale, balls[index].pos.y, -10.0f*yscale);
+			createball(balls[index].id - 1, balls[index].pos.x + 25*yscale, balls[index].pos.y, 10.0f*yscale);
 		}
 	}
 	if (balls[index].alive)
@@ -62,14 +62,14 @@ void CGamePang::createball(int size, float x, float y, float speed)
 		if (!balls[i].alive)
 		{
 			balls[i].spr = Game->Sprites->CreateSprite();
-			Game->Sprites->SetSpriteImage(balls[i].spr, &spritesheetball);
+			Game->Sprites->SetSpriteImage(Game->Renderer,balls[i].spr, &spritesheetball);
 			Game->Sprites->SetSpriteCollisionShape(balls[i].spr, SHAPE_CIRCLE, 35,35,0,0,0);
 			//Game->Sprites->SetSpriteCollisionShape(balls[i].spr, SHAPE_BOX, 27,27,0,0,0);
 			Game->Sprites->SetSpriteColour(balls[i].spr, 1, 1, 1, 0.7f);
 			Vec2F Scale = ballscale;
 			Scale.x = Scale.x * size;
 			Scale.y = Scale.y * size;
-			Game->Sprites->SetSpriteScale(balls[i].spr, Scale);
+			Game->Sprites->SetSpriteScale(Game->Renderer,balls[i].spr, Scale);
 			Game->Sprites->SetSpriteDepth(balls[i].spr, 6);
 			balls[i].tz = Game->Image->ImageSize(spritesheetball);
 			balls[i].tz.x = balls[i].tz.x * Scale.x;
@@ -111,30 +111,30 @@ void CGamePang::updateballs()
 			balls[i].pos.x += balls[i].speed*2;
 
 			if (balls[i].id == ballbig)
-				balls[i].curforce += 0.1;
+				balls[i].curforce += 0.1*yscale;
 			else
 			{
 				if(balls[i].id == ballmedium)
-					balls[i].curforce += 0.15;
+					balls[i].curforce += 0.15*yscale;
 				else
 				{
 					if (balls[i].id == ballsmall)
-						balls[i].curforce += 0.25;
+						balls[i].curforce += 0.25*yscale;
 				}
 			}
 
 			balls[i].pos.y += balls[i].curforce;
 
 			if (balls[i].id == ballbig)
-				if (balls[i].pos.y >= screenbottom - 135)
+				if (balls[i].pos.y >= screenbottom - 135.0f*yscale)
 					balls[i].curforce = balls[i].force;
 
 			if (balls[i].id == ballmedium)
-				if (balls[i].pos.y >= screenbottom - 100)
+				if (balls[i].pos.y >= screenbottom - 100.0f*yscale)
 					balls[i].curforce = balls[i].force;
 
 			if (balls[i].id == ballsmall)
-				if (balls[i].pos.y >= screenbottom - 75)
+				if (balls[i].pos.y >= screenbottom - 75.0f*yscale)
 					balls[i].curforce = balls[i].force;
 
 			Game->Sprites->SetSpriteLocation(balls[i].spr, balls[i].pos);
@@ -185,12 +185,12 @@ void CGamePang::drawballs()
 void CGamePang::createballs()
 {
 	int added = 0;
-	int speed = 10;
+	float speed = 10.0f*yscale;
 	for (int i = screenleft; i < screenright; i += int((screenright - screenleft) / (level + 1)) + 1)
 	{
 		if ((i > screenleft) && (i < screenright))
 		{
-			createball(ballbig, i, 160, speed);
+			createball(ballbig, i, 160.0f*yscale, speed);
 			speed *= -1;
 			added += 1;
 			if (added >= level)
@@ -213,12 +213,12 @@ void CGamePang::destroybullet()
 void CGamePang::createbullet()
 {
 	bullet.spr = Game->Sprites->CreateSprite();
-	Game->Sprites->SetSpriteImage(bullet.spr, &spritesheetbullet, 1, 2);
+	Game->Sprites->SetSpriteImage(Game->Renderer,bullet.spr, &spritesheetbullet, 1, 2);
 	Game->Sprites->SetSpriteAnimation(bullet.spr, 0, 0, 0);
 	Game->Sprites->SetSpriteCollisionShape(bullet.spr, SHAPE_BOX, Game->Sprites->TileSize(bullet.spr).y-18, Game->Sprites->TileSize(bullet.spr).x+160,0,0,0);
 
 	Game->Sprites->SetSpriteRotation(bullet.spr, 90);
-	Game->Sprites->SetSpriteScale(bullet.spr, bulletscale);
+	Game->Sprites->SetSpriteScale(Game->Renderer,bullet.spr, bulletscale);
 	Game->Sprites->SetSpriteDepth(bullet.spr, 3);
 	bullet.tz = Game->Sprites->TileSize(bullet.spr);
 	bullet.tz.x = bullet.tz.x * bulletscale.x;
@@ -292,11 +292,11 @@ void CGamePang::destroyplayer()
 void CGamePang::createplayer()
 {
 	player.spr = Game->Sprites->CreateSprite();
-	Game->Sprites->SetSpriteImage(player.spr, &spritesheetplayer, 12, 8);
+	Game->Sprites->SetSpriteImage(Game->Renderer,player.spr, &spritesheetplayer, 12, 8);
 	Game->Sprites->SetSpriteAnimation(player.spr, 37, 37, 0);
-	Game->Sprites->SetSpriteCollisionShape(player.spr, SHAPE_BOX, Game->Sprites->TileSize(player.spr).x - 24, Game->Sprites->TileSize(player.spr).y-14,0,0,14);
+	Game->Sprites->SetSpriteCollisionShape(player.spr, SHAPE_BOX, Game->Sprites->TileSize(player.spr).x - 24, Game->Sprites->TileSize(player.spr).y-14,0,0,14*yscale);
 
-	Game->Sprites->SetSpriteScale(player.spr, playerscale);
+	Game->Sprites->SetSpriteScale(Game->Renderer,player.spr, playerscale);
 	Game->Sprites->SetSpriteDepth(player.spr, 37);
 	player.state = playerstateidle;
 	player.tz = Game->Sprites->TileSize(player.spr);
@@ -446,61 +446,7 @@ void CGamePang::drawplayer()
 
 void CGamePang::DrawBackground(bool motionblur)
 {
-	float alpha = 255;
-	if ((motionblur) && (Game->MotionBlur))
-		alpha = 0.3*255;
-
-	SDL_Texture* prev = SDL_GetRenderTarget(Game->Renderer);
-	SDL_SetRenderTarget(Game->Renderer, Game->TexTmp);
-	SDL_SetRenderDrawColor(Game->Renderer, 0.3*255, 0.6*255,0.9*255,255);
-	SDL_RenderClear(Game->Renderer);
-	SDL_Point Pos = { 0, 0};
-	Vec2F Scale = {(float)(screenright - screenleft) / backgroundcloudtz.x, 4};
-	Game->Image->DrawImageFuze(Game->Renderer, backgroundcloud, false, &Pos, 0, &Scale, 255, 255, 255, 255 );
-
-	Scale = {2,2};
-	for (int x = -20; x < screenright; x += backgroundtreestz.x)
-	{
-		Pos = {x, screenbottom - 345-160};
-		Game->Image->DrawImageFuze(Game->Renderer, backgroundtrees, false, &Pos, 0, &Scale, 255, 255, 255, 255);
-	}
-
-	Scale = {2,2};
-	for (int x = -20; x < screenright; x += backgroundtreestz.x)
-	{
-		Pos = {x, screenbottom - 315-130};
-		Game->Image->DrawImageFuze(Game->Renderer, backgroundtrees, false, &Pos, 0, &Scale, 255, 255, 255, 255);
-	}
-
-	Scale = {2,2};
-	for (int x = -60; x < screenright; x += backgroundtreestz.x)
-	{
-		Pos = {x, screenbottom - 275-100};
-		Game->Image->DrawImageFuze(Game->Renderer, backgroundtrees, false, &Pos, 0, &Scale, 255, 255, 255, 255);
-	}
-
-	Scale = {2,2};
-	for (int x = -35; x < screenright; x += backgroundtreestz.x)
-	{
-		Pos = {x, screenbottom - 225-150};
-		Game->Image->DrawImageFuze(Game->Renderer, backgroundtrees, false, &Pos, 0, &Scale, 255, 255, 255, 255);
-	}
-
-	Pos = {(int)((screenright - screenleft) * 0.55), screenbottom - 390};
-	Scale = {3.5,3.5};
-	Game->Image->DrawImageFuze(Game->Renderer, backgroundtree, false, &Pos, 0, &Scale, 255, 255, 255, 255);
-
-	Scale = {1,1};
-	for (int x = 0; x < screenright; x+= backgroundgrasstz.x)
-	{
-		Pos = {x, screenbottom - backgroundgrasstz.y};
-		Game->Image->DrawImageFuze(Game->Renderer, backgroundgrass, false, &Pos, 0, &Scale, 255, 255, 255, 255);
-	}
-
-	SDL_SetRenderTarget(Game->Renderer, prev);
-	Scale = {1,1};
-	Pos = {0,0};
-	Game->Image->DrawImageFuze(Game->Renderer, Game->TexTmp, NULL, false, &Pos, 0, &Scale, 255, 255, 255, alpha);
+	Game->Image->DrawImage(Game->Renderer, background, NULL, NULL);
 }
 
 //init - deinit ----------------------------------------------------------------------------------------------------------------
@@ -556,18 +502,25 @@ void CGamePang::UnLoadSound()
 
 void CGamePang::LoadGraphics()
 {
+	background = Game->Image->LoadImage(Game->Renderer, "pang/background.png");
+
 	spritesheetplayer = Game->Image->LoadImage(Game->Renderer, "pang/character.png");
 	spritesheetbullet = Game->Image->LoadImage(Game->Renderer, "pang/weapon.png");
 	spritesheetball = Game->Image->LoadImage(Game->Renderer, "pang/ball.png");
-	backgroundgrass = Game->Image->LoadImage(Game->Renderer, "pang/grass.png");
-	backgroundcloud = Game->Image->LoadImage(Game->Renderer, "pang/clouds.png");
-	backgroundtrees = Game->Image->LoadImage(Game->Renderer, "pang/trees.png");
-	backgroundtree = Game->Image->LoadImage(Game->Renderer, "pang/tree.png");
-	backgroundgrasstz = Game->Image->ImageSize(backgroundgrass);
-	backgroundcloudtz = Game->Image->ImageSize(backgroundcloud);
-	backgroundtreestz = Game->Image->ImageSize(backgroundtrees);
-	backgroundtreetz = Game->Image->ImageSize(backgroundtree);
+	
+	SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/pang/character.bmp", Game->Image->GetImage(spritesheetplayer), 1,1, true, 0, 118);
+	SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/pang/weapon.bmp", Game->Image->GetImage(spritesheetbullet), 1,1, true, 0, 128);
+	SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/pang/ball.bmp", Game->Image->GetImage(spritesheetball), 1,1, true, 0, 128);
+	UnloadGraphics();
+	background = Game->Image->LoadImage(Game->Renderer, "pang/background.png");
+	spritesheetplayer = Game->Image->LoadImage(Game->Renderer, "pang/character.bmp");
+	spritesheetbullet = Game->Image->LoadImage(Game->Renderer, "pang/weapon.bmp");
+	spritesheetball = Game->Image->LoadImage(Game->Renderer, "pang/ball.bmp");
+	
+
+	
 	spritesheetballtz = Game->Image->ImageSize(spritesheetball);
+
 }
 
 void CGamePang::UnloadGraphics()
@@ -575,10 +528,7 @@ void CGamePang::UnloadGraphics()
 	Game->Image->UnLoadImage(spritesheetplayer);
 	Game->Image->UnLoadImage(spritesheetbullet);
 	Game->Image->UnLoadImage(spritesheetball);
-	Game->Image->UnLoadImage(backgroundgrass);
-	Game->Image->UnLoadImage(backgroundcloud);
-	Game->Image->UnLoadImage(backgroundtrees);
-	Game->Image->UnLoadImage(backgroundtree);
+	Game->Image->UnLoadImage(background);
 }
 
 SDL_Texture* CGamePang::screenshot()

@@ -13,7 +13,7 @@ using namespace std;
 class CGameSnake: public CGameBase {
 
 private:
-	static const int snakesize = 35;
+	static const int snakesize = 35 * yscale;
 	static const int rows = int(ScreenHeight / snakesize) -1;
 	static const int cols = int(ScreenWidth / snakesize) -1;
 	static const int updateticks = 8;

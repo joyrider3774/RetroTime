@@ -9,6 +9,7 @@
 
 CSprites::CSprites(CImage* ACImage)
 {
+	UpdateImageResets = 0;
 	Images = ACImage;
 	ForceShowCollisionShape = false;
 	needSpriteSorting = false;
@@ -31,6 +32,11 @@ void CSprites::SetForceShowCollisionShape(bool val)
 	ForceShowCollisionShape = val;
 }
 
+int  CSprites::UpdateImageResetsCount()
+{
+	return  UpdateImageResets;
+}
+
 CSprite* CSprites::CreateSprite()
 {
 	for (int i= 0; i < SPR_Max; i++)
@@ -45,6 +51,8 @@ CSprite* CSprites::CreateSprite()
 			Spr->imageID = nullptr;
 			Spr->xscale = 1;
 			Spr->yscale = 1;
+			Spr->prevxscale = -1;
+			Spr->prevyscale = -1;
 			Spr->xscale_speed = 0;
 			Spr->yscale_speed = 0;
 			Spr->xspeed = 0;
@@ -70,6 +78,7 @@ CSprite* CSprites::CreateSprite()
 			Spr->tilesX = 1;
 			Spr->tilesY = 1;
 			Spr->rotation_speed = 0.0;
+			Spr->Img = nullptr;
 			Sprites[i] = Spr;
 			return Spr;
 		}
@@ -84,12 +93,19 @@ void CSprites::RemoveSprite(CSprite* Spr)
 
 	if((Spr->index < 0) || (Spr->index >= SPR_Max))
 		return;
-
+	
+	if(Sprites[Spr->index]->Img != nullptr)
+	{
+		SDL_DestroyTexture(Sprites[Spr->index]->Img);
+		Sprites[Spr->index]->Img = nullptr;
+	}
+	
 	Sprites[Spr->index] = nullptr;
+		
 	delete Spr;
 }
 
-void CSprites::UpdateSprites()
+void CSprites::UpdateSprites(SDL_Renderer* renderer)
 {
 	SortSprites();
 	for (int i = 0; i < SPR_Max; i++)
@@ -127,6 +143,8 @@ void CSprites::UpdateSprites()
 		Sprites[i]->collisionAngle += Sprites[i]->rotation_speed;
 		Sprites[i]->collisionWidth += Sprites[i]->xscale_speed;
 		Sprites[i]->collisionHeight += Sprites[i]->yscale_speed;
+
+		UpdateImage(renderer, Sprites[i]);
 	}
 }
 
@@ -162,15 +180,18 @@ void CSprites::DrawSprite(SDL_Renderer* Renderer, CSprite* Spr)
 
 	SortSprites();
 
-	if (Spr->show && ((*Spr->imageID > -1) && (*Spr->imageID < Images->ImageSlotsMax())))
+	if (Spr->show && ((*Spr->imageID > -1) && (Spr->Img != nullptr) && (*Spr->imageID < Images->ImageSlotsMax())))
 	{
 		SDL_Point pos = {(int)(Spr->x), (int)(Spr->y)};
 		Vec2F scale = {Spr->xscale, Spr->yscale};
+		//multiply is to get the sign
+		scale = {1.0f * (Spr->xscale / abs(Spr->xscale)), 1.0f * (Spr->yscale/abs(Spr->yscale))};
 		int AnimTile = Spr->animTile;
 		int y = (int)floor(AnimTile / Spr->tilesX);
 		int x = AnimTile - (y * Spr->tilesX);
-		SDL_Rect SrcRect = {x * Spr->tileSizeX, y* Spr->tileSizeY, Spr->tileSizeX, Spr->tileSizeY};
-		Images->DrawImageFuzeSrcRectTintFloat(Renderer, *Spr->imageID, &SrcRect, true, &pos, Spr->rotation, &scale, Spr->r, Spr->g, Spr->b, Spr->a);
+		//SDL_Rect SrcRect = {x * Spr->tileSizeX, y* Spr->tileSizeY, Spr->tileSizeX, Spr->tileSizeY};
+		SDL_Rect SrcRect = {x * Spr->tileSizeX* abs(Spr->xscale), y* Spr->tileSizeY* abs(Spr->yscale), Spr->tileSizeX* abs(Spr->xscale), Spr->tileSizeY* abs(Spr->yscale)};
+		Images->DrawImageFuzeSrcRectTintFloat(Renderer, Spr->Img, &SrcRect, true, &pos, Spr->rotation, &scale, Spr->r, Spr->g, Spr->b, Spr->a);
 		if (Spr->show_collision_shape || ForceShowCollisionShape)
 		{
 			SDL_SetRenderDrawColor(Renderer, 255, 0, 255, 255);
@@ -192,6 +213,20 @@ void CSprites::DrawSprite(SDL_Renderer* Renderer, CSprite* Spr)
 					break;
 			}
 		}
+	}
+}
+
+void CSprites::ResetDrawTargets()
+{
+	for (int i = 0; i < SPR_Max; i++)
+	{
+		if (Sprites[i] == nullptr)
+			continue;
+
+		//by reseting prevxscale
+		//   it will be redrawn
+		Sprites[i]->prevxscale = 0;
+		Sprites[i]->prevyscale = 0;
 	}
 }
 
@@ -230,15 +265,93 @@ Vec2F CSprites::GetSpriteLocation(CSprite* Spr)
 	return Result;
 }
 
-void CSprites::SetSpriteImage(CSprite* Spr, int *AImageID)
+void CSprites::SetSpriteImage(SDL_Renderer* renderer, CSprite* Spr, int *AImageID)
 {
-	SetSpriteImage(Spr, AImageID, 1, 1);
+	SetSpriteImage(renderer, Spr, AImageID, 1, 1);
 }
 
-void CSprites::SetSpriteImage(CSprite* Spr, int *AImageID, int TilesX, int TilesY)
+void CSprites::UpdateImage(SDL_Renderer* renderer, CSprite* Spr) 
 {
+	if(Spr == nullptr)
+		return;
+
+	if(Spr->imageID == nullptr)
+		return;
+
+	if((abs(Spr->yscale) == abs(Spr->prevyscale)) &&
+		(abs(Spr->xscale) == abs(Spr->prevxscale)))
+		return;
+
+	SDL_Texture *tex = Images->GetImage(*Spr->imageID);
+
+	if (tex == NULL)
+		return;
+
+    Uint32 format;
+    int w, h;
+    SDL_BlendMode blendmode;
+    SDL_Texture* renderTarget;
+
+    // Get all properties from the texture we are duplicating
+    SDL_QueryTexture(tex, &format, NULL, &w, &h);
+    SDL_GetTextureBlendMode(tex, &blendmode);
+
+    // Save the current rendering target (will be NULL if it is the current window)
+    renderTarget = SDL_GetRenderTarget(renderer);
+
+	if(Spr->Img != nullptr)
+		SDL_DestroyTexture(Spr->Img);
+
+    // Create a new texture with the same properties as the one we are duplicating
+    Spr->Img = SDL_CreateTexture(renderer, format, SDL_TEXTUREACCESS_TARGET, w, h);
+
+    // Set its blending mode and make it the render target
+    SDL_SetTextureBlendMode(Spr->Img, SDL_BLENDMODE_NONE);
+    SDL_SetRenderTarget(renderer, Spr->Img);
+
+	//clear with transparant color
+	uint8_t r,g,b,a;
+	SDL_GetRenderDrawColor(renderer, &r,&g,&b,&a);
+	SDL_SetRenderDrawColor(renderer,0,0,0,0);
+	SDL_RenderClear(renderer);
+	SDL_SetRenderDrawColor(renderer, r,g,b,a);
+
+	//calculate dest size
+	SDL_Rect TmpR;
+	TmpR.x = 0;
+	TmpR.y = 0;
+	TmpR.w = w * abs(Spr->xscale);
+	TmpR.h = h * abs(Spr->yscale);
+
+	
+	// Render the full original texture onto the new one
+    SDL_RenderCopy(renderer, tex, NULL, &TmpR);
+
+    // Change the blending mode of the new texture to the same as the original one
+    SDL_SetTextureBlendMode(Spr->Img, blendmode);
+
+    // Restore the render target
+    SDL_SetRenderTarget(renderer, renderTarget);
+
+	//remember current scale
+	Spr->prevyscale = Spr->yscale;
+	Spr->prevxscale = Spr->xscale;
+	UpdateImageResets++;
+
+}
+
+void CSprites::SetSpriteImage(SDL_Renderer* renderer, CSprite* Spr, int *AImageID, int TilesX, int TilesY)
+{
+	bool needUpdateImage = Spr->imageID != AImageID;
 	Spr->imageID = AImageID;
 	SDL_Point Tz = Images->ImageSize(*AImageID);
+	if(needUpdateImage)
+	{
+		//to force an update
+		Spr->prevyscale = 0;
+		Spr->prevxscale = 0;
+		UpdateImage(renderer, Spr);
+	}
 	Spr->tileSizeX = (int)floor(Tz.x / TilesX);
 	Spr->tileSizeY = (int)floor(Tz.y / TilesY);
 	Spr->tilesX = TilesX;
@@ -250,10 +363,11 @@ void CSprites::SetSpriteImage(CSprite* Spr, int *AImageID, int TilesX, int Tiles
 	}
 }
 
-void CSprites::SetSpriteScale(CSprite* Spr, Vec2F AScale)
+void CSprites::SetSpriteScale(SDL_Renderer* renderer, CSprite* Spr, Vec2F AScale)
 {
 	Spr->xscale = AScale.x;
 	Spr->yscale = AScale.y;
+	UpdateImage(renderer, Spr);
 }
 
 void CSprites::SetSpriteRotation(CSprite* Spr, double AAngle)

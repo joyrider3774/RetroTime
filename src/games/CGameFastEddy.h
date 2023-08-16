@@ -35,13 +35,14 @@ private:
 	static const int collectablestateidle = 2;
 
 	static const int laddersfitrows = 10;
-	static const int rowfloorsize = 32; //tilesize / 2 oroginals are 64x64
+	static constexpr float rowfloorsizex = 400.0f * xscale; //tilesize / 2 oroginals are 64x64 was 32x32 but i tried to divide by 3 but actually divided by 3.2
+	static constexpr float rowfloorsizey = 32.0f * yscale; //tilesize / 2 oroginals are 64x64 was 32x32 but i tried to divide by 3 but actually divided by 3.2
 	static const int rows = 5;
 
-	static constexpr float playerspeed = 6;
-	static constexpr float playerjumpspeed = 2.8;
-	static constexpr float playerclimbspeed = 2;
-	static constexpr float collectablespeed = 2;
+	static constexpr float playerspeed = 6.4f*xscale;
+	static constexpr float playerjumpspeed = 2.0f;
+	static constexpr float playerclimbspeed = 2.0f * yscale;
+	static constexpr float collectablespeed = 2*xscale;
 
 	static const int maxenemies = 10;
 	static const int maxcollectables = 2;
@@ -67,6 +68,7 @@ private:
 	int spritesheetplayeridle;// = loadImage("Ravenmore/characterIdle")
 	int spritesheetplayerjump;// = loadImage("Ravenmore/characterJumpUp")
 	int spritesheetenemy;// = loadImage("Pipo/char59")
+	int spritesheetenemy2;// = loadImage("Pipo/char59") 
 	int spritesheetcollectable;// = loadImage("Ravenmore/platformPickups")
 	int spritesheetkey;// = loadImage("Ravenmore/PlatformDefaultProps")
 	int background;// = loadImage("EderMuniz/SnowyForestBackA")
@@ -79,7 +81,7 @@ private:
 	int collectedcreated = 0;
 	CSpriteObject player;
 	CSpriteObject ladders[maxladders];
-	CSpriteObject floors[1280 / rowfloorsize * rows]; //1280 is playfield size
+	CSpriteObject floors[(int)(ScreenWidth / rowfloorsizex * rows)]; //1280 is playfield size
 	CSpriteObject enemies[maxenemies];
 	CSpriteObject collectables[maxcollectables];
 	CSpriteObject key;

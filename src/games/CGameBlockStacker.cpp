@@ -311,12 +311,7 @@ void CGameBlockStacker::drawplayfield()
 
 void CGameBlockStacker::DrawBackground(bool motionblur)
 {
-	SDL_Point pos = { ScreenWidth / 2, ScreenHeight / 2};
-	Vec2F scale = {(float)ScreenWidth / backgroundtz.x, (float)ScreenHeight / backgroundtz.y};
-	Game->Image->DrawImageFuze(Game->Renderer, background, true, &pos , 0, &scale, 255,255,255,255);
-	SDL_Rect r = {screenleft, screentop, playfieldwidth, playfieldheight};
-	SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 255);
-	SDL_RenderFillRect(Game->Renderer, &r);
+	Game->Image->DrawImage(Game->Renderer, background, NULL, NULL);
 }
 
 
