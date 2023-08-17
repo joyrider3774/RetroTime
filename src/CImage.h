@@ -3,8 +3,6 @@
 #include <SDL.h>
 #include <iostream>
 #include <string>
-#include <vector>
-#include <algorithm>
 #include "Platform.h"
 #include "Vec2F.h"
 
@@ -21,7 +19,6 @@ class CTexture {
 		int whiteThreshold;
 		int bayerversion;
 		bool cansave;
-		vector<pair<Vec2F, SDL_Texture*>> ScaledImages;
 };
 
 class CImage {

@@ -12,6 +12,8 @@
 #include <algorithm>
 using namespace std;
 
+vector<pair<string, pair<Vec2F, SDL_Texture*>>> ScaledImages;
+
 CImage::CImage(string AssetsPath, bool ADebugInfo)
 {
 	ImgEnabled = true;
@@ -34,6 +36,13 @@ CImage::CImage(string AssetsPath, bool ADebugInfo)
 CImage::~CImage()
 {
 	UnloadImages();
+
+	for(auto it  = ScaledImages.begin(); it < ScaledImages.end(); ++it)
+	{
+		SDL_DestroyTexture(it->second.second);
+	}
+
+
 	IMG_Quit();
 }
 
@@ -60,11 +69,12 @@ SDL_Texture *CImage::LoadScaledImage(SDL_Renderer* Renderer, int GFXID, Vec2F Sc
 	w = (int)ceil(w * abs(Scale.x));
 	h = (int)ceil(h * abs(Scale.y));
 	Vec2F Resolution = {(float)w,(float)h};
-	for(auto it  = Images[GFXID]->ScaledImages.begin(); it < Images[GFXID]->ScaledImages.end(); ++it)
+	for(auto it  = ScaledImages.begin(); it < ScaledImages.end(); ++it)
 	{
-		if ((it->first.x - Resolution.x < epsilion) &&
-			(it->first.y - Resolution.y < epsilion))
-			return it->second;
+		if ((it->first == Images[GFXID]->BaseFilename) && 
+		 	(it->second.first.x - Resolution.x < epsilion) &&
+			(it->second.first.y - Resolution.y < epsilion))
+			return it->second.second;
 	}
 
 	//not loaded yet
@@ -77,7 +87,7 @@ SDL_Texture *CImage::LoadScaledImage(SDL_Renderer* Renderer, int GFXID, Vec2F Sc
 		Tmp = SDL_CreateTextureFromSurface(Renderer, Img);
 		if(Tmp)
 		{
-			Images[GFXID]->ScaledImages.push_back(make_pair(Resolution, Tmp));
+			ScaledImages.push_back(make_pair(Images[GFXID]->BaseFilename, make_pair(Resolution, Tmp)));
 			ScaledImagesLoaded++;
 		}
 		SDL_FreeSurface(Img);
@@ -156,11 +166,6 @@ void CImage::UnLoadImage(int GFXID)
 	if (Images[GFXID] != nullptr)
 	{
 		SDL_DestroyTexture(Images[GFXID]->Img);
-		
-		for(auto it  = Images[GFXID]->ScaledImages.begin(); it < Images[GFXID]->ScaledImages.end(); ++it)
-		{
-			SDL_DestroyTexture(it->second);
-		}
 		
 		delete Images[GFXID];
 		Images[GFXID] = nullptr;
