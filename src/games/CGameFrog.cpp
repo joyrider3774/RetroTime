@@ -612,7 +612,7 @@ void CGameFrog::updateobjects()
 
 	if (objectinfo.mosttop > -1)
 	{
-		if (screenbottom - (visiblerows * playerspeed) - (objects[objectinfo.mosttop].pos.y - objects[objectinfo.mosttop].tz.y / 2 ) <= 0.0001) 
+		if (screenbottom - (visiblerows * playerspeed) - (objects[objectinfo.mosttop].pos.y - objects[objectinfo.mosttop].tz.y / 2 ) <= 0.0001f) 
 		{
 			createobjects(false);
 			rowsspawned += 1;

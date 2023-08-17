@@ -1,4 +1,4 @@
-DEBUG=0
+DEBUG=1
 SRC_DIR = src
 SRC_SUBDIR = games
 OBJ_DIR = obj
@@ -13,7 +13,7 @@ CXX ?= g++
 DESTDIR ?=
 PREFIX ?= /usr
 OPT_LEVEL ?= -O2
-CPPFLAGS ?= -Wall -Wextra -std=c++11 `sdl2-config --cflags`
+CPPFLAGS ?= -Wall -Wextra -std=c++11 `sdl2-config --cflags` -Wdouble-promotion
 LDFLAGS ?= -L$(PREFIX)/lib -g
 LDLIBS ?= `sdl2-config --libs` -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lSDL2 -lSDL2_gfx -lstdc++
 

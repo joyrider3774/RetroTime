@@ -854,7 +854,7 @@ void CGame::MainLoop()
 		y = ((h - h2) / 2);
 
 		SDL_Rect Rect = { x, y, w2, h2};
-		SDL_Rect DithRect = { x, y, w2, h2};
+		//SDL_Rect DithRect = { x, y, w2, h2};
 
 		SDL_SetRenderTarget(Renderer, NULL);
 
@@ -889,19 +889,19 @@ void CGame::MainLoop()
 
 		Uint64 FrameEndPerf = SDL_GetPerformanceCounter();
 		Uint64 FramePerf = FrameEndPerf - FrameStartPerf;
-		double FrameTime = FramePerf / (double)SDL_GetPerformanceFrequency() * 1000.0f;
+		double FrameTime = FramePerf / (double)SDL_GetPerformanceFrequency() * 1000.0;
 		TotalFramePerf += FramePerf;
 
 		if(SDL_GetTicks() - Ticks >= 1000)
 		{
-			AvgFrameTime = (TotalFramePerf / TotalFrames) / (double)SDL_GetPerformanceFrequency() * 1000.0f;
+			AvgFrameTime = (TotalFramePerf / TotalFrames) / (double)SDL_GetPerformanceFrequency() * 1000.0;
 			Fps = TotalFrames;
 			TotalFrames = 0;
 			TotalFramePerf = 0;
 			Ticks = SDL_GetTicks();
 		}
 
-		int RequiredDelay = 1000.0f/DesiredFps - FrameTime;
+		int RequiredDelay = 1000.0/DesiredFps - FrameTime;
 		if (RequiredDelay > 0)
 			SDL_Delay(RequiredDelay);
 	}

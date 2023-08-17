@@ -77,7 +77,7 @@ void CGamePang::createball(int size, float x, float y, float speed)
 			balls[i].pos = { x, y};
 			Game->Sprites->SetSpriteLocation(balls[i].spr, balls[i].pos);
 			balls[i].alive = true;
-			balls[i].speed = speed*0.1;
+			balls[i].speed = speed*0.1f;
 			balls[i].force = -abs(speed);
 			balls[i].curforce = balls[i].force/3;
 			balls[i].id = size;
@@ -111,15 +111,15 @@ void CGamePang::updateballs()
 			balls[i].pos.x += balls[i].speed*2;
 
 			if (balls[i].id == ballbig)
-				balls[i].curforce += 0.1*yscale;
+				balls[i].curforce += 0.1f*yscale;
 			else
 			{
 				if(balls[i].id == ballmedium)
-					balls[i].curforce += 0.15*yscale;
+					balls[i].curforce += 0.15f*yscale;
 				else
 				{
 					if (balls[i].id == ballsmall)
-						balls[i].curforce += 0.25*yscale;
+						balls[i].curforce += 0.25f*yscale;
 				}
 			}
 

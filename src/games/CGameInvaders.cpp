@@ -235,7 +235,7 @@ void CGameInvaders::updateasteroids()
 			Game->Sprites->SetSpriteScale(Game->Renderer,asteroids[i].spr,
 				{asteroidscale - ((asteroidscale / asteroidmaxhealthpoints) * (asteroidmaxhealthpoints - asteroids[i].healthpoints)),
 				asteroidscale - ((asteroidscale / asteroidmaxhealthpoints) * (asteroidmaxhealthpoints - asteroids[i].healthpoints))});
-			Game->Sprites->SetSpriteRotation(asteroids[i].spr, asteroids[i].spr->rotation + 0.5);
+			Game->Sprites->SetSpriteRotation(asteroids[i].spr, asteroids[i].spr->rotation + 0.5f);
 		}
 	}
 }

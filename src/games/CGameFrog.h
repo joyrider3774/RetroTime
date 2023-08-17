@@ -74,7 +74,7 @@ private:
 	static const int cherryscore = 50;
 
 	static const int lenlevelincspeeds = 5;
-	float levelincspeeds[lenlevelincspeeds] = {0, 0.25*yscale, 0.5*yscale, 1.0*yscale, 1.5*yscale};
+	float levelincspeeds[lenlevelincspeeds] = {0.0f, 0.25f*yscale, 0.5f*yscale, 1.0f*yscale, 1.5f*yscale};
 	int levelincspawns[lenlevelincspeeds] = {30, 90, 240, 570, 0};
 
 	static const int numcols = 14;

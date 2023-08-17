@@ -4,11 +4,11 @@
 #include <string>
 #include <sstream>
 
-constexpr bool debugInfo = false;
+constexpr bool debugInfo = true;
 constexpr bool debugShowCollisionShapes = false;
 constexpr bool dumpScaledBitmaps = false;
 constexpr bool useDefaultColorAssets = false;
-constexpr bool loadDumpedScaledBitmaps = false;
+constexpr bool loadDumpedScaledBitmaps = true;
 
 constexpr bool titleAlphaEnabled = true;
 
@@ -25,7 +25,7 @@ constexpr float yscale = ScreenHeight / 720.0f;
 
 constexpr Uint32 PixelFormat = SDL_PIXELFORMAT_ARGB8888;
 
-constexpr float DesiredFps=60.0f;
+constexpr double DesiredFps=60.0;
 
 constexpr int ScoreBarHeight=24;
 

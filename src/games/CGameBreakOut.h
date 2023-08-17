@@ -27,18 +27,18 @@ private:
 	static const int tweenblockpositions = 0;
 	static const int tweenblockdeath = 1;
 	static const int blockstatedeath = 1;
-	static constexpr float ballspeed = 6.0*yscale;
-	static constexpr float ballspeedinc = 0.1*yscale;
+	static constexpr float ballspeed = 6.0f*yscale;
+	static constexpr float ballspeedinc = 0.1f*yscale;
 	static const int ballvelsegments = 5;
-	static constexpr float playerspeed = 8*xscale;
-	static constexpr float blockxoffset = 120*xscale;
-	static constexpr float blockyoffset = 80*yscale;
+	static constexpr float playerspeed = 8.0f*xscale;
+	static constexpr float blockxoffset = 120.0f*xscale;
+	static constexpr float blockyoffset = 80.0f*yscale;
 	static const int blockrows = 10;
 	static const int blockcols = 17;
 	static const int numblocks = blockrows * blockcols;
 
-	const Vec2F spritescale = {2.5*xscale,2.5*yscale};
-	const Vec2F blockspritecale = {1*xscale,2*yscale};
+	const Vec2F spritescale = {2.5f*xscale,2.5f*yscale};
+	const Vec2F blockspritecale = {1.0f*xscale,2.0f*yscale};
 
 	int MusMusic, SfxDie, SfxSucces, SfxBat, SfxBrick;
 	int background, spritesheetblocks, spritesheetbat, spritesheetball;
