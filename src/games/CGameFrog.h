@@ -95,9 +95,9 @@ private:
 	static const int lenrowtypes = 9;
 
 	SRowType rowtypes[lenrowtypes] = {
-	{rowtypewater, 6, 10, true, idenemyplant, 1.0f*yscale, 2, 4},
-	{rowtypewater, 6, 10, true, idenemyplant, 2.0f*yscale, 3, 2},
-	{rowtypewater, 6, 10, true, idenemyplant, 3.0f*yscale, 4, 3},
+	{rowtypewater, 5, 9, true, idenemyplant, 1.0f*yscale, 2, 4},
+	{rowtypewater, 5, 9, true, idenemyplant, 2.0f*yscale, 3, 2},
+	{rowtypewater, 5, 9, true, idenemyplant, 3.0f*yscale, 4, 3},
 
 	{rowtyperoad, 0, 0, false, idenemycar1, 2.0f*yscale, 4, 2}, //ambulance
 	{rowtyperoad, 0, 0, false, idenemycar2, 1.0f*yscale, 3, 2}, //truck
@@ -105,7 +105,7 @@ private:
 	{rowtyperoad, 0, 0, false, idenemycar4, 1.5f*yscale, 4, 2}, //dumptruck
 	{rowtyperoad, 0, 0, false, idenemycar5, 2.5f*yscale, 3, 2}, //jeep
 
-	{rowtypesafety, 12, 12,false, idnone, 2.0f*yscale, 2, 2}
+	{rowtypesafety, 10, 10,false, idnone, 2.0f*yscale, 2, 2}
 	};
 
 

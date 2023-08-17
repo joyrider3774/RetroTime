@@ -200,12 +200,21 @@ int CGameFrog::createobject(int rownr, int col, int id, int arowtype, float spee
 			{
 				tilenr = rowtypes[arowtype].backgroundtile;
 				endtilenr = rowtypes[arowtype].backgroundtileend;
-				Game->Sprites->SetSpriteImage(Game->Renderer,object.spr, &spritesheetbackground,6,3);
+				Game->Sprites->SetSpriteImage(Game->Renderer,object.spr, &spritesheetbackground,5,3);
 				tz = Game->Sprites->TileSize(object.spr);
 				Game->Sprites->SetSpriteAnimation(object.spr, tilenr, endtilenr, 6);
 				Game->Sprites->SetSpriteDepth(object.spr, 0);
+				//col == 0 is hack to have less drawing calls for the sprites
+				//i made the road water and grass tile equal in size as the width needed for a row
+				//so we only need the 1st tile to be visible
+				//however i was not able to not create the other sprite parts somehow
+				//it introduced a bug with row generating and i have not figured out yet
+				//whats causing that so this is a nasty workaround but still have an optimazation
+				//of only doing 1 big draw call for the road / water per row instead of multiple small ones
+				Game->Sprites->SetSpriteVisibility(object.spr, col == 0);
 				object.vel = {0,0};
-				scale = {playerspeed / tz.x, playerspeed / tz.y};
+				//scale = {playerspeed / tz.x, playerspeed / tz.y}
+				scale = {1.0f, 1.0f};
 				visualscale = scale;
 				object.tz.x = tz.x * scale.x;
 				object.tz.y = tz.y * scale.y;
@@ -612,7 +621,7 @@ void CGameFrog::updateobjects()
 
 	if (objectinfo.mosttop > -1)
 	{
-		if (screenbottom - (visiblerows * playerspeed) - (objects[objectinfo.mosttop].pos.y - objects[objectinfo.mosttop].tz.y / 2 ) <= 0.0001f) 
+		if ((screenbottom - (visiblerows * playerspeed)) - (objects[objectinfo.mosttop].pos.y - objects[objectinfo.mosttop].tz.y / 2 ) <= 0.000001f) 
 		{
 			createobjects(false);
 			rowsspawned += 1;

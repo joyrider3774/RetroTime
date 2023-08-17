@@ -67,6 +67,7 @@ private:
 	vector<pair<SDL_Texture*,pair<int, Vec2F>>> LoadedScaledTextures;
 	CImage* Images;
 	int UpdateImageResets;
+	int SpritesDrawn;
 	bool ForceShowCollisionShape;
 	bool needSpriteSorting;
 	void SortSprites();
@@ -102,4 +103,5 @@ public:
 	int SpriteSlotsUsed();
 	int SpriteSlotsMax();
 	int UpdateImageResetsCount();
+	int SpritesDrawnCount();
 };

@@ -15,6 +15,7 @@ CSprites::CSprites(CImage* ACImage)
 	Images = ACImage;
 	ForceShowCollisionShape = false;
 	needSpriteSorting = false;
+	SpritesDrawn = 0;
 	for (int i=0; i < SPR_Max; i++)
 	{
 		Sprites[i] = nullptr;
@@ -34,9 +35,14 @@ void CSprites::SetForceShowCollisionShape(bool val)
 	ForceShowCollisionShape = val;
 }
 
-int  CSprites::UpdateImageResetsCount()
+int CSprites::UpdateImageResetsCount()
 {
 	return  UpdateImageResets;
+}
+
+int CSprites::SpritesDrawnCount()
+{
+	return SpritesDrawn;
 }
 
 CSprite* CSprites::CreateSprite()
@@ -186,6 +192,7 @@ void CSprites::DrawSprite(SDL_Renderer* Renderer, CSprite* Spr)
 
 	if (Spr->show && ((*Spr->imageID > -1) && (Spr->Img != nullptr) && (*Spr->imageID < Images->ImageSlotsMax())))
 	{
+		SpritesDrawn++;
 		SDL_Point pos = {(int)(Spr->x), (int)(Spr->y)};
 	
 		Vec2F scale = {Spr->xscale, Spr->yscale};
@@ -239,6 +246,7 @@ void CSprites::ResetDrawTargets()
 
 void CSprites::DrawSprites(SDL_Renderer* Renderer)
 {
+	SpritesDrawn = 0;
 	for (int i = 0; i < SPR_Max; i++)
 	{
 		if (Sprites[i] == nullptr)

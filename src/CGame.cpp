@@ -880,7 +880,9 @@ void CGame::MainLoop()
 				Text += "MUS Slots: " + to_string(Audio->MusicSlotsUsed()) + "/" + to_string(Audio->MusicSlotsMax()) + "\n";
 				Text += "SPR Slots: " + to_string(Sprites->SpriteSlotsUsed()) + "/" + to_string(Sprites->SpriteSlotsMax()) + "\n";
 				Text += "SPR Resets: " + to_string(Sprites->UpdateImageResetsCount()) + "\n";
+				Text += "SPR Draws: " + to_string(Sprites->SpritesDrawnCount()) + "\n";
 				Text += "SCL Loaded: " + to_string(Image->ScaledImagesLoadedCount()) + "\n";
+				
 			}
 			int tw = Font->TextWidth("RobotoMono-Bold", 14, Text, Text.length());
 			Font->WriteText(Renderer, "RobotoMono-Bold", 14, Text, Text.length(), w - tw, 0, 0, {255, 0, 255, 255});
