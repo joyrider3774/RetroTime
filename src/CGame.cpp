@@ -208,7 +208,7 @@ void CGame::DrawTitleBackground(bool k)
 	}
 }
 
-SDL_Texture* CGame::RandomScreenshot(double Scale)
+SDL_Texture* CGame::RandomScreenshot(float Scale)
 {
 	SDL_Texture* prev = SDL_GetRenderTarget(Renderer);
 	SDL_Texture* image = SDL_CreateTexture(Renderer, PixelFormat, SDL_TEXTUREACCESS_TARGET, ScreenWidth*2, ScreenHeight*2);
@@ -880,9 +880,10 @@ void CGame::MainLoop()
 				Text += "MUS Slots: " + to_string(Audio->MusicSlotsUsed()) + "/" + to_string(Audio->MusicSlotsMax()) + "\n";
 				Text += "SPR Slots: " + to_string(Sprites->SpriteSlotsUsed()) + "/" + to_string(Sprites->SpriteSlotsMax()) + "\n";
 				Text += "SPR Resets: " + to_string(Sprites->UpdateImageResetsCount()) + "\n";
+				Text += "SCL Loaded: " + to_string(Image->ScaledImagesLoadedCount()) + "\n";
 			}
-			int tw = Font->TextWidth("RobotoMono-Bold", 16, Text, Text.length());
-			Font->WriteText(Renderer, "RobotoMono-Bold", 16, Text, Text.length(), w - tw, 0, 0, {255, 0, 255, 255});
+			int tw = Font->TextWidth("RobotoMono-Bold", 14, Text, Text.length());
+			Font->WriteText(Renderer, "RobotoMono-Bold", 14, Text, Text.length(), w - tw, 0, 0, {255, 0, 255, 255});
 		}
 		SDL_RenderPresent(Renderer);
 

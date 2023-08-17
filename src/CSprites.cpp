@@ -248,7 +248,7 @@ void CSprites::DrawSprites(SDL_Renderer* Renderer)
 	}
 }
 
-void SetSpriteRotationSpeed(CSprite* Spr, double rotationSpeed)
+void SetSpriteRotationSpeed(CSprite* Spr, float rotationSpeed)
 {
 	Spr->rotation_speed = rotationSpeed;
 }
@@ -390,9 +390,9 @@ void CSprites::SetSpriteScale(SDL_Renderer* renderer, CSprite* Spr, Vec2F AScale
 	UpdateImage(renderer, Spr);
 }
 
-void CSprites::SetSpriteRotation(CSprite* Spr, double AAngle)
+void CSprites::SetSpriteRotation(CSprite* Spr, float AAngle)
 {
-	double diffAngle = AAngle - Spr->rotation;
+	float diffAngle = AAngle - Spr->rotation;
 	Spr->collisionAngle += diffAngle;
 	Spr->rotation = AAngle;
 }
@@ -419,7 +419,7 @@ void CSprites::SetSpriteAnimation(CSprite* Spr, int StartTile, int EndTile, int 
 	}
 }
 
-void CSprites::SetSpriteCollisionShape(CSprite* Spr, ECollisionShape shape, double width, double height, double rotation, float xoffset, float yoffset)
+void CSprites::SetSpriteCollisionShape(CSprite* Spr, ECollisionShape shape, float width, float height, float rotation, float xoffset, float yoffset)
 {
 	Spr->collisionShape = shape;
 	Spr->collisionWidth = width;

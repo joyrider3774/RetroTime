@@ -37,7 +37,7 @@ private:
 	int pinc;
 	SDL_Texture* ScreenShotRandom;
 
-	SDL_Texture* RandomScreenshot(double Scale);
+	SDL_Texture* RandomScreenshot(float Scale);
 	void UpdateTimer();
 	void MainLoop();
 	void Init();
@@ -63,7 +63,7 @@ public:
 	float SubStateCounter;
 	int MusMenu;
 	int SfxConfirm, SfxBack, SfxSelect, SfxScore, SfxOne, SfxTwo, SfxThree, SfxTimeOver, SfxReadyGo, SfxOneMinute;
-	double Timer;
+	float Timer;
 	Uint32 SubStateTime;
 	bool MotionBlur;
 	int GFXFrameID, GFXMedal;

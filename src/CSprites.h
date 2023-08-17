@@ -34,7 +34,7 @@ class CSprite {
 		float yspeed;
 		float xscale_speed;
 		float yscale_speed;
-		double rotation;
+		float rotation;
 		int tileSizeX;
 		int tileSizeY;
 		int tilesX;
@@ -44,7 +44,7 @@ class CSprite {
 		int animEndTile;
 		int animSpeed;
 		ECollisionShape collisionShape;
-		double collisionAngle;
+		float collisionAngle;
 		float collisionWidth;
 		float collisionHeight;
 		float collisionxoffset;
@@ -55,7 +55,7 @@ class CSprite {
 		float g;
 		float b;
 		float a;
-		double rotation_speed;
+		float rotation_speed;
 		bool show_collision_shape;		
 };
 
@@ -88,15 +88,15 @@ public:
 	int GetSpriteAnimFrameCount(CSprite* Spr);
 	void SetSpriteImage(SDL_Renderer* renderer, CSprite* Spr, int *AImageID);
 	void SetSpriteImage(SDL_Renderer* renderer, CSprite* Spr, int *AImageID, int TilesX, int TilesY);
-	void SetSpriteRotation(CSprite* Spr, double AAngle);
+	void SetSpriteRotation(CSprite* Spr, float AAngle);
 	void SetSpriteScale(SDL_Renderer* renderer, CSprite* Spr, Vec2F AScale);
 	void SetSpriteAnimation(CSprite* Spr, int StartTile, int EndTile, int animSpeed);
-	void SetSpriteCollisionShape(CSprite* Spr, ECollisionShape shape, double width, double height, double rotation, float xoffset, float yoffset);
+	void SetSpriteCollisionShape(CSprite* Spr, ECollisionShape shape, float width, float height, float rotation, float xoffset, float yoffset);
 	void SetSpriteLocation(CSprite* Spr, Vec2F pos );
 	void SetSpriteDepth(CSprite* Spr, int depth);
 	void SetSpriteColour(CSprite* Spr, float red, float green, float blue, float alpha);
 	void SetSpriteVisibility(CSprite* Spr, bool visibility);
-	void SetSpriteRotationSpeed(CSprite* Spr, double rotationSpeed);
+	void SetSpriteRotationSpeed(CSprite* Spr, float rotationSpeed);
 	bool DetectSpriteCollision(CSprite* Spr, CSprite* SprOther);
 	SDL_Point TileSize(CSprite* Spr);
 	int SpriteSlotsUsed();

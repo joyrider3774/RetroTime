@@ -37,6 +37,12 @@ CImage::~CImage()
 	IMG_Quit();
 }
 
+
+int CImage::ScaledImagesLoadedCount()
+{
+	return ScaledImagesLoaded;
+}
+
 SDL_Texture *CImage::LoadScaledImage(SDL_Renderer* Renderer, int GFXID, Vec2F Scale)
 {
 	if(!ImgEnabled)
@@ -72,6 +78,7 @@ SDL_Texture *CImage::LoadScaledImage(SDL_Renderer* Renderer, int GFXID, Vec2F Sc
 		if(Tmp)
 		{
 			Images[GFXID]->ScaledImages.push_back(make_pair(Resolution, Tmp));
+			ScaledImagesLoaded++;
 		}
 		SDL_FreeSurface(Img);
 	}
@@ -187,7 +194,7 @@ void CImage::DrawImage(SDL_Renderer* Renderer, SDL_Texture *Texture, SDL_Rect* S
 	SDL_RenderCopy(Renderer, Texture, Src, Dst);
 }
 
-void CImage::DrawImageEx(SDL_Renderer* Renderer, int GFXID, SDL_Rect* Src, SDL_Rect* Dst, double Angle, SDL_Point* Center, SDL_RendererFlip Flip)
+void CImage::DrawImageEx(SDL_Renderer* Renderer, int GFXID, SDL_Rect* Src, SDL_Rect* Dst, float Angle, SDL_Point* Center, SDL_RendererFlip Flip)
 {
 	if((GFXID < 0) || (GFXID >= GFX_Max))
 		return;
@@ -195,7 +202,7 @@ void CImage::DrawImageEx(SDL_Renderer* Renderer, int GFXID, SDL_Rect* Src, SDL_R
 	DrawImageEx(Renderer, Images[GFXID]->Img, Src, Dst, Angle, Center, Flip);
 }
 
-void CImage::DrawImageEx(SDL_Renderer* Renderer, SDL_Texture *Texture, SDL_Rect* Src, SDL_Rect* Dst, double Angle, SDL_Point* Center, SDL_RendererFlip Flip)
+void CImage::DrawImageEx(SDL_Renderer* Renderer, SDL_Texture *Texture, SDL_Rect* Src, SDL_Rect* Dst, float Angle, SDL_Point* Center, SDL_RendererFlip Flip)
 {
 	if(!ImgEnabled)
 		return;
@@ -207,7 +214,7 @@ void CImage::DrawImageEx(SDL_Renderer* Renderer, SDL_Texture *Texture, SDL_Rect*
 }
 
 //fuze used center points for positions and a floating point scale vector
-void CImage::DrawImageFuzeSrcRectTintFloat(SDL_Renderer* Renderer, int GFXID, SDL_Rect *SrcRect, bool CenterImagePos, SDL_Point* Pos, double Angle, Vec2F* Scale, float TintR, float TintG, float TintB, float Alpha)
+void CImage::DrawImageFuzeSrcRectTintFloat(SDL_Renderer* Renderer, int GFXID, SDL_Rect *SrcRect, bool CenterImagePos, SDL_Point* Pos, float Angle, Vec2F* Scale, float TintR, float TintG, float TintB, float Alpha)
 {
 	if((GFXID < 0) || (GFXID >= GFX_Max))
 		return;
@@ -215,7 +222,7 @@ void CImage::DrawImageFuzeSrcRectTintFloat(SDL_Renderer* Renderer, int GFXID, SD
 	DrawImageFuze(Renderer, Images[GFXID]->Img, SrcRect, CenterImagePos, Pos, Angle, Scale, (Uint8)floor(255.0f * TintR) , (Uint8)floor(255.0f * TintG), (Uint8)floor(255.0f * TintB) , (Uint8)floor(255.0f * Alpha));
 }
 
-void CImage::DrawImageFuzeSrcRectTintFloat(SDL_Renderer* Renderer, SDL_Texture* Texture, SDL_Rect *SrcRect, bool CenterImagePos, SDL_Point* Pos, double Angle, Vec2F* Scale, float TintR, float TintG, float TintB, float Alpha)
+void CImage::DrawImageFuzeSrcRectTintFloat(SDL_Renderer* Renderer, SDL_Texture* Texture, SDL_Rect *SrcRect, bool CenterImagePos, SDL_Point* Pos, float Angle, Vec2F* Scale, float TintR, float TintG, float TintB, float Alpha)
 {
 	if(Texture == nullptr)
 		return;
@@ -224,7 +231,7 @@ void CImage::DrawImageFuzeSrcRectTintFloat(SDL_Renderer* Renderer, SDL_Texture* 
 }
 
 //fuze used center points for positions and a floating point scale vector
-void CImage::DrawImageFuzeTintFloat(SDL_Renderer* Renderer, int GFXID, bool CenterImagePos, SDL_Point* Pos, double Angle, Vec2F* Scale, float TintR, float TintG, float TintB, float Alpha)
+void CImage::DrawImageFuzeTintFloat(SDL_Renderer* Renderer, int GFXID, bool CenterImagePos, SDL_Point* Pos, float Angle, Vec2F* Scale, float TintR, float TintG, float TintB, float Alpha)
 {
 	if((GFXID < 0) || (GFXID >= GFX_Max))
 		return;
@@ -232,7 +239,7 @@ void CImage::DrawImageFuzeTintFloat(SDL_Renderer* Renderer, int GFXID, bool Cent
 	DrawImageFuze(Renderer, Images[GFXID]->Img, NULL, CenterImagePos, Pos, Angle, Scale, (Uint8)floor(255.0f * TintR) , (Uint8)floor(255.0f * TintG), (Uint8)floor(255.0f * TintB) , (Uint8)floor(255.0f * Alpha));
 }
 
-void CImage::DrawImageFuzeTintFloat(SDL_Renderer* Renderer, SDL_Texture *Texture, bool CenterImagePos, SDL_Point* Pos, double Angle, Vec2F* Scale, float TintR, float TintG, float TintB, float Alpha)
+void CImage::DrawImageFuzeTintFloat(SDL_Renderer* Renderer, SDL_Texture *Texture, bool CenterImagePos, SDL_Point* Pos, float Angle, Vec2F* Scale, float TintR, float TintG, float TintB, float Alpha)
 {
 	if(Texture == nullptr)
 		return;
@@ -240,7 +247,7 @@ void CImage::DrawImageFuzeTintFloat(SDL_Renderer* Renderer, SDL_Texture *Texture
 	DrawImageFuze(Renderer, Texture, NULL, CenterImagePos, Pos, Angle, Scale, (Uint8)floor(255.0f * TintR) , (Uint8)floor(255.0f * TintG), (Uint8)floor(255.0f * TintB) , (Uint8)floor(255.0f * Alpha));
 }
 
-void CImage::DrawImageFuze(SDL_Renderer* Renderer, int GFXID, bool CenterImagePos, SDL_Point* Pos, double Angle, Vec2F* Scale, Uint8 TintR, Uint8 TintG, Uint8 TintB, Uint8 Alpha)
+void CImage::DrawImageFuze(SDL_Renderer* Renderer, int GFXID, bool CenterImagePos, SDL_Point* Pos, float Angle, Vec2F* Scale, Uint8 TintR, Uint8 TintG, Uint8 TintB, Uint8 Alpha)
 {
 	if((GFXID < 0) || (GFXID >= GFX_Max))
 		return;
@@ -250,7 +257,7 @@ void CImage::DrawImageFuze(SDL_Renderer* Renderer, int GFXID, bool CenterImagePo
 
 
 //fuze used center points for positions and a floating point scale vector
-void CImage::DrawImageFuze(SDL_Renderer* Renderer, SDL_Texture *Texture, SDL_Rect *SrcRect, bool CenterImagePos, SDL_Point* Pos, double Angle, Vec2F* Scale, Uint8 TintR, Uint8 TintG, Uint8 TintB, Uint8 Alpha)
+void CImage::DrawImageFuze(SDL_Renderer* Renderer, SDL_Texture *Texture, SDL_Rect *SrcRect, bool CenterImagePos, SDL_Point* Pos, float Angle, Vec2F* Scale, Uint8 TintR, Uint8 TintG, Uint8 TintB, Uint8 Alpha)
 {
 	if(!ImgEnabled)
 		return;
