@@ -4,8 +4,10 @@
 #include <iostream>
 #include <string>
 #include <cmath>
+#include <algorithm>
 #include "CSprites.h"
 #include "Vec2F.h"
+#include "Common.h"
 
 CSprites::CSprites(CImage* ACImage)
 {
@@ -94,11 +96,13 @@ void CSprites::RemoveSprite(CSprite* Spr)
 	if((Spr->index < 0) || (Spr->index >= SPR_Max))
 		return;
 	
-	if(Sprites[Spr->index]->Img != nullptr)
-	{
-		SDL_DestroyTexture(Sprites[Spr->index]->Img);
-		Sprites[Spr->index]->Img = nullptr;
-	}
+	//dumped scaled bitmaps are handled in image class
+	if(!loadDumpedScaledBitmaps)
+		if(Sprites[Spr->index]->Img != nullptr)
+		{
+			SDL_DestroyTexture(Sprites[Spr->index]->Img);
+			Sprites[Spr->index]->Img = nullptr;
+		}
 	
 	Sprites[Spr->index] = nullptr;
 		
@@ -183,15 +187,18 @@ void CSprites::DrawSprite(SDL_Renderer* Renderer, CSprite* Spr)
 	if (Spr->show && ((*Spr->imageID > -1) && (Spr->Img != nullptr) && (*Spr->imageID < Images->ImageSlotsMax())))
 	{
 		SDL_Point pos = {(int)(Spr->x), (int)(Spr->y)};
+	
 		Vec2F scale = {Spr->xscale, Spr->yscale};
 		//multiply is to get the sign
 		scale = {1.0f * (Spr->xscale / abs(Spr->xscale)), 1.0f * (Spr->yscale/abs(Spr->yscale))};
 		int AnimTile = Spr->animTile;
 		int y = (int)floor(AnimTile / Spr->tilesX);
 		int x = AnimTile - (y * Spr->tilesX);
-		//SDL_Rect SrcRect = {x * Spr->tileSizeX, y* Spr->tileSizeY, Spr->tileSizeX, Spr->tileSizeY};
-		SDL_Rect SrcRect = {x * Spr->tileSizeX* abs(Spr->xscale), y* Spr->tileSizeY* abs(Spr->yscale), Spr->tileSizeX* abs(Spr->xscale), Spr->tileSizeY* abs(Spr->yscale)};
+		
+		SDL_Rect SrcRect = {(int)(x * Spr->tileSizeX* abs(Spr->xscale)), (int)(y* Spr->tileSizeY* abs(Spr->yscale)), (int)(Spr->tileSizeX* abs(Spr->xscale)),(int)(Spr->tileSizeY* abs(Spr->yscale))};
 		Images->DrawImageFuzeSrcRectTintFloat(Renderer, Spr->Img, &SrcRect, true, &pos, Spr->rotation, &scale, Spr->r, Spr->g, Spr->b, Spr->a);
+		
+
 		if (Spr->show_collision_shape || ForceShowCollisionShape)
 		{
 			SDL_SetRenderDrawColor(Renderer, 255, 0, 255, 255);
@@ -282,62 +289,75 @@ void CSprites::UpdateImage(SDL_Renderer* renderer, CSprite* Spr)
 		(abs(Spr->xscale) == abs(Spr->prevxscale)))
 		return;
 
-	SDL_Texture *tex = Images->GetImage(*Spr->imageID);
+	if(loadDumpedScaledBitmaps)
+		Spr->Img = Images->LoadScaledImage(renderer, *Spr->imageID, {Spr->xscale,Spr->yscale});
+	else
+	{
+		SDL_Texture *tex = Images->GetImage(*Spr->imageID);
 
-	if (tex == NULL)
-		return;
+		if (tex == NULL)
+			return;
 
-    Uint32 format;
-    int w, h;
-    SDL_BlendMode blendmode;
-    SDL_Texture* renderTarget;
+		Uint32 format;
+		int w, h;
+		SDL_BlendMode blendmode;
+		SDL_Texture* renderTarget;
 
-    // Get all properties from the texture we are duplicating
-    SDL_QueryTexture(tex, &format, NULL, &w, &h);
-    SDL_GetTextureBlendMode(tex, &blendmode);
+		// Get all properties from the texture we are duplicating
+		SDL_QueryTexture(tex, &format, NULL, &w, &h);
+		SDL_GetTextureBlendMode(tex, &blendmode);
 
-    // Save the current rendering target (will be NULL if it is the current window)
-    renderTarget = SDL_GetRenderTarget(renderer);
+		// Save the current rendering target (will be NULL if it is the current window)
+		renderTarget = SDL_GetRenderTarget(renderer);
 
-	if(Spr->Img != nullptr)
-		SDL_DestroyTexture(Spr->Img);
+		if(Spr->Img != nullptr)
+			SDL_DestroyTexture(Spr->Img);
 
-    // Create a new texture with the same properties as the one we are duplicating
-    Spr->Img = SDL_CreateTexture(renderer, format, SDL_TEXTUREACCESS_TARGET, w* abs(Spr->xscale), h * abs(Spr->yscale));
+		// Create a new texture with the same properties as the one we are duplicating
+		Spr->Img = SDL_CreateTexture(renderer, format, SDL_TEXTUREACCESS_TARGET, w* abs(Spr->xscale), h * abs(Spr->yscale));
 
-    // Set its blending mode and make it the render target
-    SDL_SetTextureBlendMode(Spr->Img, SDL_BLENDMODE_NONE);
-    SDL_SetRenderTarget(renderer, Spr->Img);
+		// Set its blending mode and make it the render target
+		SDL_SetTextureBlendMode(Spr->Img, SDL_BLENDMODE_NONE);
+		SDL_SetRenderTarget(renderer, Spr->Img);
 
-	//clear with transparant color
-	uint8_t r,g,b,a;
-	SDL_GetRenderDrawColor(renderer, &r,&g,&b,&a);
-	SDL_SetRenderDrawColor(renderer,0,0,0,0);
-	SDL_RenderClear(renderer);
-	SDL_SetRenderDrawColor(renderer, r,g,b,a);
+		//clear with transparant color
+		uint8_t r,g,b,a;
+		SDL_GetRenderDrawColor(renderer, &r,&g,&b,&a);
+		SDL_SetRenderDrawColor(renderer,0,0,0,0);
+		SDL_RenderClear(renderer);
+		SDL_SetRenderDrawColor(renderer, r,g,b,a);
 
-	//calculate dest size
-	SDL_Rect TmpR;
-	TmpR.x = 0;
-	TmpR.y = 0;
-	TmpR.w = w * abs(Spr->xscale);
-	TmpR.h = h * abs(Spr->yscale);
+		//calculate dest size
+		SDL_Rect TmpR;
+		TmpR.x = 0;
+		TmpR.y = 0;
+		TmpR.w = w * abs(Spr->xscale);
+		TmpR.h = h * abs(Spr->yscale);
 
-	
-	// Render the full original texture onto the new one
-    SDL_RenderCopy(renderer, tex, NULL, &TmpR);
+		
+		// Render the full original texture onto the new one
+		SDL_RenderCopy(renderer, tex, NULL, &TmpR);
 
-    // Change the blending mode of the new texture to the same as the original one
-    SDL_SetTextureBlendMode(Spr->Img, blendmode);
+		// Change the blending mode of the new texture to the same as the original one
+		SDL_SetTextureBlendMode(Spr->Img, blendmode);
 
-    // Restore the render target
-    SDL_SetRenderTarget(renderer, renderTarget);
+		// Restore the render target
+		SDL_SetRenderTarget(renderer, renderTarget);
 
-	//remember current scale
-	Spr->prevyscale = Spr->yscale;
-	Spr->prevxscale = Spr->xscale;
-	UpdateImageResets++;
-
+		//remember current scale
+		Spr->prevyscale = Spr->yscale;
+		Spr->prevxscale = Spr->xscale;
+		UpdateImageResets++;
+		
+		Vec2F Vec2FScale = {abs(Spr->xscale), abs(Spr->yscale)};
+		auto search = make_pair(*Spr->imageID, make_pair(Vec2FScale.x,Vec2FScale.y));
+		auto it  = find(SavedScalings.begin(), SavedScalings.end(), search);
+		if (it == SavedScalings.end()) 
+		{
+			SavedScalings.push_back(search);
+			Images->SaveImage(renderer, *Spr->imageID, Vec2FScale);
+		}
+	}
 }
 
 void CSprites::SetSpriteImage(SDL_Renderer* renderer, CSprite* Spr, int *AImageID, int TilesX, int TilesY)

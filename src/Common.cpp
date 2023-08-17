@@ -404,9 +404,14 @@ void SDL_SaveBMPTextureScaled(SDL_Renderer *Renderer, const char *File, SDL_Text
 	if (!Tex)
 		return;
 
+	
 	int w,h;
 	uint32_t f;
 	SDL_QueryTexture(Tex, &f, NULL, &w, &h);
+	if(((int)(w * ScaleX) <= 0) || ((int)(h * ScaleY) <= 0))
+		return;
+	
+	
 	SDL_Texture *Tmp = SDL_CreateTexture(Renderer, f, SDL_TEXTUREACCESS_TARGET, w*ScaleX, h*ScaleY);
 	SDL_Texture *TmpR = SDL_GetRenderTarget(Renderer);
 	

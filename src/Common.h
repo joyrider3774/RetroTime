@@ -4,8 +4,11 @@
 #include <string>
 #include <sstream>
 
-constexpr bool debugInfo = true;
+constexpr bool debugInfo = false;
 constexpr bool debugShowCollisionShapes = false;
+constexpr bool dumpScaledBitmaps = false;
+constexpr bool useDefaultColorAssets = false;
+constexpr bool loadDumpedScaledBitmaps = false;
 
 constexpr bool titleAlphaEnabled = true;
 

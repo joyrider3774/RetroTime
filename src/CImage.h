@@ -3,26 +3,41 @@
 #include <SDL.h>
 #include <iostream>
 #include <string>
+#include <vector>
+#include <algorithm>
 #include "Platform.h"
 #include "Vec2F.h"
+
 
 using namespace std;
 
 
 constexpr int GFX_Max = 100;
 
+class CTexture {
+	public:
+		SDL_Texture* Img;
+		string BaseFilename;
+		int whiteThreshold;
+		int bayerversion;
+		bool cansave;
+		vector<pair<Vec2F, SDL_Texture*>> ScaledImages;
+};
+
 class CImage {
 
 private:
-	SDL_Texture *Images[GFX_Max];
+	CTexture *Images[GFX_Max];
 	string DataPath;
 	bool ImgEnabled;
 	bool DebugInfo;
-
 public:
 	CImage(string AssetsPath, bool ADebugInfo);
 	~CImage();
+	SDL_Texture *LoadScaledImage(SDL_Renderer* Renderer, int GFXID, Vec2F Scale);
 	int LoadImage(SDL_Renderer* Renderer, string FileName);
+	int LoadImage(SDL_Renderer* Renderer, string FileName, int bayerver, int whitethreshold, bool cansave);
+	void SaveImage(SDL_Renderer* Renderer, int GFXID, Vec2F scale);
 	void UnLoadImage(int GFXID);
 	void UnloadImages();
 	void DrawImage(SDL_Renderer* Renderer, int GFXID, SDL_Rect* Src, SDL_Rect* Dst);

@@ -814,44 +814,46 @@ void CGameFrog::LoadGraphics()
 	backgroundtz = Game->Image->ImageSize(background);
 
 
-	spritesheetfrog = Game->Image->LoadImage(Game->Renderer, "frog/player.png");
-	spritesheetbackground = Game->Image->LoadImage(Game->Renderer, "frog/watergrass.png");
-	spritesheetcar1 = Game->Image->LoadImage(Game->Renderer, "frog/carblue.png");
-	spritesheetcar2 = Game->Image->LoadImage(Game->Renderer, "frog/garbagetruck.png");
-	spritesheetcar3 = Game->Image->LoadImage(Game->Renderer, "frog/ambulance.png");
-	spritesheetcar4 = Game->Image->LoadImage(Game->Renderer, "frog/taxi.png");
-	spritesheetcar5 = Game->Image->LoadImage(Game->Renderer, "frog/police.png");
-	spritesheetplant = Game->Image->LoadImage(Game->Renderer, "frog/waterplant.png");
-	spritesheetfruit1 = Game->Image->LoadImage(Game->Renderer, "frog/apple.png");
-	spritesheetfruit2 = Game->Image->LoadImage(Game->Renderer, "frog/lemon.png");
-	spritesheetfruit3 = Game->Image->LoadImage(Game->Renderer, "frog/cherry.png");
+	spritesheetfrog = Game->Image->LoadImage(Game->Renderer, "frog/player.png", 0, 128, dumpScaledBitmaps);
+	spritesheetbackground = Game->Image->LoadImage(Game->Renderer, "frog/watergrass.png", 0, 128, dumpScaledBitmaps);
+	spritesheetcar1 = Game->Image->LoadImage(Game->Renderer, "frog/carblue.png", 0, 80, dumpScaledBitmaps);
+	spritesheetcar2 = Game->Image->LoadImage(Game->Renderer, "frog/garbagetruck.png", 0, 80, dumpScaledBitmaps);
+	spritesheetcar3 = Game->Image->LoadImage(Game->Renderer, "frog/ambulance.png", 0, 80, dumpScaledBitmaps);
+	spritesheetcar4 = Game->Image->LoadImage(Game->Renderer, "frog/taxi.png", 0, 80, dumpScaledBitmaps);
+	spritesheetcar5 = Game->Image->LoadImage(Game->Renderer, "frog/police.png", 0, 80, dumpScaledBitmaps);
+	spritesheetplant = Game->Image->LoadImage(Game->Renderer, "frog/waterplant.png", 0, 140, dumpScaledBitmaps);
+	spritesheetfruit1 = Game->Image->LoadImage(Game->Renderer, "frog/apple.png",0, 10, dumpScaledBitmaps);
+	spritesheetfruit2 = Game->Image->LoadImage(Game->Renderer, "frog/lemon.png",0, 10, dumpScaledBitmaps);
+	spritesheetfruit3 = Game->Image->LoadImage(Game->Renderer, "frog/cherry.png",0, 10, dumpScaledBitmaps);
 
-	SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/frog/player.bmp", Game->Image->GetImage(spritesheetfrog), 1,1, true, 0, 128);
-	SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/frog/watergrass.bmp", Game->Image->GetImage(spritesheetbackground), 1,1, true, 0, 128);
-	SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/frog/carblue.bmp", Game->Image->GetImage(spritesheetcar1), 1,1, true, 0, 80);
-	SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/frog/garbagetruck.bmp", Game->Image->GetImage(spritesheetcar2), 1,1, true, 0, 80);
-	SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/frog/ambulance.bmp", Game->Image->GetImage(spritesheetcar3), 1,1, true,0,  80);
-	SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/frog/taxi.bmp", Game->Image->GetImage(spritesheetcar4), 1,1, true, 0, 80);
-	SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/frog/police.bmp", Game->Image->GetImage(spritesheetcar5), 1,1, true, 0, 80);
-	SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/frog/waterplant.bmp", Game->Image->GetImage(spritesheetplant), 1,1, true,0, 140); //173
-	SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/frog/apple.bmp", Game->Image->GetImage(spritesheetfruit1), 1,1, true,0, 10);
-	SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/frog/lemon.bmp", Game->Image->GetImage(spritesheetfruit2), 1,1, true,0, 10);
-	SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/frog/cherry.bmp", Game->Image->GetImage(spritesheetfruit3), 1,1, true,0, 10);
-	UnloadGraphics();
-
-	background = Game->Image->LoadImage(Game->Renderer, "frog/background.png");
-	backgroundtz = Game->Image->ImageSize(background);
-	spritesheetfrog = Game->Image->LoadImage(Game->Renderer, "frog/player.bmp");
-	spritesheetbackground = Game->Image->LoadImage(Game->Renderer, "frog/watergrass.bmp");
-	spritesheetcar1 = Game->Image->LoadImage(Game->Renderer, "frog/carblue.bmp");
-	spritesheetcar2 = Game->Image->LoadImage(Game->Renderer, "frog/garbagetruck.bmp");
-	spritesheetcar3 = Game->Image->LoadImage(Game->Renderer, "frog/ambulance.bmp");
-	spritesheetcar4 = Game->Image->LoadImage(Game->Renderer, "frog/taxi.bmp");
-	spritesheetcar5 = Game->Image->LoadImage(Game->Renderer, "frog/police.bmp");
-	spritesheetplant = Game->Image->LoadImage(Game->Renderer, "frog/waterplant.bmp");
-	spritesheetfruit1 = Game->Image->LoadImage(Game->Renderer, "frog/apple.bmp");
-	spritesheetfruit2 = Game->Image->LoadImage(Game->Renderer, "frog/lemon.bmp");
-	spritesheetfruit3 = Game->Image->LoadImage(Game->Renderer, "frog/cherry.bmp");
+	// SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/frog/player.bmp", Game->Image->GetImage(spritesheetfrog), 1,1, true, 0, 128);
+	// SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/frog/watergrass.bmp", Game->Image->GetImage(spritesheetbackground), 1,1, true, 0, 128);
+	// SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/frog/carblue.bmp", Game->Image->GetImage(spritesheetcar1), 1,1, true, 0, 80);
+	// SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/frog/garbagetruck.bmp", Game->Image->GetImage(spritesheetcar2), 1,1, true, 0, 80);
+	// SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/frog/ambulance.bmp", Game->Image->GetImage(spritesheetcar3), 1,1, true,0,  80);
+	// SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/frog/taxi.bmp", Game->Image->GetImage(spritesheetcar4), 1,1, true, 0, 80);
+	// SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/frog/police.bmp", Game->Image->GetImage(spritesheetcar5), 1,1, true, 0, 80);
+	// SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/frog/waterplant.bmp", Game->Image->GetImage(spritesheetplant), 1,1, true,0, 140); //173
+	// SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/frog/apple.bmp", Game->Image->GetImage(spritesheetfruit1), 1,1, true,0, 10);
+	// SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/frog/lemon.bmp", Game->Image->GetImage(spritesheetfruit2), 1,1, true,0, 10);
+	// SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/frog/cherry.bmp", Game->Image->GetImage(spritesheetfruit3), 1,1, true,0, 10);
+	if(!useDefaultColorAssets)
+	{
+		UnloadGraphics();
+		background = Game->Image->LoadImage(Game->Renderer, "frog/background.png");
+		backgroundtz = Game->Image->ImageSize(background);
+		spritesheetfrog = Game->Image->LoadImage(Game->Renderer, "frog/player.bmp");
+		spritesheetbackground = Game->Image->LoadImage(Game->Renderer, "frog/watergrass.bmp");
+		spritesheetcar1 = Game->Image->LoadImage(Game->Renderer, "frog/carblue.bmp");
+		spritesheetcar2 = Game->Image->LoadImage(Game->Renderer, "frog/garbagetruck.bmp");
+		spritesheetcar3 = Game->Image->LoadImage(Game->Renderer, "frog/ambulance.bmp");
+		spritesheetcar4 = Game->Image->LoadImage(Game->Renderer, "frog/taxi.bmp");
+		spritesheetcar5 = Game->Image->LoadImage(Game->Renderer, "frog/police.bmp");
+		spritesheetplant = Game->Image->LoadImage(Game->Renderer, "frog/waterplant.bmp");
+		spritesheetfruit1 = Game->Image->LoadImage(Game->Renderer, "frog/apple.bmp");
+		spritesheetfruit2 = Game->Image->LoadImage(Game->Renderer, "frog/lemon.bmp");
+		spritesheetfruit3 = Game->Image->LoadImage(Game->Renderer, "frog/cherry.bmp");
+	}
 
 }
 

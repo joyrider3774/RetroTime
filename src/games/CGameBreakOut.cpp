@@ -517,20 +517,25 @@ void CGameBreakOut::LoadGraphics()
 {
 	background = Game->Image->LoadImage(Game->Renderer, "breakout/background.png");
 	backgroundtz = Game->Image->ImageSize(background);
-	spritesheetblocks = Game->Image->LoadImage(Game->Renderer, "breakout/blocks.png");
-	spritesheetbat = Game->Image->LoadImage(Game->Renderer, "breakout/paddle.png");
-	spritesheetball = Game->Image->LoadImage(Game->Renderer, "breakout/ball.png");
+	spritesheetblocks = Game->Image->LoadImage(Game->Renderer, "breakout/blocks.png", 8, 128, dumpScaledBitmaps); 
+	spritesheetbat = Game->Image->LoadImage(Game->Renderer, "breakout/paddle.png",0, 128, dumpScaledBitmaps);
+	spritesheetball = Game->Image->LoadImage(Game->Renderer, "breakout/ball.png", 0, 128, dumpScaledBitmaps);
 
-	SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/breakout/blocks.bmp", Game->Image->GetImage(spritesheetblocks), 1,1, true,8, 128); //0 80
-	SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/breakout/paddle.bmp", Game->Image->GetImage(spritesheetbat), 1,1, true,0, 128); //173
-	SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/breakout/ball.bmp", Game->Image->GetImage(spritesheetball), 1,1, true,0, 128); //173
+	//SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/breakout/blocks.bmp", Game->Image->GetImage(spritesheetblocks), 1,1, true,8, 128); //0 80
+	//SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/breakout/paddle.bmp", Game->Image->GetImage(spritesheetbat), 1,1, true,0, 128); //173
+	//SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/breakout/ball.bmp", Game->Image->GetImage(spritesheetball), 1,1, true,0, 128); //173
 
-	UnloadGraphics();
-	background = Game->Image->LoadImage(Game->Renderer, "breakout/background.png");
-	backgroundtz = Game->Image->ImageSize(background);
-	spritesheetblocks = Game->Image->LoadImage(Game->Renderer, "breakout/blocks.bmp");
-	spritesheetbat = Game->Image->LoadImage(Game->Renderer, "breakout/paddle.bmp");
-	spritesheetball = Game->Image->LoadImage(Game->Renderer, "breakout/ball.bmp");
+	if(!useDefaultColorAssets)
+	{
+		UnloadGraphics();
+		background = Game->Image->LoadImage(Game->Renderer, "breakout/background.png");
+		backgroundtz = Game->Image->ImageSize(background);
+		spritesheetblocks = Game->Image->LoadImage(Game->Renderer, "breakout/blocks.bmp");
+		spritesheetbat = Game->Image->LoadImage(Game->Renderer, "breakout/paddle.bmp");
+		spritesheetball = Game->Image->LoadImage(Game->Renderer, "breakout/ball.bmp");
+	}
+
+
 }
 
 void CGameBreakOut::UnloadGraphics()

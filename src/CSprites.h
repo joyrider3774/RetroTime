@@ -3,6 +3,7 @@
 #include <SDL.h>
 #include <iostream>
 #include <string>
+#include <vector>
 #include "CImage.h"
 #include "Vec2F.h"
 
@@ -62,6 +63,8 @@ class CSprites {
 
 private:
 	CSprite* Sprites[SPR_Max];
+	vector<pair<int,pair<float,float>>> SavedScalings;
+	vector<pair<SDL_Texture*,pair<int, Vec2F>>> LoadedScaledTextures;
 	CImage* Images;
 	int UpdateImageResets;
 	bool ForceShowCollisionShape;

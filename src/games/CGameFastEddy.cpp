@@ -964,37 +964,40 @@ void CGameFastEddy::UnLoadSound()
 void CGameFastEddy::LoadGraphics()
 {
 	background = Game->Image->LoadImage(Game->Renderer, "fasterdave/background.png");
-	spritesheet = Game->Image->LoadImage(Game->Renderer, "fasterdave/floortileset.png");
-	spritesheetladder = Game->Image->LoadImage(Game->Renderer, "fasterdave/ladder.png");
-	spritesheetplayerclimb = Game->Image->LoadImage(Game->Renderer, "fasterdave/Character_character_climb.png");
-	spritesheetplayerrun = Game->Image->LoadImage(Game->Renderer, "fasterdave/Character_character_run.png");
-	spritesheetplayeridle = Game->Image->LoadImage(Game->Renderer, "fasterdave/Character_character_idle.png");
-	spritesheetplayerjump = Game->Image->LoadImage(Game->Renderer, "fasterdave/Character_character_jump_up.png");
-	spritesheetenemy = Game->Image->LoadImage(Game->Renderer, "fasterdave/enemy.png");
-	spritesheetcollectable = Game->Image->LoadImage(Game->Renderer, "fasterdave/orbs.png");
-	spritesheetkey = Game->Image->LoadImage(Game->Renderer, "fasterdave/key.png");
+	spritesheet = Game->Image->LoadImage(Game->Renderer, "fasterdave/floortileset.png",0, 128, dumpScaledBitmaps);
+	spritesheetladder = Game->Image->LoadImage(Game->Renderer, "fasterdave/ladder.png",0, 128, dumpScaledBitmaps);
+	spritesheetplayerclimb = Game->Image->LoadImage(Game->Renderer, "fasterdave/Character_character_climb.png",0, 128, dumpScaledBitmaps);
+	spritesheetplayerrun = Game->Image->LoadImage(Game->Renderer, "fasterdave/Character_character_run.png",0, 128, dumpScaledBitmaps);
+	spritesheetplayeridle = Game->Image->LoadImage(Game->Renderer, "fasterdave/Character_character_idle.png",0, 128, dumpScaledBitmaps);
+	spritesheetplayerjump = Game->Image->LoadImage(Game->Renderer, "fasterdave/Character_character_jump_up.png",0, 128, dumpScaledBitmaps);
+	spritesheetenemy = Game->Image->LoadImage(Game->Renderer, "fasterdave/enemy.png",0, 128, dumpScaledBitmaps);
+	spritesheetcollectable = Game->Image->LoadImage(Game->Renderer, "fasterdave/orbs.png",0, 128, dumpScaledBitmaps);
+	spritesheetkey = Game->Image->LoadImage(Game->Renderer, "fasterdave/key.png",0, 128, dumpScaledBitmaps);
 
-    SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/fasterdave/ladder.bmp", Game->Image->GetImage(spritesheetladder), 1,1, true,0, 128);
-	SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/fasterdave/floortileset.bmp", Game->Image->GetImage(spritesheet), 1,1, true,0, 128);
-	SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/fasterdave/Character_character_climb.bmp", Game->Image->GetImage(spritesheetplayerclimb), 1,1, true,0, 128);
-	SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/fasterdave/Character_character_run.bmp", Game->Image->GetImage(spritesheetplayerrun), 1,1, true,0, 128);
-	SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/fasterdave/Character_character_idle.bmp", Game->Image->GetImage(spritesheetplayeridle), 1,1, true,0, 128);
-	SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/fasterdave/Character_character_jump_up.bmp", Game->Image->GetImage(spritesheetplayerjump), 1,1, true,0, 128);
-	SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/fasterdave/enemy.bmp", Game->Image->GetImage(spritesheetenemy), 1,1, true, 0, 128);
-	SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/fasterdave/orbs.bmp", Game->Image->GetImage(spritesheetcollectable), 1,1, true,0, 128);
-	SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/fasterdave/key.bmp", Game->Image->GetImage(spritesheetkey), 1,1, true,0, 128);
-
-    UnloadGraphics();
-	background = Game->Image->LoadImage(Game->Renderer, "fasterdave/background.png");	
-	spritesheetladder = Game->Image->LoadImage(Game->Renderer, "fasterdave/ladder.bmp");
-	spritesheet = Game->Image->LoadImage(Game->Renderer, "fasterdave/floortileset.bmp");
-	spritesheetplayerclimb = Game->Image->LoadImage(Game->Renderer, "fasterdave/Character_character_climb.bmp");
-	spritesheetplayerrun = Game->Image->LoadImage(Game->Renderer, "fasterdave/Character_character_run.bmp");
-	spritesheetplayeridle = Game->Image->LoadImage(Game->Renderer, "fasterdave/Character_character_idle.bmp");
-	spritesheetplayerjump = Game->Image->LoadImage(Game->Renderer, "fasterdave/Character_character_jump_up.bmp");
-	spritesheetenemy = Game->Image->LoadImage(Game->Renderer, "fasterdave/enemy.bmp");
-	spritesheetcollectable = Game->Image->LoadImage(Game->Renderer, "fasterdave/orbs.bmp");
-	spritesheetkey = Game->Image->LoadImage(Game->Renderer, "fasterdave/key.bmp");
+    // SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/fasterdave/ladder.bmp", Game->Image->GetImage(spritesheetladder), 1,1, true,0, 128);
+	// SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/fasterdave/floortileset.bmp", Game->Image->GetImage(spritesheet), 1,1, true,0, 128);
+	// SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/fasterdave/Character_character_climb.bmp", Game->Image->GetImage(spritesheetplayerclimb), 1,1, true,0, 128);
+	// SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/fasterdave/Character_character_run.bmp", Game->Image->GetImage(spritesheetplayerrun), 1,1, true,0, 128);
+	// SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/fasterdave/Character_character_idle.bmp", Game->Image->GetImage(spritesheetplayeridle), 1,1, true,0, 128);
+	// SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/fasterdave/Character_character_jump_up.bmp", Game->Image->GetImage(spritesheetplayerjump), 1,1, true,0, 128);
+	// SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/fasterdave/enemy.bmp", Game->Image->GetImage(spritesheetenemy), 1,1, true, 0, 128);
+	// SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/fasterdave/orbs.bmp", Game->Image->GetImage(spritesheetcollectable), 1,1, true,0, 128);
+	// SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/fasterdave/key.bmp", Game->Image->GetImage(spritesheetkey), 1,1, true,0, 128);
+	
+	if(!useDefaultColorAssets)
+	{
+		UnloadGraphics();
+		background = Game->Image->LoadImage(Game->Renderer, "fasterdave/background.png");	
+		spritesheetladder = Game->Image->LoadImage(Game->Renderer, "fasterdave/ladder.bmp");
+		spritesheet = Game->Image->LoadImage(Game->Renderer, "fasterdave/floortileset.bmp");
+		spritesheetplayerclimb = Game->Image->LoadImage(Game->Renderer, "fasterdave/Character_character_climb.bmp");
+		spritesheetplayerrun = Game->Image->LoadImage(Game->Renderer, "fasterdave/Character_character_run.bmp");
+		spritesheetplayeridle = Game->Image->LoadImage(Game->Renderer, "fasterdave/Character_character_idle.bmp");
+		spritesheetplayerjump = Game->Image->LoadImage(Game->Renderer, "fasterdave/Character_character_jump_up.bmp");
+		spritesheetenemy = Game->Image->LoadImage(Game->Renderer, "fasterdave/enemy.bmp");
+		spritesheetcollectable = Game->Image->LoadImage(Game->Renderer, "fasterdave/orbs.bmp");
+		spritesheetkey = Game->Image->LoadImage(Game->Renderer, "fasterdave/key.bmp");
+	}
 
 	
 

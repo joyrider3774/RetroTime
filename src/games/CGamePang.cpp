@@ -503,21 +503,24 @@ void CGamePang::UnLoadSound()
 void CGamePang::LoadGraphics()
 {
 	background = Game->Image->LoadImage(Game->Renderer, "pang/background.png");
-
-	spritesheetplayer = Game->Image->LoadImage(Game->Renderer, "pang/character.png");
-	spritesheetbullet = Game->Image->LoadImage(Game->Renderer, "pang/weapon.png");
-	spritesheetball = Game->Image->LoadImage(Game->Renderer, "pang/ball.png");
+	spritesheetplayer = Game->Image->LoadImage(Game->Renderer, "pang/character.png",0, 118, dumpScaledBitmaps);
+	spritesheetbullet = Game->Image->LoadImage(Game->Renderer, "pang/weapon.png", 0, 128, dumpScaledBitmaps);
+	spritesheetball = Game->Image->LoadImage(Game->Renderer, "pang/ball.png",0, 128, dumpScaledBitmaps);
 	
-	SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/pang/character.bmp", Game->Image->GetImage(spritesheetplayer), 1,1, true, 0, 118);
-	SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/pang/weapon.bmp", Game->Image->GetImage(spritesheetbullet), 1,1, true, 0, 128);
-	SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/pang/ball.bmp", Game->Image->GetImage(spritesheetball), 1,1, true, 0, 128);
-	UnloadGraphics();
-	background = Game->Image->LoadImage(Game->Renderer, "pang/background.png");
-	spritesheetplayer = Game->Image->LoadImage(Game->Renderer, "pang/character.bmp");
-	spritesheetbullet = Game->Image->LoadImage(Game->Renderer, "pang/weapon.bmp");
-	spritesheetball = Game->Image->LoadImage(Game->Renderer, "pang/ball.bmp");
-	
+	// SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/pang/character.bmp", Game->Image->GetImage(spritesheetplayer), 1,1, true, 0, 118);
+	// SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/pang/weapon.bmp", Game->Image->GetImage(spritesheetbullet), 1,1, true, 0, 128);
+	// SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/pang/ball.bmp", Game->Image->GetImage(spritesheetball), 1,1, true, 0, 128);
 
+
+	if (!useDefaultColorAssets)
+	{
+		UnloadGraphics();
+		background = Game->Image->LoadImage(Game->Renderer, "pang/background.png");
+		spritesheetplayer = Game->Image->LoadImage(Game->Renderer, "pang/character.bmp");
+		spritesheetbullet = Game->Image->LoadImage(Game->Renderer, "pang/weapon.bmp");
+	 	spritesheetball = Game->Image->LoadImage(Game->Renderer, "pang/ball.bmp");
+	}
+	
 	
 	spritesheetballtz = Game->Image->ImageSize(spritesheetball);
 
