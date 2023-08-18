@@ -1,4 +1,5 @@
 DEBUG=1
+PROFILE=0
 SRC_DIR = src
 SRC_SUBDIR = games
 OBJ_DIR = obj
@@ -13,16 +14,26 @@ CXX ?= g++
 DESTDIR ?=
 PREFIX ?= /usr
 OPT_LEVEL ?= -O2
-CPPFLAGS ?= -Wall -Wextra -std=c++11 `sdl2-config --cflags` -Wdouble-promotion
-LDFLAGS ?= -L$(PREFIX)/lib -g
-LDLIBS ?= `sdl2-config --libs` -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lSDL2 -lSDL2_gfx -lstdc++
+CPPFLAGS ?= -Wall -Wextra -std=c++11 `sdl2-config --cflags` -Wdouble-promotion 
+LDFLAGS ?= -L$(PREFIX)/lib
+LDLIBS ?= `sdl2-config --libs` -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lSDL2 -lSDL2_gfx -lstdc++ 
 
 ifeq ($(DEBUG), 1)
+CPPFLAGS += -g 
+OPT_LEVEL =
+
 ifeq ($(OS),Windows_NT)
 LDLIBS += -mconsole
 endif
-CPPFLAGS += -g
-OPT_LEVEL =
+
+ifeq ($(PROFILE), 1)
+CPPFLAGS += -pg -no-pie
+LDFLAGS += -pg -no-pie
+ifeq ($(OS),Windows_NT)
+LDLIBS += /mingw32/lib/libgmon.a
+endif
+endif
+
 endif
 
 #MINGW does not have X11 and does not require it
