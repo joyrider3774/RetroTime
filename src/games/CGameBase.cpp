@@ -378,7 +378,7 @@ void CGameBase::PauseMenu()
 
 void CGameBase::DrawScoreBar()
 {
-	SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 100);
+	SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 255);
 	SDL_Rect r = {0, 0, ScreenWidth, ScoreBarHeight};
 	SDL_RenderFillRect(Game->Renderer, &r);
 	string Text = "";
@@ -401,7 +401,7 @@ void CGameBase::DrawScoreBar()
 			Text += "Timer: " + to_string_with_precision(Game->Timer, 2) + " Score:" + to_string(Game->Scores[Game->Game][Game->GameMode]) +
 				" Previous High Score: " + to_string(Game->HighScores[Game->Game][Game->GameMode]);
 	}
-	Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 20, Text, Text.length(), 0, 0, 0, {255,255,255,255});
+	Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 20*yscale, Text, Text.length(), 0, 0, 0, {255,255,255,255});
 }
 
 void CGameBase::OnGameStart()
@@ -413,9 +413,9 @@ void CGameBase::DrawSubStateText()
 {
 	//textSize(scpregamefontsize)
 	//tz = textWidth(text)
-	int w = Game->Font->TextWidth("Roboto-Regular", 60, SubStateText, SubStateText.length());
-	Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 60, SubStateText, SubStateText.length(), screenleft + ((screenright - screenleft) / 2) - w/2,
-		screentop + ((screenbottom - screentop) / 2) - 90, 0, {255, 255, 255, 240});
+	int w = Game->Font->TextWidth("Roboto-Regular", 60*yscale, SubStateText, SubStateText.length());
+	Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 60*yscale, SubStateText, SubStateText.length(), screenleft + ((screenright - screenleft) / 2) - w/2,
+		screentop + ((screenbottom - screentop) / 2) - 90*xscale, 0, {255, 255, 255, 240});
 }
 
 void CGameBase::UpdateLogic()

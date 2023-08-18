@@ -27,7 +27,7 @@ constexpr Uint32 PixelFormat = SDL_PIXELFORMAT_ARGB8888;
 
 constexpr double DesiredFps=60.0;
 
-constexpr int ScoreBarHeight=24;
+constexpr int ScoreBarHeight=24*yscale;
 
 //GameStates
 constexpr int initDiff=50;
