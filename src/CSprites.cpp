@@ -298,7 +298,13 @@ void CSprites::UpdateImage(SDL_Renderer* renderer, CSprite* Spr)
 		return;
 
 	if(loadDumpedScaledBitmaps)
+	{
 		Spr->Img = Images->LoadScaledImage(renderer, *Spr->imageID, {Spr->xscale,Spr->yscale});
+		//remember current scale
+		Spr->prevyscale = Spr->yscale;
+		Spr->prevxscale = Spr->xscale;
+		UpdateImageResets++;
+	}
 	else
 	{
 		SDL_Texture *tex = Images->GetImage(*Spr->imageID);
