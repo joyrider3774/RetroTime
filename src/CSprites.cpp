@@ -479,12 +479,20 @@ bool CSprites::DetectRectCircleCollsion(CSprite* SprRect, CSprite* SprCircle)
 	Vec2F aabb_center = {SprRect->x + SprRect->collisionxoffset / 2.0f, SprRect->y + SprRect->collisionyoffset / 2.0f};
 
 	// get difference vector between both centers
-	Vec2F difference = center - aabb_center;
-	Vec2F clamped = clamp(difference, -aabb_half_extents, aabb_half_extents);
+	Vec2F difference;
+	difference.x = center.x - aabb_center.x;
+	difference.y = center.y - aabb_center.y;
+	Vec2F neg_half_extends;
+	neg_half_extends.x = -aabb_half_extents.x;
+	neg_half_extends.y = -aabb_half_extents.y;
+	Vec2F clamped = clamp(difference, neg_half_extends, aabb_half_extents);
 	// add clamped value to AABB_center and we get the value of box closest to circle
-	Vec2F closest = aabb_center + clamped;
+	Vec2F closest;
+	closest.x = aabb_center.x + clamped.x;
+	closest.y = aabb_center.y + clamped.y;
 	// retrieve vector between center circle and closest point AABB and check if length <= radius
-	difference = closest - center;
+	difference.x = closest.x - center.x;
+	difference.y = closest.y - center.y;
 
 	return length(difference) < (abs(SprCircle->collisionWidth) * abs(SprCircle->xscale) / 2.0f);
 }
