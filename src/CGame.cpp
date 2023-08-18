@@ -903,9 +903,12 @@ void CGame::MainLoop()
 			Ticks = SDL_GetTicks();
 		}
 
-		int RequiredDelay = 1000.0/DesiredFps - FrameTime;
-		if (RequiredDelay > 0)
-			SDL_Delay(RequiredDelay);
+		if(DesiredFps > 0)
+		{
+			int RequiredDelay = 1000.0/DesiredFps - FrameTime;
+			if (RequiredDelay > 0)
+				SDL_Delay(RequiredDelay);
+		}
 	}
 	DeInit();
 }
