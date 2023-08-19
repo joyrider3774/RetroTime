@@ -20,7 +20,7 @@ class CGameRamIt;
 class CGameSnake;
 struct CGameBlockStacker;
 class CGameFastEddy;
-class CGameBreakOut;
+struct CGameBreakOut;
 class CGameBase;
 class CGameFrog;
 class CGameInvaders;

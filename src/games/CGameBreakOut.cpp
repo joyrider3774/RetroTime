@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 #include <cmath>
+#include <stdlib.h>
 #include "CGameBreakOut.h"
 #include "../CGame.h"
 #include "../Common.h"
@@ -10,179 +11,228 @@
 
 using namespace std;
 
-CGameBreakOut::CGameBreakOut(CGame* aGame)
+CGameBreakOut* Create_CGameBreakOut(CGame* aGame)
 {
-	GameBase = Create_CGameBase(aGame, GSBreakout, false);
-	MusMusic = -1;
-	SfxSucces = -1;
-	SfxDie = -1;
-	SfxBrick = -1;
-	SfxBat = -1;
-	GameBase->screenleft = 0;
-	GameBase->screenright = ScreenWidth;
-	GameBase->screentop = 0;
-	GameBase->screenbottom = ScreenHeight;
+	CGameBreakOut* GameBreakOut = (CGameBreakOut*) malloc(sizeof(CGameBreakOut));
+	GameBreakOut->GameBase = Create_CGameBase(aGame, GSBreakout, false);
+	GameBreakOut->MusMusic = -1;
+	GameBreakOut->SfxSucces = -1;
+	GameBreakOut->SfxDie = -1;
+	GameBreakOut->SfxBrick = -1;
+	GameBreakOut->SfxBat = -1;
+	GameBreakOut->GameBase->screenleft = 0;
+	GameBreakOut->GameBase->screenright = ScreenWidth;
+	GameBreakOut->GameBase->screentop = 0;
+	GameBreakOut->GameBase->screenbottom = ScreenHeight;
+
+	GameBreakOut->background = 0;
+	GameBreakOut->spritesheetblocks = 0;
+	GameBreakOut->spritesheetbat = 0;
+	GameBreakOut->spritesheetball = 0;
+	GameBreakOut->backgroundtz.x = 0;
+	GameBreakOut->backgroundtz.y = 0;
+
+	GameBreakOut->curballspeed = 0.0f;
+	GameBreakOut->pattern = 0;
+	GameBreakOut->blockinfo.mostbottom = 0;
+	GameBreakOut->blockinfo.mostleft = 0;
+	GameBreakOut->blockinfo.mostright = 0;
+
+	for (int i= 0; i < GameBreakOut->numblocks; i++)
+	{
+		Initialize_CSpriteObject(&GameBreakOut->blocks[i]);
+		initialize_CTweenInfo(&GameBreakOut->tweens[i][0]);
+		initialize_CTweenInfo(&GameBreakOut->tweens[i][1]);
+	}
+	
+	Initialize_CSpriteObject(&GameBreakOut->player);
+	Initialize_CSpriteObject(&GameBreakOut->ball);
+
+
+	GameBreakOut->updateball = CGameBreakOut_updateball;
+	GameBreakOut->createball = CGameBreakOut_createball;
+	GameBreakOut->destroyball = CGameBreakOut_destroyball;
+	GameBreakOut->updateplayer = CGameBreakOut_updateplayer;
+	GameBreakOut->createplayer = CGameBreakOut_createplayer;
+	GameBreakOut->destroyplayer = CGameBreakOut_destroyplayer;
+	GameBreakOut->updateblocks = CGameBreakOut_updateblocks;
+	GameBreakOut->createblocks = CGameBreakOut_createblocks;
+	GameBreakOut->destroyblock = CGameBreakOut_destroyblock;
+	GameBreakOut->destroyallblocks = CGameBreakOut_destroyallblocks;
+	GameBreakOut->updateblockinfo = CGameBreakOut_updateblockinfo;
+	GameBreakOut->init = CGameBreakOut_init;
+	GameBreakOut->deinit = CGameBreakOut_deinit;
+	GameBreakOut->UnloadGraphics = CGameBreakOut_UnloadGraphics;
+	GameBreakOut->LoadGraphics = CGameBreakOut_LoadGraphics;
+	GameBreakOut->LoadSound = CGameBreakOut_LoadSound;
+	GameBreakOut->UnLoadSound = CGameBreakOut_UnLoadSound;
+	GameBreakOut->UpdateObjects = CGameBreakOut_UpdateObjects;
+	GameBreakOut->DrawBackground = CGameBreakOut_DrawBackground;
+	GameBreakOut->Draw = CGameBreakOut_Draw;
+	GameBreakOut->UpdateLogic = CGameBreakOut_UpdateLogic;
+	return GameBreakOut;
 }
 
-CGameBreakOut::~CGameBreakOut()
+void Destroy_CGameBreakOut(CGameBreakOut* GameBreakOut)
 {
-	Destroy_CGameBase(GameBase);
+	Destroy_CGameBase(GameBreakOut->GameBase);
+	free(GameBreakOut);
 }
 
 //blocks ----------------------------------------------------------------------------------------------------------------
 
-void CGameBreakOut::updateblockinfo()
+void CGameBreakOut_updateblockinfo(CGameBreakOut* GameBreakOut)
 {
-	blockinfo.mostleft = -1;
-	blockinfo.mostright = -1;
-	blockinfo.mostbottom = -1;
+	GameBreakOut->blockinfo.mostleft = -1;
+	GameBreakOut->blockinfo.mostright = -1;
+	GameBreakOut->blockinfo.mostbottom = -1;
 
-	int x1 = GameBase->screenright + 1;
-	int x2 = GameBase->screenleft - 1;
-	int y = GameBase->screentop - 1;
-	for (int i = 0; i < numblocks; i++)
+	int x1 = GameBreakOut->GameBase->screenright + 1;
+	int x2 = GameBreakOut->GameBase->screenleft - 1;
+	int y = GameBreakOut->GameBase->screentop - 1;
+	for (int i = 0; i < GameBreakOut->numblocks; i++)
 	{
-		if (blocks[i].alive)
+		if (GameBreakOut->blocks[i].alive)
 		{
-			if (blocks[i].pos.x < x1)
+			if (GameBreakOut->blocks[i].pos.x < x1)
 			{
-				x1 = blocks[i].pos.x;
-				blockinfo.mostleft = i;
+				x1 = GameBreakOut->blocks[i].pos.x;
+				GameBreakOut->blockinfo.mostleft = i;
 			}
 
-			if (blocks[i].pos.x > x2)
+			if (GameBreakOut->blocks[i].pos.x > x2)
 			{
-				x2 = blocks[i].pos.x;
-				blockinfo.mostright = i;
+				x2 = GameBreakOut->blocks[i].pos.x;
+				GameBreakOut->blockinfo.mostright = i;
 			}
 
-			if (blocks[i].pos.y > y)
+			if (GameBreakOut->blocks[i].pos.y > y)
 			{
-				y = blocks[i].pos.y;
-				blockinfo.mostbottom = i;
+				y = GameBreakOut->blocks[i].pos.y;
+				GameBreakOut->blockinfo.mostbottom = i;
 			}
 		}
 	}
 }
 
 
-void CGameBreakOut::destroyallblocks()
+void CGameBreakOut_destroyallblocks(CGameBreakOut* GameBreakOut)
 {
-	for (int i = 0; i < numblocks; i++)
-		destroyblock(i);
+	for (int i = 0; i < GameBreakOut->numblocks; i++)
+		GameBreakOut->destroyblock(GameBreakOut,i);
 }
 
-void CGameBreakOut::destroyblock(int index)
+void CGameBreakOut_destroyblock(CGameBreakOut* GameBreakOut, int index)
 {
-	if(blocks[index].alive)
+	if(GameBreakOut->blocks[index].alive)
 	{
-		GameBase->Game->Sprites->RemoveSprite(blocks[index].spr);
-		blocks[index].alive = false;
+		GameBreakOut->GameBase->Game->Sprites->RemoveSprite(GameBreakOut->blocks[index].spr);
+		GameBreakOut->blocks[index].alive = false;
 	}
 }
 
-void CGameBreakOut::createblocks(bool setlocation)
+void CGameBreakOut_createblocks(CGameBreakOut* GameBreakOut, bool setlocation)
 {
-	pattern = rand() % 5;
-	for (int x = 0; x < blockcols; x++)
+	GameBreakOut->pattern = rand() % 5;
+	for (int x = 0; x < GameBreakOut->blockcols; x++)
 	{
-		for(int y = 0; y < blockrows; y++)
+		for(int y = 0; y < GameBreakOut->blockrows; y++)
 		{
-			tweens[x + y * blockcols][tweenblockpositions] = createtween(tweenblockpositions, 1+ ((rand() %(6)) / 10), funcsmoothstop, 1, true, DesiredFps);
-			blocks[x + y * blockcols].spr = GameBase->Game->Sprites->CreateSprite();
-			blocks[x + y * blockcols].state = 0;
-			blocks[x + y * blockcols].alive = true;
-			GameBase->Game->Sprites->SetSpriteImage(GameBase->Game->Renderer,blocks[x + y * blockcols].spr, &spritesheetblocks, 6, 1);
-			SDL_Point tz = GameBase->Game->Sprites->TileSize(blocks[x + y * blockcols].spr);
-			tz.x = tz.x * blockspritecale.x;
-			tz.y = tz.y * blockspritecale.y;
-			blocks[x + y * blockcols].tz = tz;
-			GameBase->Game->Sprites->SetSpriteAnimation(blocks[x + y * blockcols].spr, y % 6, y % 6, 0);
+			GameBreakOut->tweens[x + y * GameBreakOut->blockcols][GameBreakOut->tweenblockpositions] = createtween(GameBreakOut->tweenblockpositions, 1+ ((rand() %(6)) / 10), funcsmoothstop, 1, true, DesiredFps);
+			GameBreakOut->blocks[x + y * GameBreakOut->blockcols].spr = GameBreakOut->GameBase->Game->Sprites->CreateSprite();
+			GameBreakOut->blocks[x + y * GameBreakOut->blockcols].state = 0;
+			GameBreakOut->blocks[x + y * GameBreakOut->blockcols].alive = true;
+			GameBreakOut->GameBase->Game->Sprites->SetSpriteImage(GameBreakOut->GameBase->Game->Renderer,GameBreakOut->blocks[x + y * GameBreakOut->blockcols].spr, &GameBreakOut->spritesheetblocks, 6, 1);
+			SDL_Point tz = GameBreakOut->GameBase->Game->Sprites->TileSize(GameBreakOut->blocks[x + y * GameBreakOut->blockcols].spr);
+			tz.x = tz.x * GameBreakOut->blockspritecale.x;
+			tz.y = tz.y * GameBreakOut->blockspritecale.y;
+			GameBreakOut->blocks[x + y * GameBreakOut->blockcols].tz = tz;
+			GameBreakOut->GameBase->Game->Sprites->SetSpriteAnimation(GameBreakOut->blocks[x + y * GameBreakOut->blockcols].spr, y % 6, y % 6, 0);
 
-			GameBase->Game->Sprites->SetSpriteScale(GameBase->Game->Renderer,blocks[x + y * blockcols].spr, blockspritecale);
-			blocks[x + y * blockcols].pos = { GameBase->screenleft + blockxoffset + (x * tz.x), GameBase->screentop + blockyoffset + y * tz.y};
+			GameBreakOut->GameBase->Game->Sprites->SetSpriteScale(GameBreakOut->GameBase->Game->Renderer,GameBreakOut->blocks[x + y * GameBreakOut->blockcols].spr, GameBreakOut->blockspritecale);
+			GameBreakOut->blocks[x + y * GameBreakOut->blockcols].pos = { GameBreakOut->GameBase->screenleft + GameBreakOut->blockxoffset + (x * tz.x), GameBreakOut->GameBase->screentop + GameBreakOut->blockyoffset + y * tz.y};
 			if (setlocation)
-				GameBase->Game->Sprites->SetSpriteLocation(blocks[x + y * blockcols].spr, blocks[x + y * blockcols].pos);
+				GameBreakOut->GameBase->Game->Sprites->SetSpriteLocation(GameBreakOut->blocks[x + y * GameBreakOut->blockcols].spr, GameBreakOut->blocks[x + y * GameBreakOut->blockcols].pos);
 
 		}
 	}
-	updateblockinfo();
+	GameBreakOut->updateblockinfo(GameBreakOut);
 }
 
 
-void CGameBreakOut::updateblocks()
+void CGameBreakOut_updateblocks(CGameBreakOut* GameBreakOut)
 {
-	for(int x = 0; x < blockcols; x++)
+	for(int x = 0; x < GameBreakOut->blockcols; x++)
 	{
-		for(int y = 0; y < blockrows; y++)
+		for(int y = 0; y < GameBreakOut->blockrows; y++)
 		{
-			if(blocks[x + y * blockcols].alive)
+			if(GameBreakOut->blocks[x + y * GameBreakOut->blockcols].alive)
 			{
-				if(tweens[x + y * blockcols][tweenblockpositions].active)
+				if(GameBreakOut->tweens[x + y * GameBreakOut->blockcols][GameBreakOut->tweenblockpositions].active)
 				{
-					tweens[x + y * blockcols][tweenblockpositions] = updatetween(tweens[x + y * blockcols][tweenblockpositions]);
-					Vec2F pos = blocks[x + y * blockcols].pos;
-					if (pattern == 0)
+					GameBreakOut->tweens[x + y * GameBreakOut->blockcols][GameBreakOut->tweenblockpositions] = updatetween(GameBreakOut->tweens[x + y * GameBreakOut->blockcols][GameBreakOut->tweenblockpositions]);
+					Vec2F pos = GameBreakOut->blocks[x + y * GameBreakOut->blockcols].pos;
+					if (GameBreakOut->pattern == 0)
 					{
-						if (x < blockcols / 3)
-							pos.x = pos.x * tweens[x + y * blockcols][tweenblockpositions].funcval;
+						if (x < GameBreakOut->blockcols / 3)
+							pos.x = pos.x * GameBreakOut->tweens[x + y * GameBreakOut->blockcols][GameBreakOut->tweenblockpositions].funcval;
 						else
 						{
-							if( x > blockcols * 2 / 3)
-								pos.x = GameBase->screenright - (GameBase->screenright - pos.x) * tweens[x + y * blockcols][tweenblockpositions].funcval;
+							if( x > GameBreakOut->blockcols * 2 / 3)
+								pos.x = GameBreakOut->GameBase->screenright - (GameBreakOut->GameBase->screenright - pos.x) * GameBreakOut->tweens[x + y * GameBreakOut->blockcols][GameBreakOut->tweenblockpositions].funcval;
 						}
-						if (y < blockrows / 2)
-							pos.y = pos.y * tweens[x + y * blockcols][tweenblockpositions].funcval;
+						if (y < GameBreakOut->blockrows / 2)
+							pos.y = pos.y * GameBreakOut->tweens[x + y * GameBreakOut->blockcols][GameBreakOut->tweenblockpositions].funcval;
 					}
 					else
 					{
-						if(pattern == 1)
-							pos.y = pos.y * tweens[x + y * blockcols][tweenblockpositions].funcval;
+						if(GameBreakOut->pattern == 1)
+							pos.y = pos.y * GameBreakOut->tweens[x + y * GameBreakOut->blockcols][GameBreakOut->tweenblockpositions].funcval;
 						else
 						{
-							if (pattern == 2)
+							if (GameBreakOut->pattern == 2)
 							{
-								if (x < blockcols / 2)
-									pos.x = pos.x * tweens[x + y * blockcols][tweenblockpositions].funcval;
+								if (x < GameBreakOut->blockcols / 2)
+									pos.x = pos.x * GameBreakOut->tweens[x + y * GameBreakOut->blockcols][GameBreakOut->tweenblockpositions].funcval;
 								else
-									pos.x = GameBase->screenright - (GameBase->screenright - pos.x) * tweens[x + y * blockcols][tweenblockpositions].funcval;
+									pos.x = GameBreakOut->GameBase->screenright - (GameBreakOut->GameBase->screenright - pos.x) * GameBreakOut->tweens[x + y * GameBreakOut->blockcols][GameBreakOut->tweenblockpositions].funcval;
 							}
 							else
 							{
-								if (pattern == 3)
-									pos.x = pos.x * tweens[x + y * blockcols][tweenblockpositions].funcval;
+								if (GameBreakOut->pattern == 3)
+									pos.x = pos.x * GameBreakOut->tweens[x + y * GameBreakOut->blockcols][GameBreakOut->tweenblockpositions].funcval;
 								else
 								{
-									if (pattern == 4)
-										pos.x = GameBase->screenright - (GameBase->screenright - pos.x) * tweens[x + y * blockcols][tweenblockpositions].funcval;
+									if (GameBreakOut->pattern == 4)
+										pos.x = GameBreakOut->GameBase->screenright - (GameBreakOut->GameBase->screenright - pos.x) * GameBreakOut->tweens[x + y * GameBreakOut->blockcols][GameBreakOut->tweenblockpositions].funcval;
 								}
 							}
 						}
 					}
 
-//					setSpriteLocation(blocks[x + y * blockcols].spr, pos)
-					blocks[x + y * blockcols].spr->x = int(pos.x);
-					blocks[x + y * blockcols].spr->y = int(pos.y);
+//					setSpriteLocation(GameBreakOut->blocks[x + y * GameBreakOut->blockcols].spr, pos)
+					GameBreakOut->blocks[x + y * GameBreakOut->blockcols].spr->x = int(pos.x);
+					GameBreakOut->blocks[x + y * GameBreakOut->blockcols].spr->y = int(pos.y);
 
 				}
-				if (blocks[x + y * blockcols].state == blockstatedeath)
+				if (GameBreakOut->blocks[x + y * GameBreakOut->blockcols].state == GameBreakOut->blockstatedeath)
 				{
-					if (tweens[x + y * blockcols][tweenblockdeath].active)
+					if (GameBreakOut->tweens[x + y * GameBreakOut->blockcols][GameBreakOut->tweenblockdeath].active)
 					{
-						tweens[x + y * blockcols][tweenblockdeath] = updatetween(tweens[x + y * blockcols][tweenblockdeath]);
-						Vec2F pos = blocks[x + y * blockcols].pos;
-						pos.y = pos.y + (50 * tweens[x + y * blockcols][tweenblockdeath].funcval);
-						pos.x = pos.x + (30 * tweens[x + y * blockcols][tweenblockdeath].funcval);
-//						setSpriteLocation(blocks[x + y * blockcols].spr, pos)
-						blocks[x + y * blockcols].spr->x = int(pos.x);
-						blocks[x + y * blockcols].spr->y = int(pos.y);
-						GameBase->Game->Sprites->SetSpriteRotation(blocks[x + y * blockcols].spr, 720 * tweens[x + y * blockcols][tweenblockdeath].funcval);
-						GameBase->Game->Sprites->SetSpriteColour(blocks[x + y * blockcols].spr, 1,1,1, 1- tweens[x + y * blockcols][tweenblockdeath].funcval);
+						GameBreakOut->tweens[x + y * GameBreakOut->blockcols][GameBreakOut->tweenblockdeath] = updatetween(GameBreakOut->tweens[x + y * GameBreakOut->blockcols][GameBreakOut->tweenblockdeath]);
+						Vec2F pos = GameBreakOut->blocks[x + y * GameBreakOut->blockcols].pos;
+						pos.y = pos.y + (50 * GameBreakOut->tweens[x + y * GameBreakOut->blockcols][GameBreakOut->tweenblockdeath].funcval);
+						pos.x = pos.x + (30 * GameBreakOut->tweens[x + y * GameBreakOut->blockcols][GameBreakOut->tweenblockdeath].funcval);
+//						setSpriteLocation(GameBreakOut->blocks[x + y * GameBreakOut->blockcols].spr, pos)
+						GameBreakOut->blocks[x + y * GameBreakOut->blockcols].spr->x = int(pos.x);
+						GameBreakOut->blocks[x + y * GameBreakOut->blockcols].spr->y = int(pos.y);
+						GameBreakOut->GameBase->Game->Sprites->SetSpriteRotation(GameBreakOut->blocks[x + y * GameBreakOut->blockcols].spr, 720 * GameBreakOut->tweens[x + y * GameBreakOut->blockcols][GameBreakOut->tweenblockdeath].funcval);
+						GameBreakOut->GameBase->Game->Sprites->SetSpriteColour(GameBreakOut->blocks[x + y * GameBreakOut->blockcols].spr, 1,1,1, 1- GameBreakOut->tweens[x + y * GameBreakOut->blockcols][GameBreakOut->tweenblockdeath].funcval);
 					}
 					else
 					{
-						destroyblock(x + y * blockcols);
-						updateblockinfo();
+						GameBreakOut->destroyblock(GameBreakOut,x + y * GameBreakOut->blockcols);
+						GameBreakOut->updateblockinfo(GameBreakOut);
 					}
 				}
 
@@ -190,227 +240,227 @@ void CGameBreakOut::updateblocks()
 		}
 	}
 
-	if (blockinfo.mostleft == -1)
+	if (GameBreakOut->blockinfo.mostleft == -1)
 	{
-		GameBase->Game->AddToScore(500);
-		createblocks(false);
-		GameBase->Game->Audio->PlaySound(SfxSucces, 0);
+		GameBreakOut->GameBase->Game->AddToScore(500);
+		GameBreakOut->createblocks(GameBreakOut, false);
+		GameBreakOut->GameBase->Game->Audio->PlaySound(GameBreakOut->SfxSucces, 0);
 	}
 }
 
 //player ----------------------------------------------------------------------------------------------------------------
 
-void CGameBreakOut::destroyplayer()
+void CGameBreakOut_destroyplayer(CGameBreakOut* GameBreakOut)
 {
-	if (player.alive)
+	if (GameBreakOut->player.alive)
 	{
-		GameBase->Game->Sprites->RemoveSprite(player.spr);
-		player.alive = false;
+		GameBreakOut->GameBase->Game->Sprites->RemoveSprite(GameBreakOut->player.spr);
+		GameBreakOut->player.alive = false;
 	}
 }
 
-void CGameBreakOut::createplayer()
+void CGameBreakOut_createplayer(CGameBreakOut* GameBreakOut)
 {
-	player.spr = GameBase->Game->Sprites->CreateSprite();
-	GameBase->Game->Sprites->SetSpriteImage(GameBase->Game->Renderer,player.spr, &spritesheetbat);
-	GameBase->Game->Sprites->SetSpriteScale(GameBase->Game->Renderer,player.spr, spritescale);
-	player.tz = GameBase->Game->Image->ImageSize(spritesheetbat);
-	player.tz.x = player.tz.x * spritescale.x;
-	player.tz.y = player.tz.y * spritescale.y;
-	player.pos = { (float)(GameBase->screenright - GameBase->screenleft) / 2,(float)GameBase->screenbottom - 20*yscale - (player.tz.y / 2)};
-	GameBase->HealthPoints = 5;
-	GameBase->Game->Sprites->SetSpriteLocation(player.spr, player.pos);
-	player.alive = true;
+	GameBreakOut->player.spr = GameBreakOut->GameBase->Game->Sprites->CreateSprite();
+	GameBreakOut->GameBase->Game->Sprites->SetSpriteImage(GameBreakOut->GameBase->Game->Renderer,GameBreakOut->player.spr, &GameBreakOut->spritesheetbat);
+	GameBreakOut->GameBase->Game->Sprites->SetSpriteScale(GameBreakOut->GameBase->Game->Renderer,GameBreakOut->player.spr, GameBreakOut->spritescale);
+	GameBreakOut->player.tz = GameBreakOut->GameBase->Game->Image->ImageSize(GameBreakOut->spritesheetbat);
+	GameBreakOut->player.tz.x = GameBreakOut->player.tz.x * GameBreakOut->spritescale.x;
+	GameBreakOut->player.tz.y = GameBreakOut->player.tz.y * GameBreakOut->spritescale.y;
+	GameBreakOut->player.pos = { (float)(GameBreakOut->GameBase->screenright - GameBreakOut->GameBase->screenleft) / 2,(float)GameBreakOut->GameBase->screenbottom - 20*yscale - (GameBreakOut->player.tz.y / 2)};
+	GameBreakOut->GameBase->HealthPoints = 5;
+	GameBreakOut->GameBase->Game->Sprites->SetSpriteLocation(GameBreakOut->player.spr, GameBreakOut->player.pos);
+	GameBreakOut->player.alive = true;
 }
 
-void CGameBreakOut::updateplayer()
+void CGameBreakOut_updateplayer(CGameBreakOut* GameBreakOut)
 {
-	GameBase->Game->Sprites->SetSpriteVisibility(player.spr, player.alive);
-	if (player.alive)
+	GameBreakOut->GameBase->Game->Sprites->SetSpriteVisibility(GameBreakOut->player.spr, GameBreakOut->player.alive);
+	if (GameBreakOut->player.alive)
 	{
 		float speedmultiplier = 1;
 
-		if (GameBase->Game->Input->Buttons.ButA)
+		if (GameBreakOut->GameBase->Game->Input->Buttons.ButA)
 			speedmultiplier = 2;
 
-		if ((GameBase->Game->Input->Buttons.ButLeft) ||
-			(GameBase->Game->Input->Buttons.ButLeft2) ||
-			(GameBase->Game->Input->Buttons.ButDpadLeft))
+		if ((GameBreakOut->GameBase->Game->Input->Buttons.ButLeft) ||
+			(GameBreakOut->GameBase->Game->Input->Buttons.ButLeft2) ||
+			(GameBreakOut->GameBase->Game->Input->Buttons.ButDpadLeft))
 		{
-			if (player.pos.x - player.tz.x / 2 - (playerspeed * speedmultiplier) > GameBase->screenleft)
-				player.pos.x -= playerspeed * speedmultiplier;
+			if (GameBreakOut->player.pos.x - GameBreakOut->player.tz.x / 2 - (GameBreakOut->playerspeed * speedmultiplier) > GameBreakOut->GameBase->screenleft)
+				GameBreakOut->player.pos.x -= GameBreakOut->playerspeed * speedmultiplier;
 			else
-				player.pos.x = GameBase->screenleft + player.tz.x / 2;
+				GameBreakOut->player.pos.x = GameBreakOut->GameBase->screenleft + GameBreakOut->player.tz.x / 2;
 		}
 
-		if ((GameBase->Game->Input->Buttons.ButRight) ||
-			(GameBase->Game->Input->Buttons.ButRight2) ||
-			(GameBase->Game->Input->Buttons.ButDpadRight))
+		if ((GameBreakOut->GameBase->Game->Input->Buttons.ButRight) ||
+			(GameBreakOut->GameBase->Game->Input->Buttons.ButRight2) ||
+			(GameBreakOut->GameBase->Game->Input->Buttons.ButDpadRight))
 		{
-			if ( player.pos.x + player.tz.x / 2 + (playerspeed * speedmultiplier) < GameBase->screenright)
-				player.pos.x += playerspeed * speedmultiplier;
+			if ( GameBreakOut->player.pos.x + GameBreakOut->player.tz.x / 2 + (GameBreakOut->playerspeed * speedmultiplier) < GameBreakOut->GameBase->screenright)
+				GameBreakOut->player.pos.x += GameBreakOut->playerspeed * speedmultiplier;
 			else
-				player.pos.x = GameBase->screenright - player.tz.x / 2;
+				GameBreakOut->player.pos.x = GameBreakOut->GameBase->screenright - GameBreakOut->player.tz.x / 2;
 		}
 
-		//setSpriteLocation(player.spr, player.pos)
-		player.spr->x = int(player.pos.x);
-		player.spr->y = int(player.pos.y);
+		//setSpriteLocation(GameBreakOut->player.spr, GameBreakOut->player.pos)
+		GameBreakOut->player.spr->x = int(GameBreakOut->player.pos.x);
+		GameBreakOut->player.spr->y = int(GameBreakOut->player.pos.y);
 	}
 	else
 	{
-		if (player.freeze > 0)
-			player.freeze -= 1;
+		if (GameBreakOut->player.freeze > 0)
+			GameBreakOut->player.freeze -= 1;
 		else
-			player.alive = true;
+			GameBreakOut->player.alive = true;
 	}
 }
 
 
 //ball ----------------------------------------------------------------------------------------------------------------
 
-void CGameBreakOut::destroyball()
+void CGameBreakOut_destroyball(CGameBreakOut* GameBreakOut)
 {
-	if (ball.alive)
+	if (GameBreakOut->ball.alive)
 	{
-		GameBase->Game->Sprites->RemoveSprite(ball.spr);
-		ball.alive = false;
+		GameBreakOut->GameBase->Game->Sprites->RemoveSprite(GameBreakOut->ball.spr);
+		GameBreakOut->ball.alive = false;
 	}
 }
 
-void CGameBreakOut::createball()
+void CGameBreakOut_createball(CGameBreakOut* GameBreakOut)
 {
-	ball.spr = GameBase->Game->Sprites->CreateSprite();
-	GameBase->Game->Sprites->SetSpriteImage(GameBase->Game->Renderer,ball.spr, &spritesheetball);
-	GameBase->Game->Sprites->SetSpriteScale(GameBase->Game->Renderer,ball.spr, {xscale,yscale});
-	ball.tz = GameBase->Game->Image->ImageSize(spritesheetball);
-	ball.tz.x = ball.tz.x * xscale;
-	ball.tz.y = ball.tz.y * yscale;
+	GameBreakOut->ball.spr = GameBreakOut->GameBase->Game->Sprites->CreateSprite();
+	GameBreakOut->GameBase->Game->Sprites->SetSpriteImage(GameBreakOut->GameBase->Game->Renderer,GameBreakOut->ball.spr, &GameBreakOut->spritesheetball);
+	GameBreakOut->GameBase->Game->Sprites->SetSpriteScale(GameBreakOut->GameBase->Game->Renderer,GameBreakOut->ball.spr, {xscale,yscale});
+	GameBreakOut->ball.tz = GameBreakOut->GameBase->Game->Image->ImageSize(GameBreakOut->spritesheetball);
+	GameBreakOut->ball.tz.x = GameBreakOut->ball.tz.x * xscale;
+	GameBreakOut->ball.tz.y = GameBreakOut->ball.tz.y * yscale;
 	
-	GameBase->Game->Sprites->SetSpriteCollisionShape(ball.spr, SHAPE_BOX, 4/xscale, 4/yscale, 0, 0, 0);
-	ball.pos = { (float)((GameBase->screenright - GameBase->screenleft) / 2) + 250*xscale, (float)GameBase->screenbottom - 250*yscale - 20*yscale};
-	ball.vel = {-0.5,0.5};
-	curballspeed = ballspeed;
-	ball.alive = true;
-	GameBase->Game->Sprites->SetSpriteLocation(ball.spr, ball.pos);
+	GameBreakOut->GameBase->Game->Sprites->SetSpriteCollisionShape(GameBreakOut->ball.spr, SHAPE_BOX, 4/xscale, 4/yscale, 0, 0, 0);
+	GameBreakOut->ball.pos = { (float)((GameBreakOut->GameBase->screenright - GameBreakOut->GameBase->screenleft) / 2) + 250*xscale, (float)GameBreakOut->GameBase->screenbottom - 250*yscale - 20*yscale};
+	GameBreakOut->ball.vel = {-0.5,0.5};
+	GameBreakOut->curballspeed = GameBreakOut->ballspeed;
+	GameBreakOut->ball.alive = true;
+	GameBreakOut->GameBase->Game->Sprites->SetSpriteLocation(GameBreakOut->ball.spr, GameBreakOut->ball.pos);
 }
 
-void CGameBreakOut::updateball()
+void CGameBreakOut_updateball(CGameBreakOut* GameBreakOut)
 {
-	if (ball.alive)
+	if (GameBreakOut->ball.alive)
 	{
-		if (ball.freeze > 0)
-			ball.freeze -= 1;
+		if (GameBreakOut->ball.freeze > 0)
+			GameBreakOut->ball.freeze -= 1;
 		else
 		{
-			float steps = curballspeed / ballvelsegments;
+			float steps = GameBreakOut->curballspeed / GameBreakOut->ballvelsegments;
 
-			for (int j = 1; j <ballvelsegments + 1; j++)
+			for (int j = 1; j <GameBreakOut->ballvelsegments + 1; j++)
 			{
-				ball.pos.x += (steps * ball.vel.x);
-				ball.pos.y += (steps * ball.vel.y);
+				GameBreakOut->ball.pos.x += (steps * GameBreakOut->ball.vel.x);
+				GameBreakOut->ball.pos.y += (steps * GameBreakOut->ball.vel.y);
 
-				if (ball.pos.x < GameBase->screenleft)
+				if (GameBreakOut->ball.pos.x < GameBreakOut->GameBase->screenleft)
 				{
-					ball.vel.x *= -1;
-					ball.pos.x = GameBase->screenleft;
+					GameBreakOut->ball.vel.x *= -1;
+					GameBreakOut->ball.pos.x = GameBreakOut->GameBase->screenleft;
 				}
 
-				if (ball.pos.x > GameBase->screenright)
+				if (GameBreakOut->ball.pos.x > GameBreakOut->GameBase->screenright)
 				{
-					ball.vel.x *= -1;
-					ball.pos.x = GameBase->screenright;
+					GameBreakOut->ball.vel.x *= -1;
+					GameBreakOut->ball.pos.x = GameBreakOut->GameBase->screenright;
 				}
 
-				if (ball.pos.y < GameBase->screentop)
+				if (GameBreakOut->ball.pos.y < GameBreakOut->GameBase->screentop)
 				{
-					ball.pos.y = GameBase->screentop;
-					ball.vel.y *= -1;
+					GameBreakOut->ball.pos.y = GameBreakOut->GameBase->screentop;
+					GameBreakOut->ball.vel.y *= -1;
 				}
 
-				GameBase->Game->Sprites->SetSpriteLocation(ball.spr, ball.pos);
+				GameBreakOut->GameBase->Game->Sprites->SetSpriteLocation(GameBreakOut->ball.spr, GameBreakOut->ball.pos);
 
-				if (ball.pos.y >= GameBase->screenbottom)
+				if (GameBreakOut->ball.pos.y >= GameBreakOut->GameBase->screenbottom)
 				{
-					destroyball();
-					createball();
-					ball.freeze = 45;
-					GameBase->HealthPoints -= 1;
-					GameBase->Game->AddToScore(-100);
-					GameBase->Game->Audio->PlaySound(SfxDie, 0);
+					GameBreakOut->destroyball(GameBreakOut);
+					GameBreakOut->createball(GameBreakOut);
+					GameBreakOut->ball.freeze = 45;
+					GameBreakOut->GameBase->HealthPoints -= 1;
+					GameBreakOut->GameBase->Game->AddToScore(-100);
+					GameBreakOut->GameBase->Game->Audio->PlaySound(GameBreakOut->SfxDie, 0);
 				}
 
-				for (int k = 0; k < numblocks; k++)
+				for (int k = 0; k < GameBreakOut->numblocks; k++)
 				{
-					if (blocks[k].alive && (blocks[k].state != blockstatedeath))
+					if (GameBreakOut->blocks[k].alive && (GameBreakOut->blocks[k].state != GameBreakOut->blockstatedeath))
 					{
-						if (GameBase->Game->Sprites->DetectSpriteCollision(ball.spr, blocks[k].spr))
+						if (GameBreakOut->GameBase->Game->Sprites->DetectSpriteCollision(GameBreakOut->ball.spr, GameBreakOut->blocks[k].spr))
 						{
 							//seen this in wireframe issue 11 not sure what it actually
 							//calculates but seems to work more or less ok
-							float dx = (ball.pos.x - blocks[k].pos.x) / blocks[k].tz.x;
-							float dy = (ball.pos.y - blocks[k].pos.y) / blocks[k].tz.y;
+							float dx = (GameBreakOut->ball.pos.x - GameBreakOut->blocks[k].pos.x) / GameBreakOut->blocks[k].tz.x;
+							float dy = (GameBreakOut->ball.pos.y - GameBreakOut->blocks[k].pos.y) / GameBreakOut->blocks[k].tz.y;
 							if (abs(dx) > abs(dy))
-								ball.vel.x = abs(ball.vel.x) * dx / abs(dx);
+								GameBreakOut->ball.vel.x = abs(GameBreakOut->ball.vel.x) * dx / abs(dx);
 							else
-								ball.vel.y = abs(ball.vel.y) * dy / abs(dy);
+								GameBreakOut->ball.vel.y = abs(GameBreakOut->ball.vel.y) * dy / abs(dy);
 
-							GameBase->Game->AddToScore(20);
-							//inc ballspeed
-							curballspeed += ballspeedinc;
-							GameBase->Game->Audio->PlaySound(SfxBrick, 0);
-							blocks[k].state = blockstatedeath;
-							GameBase->Game->Sprites->SetSpriteDepth(blocks[k].spr, 5);
-							tweens[k][tweenblockdeath] = createtween(tweenblockdeath, 1, funcsmoothstep, 1, true, DesiredFps);
+							GameBreakOut->GameBase->Game->AddToScore(20);
+							//inc GameBreakOut->ballspeed
+							GameBreakOut->curballspeed += GameBreakOut->ballspeedinc;
+							GameBreakOut->GameBase->Game->Audio->PlaySound(GameBreakOut->SfxBrick, 0);
+							GameBreakOut->blocks[k].state = GameBreakOut->blockstatedeath;
+							GameBreakOut->GameBase->Game->Sprites->SetSpriteDepth(GameBreakOut->blocks[k].spr, 5);
+							GameBreakOut->tweens[k][GameBreakOut->tweenblockdeath] = createtween(GameBreakOut->tweenblockdeath, 1, funcsmoothstep, 1, true, DesiredFps);
 						}
 					}
 				}
 
-				if (player.alive)
+				if (GameBreakOut->player.alive)
 				{
-					if (GameBase->Game->Sprites->DetectSpriteCollision(ball.spr, player.spr))
+					if (GameBreakOut->GameBase->Game->Sprites->DetectSpriteCollision(GameBreakOut->ball.spr, GameBreakOut->player.spr))
 					{
 						//touched top part of bat
-						if (ball.pos.y < player.pos.y + player.tz.y / 3)
+						if (GameBreakOut->ball.pos.y < GameBreakOut->player.pos.y + GameBreakOut->player.tz.y / 3)
 						{
 							//set ball to top part - 1 so it can't callide again
-							ball.pos.y = player.pos.y - player.tz.y / 2 - 1;
-							GameBase->Game->Sprites->SetSpriteLocation(ball.spr, ball.pos);
+							GameBreakOut->ball.pos.y = GameBreakOut->player.pos.y - GameBreakOut->player.tz.y / 2 - 1;
+							GameBreakOut->GameBase->Game->Sprites->SetSpriteLocation(GameBreakOut->ball.spr, GameBreakOut->ball.pos);
 
 							//inverrt y velocity
-							ball.vel.y = -ball.vel.y;
+							GameBreakOut->ball.vel.y = -GameBreakOut->ball.vel.y;
 							//touch far right of bat
-							if (ball.pos.x >= player.pos.x + ((player.tz.x / 2) * 5 / 7))
+							if (GameBreakOut->ball.pos.x >= GameBreakOut->player.pos.x + ((GameBreakOut->player.tz.x / 2) * 5 / 7))
 							{
 								//and bal is moving to the left
-								if (ball.vel.x < 0)
+								if (GameBreakOut->ball.vel.x < 0)
 								{
 									//reverse x velocity
-									ball.vel.x = -ball.vel.x;
+									GameBreakOut->ball.vel.x = -GameBreakOut->ball.vel.x;
 									//add some randomness
 									float rnd = (rand() % 100) / 500;
 									if (rand() % 2 == 0)
 										rnd *= -1;
 
-									ball.vel.x += rnd;
+									GameBreakOut->ball.vel.x += rnd;
 								}
 							}
 							else
 							{
 								//touched far left of bat
-								if (ball.pos.x <= player.pos.x - ((player.tz.x / 2) * 5 / 7))
+								if (GameBreakOut->ball.pos.x <= GameBreakOut->player.pos.x - ((GameBreakOut->player.tz.x / 2) * 5 / 7))
 								{
 									//and ball moving to the right
-									if (ball.vel.x > 0)
+									if (GameBreakOut->ball.vel.x > 0)
 									{
 										//reverse x velocity
-										ball.vel.x = -ball.vel.x;
+										GameBreakOut->ball.vel.x = -GameBreakOut->ball.vel.x;
 										//add some randomness
 										float rnd = (rand() % 100) / 500;
 										if (rand() % 2 == 0)
 											rnd *= -1;
 
-										ball.vel.x += rnd;
+										GameBreakOut->ball.vel.x += rnd;
 									}
 								}
 							}
@@ -419,34 +469,34 @@ void CGameBreakOut::updateball()
 						{
 							//bottom parts = loss of ball
 							// ball is on the right
-							if (ball.pos.x > player.pos.x)
+							if (GameBreakOut->ball.pos.x > GameBreakOut->player.pos.x)
 							{
 								//ball is moving towards bat to left
-								if (ball.vel.x < 0)
+								if (GameBreakOut->ball.vel.x < 0)
 									//reverse x velocity
-									ball.vel.x = -ball.vel.x;
+									GameBreakOut->ball.vel.x = -GameBreakOut->ball.vel.x;
 							}
 							else
 							{
 								//ball is on the left and moving to the right
-								if (ball.vel.x > 0)
+								if (GameBreakOut->ball.vel.x > 0)
 									//reverse x velocity
-									ball.vel.x = -ball.vel.x;
+									GameBreakOut->ball.vel.x = -GameBreakOut->ball.vel.x;
 							}
 						}
 
-						//increase ballspeed
-						curballspeed += ballspeedinc;
+						//increase GameBreakOut->ballspeed
+						GameBreakOut->curballspeed += GameBreakOut->ballspeedinc;
 
 						//just a safety
-						while (GameBase->Game->Sprites->DetectSpriteCollision(ball.spr, player.spr))
+						while (GameBreakOut->GameBase->Game->Sprites->DetectSpriteCollision(GameBreakOut->ball.spr, GameBreakOut->player.spr))
 						{
-							ball.pos.x += (steps * ball.vel.x);
-							ball.pos.y += (steps * ball.vel.y);
-							GameBase->Game->Sprites->SetSpriteLocation(ball.spr, ball.pos);
+							GameBreakOut->ball.pos.x += (steps * GameBreakOut->ball.vel.x);
+							GameBreakOut->ball.pos.y += (steps * GameBreakOut->ball.vel.y);
+							GameBreakOut->GameBase->Game->Sprites->SetSpriteLocation(GameBreakOut->ball.spr, GameBreakOut->ball.pos);
 						}
 
-						GameBase->Game->Audio->PlaySound(SfxBat, 0);
+						GameBreakOut->GameBase->Game->Audio->PlaySound(GameBreakOut->SfxBat, 0);
 					}
 				}
 			}
@@ -456,113 +506,113 @@ void CGameBreakOut::updateball()
 
 //background ----------------------------------------------------------------------------------------------------------------
 
-void CGameBreakOut::DrawBackground()
+void CGameBreakOut_DrawBackground(CGameBreakOut* GameBreakOut)
 {
-	GameBase->Game->Image->DrawImage(GameBase->Game->Renderer, background, NULL, NULL);
+	GameBreakOut->GameBase->Game->Image->DrawImage(GameBreakOut->GameBase->Game->Renderer, GameBreakOut->background, NULL, NULL);
 }
 
-void CGameBreakOut::Draw()
+void CGameBreakOut_Draw(CGameBreakOut* GameBreakOut)
 {
-	DrawBackground();
-	GameBase->Game->Sprites->DrawSprites(GameBase->Game->Renderer);
-	GameBase->DrawScoreBar(GameBase);
-	GameBase->DrawSubStateText(GameBase);
+	GameBreakOut->DrawBackground(GameBreakOut);
+	GameBreakOut->GameBase->Game->Sprites->DrawSprites(GameBreakOut->GameBase->Game->Renderer);
+	GameBreakOut->GameBase->DrawScoreBar(GameBreakOut->GameBase);
+	GameBreakOut->GameBase->DrawSubStateText(GameBreakOut->GameBase);
 }
 //init - deinit ----------------------------------------------------------------------------------------------------------------
 
-void CGameBreakOut::init()
+void CGameBreakOut_init(CGameBreakOut* GameBreakOut)
 {
-	LoadGraphics();
-	createblocks(false);
-	createplayer();
-	createball();
+	GameBreakOut->LoadGraphics(GameBreakOut);
+	GameBreakOut->createblocks(GameBreakOut, false);
+	GameBreakOut->createplayer(GameBreakOut);
+	GameBreakOut->createball(GameBreakOut);
 
-	LoadSound();
-	GameBase->Game->CurrentGameMusicID = MusMusic;
-	GameBase->Game->Audio->PlayMusic(MusMusic, -1);
+	GameBreakOut->LoadSound(GameBreakOut);
+	GameBreakOut->GameBase->Game->CurrentGameMusicID = GameBreakOut->MusMusic;
+	GameBreakOut->GameBase->Game->Audio->PlayMusic(GameBreakOut->MusMusic, -1);
 }
 
-void CGameBreakOut::LoadSound()
+void CGameBreakOut_LoadSound(CGameBreakOut* GameBreakOut)
 {
-	SfxDie = GameBase->Game->Audio->LoadSound("common/die.wav");
-	SfxSucces = GameBase->Game->Audio->LoadSound("common/succes.wav");
-	SfxBat = GameBase->Game->Audio->LoadSound("breakout/bat.wav");
-	SfxBrick = GameBase->Game->Audio->LoadSound("breakout/brick.wav");
-	MusMusic = GameBase->Game->Audio->LoadMusic("breakout/music.ogg");
+	GameBreakOut->SfxDie = GameBreakOut->GameBase->Game->Audio->LoadSound("common/die.wav");
+	GameBreakOut->SfxSucces = GameBreakOut->GameBase->Game->Audio->LoadSound("common/succes.wav");
+	GameBreakOut->SfxBat = GameBreakOut->GameBase->Game->Audio->LoadSound("breakout/bat.wav");
+	GameBreakOut->SfxBrick = GameBreakOut->GameBase->Game->Audio->LoadSound("breakout/brick.wav");
+	GameBreakOut->MusMusic = GameBreakOut->GameBase->Game->Audio->LoadMusic("breakout/music.ogg");
 }
 
-void CGameBreakOut::UnLoadSound()
+void CGameBreakOut_UnLoadSound(CGameBreakOut* GameBreakOut)
 {
-	GameBase->Game->Audio->StopMusic();
-	GameBase->Game->Audio->StopSound();
-	GameBase->Game->Audio->UnLoadMusic(MusMusic);
-	GameBase->Game->Audio->UnLoadSound(SfxSucces);
-	GameBase->Game->Audio->UnLoadSound(SfxDie);
-	GameBase->Game->Audio->UnLoadSound(SfxBrick);
-	GameBase->Game->Audio->UnLoadSound(SfxBat);
+	GameBreakOut->GameBase->Game->Audio->StopMusic();
+	GameBreakOut->GameBase->Game->Audio->StopSound();
+	GameBreakOut->GameBase->Game->Audio->UnLoadMusic(GameBreakOut->MusMusic);
+	GameBreakOut->GameBase->Game->Audio->UnLoadSound(GameBreakOut->SfxSucces);
+	GameBreakOut->GameBase->Game->Audio->UnLoadSound(GameBreakOut->SfxDie);
+	GameBreakOut->GameBase->Game->Audio->UnLoadSound(GameBreakOut->SfxBrick);
+	GameBreakOut->GameBase->Game->Audio->UnLoadSound(GameBreakOut->SfxBat);
 }
 
-void CGameBreakOut::deinit()
+void CGameBreakOut_deinit(CGameBreakOut* GameBreakOut)
 {
-	destroyplayer();
-	destroyallblocks();
-	destroyball();
-	UnLoadSound();
-	GameBase->Game->SubStateCounter = 0;
-	GameBase->Game->SubGameState = SGNone;
-	GameBase->Game->CurrentGameMusicID = -1;
-	UnloadGraphics();
+	GameBreakOut->destroyplayer(GameBreakOut);
+	GameBreakOut->destroyallblocks(GameBreakOut);
+	GameBreakOut->destroyball(GameBreakOut);
+	GameBreakOut->UnLoadSound(GameBreakOut);
+	GameBreakOut->GameBase->Game->SubStateCounter = 0;
+	GameBreakOut->GameBase->Game->SubGameState = SGNone;
+	GameBreakOut->GameBase->Game->CurrentGameMusicID = -1;
+	GameBreakOut->UnloadGraphics(GameBreakOut);
 }
 
-void CGameBreakOut::LoadGraphics()
+void CGameBreakOut_LoadGraphics(CGameBreakOut* GameBreakOut)
 {
-	background = GameBase->Game->Image->LoadImage(GameBase->Game->Renderer, "breakout/background.png");
-	backgroundtz = GameBase->Game->Image->ImageSize(background);
-	spritesheetblocks = GameBase->Game->Image->LoadImage(GameBase->Game->Renderer, "breakout/blocks.png", 8, 128, dumpScaledBitmaps); 
-	spritesheetbat = GameBase->Game->Image->LoadImage(GameBase->Game->Renderer, "breakout/paddle.png",0, 128, dumpScaledBitmaps);
-	spritesheetball = GameBase->Game->Image->LoadImage(GameBase->Game->Renderer, "breakout/ball.png", 0, 128, dumpScaledBitmaps);
+	GameBreakOut->background = GameBreakOut->GameBase->Game->Image->LoadImage(GameBreakOut->GameBase->Game->Renderer, "breakout/background.png");
+	GameBreakOut->backgroundtz = GameBreakOut->GameBase->Game->Image->ImageSize(GameBreakOut->background);
+	GameBreakOut->spritesheetblocks = GameBreakOut->GameBase->Game->Image->LoadImage(GameBreakOut->GameBase->Game->Renderer, "breakout/blocks.png", 8, 128, dumpScaledBitmaps); 
+	GameBreakOut->spritesheetbat = GameBreakOut->GameBase->Game->Image->LoadImage(GameBreakOut->GameBase->Game->Renderer, "breakout/paddle.png",0, 128, dumpScaledBitmaps);
+	GameBreakOut->spritesheetball = GameBreakOut->GameBase->Game->Image->LoadImage(GameBreakOut->GameBase->Game->Renderer, "breakout/ball.png", 0, 128, dumpScaledBitmaps);
 
-	//SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/breakout/blocks.bmp", Game->Image->GetImage(spritesheetblocks), 1,1, true,8, 128); //0 80
-	//SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/breakout/paddle.bmp", Game->Image->GetImage(spritesheetbat), 1,1, true,0, 128); //173
-	//SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/breakout/ball.bmp", Game->Image->GetImage(spritesheetball), 1,1, true,0, 128); //173
+	//SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/breakout/blocks.bmp", Game->Image->GetImage(GameBreakOut->spritesheetblocks), 1,1, true,8, 128); //0 80
+	//SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/breakout/paddle.bmp", Game->Image->GetImage(GameBreakOut->spritesheetbat), 1,1, true,0, 128); //173
+	//SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/breakout/ball.bmp", Game->Image->GetImage(GameBreakOut->spritesheetball), 1,1, true,0, 128); //173
 
 	if(!useDefaultColorAssets)
 	{
-		UnloadGraphics();
-		background = GameBase->Game->Image->LoadImage(GameBase->Game->Renderer, "breakout/background.png");
-		backgroundtz = GameBase->Game->Image->ImageSize(background);
-		spritesheetblocks = GameBase->Game->Image->LoadImage(GameBase->Game->Renderer, "breakout/blocks.bmp");
-		spritesheetbat = GameBase->Game->Image->LoadImage(GameBase->Game->Renderer, "breakout/paddle.bmp");
-		spritesheetball = GameBase->Game->Image->LoadImage(GameBase->Game->Renderer, "breakout/ball.bmp");
+		GameBreakOut->UnloadGraphics(GameBreakOut);
+		GameBreakOut->background = GameBreakOut->GameBase->Game->Image->LoadImage(GameBreakOut->GameBase->Game->Renderer, "breakout/background.png");
+		GameBreakOut->backgroundtz = GameBreakOut->GameBase->Game->Image->ImageSize(GameBreakOut->background);
+		GameBreakOut->spritesheetblocks = GameBreakOut->GameBase->Game->Image->LoadImage(GameBreakOut->GameBase->Game->Renderer, "breakout/blocks.bmp");
+		GameBreakOut->spritesheetbat = GameBreakOut->GameBase->Game->Image->LoadImage(GameBreakOut->GameBase->Game->Renderer, "breakout/paddle.bmp");
+		GameBreakOut->spritesheetball = GameBreakOut->GameBase->Game->Image->LoadImage(GameBreakOut->GameBase->Game->Renderer, "breakout/ball.bmp");
 	}
 
 
 }
 
-void CGameBreakOut::UnloadGraphics()
+void CGameBreakOut_UnloadGraphics(CGameBreakOut* GameBreakOut)
 {
-	GameBase->Game->Image->UnLoadImage(background);
-	GameBase->Game->Image->UnLoadImage(spritesheetblocks);
-	GameBase->Game->Image->UnLoadImage(spritesheetbat);
-	GameBase->Game->Image->UnLoadImage(spritesheetball);
+	GameBreakOut->GameBase->Game->Image->UnLoadImage(GameBreakOut->background);
+	GameBreakOut->GameBase->Game->Image->UnLoadImage(GameBreakOut->spritesheetblocks);
+	GameBreakOut->GameBase->Game->Image->UnLoadImage(GameBreakOut->spritesheetbat);
+	GameBreakOut->GameBase->Game->Image->UnLoadImage(GameBreakOut->spritesheetball);
 }
 
 //Update ----------------------------------------------------------------------------------------------------------------
 
-void CGameBreakOut::UpdateObjects(bool IsGameState)
+void CGameBreakOut_UpdateObjects(CGameBreakOut* GameBreakOut, bool IsGameState)
 {
-	updateblocks();
+	GameBreakOut->updateblocks(GameBreakOut);
 	if (IsGameState)
 	{
-		updateplayer();
-		updateball();
+		GameBreakOut->updateplayer(GameBreakOut);
+		GameBreakOut->updateball(GameBreakOut);
 	}
 }
 
-void CGameBreakOut::UpdateLogic()
+void CGameBreakOut_UpdateLogic(CGameBreakOut* GameBreakOut)
 {
-	GameBase->UpdateLogic(GameBase);
-	UpdateObjects(GameBase->Game->SubGameState == SGGame);
-	if(GameBase->Game->SubGameState == SGGame)
-		GameBase->Game->Sprites->UpdateSprites(GameBase->Game->Renderer);
+	GameBreakOut->GameBase->UpdateLogic(GameBreakOut->GameBase);
+	GameBreakOut->UpdateObjects(GameBreakOut, GameBreakOut->GameBase->Game->SubGameState == SGGame);
+	if(GameBreakOut->GameBase->Game->SubGameState == SGGame)
+		GameBreakOut->GameBase->Game->Sprites->UpdateSprites(GameBreakOut->GameBase->Game->Renderer);
 }

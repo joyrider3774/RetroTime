@@ -69,8 +69,8 @@ void CGame::DeInit()
 			delete GameFastEddy;
 			break;
 		case GSBreakout:
-			GameBreakOut->deinit();
-			delete GameBreakOut;
+			GameBreakOut->deinit(GameBreakOut);
+			Destroy_CGameBreakOut(GameBreakOut);
 			break;
 		case GSTetris:
 			GameBlockStacker->deinit(GameBlockStacker);
@@ -453,8 +453,8 @@ void CGame::CreateActiveGame()
 			ActiveGameGameStateId = -1;
 			break;
 		case GSBreakout:
-			GameBreakOut->deinit();
-			delete GameBreakOut;
+			GameBreakOut->deinit(GameBreakOut);
+			Destroy_CGameBreakOut(GameBreakOut);
 			ActiveGameGameStateId = -1;
 			break;
 		case GSTetris:
@@ -490,7 +490,7 @@ void CGame::CreateActiveGame()
 			ActiveGameGameStateId = GSFrog;
 			break;
 		case GSBreakoutInit:
-			GameBreakOut = new CGameBreakOut(this);
+			GameBreakOut = Create_CGameBreakOut(this);
 			ActiveGameGameStateId = GSBreakout;
 			break;
 		case GSPangInit:
@@ -550,7 +550,7 @@ void CGame::MainLoop()
 					GameFastEddy->LoadGraphics();
 					break;
 				case GSBreakout:
-					GameBreakOut->LoadGraphics();
+					GameBreakOut->LoadGraphics(GameBreakOut);
 					break;
 				case GSTetris:
 					GameBlockStacker->LoadGraphics(GameBlockStacker);
@@ -671,7 +671,7 @@ void CGame::MainLoop()
 						GameFastEddy->init();
 						break;
 					case GSBreakout:
-						GameBreakOut->init();
+						GameBreakOut->init(GameBreakOut);
 						break;
 					case GSTetris:
 						GameBlockStacker->init(GameBlockStacker);
@@ -716,15 +716,17 @@ void CGame::MainLoop()
 						GameFastEddy->Draw();
 						break;
 					case GSBreakout:
-						GameBreakOut->UpdateLogic();
-						GameBreakOut->Draw();
+						GameBreakOut->UpdateLogic(GameBreakOut);
+						GameBreakOut->Draw(GameBreakOut);
 						break;
 					case GSTetris:
 						GameBlockStacker->UpdateLogic(GameBlockStacker);
 						GameBlockStacker->Draw(GameBlockStacker);
 						break;
+					default:
+						break;
 				}
-				break;		
+				break;
 			default:
 				break;
 		}

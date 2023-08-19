@@ -71,7 +71,7 @@ void SubScoreScreen(CGame *Game)
 			Game->GameFastEddy->Draw();
 			break;
 		case GSBreakout:
-			Game->GameBreakOut->Draw();
+			Game->GameBreakOut->Draw(Game->GameBreakOut);
 			break;
 		case GSFrog:
 			Game->GameFrog->Draw();

@@ -10,9 +10,8 @@ enum TweenFunc
 	funcarchstep = 6
 };
 
-class CTweenInfo
+struct CTweenInfo
 {
-public:
 	float val;
 	float ticks;
 	float maxticks;
@@ -24,6 +23,7 @@ public:
 	float multiplier;
 };
 
+void initialize_CTweenInfo(CTweenInfo *TweenInfo);
 float tweencalcmaxticks(float seconds, float FPS);
 float tweencalcstepinc(float seconds, float FPS);
 float arch(float val);

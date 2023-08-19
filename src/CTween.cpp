@@ -1,5 +1,18 @@
 #include "CTween.h"
 
+void initialize_CTweenInfo(CTweenInfo *TweenInfo)
+{
+	TweenInfo->val = 0.0f;
+	TweenInfo->ticks = 0.0f;
+	TweenInfo->maxticks = 0.0f;
+	TweenInfo->inc = 0.0f;
+	TweenInfo->active = false;
+	TweenInfo->func = funcsmoothstart;
+	TweenInfo->id = -1;
+	TweenInfo->funcval = 0.0f;
+	TweenInfo->multiplier = 0.0f;
+}
+
 float smoothstart2(float val)
 {
 	return val*val;

@@ -4,9 +4,8 @@
 #include "../CSprites.h"
 #include "../Vec2F.h"
 
-class CSpriteObject
+struct CSpriteObject
 {
-public:
 		bool alive = false;
 		Vec2F vel = {0,0};
 		Vec2F pos = {0,0};
@@ -29,3 +28,6 @@ public:
 		int group;
 		int row;
 };
+typedef struct CSpriteObject CSpriteObject;
+
+void Initialize_CSpriteObject(CSpriteObject *SpriteObject);
