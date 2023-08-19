@@ -166,5 +166,5 @@ public:
 	void LoadGraphics();
 	void LoadSound();
 	void UnLoadSound();
-	void DrawBackground(bool motionblur);
+	void DrawBackground();
 };

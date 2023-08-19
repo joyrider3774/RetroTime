@@ -78,7 +78,7 @@ public:
 	void LoadSound();
 	void UnLoadSound();
 	void UpdateObjects(bool IsGameState);
-	void DrawBackground(bool motionblur);
+	void DrawBackground();
 	void Draw();
 	void UpdateLogic();
 };

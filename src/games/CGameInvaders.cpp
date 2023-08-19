@@ -613,7 +613,7 @@ void CGameInvaders::updateplayer()
 
 //background ----------------------------------------------------------------------------------------------------------------
 
-void CGameInvaders::DrawBackground(bool motionblur)
+void CGameInvaders::DrawBackground()
 {
 	GameBase->Game->Image->DrawImage(GameBase->Game->Renderer, background, NULL, NULL);
 }
@@ -756,7 +756,7 @@ bool CGameInvaders::DrawObjects()
 
 void CGameInvaders::Draw()
 {
-	DrawBackground((GameBase->Game->SubGameState == SGGame));
+	DrawBackground();
 	if (DrawObjects())
 		GameBase->Game->Sprites->DrawSprites(GameBase->Game->Renderer);
 	GameBase->DrawScoreBar();

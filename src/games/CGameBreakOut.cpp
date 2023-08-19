@@ -456,14 +456,14 @@ void CGameBreakOut::updateball()
 
 //background ----------------------------------------------------------------------------------------------------------------
 
-void CGameBreakOut::DrawBackground(bool motionblur)
+void CGameBreakOut::DrawBackground()
 {
 	GameBase->Game->Image->DrawImage(GameBase->Game->Renderer, background, NULL, NULL);
 }
 
 void CGameBreakOut::Draw()
 {
-	DrawBackground((GameBase->Game->SubGameState == SGGame));
+	DrawBackground();
 	GameBase->Game->Sprites->DrawSprites(GameBase->Game->Renderer);
 	GameBase->DrawScoreBar();
 	GameBase->DrawSubStateText();

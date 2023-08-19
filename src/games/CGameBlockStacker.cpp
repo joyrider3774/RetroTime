@@ -301,14 +301,14 @@ void CGameBlockStacker::drawplayfield()
 
 //Drawing ----------------------------------------------------------------------------------------------------------------
 
-void CGameBlockStacker::DrawBackground(bool motionblur)
+void CGameBlockStacker::DrawBackground()
 {
 	GameBase->Game->Image->DrawImage(GameBase->Game->Renderer, background, NULL, NULL);
 }
 
 void CGameBlockStacker::Draw()
 {
-	DrawBackground((GameBase->Game->SubGameState == SGGame));
+	DrawBackground();
 	if (DrawObjects())
 		GameBase->Game->Sprites->DrawSprites(GameBase->Game->Renderer);
 	GameBase->DrawScoreBar();

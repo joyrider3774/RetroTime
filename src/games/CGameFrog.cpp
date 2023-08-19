@@ -759,7 +759,7 @@ void CGameFrog::updateplayer()
 
 //background ----------------------------------------------------------------------------------------------------------------
 
-void CGameFrog::DrawBackground(bool motionblur)
+void CGameFrog::DrawBackground()
 {
 	GameBase->Game->Image->DrawImage(GameBase->Game->Renderer, background, NULL, NULL);
 }
@@ -930,7 +930,7 @@ void CGameFrog::UpdateLogic()
 void CGameFrog::Draw()
 {
 	GameBase->Game->Sprites->DrawSprites(GameBase->Game->Renderer);
-	DrawBackground(false);
+	DrawBackground();
 	GameBase->DrawScoreBar();
 	GameBase->DrawSubStateText();
 }

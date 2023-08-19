@@ -112,8 +112,6 @@ constexpr int OptionMenus = 4;
 
 using namespace std;
 
-//CRTS
-constexpr int Crts = 6;
 
 struct ModeDesc {
 	int mode;
@@ -148,11 +146,6 @@ struct OptionMenusDesc {
 	string name;
 };
 
-struct CrtOptDesc {
-	int crt;
-	string name;
-};
-
 extern GameDesc GSGames[Games];
 extern ModeDesc GMModes[Modes];
 extern MainMenusDesc MMMainMenus[MainMenus];
@@ -160,7 +153,6 @@ extern OptionMenusDesc OMOptionMenus[OptionMenus];
 extern GPGamePauseMenusDesc GPGamePauseMenus[Games];
 extern PauseMenuDesc PMPauseMenus[PauseMenus];
 extern OptionMenusDesc OMOptionMenus[OptionMenus];
-extern CrtOptDesc CrtOptions[Crts];
 
 extern Uint32 ColorToUint(int R, int G, int B);
 extern SDL_Colour UintToColor(Uint32 colour);

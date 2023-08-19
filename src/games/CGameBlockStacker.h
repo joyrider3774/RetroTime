@@ -39,7 +39,7 @@ private:
 public:
 	CGameBlockStacker(CGame* aGame);
 	~CGameBlockStacker();
-	void DrawBackground(bool motionblur);
+	void DrawBackground();
 	void Draw();
 	void UpdateLogic();
 	void init();

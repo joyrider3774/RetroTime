@@ -353,7 +353,7 @@ void CGameRamIt::drawplayfield()
 
 //background ----------------------------------------------------------------------------------------------------------------
 
-void CGameRamIt::DrawBackground(bool motionblur)
+void CGameRamIt::DrawBackground()
 {
 	SDL_SetRenderDrawColor(GameBase->Game->Renderer, 150, 150, 150, 255);
 	SDL_RenderClear(GameBase->Game->Renderer);
@@ -452,7 +452,7 @@ bool CGameRamIt::DrawObjects()
 
 void CGameRamIt::Draw()
 {
-	DrawBackground((GameBase->Game->SubGameState == SGGame));
+	DrawBackground();
 	if (DrawObjects())
 		GameBase->Game->Sprites->DrawSprites(GameBase->Game->Renderer);
 	GameBase->DrawScoreBar();

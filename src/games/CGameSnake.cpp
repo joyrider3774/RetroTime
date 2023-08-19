@@ -156,7 +156,7 @@ void CGameSnake::updatesnake()
 
 //background ----------------------------------------------------------------------------------------------------------------
 
-void CGameSnake::DrawBackground(bool motionblur)
+void CGameSnake::DrawBackground()
 {
 	SDL_SetRenderDrawColor(GameBase->Game->Renderer, 0x65, 0x65, 0xFF, 0xFF);
 	SDL_RenderClear(GameBase->Game->Renderer);
@@ -253,7 +253,7 @@ bool CGameSnake::DrawObjects()
 
 void CGameSnake::Draw()
 {
-	DrawBackground((GameBase->Game->SubGameState == SGGame));
+	DrawBackground();
 	if (DrawObjects())
 		GameBase->Game->Sprites->DrawSprites(GameBase->Game->Renderer);
 	GameBase->DrawScoreBar();

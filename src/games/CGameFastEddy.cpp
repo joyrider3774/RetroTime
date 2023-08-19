@@ -898,7 +898,7 @@ void CGameFastEddy::createladders()
 
 //background ----------------------------------------------------------------------------------------------------------------
 
-void CGameFastEddy::DrawBackground(bool motionblur)
+void CGameFastEddy::DrawBackground()
 {
 	GameBase->Game->Image->DrawImage(GameBase->Game->Renderer, background, NULL, NULL);
 }
@@ -1035,7 +1035,7 @@ void CGameFastEddy::UpdateLogic()
 
 void CGameFastEddy::Draw()
 {
-	DrawBackground((GameBase->Game->SubGameState == SGGame));
+	DrawBackground();
 	GameBase->Game->Sprites->DrawSprites(GameBase->Game->Renderer);
 	GameBase->DrawScoreBar();
 	GameBase->DrawSubStateText();

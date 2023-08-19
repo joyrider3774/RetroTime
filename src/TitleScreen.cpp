@@ -29,7 +29,7 @@ void TitleScreen(CGame *Game)
 		Game->GameState -= initDiff;
 	}
 	//draw everything to offscreen surface
-	Game->DrawTitleBackground(Game->Input->Buttons.ButLT && Game->Input->Buttons.ButRT);
+	Game->DrawTitleBackground();
 	SDL_SetRenderDrawColor(Game->Renderer, 255, 255, 255, 235);
 	//so we can can copy the transparant part with the blue and text from this image
 	SDL_Point FramePos = {ScreenWidth / 2, ScreenHeight / 2};

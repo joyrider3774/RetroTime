@@ -119,14 +119,6 @@ void CGameBase::PauseMenu()
 			Game->SubGameState = GSGame;
 		}
 
-		if(Game->Input->Buttons.RenderReset)
-		{
-			SDL_Log("Render Reset, Recreating crt and background, Reloading Game Graphics");
-			Game->Image->UnloadImages();
-			Game->LoadGraphics();
-			Game->ReCreateCrt();
-		}
-
 		if (Game->SubGameState == SGGameHelp)
 		{
 			if ((Game->Input->Buttons.ButB && !Game->Input->PrevButtons.ButB) ||

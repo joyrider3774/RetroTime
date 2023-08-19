@@ -445,7 +445,7 @@ void CGamePang::drawplayer()
 
 //background ----------------------------------------------------------------------------------------------------------------
 
-void CGamePang::DrawBackground(bool motionblur)
+void CGamePang::DrawBackground()
 {
 	GameBase->Game->Image->DrawImage(GameBase->Game->Renderer, background, NULL, NULL);
 }
@@ -560,7 +560,7 @@ bool CGamePang::DrawObjects()
 
 void CGamePang::Draw()
 {
-	DrawBackground((GameBase->Game->SubGameState == SGGame));
+	DrawBackground();
 	if (DrawObjects())
 		GameBase->Game->Sprites->DrawSprites(GameBase->Game->Renderer);
 	GameBase->DrawScoreBar();

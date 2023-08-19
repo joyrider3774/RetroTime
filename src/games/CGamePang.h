@@ -87,7 +87,7 @@ public:
 	void UnLoadSound();
 	void UpdateObjects(bool IsGameState);
 	bool DrawObjects();
-	void DrawBackground(bool motionblur);
+	void DrawBackground();
 	void Draw();
 	void UpdateLogic();
 };

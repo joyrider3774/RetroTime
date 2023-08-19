@@ -46,7 +46,6 @@ private:
 	void MainLoop();
 	void Init();
 	void DeInit();
-	void CreateCrt(int type);
 	void CreateActiveGame();
 public:
 	SDL_Window *SdlWindow;
@@ -66,17 +65,16 @@ public:
 	CImage *Image;
 	CSprites *Sprites;
 	SDL_Renderer *Renderer;
-	SDL_Texture *TexOffScreen, *TexScreen, *TexCrt, *TexTmp;
+	SDL_Texture *TexOffScreen, *TexScreen, *TexTmp;
 	long long int RetroCarouselHighScore, RetroCarouselScore;
 	long long int HighScores[Games][Modes];
 	long long int Scores[Games][Modes];
-	int GameState, SubGameState, GameMode, Game, Crt;
+	int GameState, SubGameState, GameMode, Game;
 	float SubStateCounter;
 	int MusMenu;
 	int SfxConfirm, SfxBack, SfxSelect, SfxScore, SfxOne, SfxTwo, SfxThree, SfxTimeOver, SfxReadyGo, SfxOneMinute;
 	float Timer;
 	Uint32 SubStateTime;
-	bool MotionBlur;
 	int GFXFrameID, GFXMedal;
 	int CurrentGameMusicID;
 	int ColorModR=255, ColorModG=255, ColorModB=255;
@@ -99,11 +97,9 @@ public:
 	void ResetScores();
 	void ResetHighScores();
 	void AddToScore(long long int Value);
-	void DrawTitleBackground(bool k);
+	void DrawTitleBackground();
 	string GetFilePath(string InputFile);
-	void DrawCrt();
 	void Run(int argc, char **argv);
-	void ReCreateCrt();
 	void StartCrossFade(int SetGameState, int SetNextSubState, int SetNextSubStateCounter, Uint32 SetNextSubStateTimeAdd);
 	void ToggleFullscreen();
 };

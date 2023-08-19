@@ -174,16 +174,6 @@ OptionMenusDesc OMOptionMenus[OptionMenus] =
 	{OMBack,			"Back"},
 };
 
-//CrtOptions
-CrtOptDesc CrtOptions[Crts] =
-{
-	{0, "Off"},
-	{1,	"Lines 2"},
-	{2,	"Lines 4"},
-	{3,	"Lines 8"},
-	{4,	"Dots"},
-	{5,	"Cross"}
-};
 
 Uint32 ColorToUint(int R, int G, int B)
 {
