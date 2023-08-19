@@ -37,9 +37,8 @@ struct SObjectInfo {
 typedef struct SObjectInfo SObjectInfo;
 
 
-class CGameFrog {
+struct CGameFrog {
 
-private:
 	CGameBase *GameBase;
 	static const int debugmode = false;
 	static constexpr float playerspeed = 16.0f*3.0f*yscale;
@@ -74,9 +73,7 @@ private:
 	static const int cherryscore = 50;
 
 	static const int lenlevelincspeeds = 5;
-	float levelincspeeds[lenlevelincspeeds] = {0.0f, 0.25f*yscale, 0.5f*yscale, 1.0f*yscale, 1.5f*yscale};
-	int levelincspawns[lenlevelincspeeds] = {30, 90, 240, 570, 0};
-
+	
 	static const int numcols = 14;
 	static const int generatorrows = 1;
 	static const int maxrowsbeforesafetyrow = 4;
@@ -94,20 +91,9 @@ private:
 
 	static const int lenrowtypes = 9;
 
-	SRowType rowtypes[lenrowtypes] = {
-	{rowtypewater, 5, 9, true, idenemyplant, 1.0f*yscale, 2, 4},
-	{rowtypewater, 5, 9, true, idenemyplant, 2.0f*yscale, 3, 2},
-	{rowtypewater, 5, 9, true, idenemyplant, 3.0f*yscale, 4, 3},
-
-	{rowtyperoad, 0, 0, false, idenemycar1, 2.0f*yscale, 4, 2}, //ambulance
-	{rowtyperoad, 0, 0, false, idenemycar2, 1.0f*yscale, 3, 2}, //truck
-	{rowtyperoad, 0, 0, false, idenemycar3, 7.0f*yscale, numrows, 1}, //formula 1
-	{rowtyperoad, 0, 0, false, idenemycar4, 1.5f*yscale, 4, 2}, //dumptruck
-	{rowtyperoad, 0, 0, false, idenemycar5, 2.5f*yscale, 3, 2}, //jeep
-
-	{rowtypesafety, 10, 10,false, idnone, 2.0f*yscale, 2, 2}
-	};
-
+	SRowType rowtypes[lenrowtypes];
+	float levelincspeeds[lenlevelincspeeds];
+	int levelincspawns[lenlevelincspeeds];
 
 	float worldspeed;
 	int nextrowtype;
@@ -145,26 +131,46 @@ private:
 	int spritesheetfruit3;
 
 
-	void updateplayer();
-	void createplayer();
-	void destroyplayer();
-	void updateobjects();
-	void createobjectrow(int rownr, int arowtype);
-	int createobject(int rownr, int col, int id, int arowtype, float speed, int dir, int startobjectindex);
-	void destroyobject(int index);
-	void destroyallobjects();
-	void createobjects(bool initialize);
-	void OnGameStart();
-public:
-	CGameFrog(CGame* aGame);
-	~CGameFrog();
-	void init();
-	void deinit();
-	void UpdateLogic();
-	void Draw();
-	void UnloadGraphics();
-	void LoadGraphics();
-	void LoadSound();
-	void UnLoadSound();
-	void DrawBackground();
+	void (*updateplayer)(CGameFrog* GameFrog);
+	void (*createplayer)(CGameFrog* GameFrog);
+	void (*destroyplayer)(CGameFrog* GameFrog);
+	void (*updateobjects)(CGameFrog* GameFrog);
+	void (*createobjectrow)(CGameFrog* GameFrog, int rownr, int arowtype);
+	int (*createobject)(CGameFrog* GameFrog, int rownr, int col, int id, int arowtype, float speed, int dir, int startobjectindex);
+	void (*destroyobject)(CGameFrog* GameFrog, int index);
+	void (*destroyallobjects)(CGameFrog* GameFrog);
+	void (*createobjects)(CGameFrog* GameFrog, bool initialize);
+	void (*OnGameStart)(CGameFrog* GameFrog);
+	void (*init)(CGameFrog* GameFrog);
+	void (*deinit)(CGameFrog* GameFrog);
+	void (*UpdateLogic)(CGameFrog* GameFrog);
+	void (*Draw)(CGameFrog* GameFrog);
+	void (*UnloadGraphics)(CGameFrog* GameFrog);
+	void (*LoadGraphics)(CGameFrog* GameFrog);
+	void (*LoadSound)(CGameFrog* GameFrog);
+	void (*UnLoadSound)(CGameFrog* GameFrog);
+	void (*DrawBackground)(CGameFrog* GameFrog);
 };
+typedef struct CGameFrog CGameFrog;
+
+void CGameFrog_Draw(CGameFrog* GameFrog);
+void CGameFrog_UpdateLogic(CGameFrog* GameFrog);
+void CGameFrog_OnGameStart(CGameFrog* GameFrog);
+void CGameFrog_UnloadGraphics(CGameFrog* GameFrog);
+void CGameFrog_LoadGraphics(CGameFrog* GameFrog);
+void CGameFrog_UnLoadSound(CGameFrog* GameFrog);
+void CGameFrog_LoadSound(CGameFrog* GameFrog);
+void CGameFrog_deinit(CGameFrog* GameFrog);
+void CGameFrog_init(CGameFrog* GameFrog);
+void CGameFrog_DrawBackground(CGameFrog* GameFrog);
+void CGameFrog_updateplayer(CGameFrog* GameFrog);
+void CGameFrog_createplayer(CGameFrog* GameFrog);
+void CGameFrog_destroyplayer(CGameFrog* GameFrog);
+void CGameFrog_updateobjects(CGameFrog* GameFrog);
+void CGameFrog_createobjectrow(CGameFrog* GameFrog, int rownr, int arowtype);
+int CGameFrog_createobject(CGameFrog* GameFrog, int rownr, int col, int id, int arowtype, float speed, int dir, int startobjectindex);
+void CGameFrog_destroyobject(CGameFrog* GameFrog, int index);
+void CGameFrog_destroyallobjects(CGameFrog* GameFrog);
+void CGameFrog_createobjects(CGameFrog* GameFrog, bool initialize);
+void Destroy_CGameFrog(CGameFrog* GameFrog);
+CGameFrog* Create_CGameFrog(CGame* aGame);

@@ -74,7 +74,7 @@ void SubScoreScreen(CGame *Game)
 			Game->GameBreakOut->Draw(Game->GameBreakOut);
 			break;
 		case GSFrog:
-			Game->GameFrog->Draw();
+			Game->GameFrog->Draw(Game->GameFrog);
 			break;
 		case GSTetris:
 			Game->GameBlockStacker->Draw(Game->GameBlockStacker);

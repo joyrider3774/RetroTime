@@ -61,8 +61,8 @@ void CGame::DeInit()
 			delete GameInvaders;
 			break;
 		case GSFrog:
-			GameFrog->deinit();
-			delete GameFrog;
+			GameFrog->deinit(GameFrog);
+			Destroy_CGameFrog(GameFrog);
 			break;
 		case GSEddy:
 			GameFastEddy->deinit(GameFastEddy);
@@ -443,8 +443,8 @@ void CGame::CreateActiveGame()
 			ActiveGameGameStateId = -1;
 			break;
 		case GSFrog:
-			GameFrog->deinit();
-			delete GameFrog;
+			GameFrog->deinit(GameFrog);
+			Destroy_CGameFrog(GameFrog);
 			ActiveGameGameStateId = -1;
 			break;
 		case GSEddy:
@@ -486,7 +486,7 @@ void CGame::CreateActiveGame()
 			ActiveGameGameStateId = GSEddy;
 			break;
 		case GSFrogInit:
-			GameFrog = new CGameFrog(this);
+			GameFrog = Create_CGameFrog(this);
 			ActiveGameGameStateId = GSFrog;
 			break;
 		case GSBreakoutInit:
@@ -544,7 +544,7 @@ void CGame::MainLoop()
 					GameInvaders->LoadGraphics();
 					break;
 				case GSFrog:
-					GameFrog->LoadGraphics();
+					GameFrog->LoadGraphics(GameFrog);
 					break;
 				case GSEddy:
 					GameFastEddy->LoadGraphics(GameFastEddy);
@@ -665,7 +665,7 @@ void CGame::MainLoop()
 						GameInvaders->init();
 						break;
 					case GSFrog:
-						GameFrog->init();
+						GameFrog->init(GameFrog);
 						break;
 					case GSEddy:
 						GameFastEddy->init(GameFastEddy);
@@ -708,8 +708,8 @@ void CGame::MainLoop()
 						GameInvaders->Draw();
 						break;
 					case GSFrog:
-						GameFrog->UpdateLogic();
-						GameFrog->Draw();
+						GameFrog->UpdateLogic(GameFrog);
+						GameFrog->Draw(GameFrog);
 						break;
 					case GSEddy:
 						GameFastEddy->UpdateLogic(GameFastEddy);
