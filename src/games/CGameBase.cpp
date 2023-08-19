@@ -17,41 +17,6 @@ CGameBase::~CGameBase()
 
 }
 
-void CGameBase::init()
-{
-
-}
-
-void CGameBase::deinit()
-{
-
-}
-
-void CGameBase::LoadGraphics()
-{
-
-}
-
-void CGameBase::UnloadGraphics()
-{
-
-}
-
-void CGameBase::LoadSound()
-{
-
-}
-
-void CGameBase::UnLoadSound()
-{
-
-}
-
-void CGameBase::UpdateObjects(bool IsGameState)
-{
-
-}
-
 void CGameBase::PauseMenu()
 {
 	int prevsubgamestate = Game->SubGameState;
@@ -82,7 +47,6 @@ void CGameBase::PauseMenu()
 		//draw everything to offscreen surface
 
 		SDL_SetRenderTarget(Game->Renderer, Game->TexOffScreen);
-		Draw(); //game
 
 		// this seems to cause a blackscreen somehow when certain games
 		// are paused not sure as to why but i disabled it for now
@@ -161,7 +125,6 @@ void CGameBase::PauseMenu()
 		{
 			SDL_Log("Render Reset, Recreating crt and background, Reloading Game Graphics");
 			Game->Image->UnloadImages();
-			LoadGraphics();
 			Game->LoadGraphics();
 			Game->CreateScreenshotsAndBackground();
 			Game->ReCreateCrt();
@@ -404,11 +367,6 @@ void CGameBase::DrawScoreBar()
 	Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 20*yscale, Text, Text.length(), 0, 0, 0, {255,255,255,255});
 }
 
-void CGameBase::OnGameStart()
-{
-
-}
-
 void CGameBase::DrawSubStateText()
 {
 	//textSize(scpregamefontsize)
@@ -499,32 +457,4 @@ bool CGameBase::UpdateLogic()
 		}
 	}
 	return result;
-}
-
-void CGameBase::Draw()
-{
-	DrawBackground((Game->SubGameState == SGGame) && !ScreenshotMode);
-	if (DrawObjects())
-		Game->Sprites->DrawSprites(Game->Renderer);
-	if(!ScreenshotMode)
-	{
-		DrawScoreBar();
-		DrawSubStateText();
-	}
-}
-
-bool CGameBase::DrawObjects()
-{
-	//call drawsprites
-	return true;
-}
-
-void CGameBase::DrawBackground(bool motionblur)
-{
-
-}
-
-SDL_Texture* CGameBase::screenshot()
-{
-	return nullptr;
 }
