@@ -23,9 +23,8 @@ struct senemyinfo
 typedef struct senemyinfo senemyinfo;
 
 
-class CGameInvaders {
+struct CGameInvaders {
 
-private:
 	CGameBase *GameBase;
 	static const int tweenenemypositions = 0;
 	static const int tweenenemydeath = 1;
@@ -37,7 +36,7 @@ private:
 	static const int enemystartyoffset = 50*yscale;
 	static const int enemyspacing = 60*yscale;
 	static const int enemyhorzspacing = 50*xscale;
-	Vec2F enemyscale = {1.5f*xscale,1.5f*yscale};
+	static constexpr Vec2F enemyscale = {1.5f*xscale,1.5f*yscale};
 	static constexpr float enemyspeed = 1.0f*xscale;
 	static constexpr float enemyspeedinc = 0.15f*xscale;
 	static constexpr float playerspeed = 8.0f*xscale;
@@ -50,7 +49,6 @@ private:
 	static const int asteroidmaxhealthpoints = 50;
 	static const int maxenemybullets = 5;
 	static const int enemybulletrandomizer = 100;
-
 
 	int deaths = 0;
 	int pattern = 0;
@@ -82,42 +80,80 @@ private:
 
 	int MusMusic, SfxPlayerShoot, SfxPlayerDeath, SfxEnemyShoot, SfxEnemyDeath, SfxSucces, SfxDie;
 
-	void updateplayer();
-	void createplayer();
-	void destroyplayer();
-	void updateinvaders();
-	void createinvaders(bool setposition);
-	bool tweenactive(int id);
-	void destroyinvader(int index);
-	void destroyallinvaders();
-	void updateenemyinfo();
-	void updatebullet();
-	void destroybullet();
-	void createbullet();
-	void updateasteroids();
-	void createasteroids();
-	void destroyasteroid(int index);
-	void destroyallasteroids();
-	void updateenemybullet();
-	void createnemybullet(Vec2F pos);
-	void destroyenemybullet(int index);
-	void destroyallenemybullet();
-	void createexplosion(Vec2F pos);
-	void destroyexploison(int index);
-	void destroyallexplosion();
-	void checkexplosions();
-public:
-	CGameInvaders(CGame* aGame);
-	~CGameInvaders();
-	void init();
-	void deinit();
-	void UnloadGraphics();
-	void LoadGraphics();
-	void LoadSound();
-	void UnLoadSound();
-	void UpdateObjects(bool IsGameState);
-	bool DrawObjects();
-	void DrawBackground();
-	void Draw();
-	void UpdateLogic();
+	void (*updateplayer)(CGameInvaders* GameInvaders);
+	void (*createplayer)(CGameInvaders* GameInvaders);
+	void (*destroyplayer)(CGameInvaders* GameInvaders);
+	void (*updateinvaders)(CGameInvaders* GameInvaders);
+	void (*createinvaders)(CGameInvaders* GameInvaders,bool setposition);
+	bool (*tweenactive)(CGameInvaders* GameInvaders,int id);
+	void (*destroyinvader)(CGameInvaders* GameInvaders,int index);
+	void (*destroyallinvaders)(CGameInvaders* GameInvaders);
+	void (*updateenemyinfo)(CGameInvaders* GameInvaders);
+	void (*updatebullet)(CGameInvaders* GameInvaders);
+	void (*destroybullet)(CGameInvaders* GameInvaders);
+	void (*createbullet)(CGameInvaders* GameInvaders);
+	void (*updateasteroids)(CGameInvaders* GameInvaders);
+	void (*createasteroids)(CGameInvaders* GameInvaders);
+	void (*destroyasteroid)(CGameInvaders* GameInvaders,int index);
+	void (*destroyallasteroids)(CGameInvaders* GameInvaders);
+	void (*updateenemybullet)(CGameInvaders* GameInvaders);
+	void (*createnemybullet)(CGameInvaders* GameInvaders,Vec2F pos);
+	void (*destroyenemybullet)(CGameInvaders* GameInvaders,int index);
+	void (*destroyallenemybullet)(CGameInvaders* GameInvaders);
+	void (*createexplosion)(CGameInvaders* GameInvaders,Vec2F pos);
+	void (*destroyexploison)(CGameInvaders* GameInvaders,int index);
+	void (*destroyallexplosion)(CGameInvaders* GameInvaders);
+	void (*checkexplosions)(CGameInvaders* GameInvaders);
+
+
+	void (*init)(CGameInvaders* GameInvaders);
+	void (*deinit)(CGameInvaders* GameInvaders);
+	void (*UnloadGraphics)(CGameInvaders* GameInvaders);
+	void (*LoadGraphics)(CGameInvaders* GameInvaders);
+	void (*LoadSound)(CGameInvaders* GameInvaders);
+	void (*UnLoadSound)(CGameInvaders* GameInvaders);
+	void (*UpdateObjects)(CGameInvaders* GameInvaders,bool IsGameState);
+	bool (*DrawObjects)(CGameInvaders* GameInvaders);
+	void (*DrawBackground)(CGameInvaders* GameInvaders);
+	void (*Draw)(CGameInvaders* GameInvaders);
+	void (*UpdateLogic)(CGameInvaders* GameInvaders);
 };
+typedef struct CGameInvaders CGameInvaders;
+
+void CGameInvaders_Draw(CGameInvaders* GameInvaders);
+bool CGameInvaders_DrawObjects(CGameInvaders* GameInvaders);
+void CGameInvaders_UpdateLogic(CGameInvaders* GameInvaders);
+void CGameInvaders_UpdateObjects(CGameInvaders* GameInvaders, bool IsGameState);
+void CGameInvaders_UnloadGraphics(CGameInvaders* GameInvaders);
+void CGameInvaders_LoadGraphics(CGameInvaders* GameInvaders);
+void CGameInvaders_UnLoadSound(CGameInvaders* GameInvaders);
+void CGameInvaders_LoadSound(CGameInvaders* GameInvaders);
+void CGameInvaders_deinit(CGameInvaders* GameInvaders);
+void CGameInvaders_init(CGameInvaders* GameInvaders);
+void CGameInvaders_DrawBackground(CGameInvaders* GameInvaders);
+void CGameInvaders_updateplayer(CGameInvaders* GameInvaders);
+void CGameInvaders_createplayer(CGameInvaders* GameInvaders);
+void CGameInvaders_destroyplayer(CGameInvaders* GameInvaders);
+void CGameInvaders_updateinvaders(CGameInvaders* GameInvaders);
+void CGameInvaders_createinvaders(CGameInvaders* GameInvaders, bool setposition);
+bool CGameInvaders_tweenactive(CGameInvaders*, int id);
+void CGameInvaders_destroyinvader(CGameInvaders* GameInvaders, int index);
+void CGameInvaders_destroyallinvaders(CGameInvaders* GameInvaders);
+void CGameInvaders_updateenemyinfo(CGameInvaders* GameInvaders);
+void CGameInvaders_updatebullet(CGameInvaders* GameInvaders);
+void CGameInvaders_destroybullet(CGameInvaders* GameInvaders);
+void CGameInvaders_createbullet(CGameInvaders* GameInvaders);
+void CGameInvaders_updateasteroids(CGameInvaders* GameInvaders);
+void CGameInvaders_createasteroids(CGameInvaders* GameInvaders);
+void CGameInvaders_destroyasteroid(CGameInvaders* GameInvaders, int index);
+void CGameInvaders_destroyallasteroids(CGameInvaders* GameInvaders);
+void CGameInvaders_updateenemybullet(CGameInvaders* GameInvaders);
+void CGameInvaders_createnemybullet(CGameInvaders* GameInvaders, Vec2F pos);
+void CGameInvaders_destroyenemybullet(CGameInvaders* GameInvaders, int index);
+void CGameInvaders_destroyallenemybullet(CGameInvaders* GameInvaders);
+void CGameInvaders_createexplosion(CGameInvaders* GameInvaders, Vec2F pos);
+void CGameInvaders_destroyexploison(CGameInvaders* GameInvaders, int index);
+void CGameInvaders_destroyallexplosion(CGameInvaders* GameInvaders);
+void CGameInvaders_checkexplosions(CGameInvaders* GameInvaders);
+void Destroy_CGameInvaders(CGameInvaders* GameInvaders);
+CGameInvaders* Create_CGameInvaders(CGame* aGame);

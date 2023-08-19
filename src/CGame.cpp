@@ -57,8 +57,8 @@ void CGame::DeInit()
 			delete GamePang;
 			break;
 		case GSSpaceInvaders:
-			GameInvaders->deinit();
-			delete GameInvaders;
+			GameInvaders->deinit(GameInvaders);
+			Destroy_CGameInvaders(GameInvaders);
 			break;
 		case GSFrog:
 			GameFrog->deinit(GameFrog);
@@ -438,7 +438,7 @@ void CGame::CreateActiveGame()
 			ActiveGameGameStateId = -1;
 			break;
 		case GSSpaceInvaders:
-			GameInvaders->deinit();
+			GameInvaders->deinit(GameInvaders);
 			delete GameInvaders;
 			ActiveGameGameStateId = -1;
 			break;
@@ -498,7 +498,7 @@ void CGame::CreateActiveGame()
 			ActiveGameGameStateId = GSPang;
 			break;
 		case GSSpaceInvadersInit:
-			GameInvaders = new CGameInvaders(this);
+			GameInvaders = Create_CGameInvaders(this);
 			ActiveGameGameStateId = GSSpaceInvaders;
 			break;
 		default:
@@ -541,7 +541,7 @@ void CGame::MainLoop()
 					GamePang->LoadGraphics();
 					break;
 				case GSSpaceInvaders:
-					GameInvaders->LoadGraphics();
+					GameInvaders->LoadGraphics(GameInvaders);
 					break;
 				case GSFrog:
 					GameFrog->LoadGraphics(GameFrog);
@@ -662,7 +662,7 @@ void CGame::MainLoop()
 						GamePang->init();
 						break;
 					case GSSpaceInvaders:
-						GameInvaders->init();
+						GameInvaders->init(GameInvaders);
 						break;
 					case GSFrog:
 						GameFrog->init(GameFrog);
@@ -704,8 +704,8 @@ void CGame::MainLoop()
 						GamePang->Draw();
 						break;
 					case GSSpaceInvaders:
-						GameInvaders->UpdateLogic();
-						GameInvaders->Draw();
+						GameInvaders->UpdateLogic(GameInvaders);
+						GameInvaders->Draw(GameInvaders);
 						break;
 					case GSFrog:
 						GameFrog->UpdateLogic(GameFrog);

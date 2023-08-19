@@ -23,7 +23,7 @@ struct CGameFastEddy;
 struct CGameBreakOut;
 class CGameBase;
 struct CGameFrog;
-class CGameInvaders;
+struct CGameInvaders;
 class CGamePang;
 class CGameSnake;
 
