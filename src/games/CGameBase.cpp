@@ -1,27 +1,41 @@
 #include <SDL.h>
+#include <stdlib.h>
 #include "CGameBase.h"
 #include "../Vec2F.h"
 
-CGameBase::CGameBase(CGame *aGame, int aGameStateID, bool aUsesLevels)
+CGameBase* Create_CGameBase(CGame *aGame, int aGameStateID, bool aUsesLevels)
 {
-	Game = aGame;
-	UsesLevels = aUsesLevels;
-	GameStateID = aGameStateID;
-	level = 0;
-	HealthPoints = 0;
+	CGameBase* result = (CGameBase*) malloc(sizeof(CGameBase));
+	result->Game = aGame;
+	result->UsesLevels = aUsesLevels;
+	result->GameStateID = aGameStateID;
+	result->level = 0;
+	result->HealthPoints = 0;
+	result->SubStateText[0] = '\0';
+	result->playfieldheight = 0;
+	result->playfieldwidth = 0;
+	result->screenbottom = 0;
+	result->screentop = 0;
+	result->screenleft = 0;
+	result->screenright = 0;
+	result->DrawScoreBar = CGameBase_DrawScoreBar;
+	result->PauseMenu = CGameBase_PauseMenu;
+	result->DrawSubStateText = CGameBase_DrawSubstateText;
+	result->UpdateLogic = CGameBase_UpdateLogic;
+	return result;
 }
 
-CGameBase::~CGameBase()
+void Destroy_CGameBase(CGameBase* GameBase)
 {
-
+	free(GameBase);
 }
 
-void CGameBase::PauseMenu()
+void CGameBase_PauseMenu(CGameBase* GameBase)
 {
-	int prevsubgamestate = Game->SubGameState;
-	int prevsubstatecounter = Game->SubStateCounter;
-	Game->SubGameState = SGPauseMenu;
-	Game->Audio->PlaySound(Game->SfxConfirm, 0);
+	int prevsubgamestate = GameBase->Game->SubGameState;
+	int prevsubstatecounter = GameBase->Game->SubStateCounter;
+	GameBase->Game->SubGameState = SGPauseMenu;
+	GameBase->Game->Audio->PlaySound(GameBase->Game->SfxConfirm, 0);
 	//subgamestate = sgframe;
 	//global.substatecounter = 10.6
 	int selected = 0;
@@ -29,7 +43,7 @@ void CGameBase::PauseMenu()
 	int maxmenus = 5;
 	int menutextsize = 60*yscale;
 	int menuspacing = 85*yscale;
-	Game->Input->ResetButtons();
+	GameBase->Game->Input->ResetButtons();
 
 	Uint64 TotalFrames = 0;
 	Uint64 TotalFramePerf = 0;
@@ -37,37 +51,37 @@ void CGameBase::PauseMenu()
 	double AvgFrameTime = 0.0f;
 	Uint32 Ticks = SDL_GetTicks();
 
-	while ((Game->SubGameState == SGFrame) || (Game->SubGameState == SGPauseMenu) || (Game->SubGameState == SGGameHelp))
+	while ((GameBase->Game->SubGameState == SGFrame) || (GameBase->Game->SubGameState == SGPauseMenu) || (GameBase->Game->SubGameState == SGGameHelp))
 	{
 		TotalFrames++;
 		Uint64 FrameStartPerf = SDL_GetPerformanceCounter();
-		selectedmenu = GPGamePauseMenus[Game->Game].menus[selected];
+		selectedmenu = GPGamePauseMenus[GameBase->Game->Game].menus[selected];
 
 		//draw everything to offscreen surface
 
-		SDL_SetRenderTarget(Game->Renderer, Game->TexOffScreen);
+		SDL_SetRenderTarget(GameBase->Game->Renderer, GameBase->Game->TexOffScreen);
 
 		// this seems to cause a blackscreen somehow when certain games
 		// are paused not sure as to why but i disabled it for now
-		// SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 128);
-		// SDL_RenderFillRect(Game->Renderer, NULL);
+		// SDL_SetRenderDrawColor(GameBase->Game->Renderer, 0, 0, 0, 128);
+		// SDL_RenderFillRect(GameBase->Game->Renderer, NULL);
 
 		 //draw everything to offscreen surface
-		SDL_SetRenderDrawColor(Game->Renderer, 255,255, 255, 255);
+		SDL_SetRenderDrawColor(GameBase->Game->Renderer, 255,255, 255, 255);
 		//so we can can copy the transparant part with the blue and text from this image
 		SDL_Point FramePos = {ScreenWidth / 2, ScreenHeight / 2};
 		Vec2F FrameScale = {16.0f / 4 * xscale, 12.8f *yscale};
-		Game->Image->DrawImageFuze(Game->Renderer, Game->GFXFrameID, true, &FramePos, 0, &FrameScale, 255, 255, 255, 255);
+		GameBase->Game->Image->DrawImageFuze(GameBase->Game->Renderer, GameBase->Game->GFXFrameID, true, &FramePos, 0, &FrameScale, 255, 255, 255, 255);
 
-		if (Game->SubGameState == SGPauseMenu)
+		if (GameBase->Game->SubGameState == SGPauseMenu)
 		{
 			string Text = "Paused";
-			Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 80*yscale, Text, Text.length(), 510*xscale, 50*yscale, 0, {255,255,255,255});
+			GameBase->Game->Font->WriteText(GameBase->Game->Renderer, "Roboto-Regular", 80*yscale, Text, Text.length(), 510*xscale, 50*yscale, 0, {255,255,255,255});
 			int menu;
 			SDL_Color color;
 			for(int i = 0; i < maxmenus; i++)
 			{
-				menu = GPGamePauseMenus[Game->Game].menus[i];
+				menu = GPGamePauseMenus[GameBase->Game->Game].menus[i];
 				if (menu == selectedmenu)
 					color = {255, 255, 255, 255};
 				else
@@ -76,148 +90,148 @@ void CGameBase::PauseMenu()
 				switch(menu)
 				{
 					case PMSoundVol:
-						Text = PMPauseMenus[menu].name + to_string((int)(Game->Audio->GetVolumeSound()*100/128)) + "%";
-						Game->Font->WriteText(Game->Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 300*xscale, 185*yscale + i * menuspacing, 0, color);
+						Text = PMPauseMenus[menu].name + to_string((int)(GameBase->Game->Audio->GetVolumeSound()*100/128)) + "%";
+						GameBase->Game->Font->WriteText(GameBase->Game->Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 300*xscale, 185*yscale + i * menuspacing, 0, color);
 						break;
 					case PMMusicVol:
-						Text = PMPauseMenus[menu].name + to_string((int)(Game->Audio->GetVolumeMusic()*100/128)) + "%";
-						Game->Font->WriteText(Game->Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 300*xscale, 185*yscale + i * menuspacing, 0, color);
+						Text = PMPauseMenus[menu].name + to_string((int)(GameBase->Game->Audio->GetVolumeMusic()*100/128)) + "%";
+						GameBase->Game->Font->WriteText(GameBase->Game->Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 300*xscale, 185*yscale + i * menuspacing, 0, color);
 						break;
 					default:
-						Game->Font->WriteText(Game->Renderer, "Roboto-Regular", menutextsize, PMPauseMenus[menu].name, PMPauseMenus[menu].name.length(), 300*xscale,
+						GameBase->Game->Font->WriteText(GameBase->Game->Renderer, "Roboto-Regular", menutextsize, PMPauseMenus[menu].name, PMPauseMenus[menu].name.length(), 300*xscale,
 							185*yscale + i * menuspacing, 0, color);
 						break;
 				}
 			}
 			Text = "Use dpad to switch between options. (A) to select and (B) for back";
-			Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 34*yscale, Text, Text.length(), 90*xscale, 630*yscale, 0, {255, 255, 255, 255});
+			GameBase->Game->Font->WriteText(GameBase->Game->Renderer, "Roboto-Regular", 34*yscale, Text, Text.length(), 90*xscale, 630*yscale, 0, {255, 255, 255, 255});
 		}
 
-		if (Game->SubGameState == SGGameHelp)
+		if (GameBase->Game->SubGameState == SGGameHelp)
 		{
 			string Text = "Game Help";
-			Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 80*yscale, Text, Text.length(), 485*xscale, 50*yscale, 0, {255,255,255,255});
+			GameBase->Game->Font->WriteText(GameBase->Game->Renderer, "Roboto-Regular", 80*yscale, Text, Text.length(), 485*xscale, 50*yscale, 0, {255,255,255,255});
 
-			Text = GSGames[Game->Game].name;
-			Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 50*yscale, Text, Text.length(), 75*xscale, 150*yscale, 0, {255,255,255,255});
+			Text = GSGames[GameBase->Game->Game].name;
+			GameBase->Game->Font->WriteText(GameBase->Game->Renderer, "Roboto-Regular", 50*yscale, Text, Text.length(), 75*xscale, 150*yscale, 0, {255,255,255,255});
 
-			Text = GMModes[Game->GameMode].name + " High Score: " + to_string(Game->HighScores[Game->Game][Game->GameMode]);
-			Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 38*yscale, Text, Text.length(), 75*xscale, 210*yscale, 0, {255,255,255,255});
+			Text = GMModes[GameBase->Game->GameMode].name + " High Score: " + to_string(GameBase->Game->HighScores[GameBase->Game->Game][GameBase->Game->GameMode]);
+			GameBase->Game->Font->WriteText(GameBase->Game->Renderer, "Roboto-Regular", 38*yscale, Text, Text.length(), 75*xscale, 210*yscale, 0, {255,255,255,255});
 
-			Text = GSGames[Game->Game].description;
-			Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 38*yscale, Text, Text.length(), 75*xscale, 255*yscale, 0, {255,255,255,255});
+			Text = GSGames[GameBase->Game->Game].description;
+			GameBase->Game->Font->WriteText(GameBase->Game->Renderer, "Roboto-Regular", 38*yscale, Text, Text.length(), 75*xscale, 255*yscale, 0, {255,255,255,255});
 
 			Text = "Press (A) or (B) for back";
-			Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 34*yscale, Text, Text.length(), 485*xscale, 630*yscale, 0, {255, 255, 255, 255});
+			GameBase->Game->Font->WriteText(GameBase->Game->Renderer, "Roboto-Regular", 34*yscale, Text, Text.length(), 485*xscale, 630*yscale, 0, {255, 255, 255, 255});
 		}
 
-		Game->Input->Update();
+		GameBase->Game->Input->Update();
 
-		if (Game->Input->Buttons.ButQuit)
+		if (GameBase->Game->Input->Buttons.ButQuit)
 		{
-			Game->GameState = GSQuit;
-			Game->SubGameState = GSGame;
+			GameBase->Game->GameState = GSQuit;
+			GameBase->Game->SubGameState = GSGame;
 		}
 
-		if (Game->SubGameState == SGGameHelp)
+		if (GameBase->Game->SubGameState == SGGameHelp)
 		{
-			if ((Game->Input->Buttons.ButB && !Game->Input->PrevButtons.ButB) ||
-				(Game->Input->Buttons.ButA && !Game->Input->PrevButtons.ButA) ||
-				(!Game->Input->PrevButtons.ButBack && Game->Input->Buttons.ButBack) ||
-				(!Game->Input->PrevButtons.ButStart && Game->Input->Buttons.ButStart))
+			if ((GameBase->Game->Input->Buttons.ButB && !GameBase->Game->Input->PrevButtons.ButB) ||
+				(GameBase->Game->Input->Buttons.ButA && !GameBase->Game->Input->PrevButtons.ButA) ||
+				(!GameBase->Game->Input->PrevButtons.ButBack && GameBase->Game->Input->Buttons.ButBack) ||
+				(!GameBase->Game->Input->PrevButtons.ButStart && GameBase->Game->Input->Buttons.ButStart))
 			{
-				Game->Audio->PlaySound(Game->SfxBack, 0);
-				Game->SubGameState = SGPauseMenu;
-				Game->Input->ResetButtons();
+				GameBase->Game->Audio->PlaySound(GameBase->Game->SfxBack, 0);
+				GameBase->Game->SubGameState = SGPauseMenu;
+				GameBase->Game->Input->ResetButtons();
 			}
 		}
 
-		if (Game->SubGameState == SGPauseMenu)
+		if (GameBase->Game->SubGameState == SGPauseMenu)
 		{
-			if ((!Game->Input->PrevButtons.ButLeft && Game->Input->Buttons.ButLeft) ||
-				(!Game->Input->PrevButtons.ButLeft2 && Game->Input->Buttons.ButLeft2) ||
-				(!Game->Input->PrevButtons.ButDpadLeft && Game->Input->Buttons.ButDpadLeft))
+			if ((!GameBase->Game->Input->PrevButtons.ButLeft && GameBase->Game->Input->Buttons.ButLeft) ||
+				(!GameBase->Game->Input->PrevButtons.ButLeft2 && GameBase->Game->Input->Buttons.ButLeft2) ||
+				(!GameBase->Game->Input->PrevButtons.ButDpadLeft && GameBase->Game->Input->Buttons.ButDpadLeft))
 			{
-				Game->Audio->PlaySound(Game->SfxSelect, 0);
+				GameBase->Game->Audio->PlaySound(GameBase->Game->SfxSelect, 0);
 
 				switch(selectedmenu)
 				{
 					case PMSoundVol:
 					{
-						Game->Audio->DecVolumeSound();
+						GameBase->Game->Audio->DecVolumeSound();
 						break;
 					}
 
 					case PMMusicVol:
 					{
-						bool wasplaying = Game->Audio->IsMusicPlaying();
-						Game->Audio->DecVolumeMusic();
+						bool wasplaying = GameBase->Game->Audio->IsMusicPlaying();
+						GameBase->Game->Audio->DecVolumeMusic();
 						if (!wasplaying)
-							Game->Audio->PlayMusic(Game->CurrentGameMusicID, -1);
+							GameBase->Game->Audio->PlayMusic(GameBase->Game->CurrentGameMusicID, -1);
 						break;
 					}
 
 				}
 			}
 
-			if ((!Game->Input->PrevButtons.ButRight && Game->Input->Buttons.ButRight) ||
-				(!Game->Input->PrevButtons.ButRight2 && Game->Input->Buttons.ButRight2) ||
-				(!Game->Input->PrevButtons.ButDpadRight && Game->Input->Buttons.ButDpadRight))
+			if ((!GameBase->Game->Input->PrevButtons.ButRight && GameBase->Game->Input->Buttons.ButRight) ||
+				(!GameBase->Game->Input->PrevButtons.ButRight2 && GameBase->Game->Input->Buttons.ButRight2) ||
+				(!GameBase->Game->Input->PrevButtons.ButDpadRight && GameBase->Game->Input->Buttons.ButDpadRight))
 			{
-				Game->Audio->PlaySound(Game->SfxSelect, 0);
+				GameBase->Game->Audio->PlaySound(GameBase->Game->SfxSelect, 0);
 				switch(selectedmenu)
 				{
 					case PMSoundVol:
 					{
-						Game->Audio->IncVolumeSound();
+						GameBase->Game->Audio->IncVolumeSound();
 						break;
 					}
 
 					case PMMusicVol:
 					{
-						bool wasplaying = Game->Audio->IsMusicPlaying();
-						Game->Audio->IncVolumeMusic();
+						bool wasplaying = GameBase->Game->Audio->IsMusicPlaying();
+						GameBase->Game->Audio->IncVolumeMusic();
 						if (!wasplaying)
-							Game->Audio->PlayMusic(Game->CurrentGameMusicID, -1);
+							GameBase->Game->Audio->PlayMusic(GameBase->Game->CurrentGameMusicID, -1);
 						break;
 					}
 				}
 			}
 
-			if ((!Game->Input->PrevButtons.ButDown && Game->Input->Buttons.ButDown) ||
-				(!Game->Input->PrevButtons.ButDown2 && Game->Input->Buttons.ButDown2) ||
-				(!Game->Input->PrevButtons.ButDpadDown && Game->Input->Buttons.ButDpadDown))
+			if ((!GameBase->Game->Input->PrevButtons.ButDown && GameBase->Game->Input->Buttons.ButDown) ||
+				(!GameBase->Game->Input->PrevButtons.ButDown2 && GameBase->Game->Input->Buttons.ButDown2) ||
+				(!GameBase->Game->Input->PrevButtons.ButDpadDown && GameBase->Game->Input->Buttons.ButDpadDown))
 			{
-				Game->Audio->PlaySound(Game->SfxSelect, 0);
+				GameBase->Game->Audio->PlaySound(GameBase->Game->SfxSelect, 0);
 
 				selected += 1;
 				if (selected == maxmenus)
 					selected = 0;
 			}
 
-			if ((!Game->Input->PrevButtons.ButUp && Game->Input->Buttons.ButUp) ||
-				(!Game->Input->PrevButtons.ButUp2 && Game->Input->Buttons.ButUp2) ||
-				(!Game->Input->PrevButtons.ButDpadUp && Game->Input->Buttons.ButDpadUp))
+			if ((!GameBase->Game->Input->PrevButtons.ButUp && GameBase->Game->Input->Buttons.ButUp) ||
+				(!GameBase->Game->Input->PrevButtons.ButUp2 && GameBase->Game->Input->Buttons.ButUp2) ||
+				(!GameBase->Game->Input->PrevButtons.ButDpadUp && GameBase->Game->Input->Buttons.ButDpadUp))
 			{
-				Game->Audio->PlaySound(Game->SfxSelect, 0);
+				GameBase->Game->Audio->PlaySound(GameBase->Game->SfxSelect, 0);
 
 				selected -= 1;
 				if (selected == -1)
 					selected = maxmenus - 1;
 			}
 
-			if (!Game->Input->PrevButtons.ButBack && Game->Input->Buttons.ButBack)
+			if (!GameBase->Game->Input->PrevButtons.ButBack && GameBase->Game->Input->Buttons.ButBack)
 			{
-				Game->Audio->PlaySound(Game->SfxConfirm, 0);
+				GameBase->Game->Audio->PlaySound(GameBase->Game->SfxConfirm, 0);
 
-				Game->SubGameState = prevsubgamestate;
-				Game->SubStateCounter = prevsubstatecounter;
+				GameBase->Game->SubGameState = prevsubgamestate;
+				GameBase->Game->SubStateCounter = prevsubstatecounter;
 			}
 
-			if ((!Game->Input->PrevButtons.ButA && Game->Input->Buttons.ButA) ||
-				(!Game->Input->PrevButtons.ButStart && Game->Input->Buttons.ButStart))
+			if ((!GameBase->Game->Input->PrevButtons.ButA && GameBase->Game->Input->Buttons.ButA) ||
+				(!GameBase->Game->Input->PrevButtons.ButStart && GameBase->Game->Input->Buttons.ButStart))
 			{
-				Game->Audio->PlaySound(Game->SfxConfirm, 0);
+				GameBase->Game->Audio->PlaySound(GameBase->Game->SfxConfirm, 0);
 
 				switch(selectedmenu)
 				{
@@ -225,55 +239,55 @@ void CGameBase::PauseMenu()
 					{
 						//to fix tetris block rotating or dropping
 						//when choosing continue with a or a with b pressed
-						while (Game->Input->Buttons.ButA || Game->Input->Buttons.ButB)
-							Game->Input->Update();
+						while (GameBase->Game->Input->Buttons.ButA || GameBase->Game->Input->Buttons.ButB)
+							GameBase->Game->Input->Update();
 
-						Game->SubGameState = prevsubgamestate;
-						Game->SubStateCounter = prevsubstatecounter;
+						GameBase->Game->SubGameState = prevsubgamestate;
+						GameBase->Game->SubStateCounter = prevsubstatecounter;
 						break;
 					}
 
 					case PMQuit:
 					{
-						Game->StartCrossFade(GSTitleScreenInit, SGNone, 3, 500);
+						GameBase->Game->StartCrossFade(GSTitleScreenInit, SGNone, 3, 500);
 						break;
 					}
 
 					case PMSoundVol:
 					{
-						Game->Audio->IncVolumeSound();
+						GameBase->Game->Audio->IncVolumeSound();
 						break;
 					}
 
 					case PMMusicVol:
 					{
-						bool wasplaying = Game->Audio->IsMusicPlaying();
-						Game->Audio->IncVolumeMusic();
+						bool wasplaying = GameBase->Game->Audio->IsMusicPlaying();
+						GameBase->Game->Audio->IncVolumeMusic();
 						if(!wasplaying)
-							Game->Audio->PlayMusic(Game->CurrentGameMusicID, -1);
+							GameBase->Game->Audio->PlayMusic(GameBase->Game->CurrentGameMusicID, -1);
 						break;
 					}
 
 					case PMGameHelp:
 					{
-						Game->SubGameState = SGGameHelp;
-						Game->Input->ResetButtons();
+						GameBase->Game->SubGameState = SGGameHelp;
+						GameBase->Game->Input->ResetButtons();
 						break;
 					}
 				}
 			}
 		}
 
-		SDL_SetRenderTarget(Game->Renderer, Game->TexScreen);
-		SDL_RenderCopy(Game->Renderer, Game->TexOffScreen, NULL, NULL);
+		SDL_SetRenderTarget(GameBase->Game->Renderer, GameBase->Game->TexScreen);
+		SDL_RenderCopy(GameBase->Game->Renderer, GameBase->Game->TexOffScreen, NULL, NULL);
 
 
-		SDL_SetRenderTarget(Game->Renderer, NULL);
-		SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 255);
-		SDL_RenderClear(Game->Renderer);
+		SDL_SetRenderTarget(GameBase->Game->Renderer, NULL);
+		SDL_SetRenderDrawColor(GameBase->Game->Renderer, 0, 0, 0, 255);
+		SDL_RenderClear(GameBase->Game->Renderer);
 
 		int w, h, w2, h2, x, y;
-		SDL_GetWindowSize(Game->SdlWindow, &w , &h);
+		SDL_GetWindowSize(GameBase->Game->SdlWindow, &w , &h);
 		float ScaleX = (float)w / (float)ScreenWidth;
 		float ScaleY = (float)h / (float)ScreenHeight;
 		h2 = ScreenHeight * ScaleY;
@@ -287,23 +301,23 @@ void CGameBase::PauseMenu()
 		y = ((h - h2) / 2);
 
 		SDL_Rect Rect = { x, y, w2, h2};
-		SDL_RenderCopy(Game->Renderer, Game->TexScreen, NULL, &Rect);
+		SDL_RenderCopy(GameBase->Game->Renderer, GameBase->Game->TexScreen, NULL, &Rect);
 
-		if (debugInfo || Game->ShowFPS)
+		if (debugInfo || GameBase->Game->ShowFPS)
 		{
 			string Text = "FPS: " + to_string(Fps) + "\n";
 			if(debugInfo)
 			{
 				Text += "FrameTime: " + to_string(AvgFrameTime) + "\n";
-				Text += "GFX Slots: " + to_string(Game->Image->ImageSlotsUsed()) + "/" + to_string(Game->Image->ImageSlotsMax()) + "\n";
-				Text += "SND Slots: " + to_string(Game->Audio->SoundSlotsUsed()) + "/" + to_string(Game->Audio->SoundSlotsMax()) + "\n";
-				Text += "MUS Slots: " + to_string(Game->Audio->MusicSlotsUsed()) + "/" + to_string(Game->Audio->MusicSlotsMax()) + "\n";
-				Text += "SPR Slots: " + to_string(Game->Sprites->SpriteSlotsUsed()) + "/" + to_string(Game->Sprites->SpriteSlotsMax()) + "\n";
+				Text += "GFX Slots: " + to_string(GameBase->Game->Image->ImageSlotsUsed()) + "/" + to_string(GameBase->Game->Image->ImageSlotsMax()) + "\n";
+				Text += "SND Slots: " + to_string(GameBase->Game->Audio->SoundSlotsUsed()) + "/" + to_string(GameBase->Game->Audio->SoundSlotsMax()) + "\n";
+				Text += "MUS Slots: " + to_string(GameBase->Game->Audio->MusicSlotsUsed()) + "/" + to_string(GameBase->Game->Audio->MusicSlotsMax()) + "\n";
+				Text += "SPR Slots: " + to_string(GameBase->Game->Sprites->SpriteSlotsUsed()) + "/" + to_string(GameBase->Game->Sprites->SpriteSlotsMax()) + "\n";
 			}
-			int tw = Game->Font->TextWidth("RobotoMono-Bold", 16, Text, Text.length());
-			Game->Font->WriteText(Game->Renderer, "RobotoMono-Bold", 16, Text, Text.length(), w - tw, 0, 0, {255, 0, 255, 255});
+			int tw = GameBase->Game->Font->TextWidth("RobotoMono-Bold", 16, Text, Text.length());
+			GameBase->Game->Font->WriteText(GameBase->Game->Renderer, "RobotoMono-Bold", 16, Text, Text.length(), w - tw, 0, 0, {255, 0, 255, 255});
 		}
-		SDL_RenderPresent(Game->Renderer);
+		SDL_RenderPresent(GameBase->Game->Renderer);
 
 		Uint64 FrameEndPerf = SDL_GetPerformanceCounter();
 		Uint64 FramePerf = FrameEndPerf - FrameStartPerf;
@@ -325,96 +339,98 @@ void CGameBase::PauseMenu()
 				SDL_Delay(RequiredDelay);
 		}
 	}
-	Game->Input->ResetButtons();
+	GameBase->Game->Input->ResetButtons();
 }
 
-void CGameBase::DrawScoreBar()
+void CGameBase_DrawScoreBar(CGameBase* GameBase)
 {
-	SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 255);
+	SDL_SetRenderDrawColor(GameBase->Game->Renderer, 0, 0, 0, 255);
 	SDL_Rect r = {0, 0, ScreenWidth, ScoreBarHeight};
-	SDL_RenderFillRect(Game->Renderer, &r);
+	SDL_RenderFillRect(GameBase->Game->Renderer, &r);
 	string Text = "";
-	if(UsesLevels)
-		Text = "Level: " + to_string(level) + " ";
+	if(GameBase->UsesLevels)
+		Text = "Level: " + to_string(GameBase->level) + " ";
 
-	if (Game->GameMode == GMGame)
-		Text += "Lives: " + to_string(HealthPoints) + " Score:" + to_string(Game->Scores[Game->Game][Game->GameMode]) +
-			" High Score: " + to_string(Game->HighScores[Game->Game][Game->GameMode]);
+	if (GameBase->Game->GameMode == GMGame)
+		Text += "Lives: " + to_string(GameBase->HealthPoints) + " Score:" + to_string(GameBase->Game->Scores[GameBase->Game->Game][GameBase->Game->GameMode]) +
+			" High Score: " + to_string(GameBase->Game->HighScores[GameBase->Game->Game][GameBase->Game->GameMode]);
 	else
 	{
-		if(Game->GameMode == GMRetroCarousel)
+		if(GameBase->Game->GameMode == GMRetroCarousel)
 		{
-			Text += "Timer: " + to_string_with_precision(Game->Timer, 2) + " Total Score:" + to_string(Game->RetroCarouselScore +
-				Game->Scores[Game->Game][Game->GameMode]) + " Score: " + to_string(Game->Scores[Game->Game][Game->GameMode]) +
-				" Previous Total high score: " + to_string(Game->RetroCarouselHighScore) +
-				" Previous High Score: " + to_string(Game->HighScores[Game->Game][Game->GameMode]);
+			Text += "Timer: " + to_string_with_precision(GameBase->Game->Timer, 2) + " Total Score:" + to_string(GameBase->Game->RetroCarouselScore +
+				GameBase->Game->Scores[GameBase->Game->Game][GameBase->Game->GameMode]) + " Score: " + to_string(GameBase->Game->Scores[GameBase->Game->Game][GameBase->Game->GameMode]) +
+				" Previous Total high score: " + to_string(GameBase->Game->RetroCarouselHighScore) +
+				" Previous High Score: " + to_string(GameBase->Game->HighScores[GameBase->Game->Game][GameBase->Game->GameMode]);
 		}
 		else
-			Text += "Timer: " + to_string_with_precision(Game->Timer, 2) + " Score:" + to_string(Game->Scores[Game->Game][Game->GameMode]) +
-				" Previous High Score: " + to_string(Game->HighScores[Game->Game][Game->GameMode]);
+			Text += "Timer: " + to_string_with_precision(GameBase->Game->Timer, 2) + " Score:" + to_string(GameBase->Game->Scores[GameBase->Game->Game][GameBase->Game->GameMode]) +
+				" Previous High Score: " + to_string(GameBase->Game->HighScores[GameBase->Game->Game][GameBase->Game->GameMode]);
 	}
-	Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 20*yscale, Text, Text.length(), 0, 0, 0, {255,255,255,255});
+	GameBase->Game->Font->WriteText(GameBase->Game->Renderer, "Roboto-Regular", 20*yscale, Text, Text.length(), 0, 0, 0, {255,255,255,255});
 }
 
-void CGameBase::DrawSubStateText()
+void CGameBase_DrawSubstateText(CGameBase* GameBase)
 {
 	//textSize(scpregamefontsize)
 	//tz = textWidth(text)
-	int w = Game->Font->TextWidth("Roboto-Regular", 60*yscale, SubStateText, SubStateText.length());
-	Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 60*yscale, SubStateText, SubStateText.length(), screenleft + ((screenright - screenleft) / 2) - w/2,
-		screentop + ((screenbottom - screentop) / 2) - 90*xscale, 0, {255, 255, 255, 240});
+	int w = GameBase->Game->Font->TextWidth("Roboto-Regular", 60*yscale, GameBase->SubStateText, strlen(GameBase->SubStateText));
+	GameBase->Game->Font->WriteText(GameBase->Game->Renderer, "Roboto-Regular", 60*yscale, GameBase->SubStateText, strlen(GameBase->SubStateText), GameBase->screenleft + ((GameBase->screenright - GameBase->screenleft) / 2) - w/2,
+		GameBase->screentop + ((GameBase->screenbottom - GameBase->screentop) / 2) - 90*xscale, 0, {255, 255, 255, 240});
 }
 
-bool CGameBase::UpdateLogic()
+bool CGameBase_UpdateLogic(CGameBase* GameBase)
 {
 	bool result = false;
-	if ((Game->Input->Buttons.ButStart && !Game->Input->PrevButtons.ButStart) ||
-		(Game->Input->Buttons.ButBack && !Game->Input->PrevButtons.ButBack))
-	 	PauseMenu();
+	if ((GameBase->Game->Input->Buttons.ButStart && !GameBase->Game->Input->PrevButtons.ButStart) ||
+		(GameBase->Game->Input->Buttons.ButBack && !GameBase->Game->Input->PrevButtons.ButBack))
+	 	GameBase->PauseMenu(GameBase);
 
-	if (Game->GameMode == GMGame)
+	if (GameBase->Game->GameMode == GMGame)
 	{
-		if (Game->SubGameState == SGGame)
+		if (GameBase->Game->SubGameState == SGGame)
 		{
-			if(HealthPoints == 0)
+			if(GameBase->HealthPoints == 0)
 			{
-				Game->SubGameState = SGTimeUp;
-				Game->SubStateTime = SDL_GetTicks() + 750;
-				Game->SubStateCounter = 0;
+				GameBase->Game->SubGameState = SGTimeUp;
+				GameBase->Game->SubStateTime = SDL_GetTicks() + 750;
+				GameBase->Game->SubStateCounter = 0;
 			}
 		}
 	}
 
-	SubStateText = "";
-	if (Game->SubGameState != SGFadeIn)
+	GameBase->SubStateText[0] = '\0';
+	if (GameBase->Game->SubGameState != SGFadeIn)
 	{
-		if ((Game->SubGameState == SGReadyGo)||
-			(Game->SubGameState == SGTimeUp))
+		if ((GameBase->Game->SubGameState == SGReadyGo)||
+			(GameBase->Game->SubGameState == SGTimeUp))
 		{
-			if (Game->SubStateTime > SDL_GetTicks())
+			if (GameBase->Game->SubStateTime > SDL_GetTicks())
 			{
-				if (Game->SubStateCounter >= 0)
+				if (GameBase->Game->SubStateCounter >= 0)
 				{
-					SubStateText = to_string((int)Game->SubStateCounter);
-					if(Game->SubStateCounter == 2)
+					char Tmp[50];
+					itoa(GameBase->Game->SubStateCounter, Tmp, 10);
+					strcpy(GameBase->SubStateText, Tmp);
+					if(GameBase->Game->SubStateCounter == 2)
 					{
-						Game->Audio->PlaySound(Game->SfxReadyGo, 0);
+						GameBase->Game->Audio->PlaySound(GameBase->Game->SfxReadyGo, 0);
 					}
 
-					if (Game->SubStateCounter == 0)
+					if (GameBase->Game->SubStateCounter == 0)
 					{
-						if (Game->SubGameState == SGReadyGo)
+						if (GameBase->Game->SubGameState == SGReadyGo)
 						{
-							SubStateText = "GO";
+							strcpy(GameBase->SubStateText, string("GO").c_str());
 						}
 						else
 						{
-							if (Game->GameMode != GMGame)
+							if (GameBase->Game->GameMode != GMGame)
 							{
-								SubStateText = "Time Up";
+								strcpy(GameBase->SubStateText, string("Time Up").c_str());
 							}
 							else
-								SubStateText = "Game Over";
+								strcpy(GameBase->SubStateText, string("Game Over").c_str());
 
 						}
 					}
@@ -422,24 +438,24 @@ bool CGameBase::UpdateLogic()
 			}
 			else
 			{
-				if (Game->SubStateCounter > 0)
+				if (GameBase->Game->SubStateCounter > 0)
 				{
-					if (Game->SubStateCounter > 1)
-						Game->SubStateTime = SDL_GetTicks() + 500;
+					if (GameBase->Game->SubStateCounter > 1)
+						GameBase->Game->SubStateTime = SDL_GetTicks() + 500;
 					else
-						Game->SubStateTime = SDL_GetTicks() + 250;
-					Game->SubStateCounter -= 1;
+						GameBase->Game->SubStateTime = SDL_GetTicks() + 250;
+					GameBase->Game->SubStateCounter -= 1;
 				}
 				else
 				{
-					if (Game->SubGameState == SGReadyGo)
+					if (GameBase->Game->SubGameState == SGReadyGo)
 					{
 						result = true;//OnGameStart();
-						Game->SubGameState = SGGame;
+						GameBase->Game->SubGameState = SGGame;
 					}
 					else
 					{
-						Game->GameState = GSSubScoreInit;
+						GameBase->Game->GameState = GSSubScoreInit;
 					}
 				}
 			}

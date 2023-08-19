@@ -12,7 +12,7 @@ using namespace std;
 
 CGameBreakOut::CGameBreakOut(CGame* aGame)
 {
-	GameBase = new CGameBase(aGame, GSBreakout, false);
+	GameBase = Create_CGameBase(aGame, GSBreakout, false);
 	MusMusic = -1;
 	SfxSucces = -1;
 	SfxDie = -1;
@@ -26,7 +26,7 @@ CGameBreakOut::CGameBreakOut(CGame* aGame)
 
 CGameBreakOut::~CGameBreakOut()
 {
-
+	Destroy_CGameBase(GameBase);
 }
 
 //blocks ----------------------------------------------------------------------------------------------------------------
@@ -465,8 +465,8 @@ void CGameBreakOut::Draw()
 {
 	DrawBackground();
 	GameBase->Game->Sprites->DrawSprites(GameBase->Game->Renderer);
-	GameBase->DrawScoreBar();
-	GameBase->DrawSubStateText();
+	GameBase->DrawScoreBar(GameBase);
+	GameBase->DrawSubStateText(GameBase);
 }
 //init - deinit ----------------------------------------------------------------------------------------------------------------
 
@@ -561,7 +561,7 @@ void CGameBreakOut::UpdateObjects(bool IsGameState)
 
 void CGameBreakOut::UpdateLogic()
 {
-	GameBase->UpdateLogic();
+	GameBase->UpdateLogic(GameBase);
 	UpdateObjects(GameBase->Game->SubGameState == SGGame);
 	if(GameBase->Game->SubGameState == SGGame)
 		GameBase->Game->Sprites->UpdateSprites(GameBase->Game->Renderer);

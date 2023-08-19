@@ -11,7 +11,7 @@ using namespace std;
 
 CGameFrog::CGameFrog(CGame* aGame)
 {
-	GameBase = new CGameBase(aGame, GSFrog, true);
+	GameBase = Create_CGameBase(aGame, GSFrog, true);
 	MusMusic = -1;
 	SfxDie = -1;
 	SfxCollect = -1;
@@ -28,7 +28,7 @@ CGameFrog::CGameFrog(CGame* aGame)
 
 CGameFrog::~CGameFrog()
 {
-
+	Destroy_CGameBase(GameBase);
 }
 
 
@@ -885,7 +885,7 @@ void CGameFrog::OnGameStart()
 
 void CGameFrog::UpdateLogic()
 {
-	if (GameBase->UpdateLogic())
+	if (GameBase->UpdateLogic(GameBase))
 		OnGameStart();
 	if (GameBase->Game->SubGameState == SGGame)
 	{
@@ -931,6 +931,6 @@ void CGameFrog::Draw()
 {
 	GameBase->Game->Sprites->DrawSprites(GameBase->Game->Renderer);
 	DrawBackground();
-	GameBase->DrawScoreBar();
-	GameBase->DrawSubStateText();
+	GameBase->DrawScoreBar(GameBase);
+	GameBase->DrawSubStateText(GameBase);
 }

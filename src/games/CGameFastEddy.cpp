@@ -11,7 +11,7 @@ using namespace std;
 
 CGameFastEddy::CGameFastEddy(CGame* aGame)
 {
-	GameBase = new CGameBase(aGame, GSEddy, true);
+	GameBase = Create_CGameBase(aGame, GSEddy, true);
 
 	MusMusic = -1;
 	SfxSucces = -1;
@@ -38,7 +38,7 @@ CGameFastEddy::CGameFastEddy(CGame* aGame)
 
 CGameFastEddy::~CGameFastEddy()
 {
-
+	Destroy_CGameBase(GameBase);
 }
 
 
@@ -1027,7 +1027,7 @@ void CGameFastEddy::UpdateObjects(bool IsGameState)
 
 void CGameFastEddy::UpdateLogic()
 {
-	GameBase->UpdateLogic();
+	GameBase->UpdateLogic(GameBase);
 	UpdateObjects(GameBase->Game->SubGameState == SGGame);
 	if(GameBase->Game->SubGameState == SGGame)
 		GameBase->Game->Sprites->UpdateSprites(GameBase->Game->Renderer);
@@ -1037,6 +1037,6 @@ void CGameFastEddy::Draw()
 {
 	DrawBackground();
 	GameBase->Game->Sprites->DrawSprites(GameBase->Game->Renderer);
-	GameBase->DrawScoreBar();
-	GameBase->DrawSubStateText();
+	GameBase->DrawScoreBar(GameBase);
+	GameBase->DrawSubStateText(GameBase);
 }

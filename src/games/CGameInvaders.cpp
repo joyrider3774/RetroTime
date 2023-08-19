@@ -11,7 +11,7 @@ using namespace std;
 
 CGameInvaders::CGameInvaders(CGame* aGame)
 {
-	GameBase = new CGameBase(aGame, GSSpaceInvaders, false);
+	GameBase = Create_CGameBase(aGame, GSSpaceInvaders, false);
 
 	MusMusic = -1;
 	SfxSucces = -1;
@@ -27,7 +27,10 @@ CGameInvaders::CGameInvaders(CGame* aGame)
 
 }
 
-CGameInvaders::~CGameInvaders(){};
+CGameInvaders::~CGameInvaders()
+{
+	Destroy_CGameBase(GameBase);
+}
 
 //explosions ----------------------------------------------------------------------------------------------------------------
 
@@ -740,7 +743,7 @@ void CGameInvaders::UpdateObjects(bool IsGameState)
 
 void CGameInvaders::UpdateLogic()
 {
-	GameBase->UpdateLogic();
+	GameBase->UpdateLogic(GameBase);
 	UpdateObjects(GameBase->Game->SubGameState == SGGame);
 	if(GameBase->Game->SubGameState == SGGame)
 		GameBase->Game->Sprites->UpdateSprites(GameBase->Game->Renderer);
@@ -759,6 +762,6 @@ void CGameInvaders::Draw()
 	DrawBackground();
 	if (DrawObjects())
 		GameBase->Game->Sprites->DrawSprites(GameBase->Game->Renderer);
-	GameBase->DrawScoreBar();
-	GameBase->DrawSubStateText();
+	GameBase->DrawScoreBar(GameBase);
+	GameBase->DrawSubStateText(GameBase);
 }

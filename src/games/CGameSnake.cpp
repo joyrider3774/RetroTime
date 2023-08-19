@@ -3,7 +3,7 @@
 
 CGameSnake::CGameSnake(CGame* aGame)
 {
-	GameBase = new CGameBase(aGame, GSRamIt, true);
+	GameBase = Create_CGameBase(aGame, GSRamIt, true);
 	MusMusic = -1;
 	SfxFood = -1;
 	SfxDie = -1;
@@ -17,7 +17,7 @@ CGameSnake::CGameSnake(CGame* aGame)
 
 CGameSnake::~CGameSnake()
 {
-
+	Destroy_CGameBase(GameBase);
 }
 
 //food ----------------------------------------------------------------------------------------------------------------
@@ -236,7 +236,7 @@ void CGameSnake::UpdateObjects(bool IsGameState)
 
 void CGameSnake::UpdateLogic()
 {
-	GameBase->UpdateLogic();
+	GameBase->UpdateLogic(GameBase);
 	UpdateObjects(GameBase->Game->SubGameState == SGGame);
 	if(GameBase->Game->SubGameState == SGGame)
 		GameBase->Game->Sprites->UpdateSprites(GameBase->Game->Renderer);
@@ -256,6 +256,6 @@ void CGameSnake::Draw()
 	DrawBackground();
 	if (DrawObjects())
 		GameBase->Game->Sprites->DrawSprites(GameBase->Game->Renderer);
-	GameBase->DrawScoreBar();
-	GameBase->DrawSubStateText();
+	GameBase->DrawScoreBar(GameBase);
+	GameBase->DrawSubStateText(GameBase);
 }

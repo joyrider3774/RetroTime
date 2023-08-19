@@ -12,7 +12,7 @@ using namespace std;
 
 CGameBlockStacker::CGameBlockStacker(CGame* aGame)
 {
-	GameBase = new CGameBase(aGame, GSTetris, true);
+	GameBase = Create_CGameBase(aGame, GSTetris, true);
 
 	MusMusic = -1;
 	SfxDie = -1;
@@ -29,7 +29,7 @@ CGameBlockStacker::CGameBlockStacker(CGame* aGame)
 
 CGameBlockStacker::~CGameBlockStacker()
 {
-
+	Destroy_CGameBase(GameBase);
 }
 
 //helper funcs ----------------------------------------------------------------------------------------------------------------
@@ -311,8 +311,8 @@ void CGameBlockStacker::Draw()
 	DrawBackground();
 	if (DrawObjects())
 		GameBase->Game->Sprites->DrawSprites(GameBase->Game->Renderer);
-	GameBase->DrawScoreBar();
-	GameBase->DrawSubStateText();
+	GameBase->DrawScoreBar(GameBase);
+	GameBase->DrawSubStateText(GameBase);
 }
 
 //init - deinit ----------------------------------------------------------------------------------------------------------------
@@ -382,7 +382,7 @@ void CGameBlockStacker::deinit()
 
 void CGameBlockStacker::UpdateLogic()
 {
-	GameBase->UpdateLogic();
+	GameBase->UpdateLogic(GameBase);
 	UpdateObjects(GameBase->Game->SubGameState == SGGame);
 	if(GameBase->Game->SubGameState == SGGame)
 		GameBase->Game->Sprites->UpdateSprites(GameBase->Game->Renderer);

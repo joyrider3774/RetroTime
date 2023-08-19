@@ -10,7 +10,7 @@ using namespace std;
 
 CGameRamIt::CGameRamIt(CGame* aGame)
 {
-	GameBase = new CGameBase(aGame, GSRamIt, true);
+	GameBase = Create_CGameBase(aGame, GSRamIt, true);
 
 	speed = 0;
 	speedcount = 0;
@@ -30,7 +30,10 @@ CGameRamIt::CGameRamIt(CGame* aGame)
 	GameBase->screenbottom = GameBase->screentop + GameBase->playfieldheight;
 }
 
-CGameRamIt::~CGameRamIt() {}
+CGameRamIt::~CGameRamIt() 
+{
+	Destroy_CGameBase(GameBase);
+}
 
 bool CGameRamIt::createbullet()
 {
@@ -434,7 +437,7 @@ void CGameRamIt::UpdateObjects(bool IsGameState)
 
 void CGameRamIt::UpdateLogic()
 {
-	GameBase->UpdateLogic();
+	GameBase->UpdateLogic(GameBase);
 	UpdateObjects(GameBase->Game->SubGameState == SGGame);
 	if(GameBase->Game->SubGameState == SGGame)
 		GameBase->Game->Sprites->UpdateSprites(GameBase->Game->Renderer);
@@ -455,6 +458,6 @@ void CGameRamIt::Draw()
 	DrawBackground();
 	if (DrawObjects())
 		GameBase->Game->Sprites->DrawSprites(GameBase->Game->Renderer);
-	GameBase->DrawScoreBar();
-	GameBase->DrawSubStateText();
+	GameBase->DrawScoreBar(GameBase);
+	GameBase->DrawSubStateText(GameBase);
 }

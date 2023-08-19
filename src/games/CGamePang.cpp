@@ -11,7 +11,7 @@ using namespace std;
 
 CGamePang::CGamePang(CGame* aGame)
 {
-	GameBase = new CGameBase(aGame, GSPang, true);
+	GameBase = Create_CGameBase(aGame, GSPang, true);
 
 	MusMusic = -1;
 	SfxSucces = -1;
@@ -26,7 +26,7 @@ CGamePang::CGamePang(CGame* aGame)
 
 CGamePang::~CGamePang()
 {
-
+	Destroy_CGameBase(GameBase);
 }
 
 
@@ -543,7 +543,7 @@ void CGamePang::UpdateObjects(bool IsGameState)
 
 void CGamePang::UpdateLogic()
 {
-	GameBase->UpdateLogic();
+	GameBase->UpdateLogic(GameBase);
 	UpdateObjects(GameBase->Game->SubGameState == SGGame);
 	if(GameBase->Game->SubGameState == SGGame)
 		GameBase->Game->Sprites->UpdateSprites(GameBase->Game->Renderer);
@@ -563,6 +563,6 @@ void CGamePang::Draw()
 	DrawBackground();
 	if (DrawObjects())
 		GameBase->Game->Sprites->DrawSprites(GameBase->Game->Renderer);
-	GameBase->DrawScoreBar();
-	GameBase->DrawSubStateText();
+	GameBase->DrawScoreBar(GameBase);
+	GameBase->DrawSubStateText(GameBase);
 }
