@@ -12,9 +12,7 @@
 
 using namespace std;
 
-class CGameFastEddy {
-
-private:
+struct CGameFastEddy {
 	CGameBase *GameBase;
 	static const int playerstateunknown = -1;
 	static const int playerstateidle = 0;
@@ -87,36 +85,66 @@ private:
 	CSpriteObject collectables[maxcollectables];
 	CSpriteObject key;
 
-	void createkey();
-	void destroykey();
-	void updatekey();
-	void createladders();
-	void destroyladders();
-	void createfloors();
-	void destroyfloors();
-	void updateplayer();
-	void createplayer();
-	void destroyplayer();
-	void updateenemies();
-	void createenemies(bool levelsucces);
-	void createenemy(int row, float x, int state, int group, int multiply);
-	void enemyenablelevelend();
-	void destroyenemies();
-	void updatecollectables();
-	void createcollectables(int ignorerow);
-	void destroycollectable(int index);
-	void destroyallcollectables();
-public:
-	CGameFastEddy(CGame* aGame);
-	~CGameFastEddy();
-	void init();
-	void deinit();
-	void UnloadGraphics();
-	void LoadGraphics();
-	void LoadSound();
-	void UnLoadSound();
-	void UpdateObjects(bool IsGameState);
-	void DrawBackground();
-	void Draw();
-	void UpdateLogic();
+	void (*createkey)(CGameFastEddy* GameFastEddy);
+	void (*destroykey)(CGameFastEddy* GameFastEddy);
+	void (*updatekey)(CGameFastEddy* GameFastEddy);
+	void (*createladders)(CGameFastEddy* GameFastEddy);
+	void (*destroyladders)(CGameFastEddy* GameFastEddy);
+	void (*createfloors)(CGameFastEddy* GameFastEddy);
+	void (*destroyfloors)(CGameFastEddy* GameFastEddy);
+	void (*updateplayer)(CGameFastEddy* GameFastEddy);
+	void (*createplayer)(CGameFastEddy* GameFastEddy);
+	void (*destroyplayer)(CGameFastEddy* GameFastEddy);
+	void (*updateenemies)(CGameFastEddy* GameFastEddy);
+	void (*createenemies)(CGameFastEddy* GameFastEddy,bool levelsucces);
+	void (*createenemy)(CGameFastEddy* GameFastEddy,int row, float x, int state, int group, int multiply);
+	void (*enemyenablelevelend)(CGameFastEddy* GameFastEddy);
+	void (*destroyenemies)(CGameFastEddy* GameFastEddy);
+	void (*updatecollectables)(CGameFastEddy* GameFastEddy);
+	void (*createcollectables)(CGameFastEddy* GameFastEddy,int ignorerow);
+	void (*destroycollectable)(CGameFastEddy* GameFastEddy,int index);
+	void (*destroyallcollectables)(CGameFastEddy* GameFastEddy);
+	void (*init)(CGameFastEddy* GameFastEddy);
+	void (*deinit)(CGameFastEddy* GameFastEddy);
+	void (*UnloadGraphics)(CGameFastEddy* GameFastEddy);
+	void (*LoadGraphics)(CGameFastEddy* GameFastEddy);
+	void (*LoadSound)(CGameFastEddy* GameFastEddy);
+	void (*UnLoadSound)(CGameFastEddy* GameFastEddy);
+	void (*UpdateObjects)(CGameFastEddy* GameFastEddy, bool IsGameState);
+	void (*DrawBackground)(CGameFastEddy* GameFastEddy);
+	void (*Draw)(CGameFastEddy* GameFastEddy);
+	void (*UpdateLogic)(CGameFastEddy* GameFastEddy);
 };
+typedef struct CGameFastEddy CGameFastEddy;
+
+void CGameFastEddy_Draw(CGameFastEddy* GameFastEddy);
+void CGameFastEddy_UpdateLogic(CGameFastEddy* GameFastEddy);
+void CGameFastEddy_UpdateObjects(CGameFastEddy* GameFastEddy, bool IsGameState);
+void CGameFastEddy_UnloadGraphics(CGameFastEddy* GameFastEddy);
+void CGameFastEddy_LoadGraphics(CGameFastEddy* GameFastEddy);
+void CGameFastEddy_UnLoadSound(CGameFastEddy* GameFastEddy);
+void CGameFastEddy_LoadSound(CGameFastEddy* GameFastEddy);
+void CGameFastEddy_deinit(CGameFastEddy* GameFastEddy);
+void CGameFastEddy_init(CGameFastEddy* GameFastEddy);
+void CGameFastEddy_DrawBackground(CGameFastEddy* GameFastEddy);
+void CGameFastEddy_createladders(CGameFastEddy* GameFastEddy);
+void CGameFastEddy_destroyladders(CGameFastEddy* GameFastEddy);
+void CGameFastEddy_createfloors(CGameFastEddy* GameFastEddy);
+void CGameFastEddy_destroyfloors(CGameFastEddy* GameFastEddy);
+void CGameFastEddy_updateplayer(CGameFastEddy* GameFastEddy);
+void CGameFastEddy_createplayer(CGameFastEddy* GameFastEddy);
+void CGameFastEddy_destroyplayer(CGameFastEddy* GameFastEddy);
+void CGameFastEddy_updateenemies(CGameFastEddy* GameFastEddy);
+void CGameFastEddy_createenemies(CGameFastEddy* GameFastEddy, bool levelsucces);
+void CGameFastEddy_createenemy(CGameFastEddy* GameFastEddy, int row, float x, int state, int group, int multiply);
+void CGameFastEddy_enemyenablelevelend(CGameFastEddy* GameFastEddy);
+void CGameFastEddy_destroyenemies(CGameFastEddy* GameFastEddy);
+void CGameFastEddy_updatecollectables(CGameFastEddy* GameFastEddy);
+void CGameFastEddy_createcollectables(CGameFastEddy* GameFastEddy, int ignorerow);
+void CGameFastEddy_destroycollectable(CGameFastEddy* GameFastEddy, int index);
+void CGameFastEddy_destroyallcollectables(CGameFastEddy* GameFastEddy);
+void CGameFastEddy_updatekey(CGameFastEddy* GameFastEddy);
+void CGameFastEddy_destroykey(CGameFastEddy* GameFastEddy);
+void CGameFastEddy_createkey(CGameFastEddy* GameFastEddy);
+void Destroy_CGameFastEddy(CGameFastEddy* GameFastEddy);
+CGameFastEddy* Create_CGameFastEddy(CGame* aGame);

@@ -65,8 +65,8 @@ void CGame::DeInit()
 			delete GameFrog;
 			break;
 		case GSEddy:
-			GameFastEddy->deinit();
-			delete GameFastEddy;
+			GameFastEddy->deinit(GameFastEddy);
+			Destroy_CGameFastEddy(GameFastEddy);
 			break;
 		case GSBreakout:
 			GameBreakOut->deinit(GameBreakOut);
@@ -448,8 +448,8 @@ void CGame::CreateActiveGame()
 			ActiveGameGameStateId = -1;
 			break;
 		case GSEddy:
-			GameFastEddy->deinit();
-			delete GameFastEddy;
+			GameFastEddy->deinit(GameFastEddy);
+			Destroy_CGameFastEddy(GameFastEddy);
 			ActiveGameGameStateId = -1;
 			break;
 		case GSBreakout:
@@ -482,7 +482,7 @@ void CGame::CreateActiveGame()
 			ActiveGameGameStateId = GSRamIt;
 			break;
 		case GSEddyInit:
-			GameFastEddy = new CGameFastEddy(this);
+			GameFastEddy = Create_CGameFastEddy(this);
 			ActiveGameGameStateId = GSEddy;
 			break;
 		case GSFrogInit:
@@ -547,7 +547,7 @@ void CGame::MainLoop()
 					GameFrog->LoadGraphics();
 					break;
 				case GSEddy:
-					GameFastEddy->LoadGraphics();
+					GameFastEddy->LoadGraphics(GameFastEddy);
 					break;
 				case GSBreakout:
 					GameBreakOut->LoadGraphics(GameBreakOut);
@@ -668,7 +668,7 @@ void CGame::MainLoop()
 						GameFrog->init();
 						break;
 					case GSEddy:
-						GameFastEddy->init();
+						GameFastEddy->init(GameFastEddy);
 						break;
 					case GSBreakout:
 						GameBreakOut->init(GameBreakOut);
@@ -712,8 +712,8 @@ void CGame::MainLoop()
 						GameFrog->Draw();
 						break;
 					case GSEddy:
-						GameFastEddy->UpdateLogic();
-						GameFastEddy->Draw();
+						GameFastEddy->UpdateLogic(GameFastEddy);
+						GameFastEddy->Draw(GameFastEddy);
 						break;
 					case GSBreakout:
 						GameBreakOut->UpdateLogic(GameBreakOut);

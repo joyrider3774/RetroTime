@@ -19,7 +19,7 @@ using namespace std;
 class CGameRamIt;
 class CGameSnake;
 struct CGameBlockStacker;
-class CGameFastEddy;
+struct CGameFastEddy;
 struct CGameBreakOut;
 class CGameBase;
 class CGameFrog;
