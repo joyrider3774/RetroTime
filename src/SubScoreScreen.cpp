@@ -77,7 +77,7 @@ void SubScoreScreen(CGame *Game)
 			Game->GameFrog->Draw();
 			break;
 		case GSTetris:
-			Game->GameBlockStacker->Draw();
+			Game->GameBlockStacker->Draw(Game->GameBlockStacker);
 			break;
 	}
 	// SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 128);

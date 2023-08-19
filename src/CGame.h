@@ -18,7 +18,7 @@ using namespace std;
 
 class CGameRamIt;
 class CGameSnake;
-class CGameBlockStacker;
+struct CGameBlockStacker;
 class CGameFastEddy;
 class CGameBreakOut;
 class CGameBase;

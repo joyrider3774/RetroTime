@@ -2,6 +2,7 @@
 #include <SDL2_gfxPrimitives.h>
 #include <string>
 #include <iostream>
+#include <stdlib.h>
 #include "CGameBlockStacker.h"
 #include "BlockStackerBlocks.h"
 #include "../CGame.h"
@@ -10,31 +11,51 @@
 
 using namespace std;
 
-CGameBlockStacker::CGameBlockStacker(CGame* aGame)
+CGameBlockStacker* Create_CGameBlockStacker(CGame* aGame)
 {
-	GameBase = Create_CGameBase(aGame, GSTetris, true);
+	CGameBlockStacker* BlockStacker = (CGameBlockStacker*) malloc(sizeof(CGameBlockStacker));
+	BlockStacker->GameBase = Create_CGameBase(aGame, GSTetris, true);
 
-	MusMusic = -1;
-	SfxDie = -1;
-	SfxLineClear = -1;
-	SfxDrop = -1;
-	SfxRotate = -1;
-	GameBase->playfieldwidth = numcols * blocksize;
-	GameBase->playfieldheight = numrows * blocksize;
-	GameBase->screenleft = (ScreenWidth - GameBase->playfieldwidth) / 2;
-	GameBase->screenright = GameBase->screenleft + GameBase->playfieldwidth;
-	GameBase->screentop = (ScreenHeight - GameBase->playfieldheight) / 2;
-	GameBase->screenbottom = GameBase->screentop + GameBase->playfieldheight;
+	BlockStacker->MusMusic = -1;
+	BlockStacker->SfxDie = -1;
+	BlockStacker->SfxLineClear = -1;
+	BlockStacker->SfxDrop = -1;
+	BlockStacker->SfxRotate = -1;
+	BlockStacker->GameBase->playfieldwidth = BlockStacker->numcols * BlockStacker->blocksize;
+	BlockStacker->GameBase->playfieldheight = BlockStacker->numrows * BlockStacker->blocksize;
+	BlockStacker->GameBase->screenleft = (ScreenWidth - BlockStacker->GameBase->playfieldwidth) / 2;
+	BlockStacker->GameBase->screenright = BlockStacker->GameBase->screenleft + BlockStacker->GameBase->playfieldwidth;
+	BlockStacker->GameBase->screentop = (ScreenHeight - BlockStacker->GameBase->playfieldheight) / 2;
+	BlockStacker->GameBase->screenbottom = BlockStacker->GameBase->screentop + BlockStacker->GameBase->playfieldheight;
+
+	BlockStacker->piecefits = CGameBlockStacker_piecefits;
+	BlockStacker->updateplayer = CGameBlockStacker_updateplayer;
+	BlockStacker->createplayfield = CGameBlockStacker_createplayfield;
+	BlockStacker->updateplayfield = CGameBlockStacker_updateplayfield;
+	BlockStacker->drawplayfieldcell = CGameBlockStacker_drawplayfieldcell;
+	BlockStacker->drawplayfield = CGameBlockStacker_drawplayfield;
+	BlockStacker->DrawBackground = CGameBlockStacker_DrawBackground;
+	BlockStacker->Draw = CGameBlockStacker_Draw;
+	BlockStacker->UpdateLogic = CGameBlockStacker_UpdateLogic;
+	BlockStacker->init = CGameBlockStacker_init;
+	BlockStacker->deinit = CGameBlockStacker_deinit;
+	BlockStacker->UnloadGraphics = CGameBlockStacker_UnloadGraphics;
+	BlockStacker->LoadGraphics = CGameBlockStacker_LoadGraphics;
+	BlockStacker->LoadSound = CGameBlockStacker_LoadSound;
+	BlockStacker->UnLoadSound = CGameBlockStacker_UnLoadSound;
+	BlockStacker->UpdateObjects = CGameBlockStacker_UpdateObjects;
+	BlockStacker->DrawObjects = CGameBlockStacker_DrawObjects;
+	return BlockStacker;
 }
 
-CGameBlockStacker::~CGameBlockStacker()
+void Destroy_CGameBlockStacker(CGameBlockStacker* BlockStacker)
 {
-	Destroy_CGameBase(GameBase);
+	Destroy_CGameBase(BlockStacker->GameBase);
 }
 
 //helper funcs ----------------------------------------------------------------------------------------------------------------
 
-bool CGameBlockStacker::piecefits(int tetrimo, int rotation, int posx, int posy)
+bool CGameBlockStacker_piecefits(CGameBlockStacker* BlockStacker, int tetrimo, int rotation, int posx, int posy)
 {
 	bool result = true;
 	for(int x = 0; x < 4; x++)
@@ -42,11 +63,11 @@ bool CGameBlockStacker::piecefits(int tetrimo, int rotation, int posx, int posy)
 		for(int y = 0; y < 4; y++)
 		{
 			int piece = y * 4 + x;
-			int field = (posy + y) * numcols + posx + x;
+			int field = (posy + y) * BlockStacker->numcols + posx + x;
 
-			if ((posx + x >= 0) && (posx + x < numcols) &&
-				(posy + y >= 0) && (posy + y < numrows) &&
-				(tstetrimos[tetrimo][rotation % 4][piece] && (playfield[field] != -1)))
+			if ((posx + x >= 0) && (posx + x < BlockStacker->numcols) &&
+				(posy + y >= 0) && (posy + y < BlockStacker->numrows) &&
+				(tstetrimos[tetrimo][rotation % 4][piece] && (BlockStacker->playfield[field] != -1)))
 			{
 				result = false;
 				break;
@@ -60,89 +81,89 @@ bool CGameBlockStacker::piecefits(int tetrimo, int rotation, int posx, int posy)
 
 //player ----------------------------------------------------------------------------------------------------------------
 
-void CGameBlockStacker::updateplayer()
+void CGameBlockStacker_updateplayer(CGameBlockStacker* BlockStacker)
 {
-	if ((GameBase->Game->Input->Buttons.ButLeft) ||
-		(GameBase->Game->Input->Buttons.ButLeft2) ||
-		(GameBase->Game->Input->Buttons.ButDpadLeft))
-		if (piecefits(currpiece, rotation, plrx - 1, plry))
-			plrx -= 1;
+	if ((BlockStacker->GameBase->Game->Input->Buttons.ButLeft) ||
+		(BlockStacker->GameBase->Game->Input->Buttons.ButLeft2) ||
+		(BlockStacker->GameBase->Game->Input->Buttons.ButDpadLeft))
+		if (BlockStacker->piecefits(BlockStacker, BlockStacker->currpiece, BlockStacker->rotation, BlockStacker->plrx - 1, BlockStacker->plry))
+			BlockStacker->plrx -= 1;
 
-	if ((GameBase->Game->Input->Buttons.ButRight) ||
-		(GameBase->Game->Input->Buttons.ButRight2) ||
-		(GameBase->Game->Input->Buttons.ButDpadRight))
-		if (piecefits(currpiece, rotation, plrx + 1, plry))
-			plrx += 1;
+	if ((BlockStacker->GameBase->Game->Input->Buttons.ButRight) ||
+		(BlockStacker->GameBase->Game->Input->Buttons.ButRight2) ||
+		(BlockStacker->GameBase->Game->Input->Buttons.ButDpadRight))
+		if (BlockStacker->piecefits(BlockStacker, BlockStacker->currpiece, BlockStacker->rotation, BlockStacker->plrx + 1, BlockStacker->plry))
+			BlockStacker->plrx += 1;
 
-	if ((GameBase->Game->Input->Buttons.ButDown) ||
-		(GameBase->Game->Input->Buttons.ButDown2) ||
-		(GameBase->Game->Input->Buttons.ButDpadDown))
-		if (piecefits(currpiece, rotation, plrx, plry + 1))
-			plry += 1;
+	if ((BlockStacker->GameBase->Game->Input->Buttons.ButDown) ||
+		(BlockStacker->GameBase->Game->Input->Buttons.ButDown2) ||
+		(BlockStacker->GameBase->Game->Input->Buttons.ButDpadDown))
+		if (BlockStacker->piecefits(BlockStacker, BlockStacker->currpiece, BlockStacker->rotation, BlockStacker->plrx, BlockStacker->plry + 1))
+			BlockStacker->plry += 1;
 
-	if (GameBase->Game->Input->Buttons.ButA)
+	if (BlockStacker->GameBase->Game->Input->Buttons.ButA)
 	{
-		if (rotateblock && piecefits(currpiece, rotation +1, plrx, plry))
+		if (BlockStacker->rotateblock && BlockStacker->piecefits(BlockStacker, BlockStacker->currpiece, BlockStacker->rotation +1, BlockStacker->plrx, BlockStacker->plry))
 		{
-			GameBase->Game->Audio->PlaySound(SfxRotate, 0);
-			rotation += 1;
-			rotateblock = false;
+			BlockStacker->GameBase->Game->Audio->PlaySound(BlockStacker->SfxRotate, 0);
+			BlockStacker->rotation += 1;
+			BlockStacker->rotateblock = false;
 		}
 	}
 	else
-		rotateblock = true;
+		BlockStacker->rotateblock = true;
 
-	if (GameBase->Game->Input->Buttons.ButB)
+	if (BlockStacker->GameBase->Game->Input->Buttons.ButB)
 	{
-		if (dropblock)
+		if (BlockStacker->dropblock)
 		{
-			while (piecefits(currpiece, rotation, plrx, plry +1))
-				plry += 1;
-			dropblock = false;
-			speedcount = 10000;
+			while (BlockStacker->piecefits(BlockStacker, BlockStacker->currpiece, BlockStacker->rotation, BlockStacker->plrx, BlockStacker->plry +1))
+				BlockStacker->plry += 1;
+			BlockStacker->dropblock = false;
+			BlockStacker->speedcount = 10000;
 		}
 	}
 	else
-		dropblock = true;
+		BlockStacker->dropblock = true;
 }
 
 //playfield ----------------------------------------------------------------------------------------------------------------
 
-void CGameBlockStacker::createplayfield()
+void CGameBlockStacker_createplayfield(CGameBlockStacker* BlockStacker)
 {
-	for(int y = 0; y < numrows; y++)
-		for(int x = 0; x < numcols; x++)
-			if ((x == 0) || (x == numcols -1) || (y == numrows -1))
-				playfield[y*numcols +x] = -2;
+	for(int y = 0; y < BlockStacker->numrows; y++)
+		for(int x = 0; x < BlockStacker->numcols; x++)
+			if ((x == 0) || (x == BlockStacker->numcols -1) || (y == BlockStacker->numrows -1))
+				BlockStacker->playfield[y*BlockStacker->numcols +x] = -2;
 			else
-				playfield[y*numcols +x] = -1;
+				BlockStacker->playfield[y*BlockStacker->numcols +x] = -1;
 }
 
-void CGameBlockStacker::updateplayfield(bool force)
+void CGameBlockStacker_updateplayfield(CGameBlockStacker* BlockStacker, bool force)
 {
 
-	if (lineclear > -1)
+	if (BlockStacker->lineclear > -1)
 	{
-		lineclear -= 1;
+		BlockStacker->lineclear -= 1;
 
-		if (lineclear == 0)
+		if (BlockStacker->lineclear == 0)
 		{
-			int y = numrows -2;
+			int y = BlockStacker->numrows -2;
 			while(y > 0)
 			{
-				if(playfield[y * numcols + 1] == -3)
+				if(BlockStacker->playfield[y * BlockStacker->numcols + 1] == -3)
 				{
 					int y2 = y;
 					//set all rows equal to row above
 					while (y2 > 0)
 					{
-						for(int x = 1; x < numcols -1; x++)
-							playfield[y2 * numcols + x] = playfield[(y2 -1) * numcols + x];
+						for(int x = 1; x < BlockStacker->numcols -1; x++)
+							BlockStacker->playfield[y2 * BlockStacker->numcols + x] = BlockStacker->playfield[(y2 -1) * BlockStacker->numcols + x];
 						y2 -= 1;
 					}
 					//clear top row
-					for(int x = 1; x < numcols -1; x++)
-						playfield[x] = -1;
+					for(int x = 1; x < BlockStacker->numcols -1; x++)
+						BlockStacker->playfield[x] = -1;
 					y += 1;
 				}
 				y -=1;
@@ -151,30 +172,30 @@ void CGameBlockStacker::updateplayfield(bool force)
 	}
 	else
 	{
-		speedcount += 1;
+		BlockStacker->speedcount += 1;
 
-		if (speedcount % ticksinputidle == 0)
-			updateplayer();
+		if (BlockStacker->speedcount % BlockStacker->ticksinputidle == 0)
+			BlockStacker->updateplayer(BlockStacker);
 
-		if (force || (speedcount >= speed*ticksidle))
+		if (force || (BlockStacker->speedcount >= BlockStacker->speed*BlockStacker->ticksidle))
 		{
-			speedcount = 0;
-			piececount += 1;
+			BlockStacker->speedcount = 0;
+			BlockStacker->piececount += 1;
 			//level increase
-			if (piececount % 40 == 0)
-				if (speed >= 5)
+			if (BlockStacker->piececount % 40 == 0)
+				if (BlockStacker->speed >= 5)
 				{
-					speed -= 1;
-					GameBase->level += 1;
+					BlockStacker->speed -= 1;
+					BlockStacker->GameBase->level += 1;
 				}
 
 			//can we move the piece down ?
-			if (piecefits(currpiece, rotation, plrx, plry +1))
-				plry += 1;
+			if (BlockStacker->piecefits(BlockStacker, BlockStacker->currpiece, BlockStacker->rotation, BlockStacker->plrx, BlockStacker->plry +1))
+				BlockStacker->plry += 1;
 			else
 			{
 				if(!force)
-					GameBase->Game->Audio->PlaySound(SfxDrop, 0);
+					BlockStacker->GameBase->Game->Audio->PlaySound(BlockStacker->SfxDrop, 0);
 
 
 				//lock it in place
@@ -182,8 +203,8 @@ void CGameBlockStacker::updateplayfield(bool force)
 					for(int y = 0; y < 4; y++)
 					{
 						int piece = y * 4 + x;
-						if (tstetrimos[currpiece][rotation % 4][piece])
-							playfield[(plry + y) * numcols + plrx + x] = currpiece;
+						if (tstetrimos[BlockStacker->currpiece][BlockStacker->rotation % 4][piece])
+							BlockStacker->playfield[(BlockStacker->plry + y) * BlockStacker->numcols + BlockStacker->plrx + x] = BlockStacker->currpiece;
 					}
 
 				//check for lines
@@ -191,45 +212,45 @@ void CGameBlockStacker::updateplayfield(bool force)
 				bool linedone = true;
 				for(int y = 0; y < 4; y++)
 				{
-					if (plry + y < numrows -1)
+					if (BlockStacker->plry + y < BlockStacker->numrows -1)
 					{
 						linedone = true;
-						for(int x = 1; x < numcols -1; x++)
-							linedone = linedone && (playfield[(plry + y) * numcols + x] > -1);
+						for(int x = 1; x < BlockStacker->numcols -1; x++)
+							linedone = linedone && (BlockStacker->playfield[(BlockStacker->plry + y) * BlockStacker->numcols + x] > -1);
 
 						if (linedone)
 						{
 							numlines += 1;
-							for(int x = 1; x < numcols -1; x++)
-								playfield[(plry + y) * numcols + x] = -3;
+							for(int x = 1; x < BlockStacker->numcols -1; x++)
+								BlockStacker->playfield[(BlockStacker->plry + y) * BlockStacker->numcols + x] = -3;
 						}
 					}
 				}
-				GameBase->Game->AddToScore(7);
+				BlockStacker->GameBase->Game->AddToScore(7);
 
 				if (numlines > 0)
 				{
-					GameBase->Game->AddToScore((1 << numlines) * 20);
-					lineclear = 30;
-					GameBase->Game->Audio->PlaySound(SfxLineClear, 0);
+					BlockStacker->GameBase->Game->AddToScore((1 << numlines) * 20);
+					BlockStacker->lineclear = 30;
+					BlockStacker->GameBase->Game->Audio->PlaySound(BlockStacker->SfxLineClear, 0);
 				}
 
-				plrx = numcols / 2 -2;
-				plry = 0;
-				rotation = 0;
-				currpiece = rand() % 7;
+				BlockStacker->plrx = BlockStacker->numcols / 2 -2;
+				BlockStacker->plry = 0;
+				BlockStacker->rotation = 0;
+				BlockStacker->currpiece = rand() % 7;
 
-				if (!piecefits(currpiece, rotation, plrx, plry))
+				if (!BlockStacker->piecefits(BlockStacker, BlockStacker->currpiece, BlockStacker->rotation, BlockStacker->plrx, BlockStacker->plry))
 				{
-					GameBase->Game->Audio->PlaySound(SfxDie, 0);
-					if(GameBase->Game->GameMode == GMGame)
+					BlockStacker->GameBase->Game->Audio->PlaySound(BlockStacker->SfxDie, 0);
+					if(BlockStacker->GameBase->Game->GameMode == GMGame)
 					{
-						GameBase->HealthPoints -= 1;
+						BlockStacker->GameBase->HealthPoints -= 1;
 					}
 					else
 					{
-						GameBase->Game->AddToScore(-250);
-						createplayfield();
+						BlockStacker->GameBase->Game->AddToScore(-250);
+						BlockStacker->createplayfield(BlockStacker);
 					}
 				}
 			}
@@ -237,7 +258,7 @@ void CGameBlockStacker::updateplayfield(bool force)
 	}
 }
 
-void CGameBlockStacker::drawplayfieldcell(int x, int y, int piece)
+void CGameBlockStacker_drawplayfieldcell(CGameBlockStacker* BlockStacker, int x, int y, int piece)
 {
 	SDL_Color color;
 
@@ -270,133 +291,133 @@ void CGameBlockStacker::drawplayfieldcell(int x, int y, int piece)
 		if (piece == -3)
 			color = {0xFF, 0xFF, 0xFF, 0xFF};
 
-		SDL_Rect r = {GameBase->screenleft + x * blocksize, GameBase->screentop + y * blocksize, blocksize, blocksize};
-		SDL_SetRenderDrawColor(GameBase->Game->Renderer, 0, 0, 0, 255);
-		SDL_RenderFillRect(GameBase->Game->Renderer, &r);
+		SDL_Rect r = {BlockStacker->GameBase->screenleft + x * BlockStacker->blocksize, BlockStacker->GameBase->screentop + y * BlockStacker->blocksize, BlockStacker->blocksize, BlockStacker->blocksize};
+		SDL_SetRenderDrawColor(BlockStacker->GameBase->Game->Renderer, 0, 0, 0, 255);
+		SDL_RenderFillRect(BlockStacker->GameBase->Game->Renderer, &r);
 
-		r = {GameBase->screenleft +1 + x * blocksize, GameBase->screentop +1 + y * blocksize, blocksize-2, blocksize-2};
-		SDL_SetRenderDrawColor(GameBase->Game->Renderer, color.r, color.g, color.b, color.a);
-		SDL_RenderFillRect(GameBase->Game->Renderer, &r);
+		r = {BlockStacker->GameBase->screenleft +1 + x * BlockStacker->blocksize, BlockStacker->GameBase->screentop +1 + y * BlockStacker->blocksize, BlockStacker->blocksize-2, BlockStacker->blocksize-2};
+		SDL_SetRenderDrawColor(BlockStacker->GameBase->Game->Renderer, color.r, color.g, color.b, color.a);
+		SDL_RenderFillRect(BlockStacker->GameBase->Game->Renderer, &r);
 	}
 }
 
-void CGameBlockStacker::drawplayfield()
+void CGameBlockStacker_drawplayfield(CGameBlockStacker* BlockStacker)
 {
-	for(int x = 0; x < numcols; x++)
-		for(int y = 0; y < numrows; y++)
+	for(int x = 0; x < BlockStacker->numcols; x++)
+		for(int y = 0; y < BlockStacker->numrows; y++)
 		{
-			int piece = playfield[y * numcols + x];
-			drawplayfieldcell(x,y, piece);
+			int piece = BlockStacker->playfield[y * BlockStacker->numcols + x];
+			BlockStacker->drawplayfieldcell(BlockStacker,x,y, piece);
 		}
 
 	for(int x = 0; x < 4; x++)
 		for(int y = 0; y < 4; y++)
 		{
 			int piece = y * 4 + x;
-			if(tstetrimos[currpiece][rotation % 4][piece])
-				drawplayfieldcell(plrx + x, plry + y, currpiece);
+			if(tstetrimos[BlockStacker->currpiece][BlockStacker->rotation % 4][piece])
+				BlockStacker->drawplayfieldcell(BlockStacker,BlockStacker->plrx + x, BlockStacker->plry + y, BlockStacker->currpiece);
 
 		}
 }
 
 //Drawing ----------------------------------------------------------------------------------------------------------------
 
-void CGameBlockStacker::DrawBackground()
+void CGameBlockStacker_DrawBackground(CGameBlockStacker* BlockStacker)
 {
-	GameBase->Game->Image->DrawImage(GameBase->Game->Renderer, background, NULL, NULL);
+	BlockStacker->GameBase->Game->Image->DrawImage(BlockStacker->GameBase->Game->Renderer, BlockStacker->background, NULL, NULL);
 }
 
-void CGameBlockStacker::Draw()
+void CGameBlockStacker_Draw(CGameBlockStacker* BlockStacker)
 {
-	DrawBackground();
-	if (DrawObjects())
-		GameBase->Game->Sprites->DrawSprites(GameBase->Game->Renderer);
-	GameBase->DrawScoreBar(GameBase);
-	GameBase->DrawSubStateText(GameBase);
+	BlockStacker->DrawBackground(BlockStacker);
+	if (BlockStacker->DrawObjects(BlockStacker))
+		BlockStacker->GameBase->Game->Sprites->DrawSprites(BlockStacker->GameBase->Game->Renderer);
+	BlockStacker->GameBase->DrawScoreBar(BlockStacker->GameBase);
+	BlockStacker->GameBase->DrawSubStateText(BlockStacker->GameBase);
 }
 
 //init - deinit ----------------------------------------------------------------------------------------------------------------
 
-void CGameBlockStacker::init()
+void CGameBlockStacker_init(CGameBlockStacker* BlockStacker)
 {
-	LoadGraphics();
-	LoadSound();
-	GameBase->Game->CurrentGameMusicID = MusMusic;
-	GameBase->Game->Audio->PlayMusic(MusMusic, -1);
-	GameBase->HealthPoints = 1;
-	currpiece = rand() % 7;
-	rotation = 0;
-	plrx = numcols / 2 -2;
-	plry = 0;
-	speed = 20;
-	speedcount = 0;
-	piececount = 0;
-	rotateblock = true;
-	dropblock = true;
-	GameBase->level = 1;
-	lineclear = 0;
-	createplayfield();
+	BlockStacker->LoadGraphics(BlockStacker);
+	BlockStacker->LoadSound(BlockStacker);
+	BlockStacker->GameBase->Game->CurrentGameMusicID = BlockStacker->MusMusic;
+	BlockStacker->GameBase->Game->Audio->PlayMusic(BlockStacker->MusMusic, -1);
+	BlockStacker->GameBase->HealthPoints = 1;
+	BlockStacker->currpiece = rand() % 7;
+	BlockStacker->rotation = 0;
+	BlockStacker->plrx = BlockStacker->numcols / 2 -2;
+	BlockStacker->plry = 0;
+	BlockStacker->speed = 20;
+	BlockStacker->speedcount = 0;
+	BlockStacker->piececount = 0;
+	BlockStacker->rotateblock = true;
+	BlockStacker->dropblock = true;
+	BlockStacker->GameBase->level = 1;
+	BlockStacker->lineclear = 0;
+	BlockStacker->createplayfield(BlockStacker);
 }
 
-void CGameBlockStacker::LoadGraphics()
+void CGameBlockStacker_LoadGraphics(CGameBlockStacker* BlockStacker)
 {
-	background = GameBase->Game->Image->LoadImage(GameBase->Game->Renderer, "blockstacker/background.png");
-	backgroundtz = GameBase->Game->Image->ImageSize(background);
+	BlockStacker->background = BlockStacker->GameBase->Game->Image->LoadImage(BlockStacker->GameBase->Game->Renderer, "blockstacker/background.png");
+	BlockStacker->backgroundtz = BlockStacker->GameBase->Game->Image->ImageSize(BlockStacker->background);
 }
 
-void CGameBlockStacker::UnloadGraphics()
+void CGameBlockStacker_UnloadGraphics(CGameBlockStacker* BlockStacker)
 {
-	GameBase->Game->Image->UnLoadImage(background);
+	BlockStacker->GameBase->Game->Image->UnLoadImage(BlockStacker->background);
 }
 
-void CGameBlockStacker::LoadSound()
+void CGameBlockStacker_LoadSound(CGameBlockStacker* BlockStacker)
 {
-	SfxLineClear = GameBase->Game->Audio->LoadSound("blockstacker/lineclear.ogg");
-	SfxDrop = GameBase->Game->Audio->LoadSound("blockstacker/drop.wav");
-	SfxRotate = GameBase->Game->Audio->LoadSound("blockstacker/rotate.wav");
-	MusMusic = GameBase->Game->Audio->LoadMusic("blockstacker/music.ogg");
-	SfxDie = GameBase->Game->Audio->LoadSound("common/die.wav");
+	BlockStacker->SfxLineClear = BlockStacker->GameBase->Game->Audio->LoadSound("blockstacker/lineclear.ogg");
+	BlockStacker->SfxDrop = BlockStacker->GameBase->Game->Audio->LoadSound("blockstacker/drop.wav");
+	BlockStacker->SfxRotate = BlockStacker->GameBase->Game->Audio->LoadSound("blockstacker/rotate.wav");
+	BlockStacker->MusMusic = BlockStacker->GameBase->Game->Audio->LoadMusic("blockstacker/music.ogg");
+	BlockStacker->SfxDie = BlockStacker->GameBase->Game->Audio->LoadSound("common/die.wav");
 }
 
-void CGameBlockStacker::UnLoadSound()
+void CGameBlockStacker_UnLoadSound(CGameBlockStacker* BlockStacker)
 {
-	GameBase->Game->Audio->StopMusic();
-	GameBase->Game->Audio->StopSound();
-	GameBase->Game->Audio->UnLoadMusic(MusMusic);
-	GameBase->Game->Audio->UnLoadSound(SfxLineClear);
-	GameBase->Game->Audio->UnLoadSound(SfxDrop);
-	GameBase->Game->Audio->UnLoadSound(SfxRotate);
-	GameBase->Game->Audio->UnLoadSound(SfxDie);
+	BlockStacker->GameBase->Game->Audio->StopMusic();
+	BlockStacker->GameBase->Game->Audio->StopSound();
+	BlockStacker->GameBase->Game->Audio->UnLoadMusic(BlockStacker->MusMusic);
+	BlockStacker->GameBase->Game->Audio->UnLoadSound(BlockStacker->SfxLineClear);
+	BlockStacker->GameBase->Game->Audio->UnLoadSound(BlockStacker->SfxDrop);
+	BlockStacker->GameBase->Game->Audio->UnLoadSound(BlockStacker->SfxRotate);
+	BlockStacker->GameBase->Game->Audio->UnLoadSound(BlockStacker->SfxDie);
 }
 
-void CGameBlockStacker::deinit()
+void CGameBlockStacker_deinit(CGameBlockStacker* BlockStacker)
 {
-	UnLoadSound();
-	GameBase->Game->SubStateCounter = 0;
-	GameBase->Game->SubGameState = SGNone;
-	GameBase->Game->CurrentGameMusicID = -1;
-	UnloadGraphics();
+	BlockStacker->UnLoadSound(BlockStacker);
+	BlockStacker->GameBase->Game->SubStateCounter = 0;
+	BlockStacker->GameBase->Game->SubGameState = SGNone;
+	BlockStacker->GameBase->Game->CurrentGameMusicID = -1;
+	BlockStacker->UnloadGraphics(BlockStacker);
 }
 
 //Update ----------------------------------------------------------------------------------------------------------------
 
-void CGameBlockStacker::UpdateLogic()
+void CGameBlockStacker_UpdateLogic(CGameBlockStacker* BlockStacker)
 {
-	GameBase->UpdateLogic(GameBase);
-	UpdateObjects(GameBase->Game->SubGameState == SGGame);
-	if(GameBase->Game->SubGameState == SGGame)
-		GameBase->Game->Sprites->UpdateSprites(GameBase->Game->Renderer);
+	BlockStacker->GameBase->UpdateLogic(BlockStacker->GameBase);
+	BlockStacker->UpdateObjects(BlockStacker, BlockStacker->GameBase->Game->SubGameState == SGGame);
+	if(BlockStacker->GameBase->Game->SubGameState == SGGame)
+		BlockStacker->GameBase->Game->Sprites->UpdateSprites(BlockStacker->GameBase->Game->Renderer);
 }
 
-void CGameBlockStacker::UpdateObjects(bool IsGameState)
+void CGameBlockStacker_UpdateObjects(CGameBlockStacker* BlockStacker, bool IsGameState)
 {
 	if(IsGameState)
-		updateplayfield(false);
+		BlockStacker->updateplayfield(BlockStacker,false);
 }
 
-bool CGameBlockStacker::DrawObjects()
+bool CGameBlockStacker_DrawObjects(CGameBlockStacker* BlockStacker)
 {
-	drawplayfield();
+	BlockStacker->drawplayfield(BlockStacker);
 	//don't call drawsprites
 	return false;
 }

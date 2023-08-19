@@ -73,8 +73,8 @@ void CGame::DeInit()
 			delete GameBreakOut;
 			break;
 		case GSTetris:
-			GameBlockStacker->deinit();
-			delete GameBlockStacker;
+			GameBlockStacker->deinit(GameBlockStacker);
+			Destroy_CGameBlockStacker(GameBlockStacker);
 			break;
 		default:
 			break;
@@ -458,8 +458,8 @@ void CGame::CreateActiveGame()
 			ActiveGameGameStateId = -1;
 			break;
 		case GSTetris:
-			GameBlockStacker->deinit();
-			delete GameBlockStacker;
+			GameBlockStacker->deinit(GameBlockStacker);
+			Destroy_CGameBlockStacker(GameBlockStacker);
 			ActiveGameGameStateId = -1;
 			break;
 		default:			
@@ -474,7 +474,7 @@ void CGame::CreateActiveGame()
 			ActiveGameGameStateId = GSSnake;
 			break;
 		case GSTetrisInit:
-			GameBlockStacker = new CGameBlockStacker(this);
+			GameBlockStacker = Create_CGameBlockStacker(this);
 			ActiveGameGameStateId = GSTetris;
 			break;
 		case GSRamItInit:
@@ -553,7 +553,7 @@ void CGame::MainLoop()
 					GameBreakOut->LoadGraphics();
 					break;
 				case GSTetris:
-					GameBlockStacker->LoadGraphics();
+					GameBlockStacker->LoadGraphics(GameBlockStacker);
 					break;
 				default:
 					break;
@@ -674,7 +674,7 @@ void CGame::MainLoop()
 						GameBreakOut->init();
 						break;
 					case GSTetris:
-						GameBlockStacker->init();
+						GameBlockStacker->init(GameBlockStacker);
 						break;
 				}
 				ResetTimer();
@@ -720,8 +720,8 @@ void CGame::MainLoop()
 						GameBreakOut->Draw();
 						break;
 					case GSTetris:
-						GameBlockStacker->UpdateLogic();
-						GameBlockStacker->Draw();
+						GameBlockStacker->UpdateLogic(GameBlockStacker);
+						GameBlockStacker->Draw(GameBlockStacker);
 						break;
 				}
 				break;		
