@@ -12,9 +12,10 @@
 using namespace std;
 
 
-class CGameBlockStacker: public CGameBase {
+class CGameBlockStacker {
 
 private:
+	CGameBase *GameBase;
 	static const int numcols = 12;
 	static const int numrows = 18;
 	static const int blocksize = ScreenHeight / numrows;
@@ -38,14 +39,16 @@ private:
 public:
 	CGameBlockStacker(CGame* aGame, bool aScreenshotMode = false);
 	~CGameBlockStacker();
-	SDL_Texture* screenshot() override;
-	void DrawBackground(bool motionblur) override;
-	void init() override;
-	void deinit() override;
-	void UnloadGraphics() override;
-	void LoadGraphics() override;
-	void LoadSound() override;
-	void UnLoadSound() override;
-	void UpdateObjects(bool IsGameState) override;
-	bool DrawObjects() override;
+	SDL_Texture* screenshot();
+	void DrawBackground(bool motionblur);
+	void Draw();
+	void UpdateLogic();
+	void init();
+	void deinit();
+	void UnloadGraphics();
+	void LoadGraphics();
+	void LoadSound();
+	void UnLoadSound();
+	void UpdateObjects(bool IsGameState);
+	bool DrawObjects();
 };

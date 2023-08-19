@@ -418,8 +418,9 @@ void CGameBase::DrawSubStateText()
 		screentop + ((screenbottom - screentop) / 2) - 90*xscale, 0, {255, 255, 255, 240});
 }
 
-void CGameBase::UpdateLogic()
+bool CGameBase::UpdateLogic()
 {
+	bool result = false;
 	if ((Game->Input->Buttons.ButStart && !Game->Input->PrevButtons.ButStart) ||
 		(Game->Input->Buttons.ButBack && !Game->Input->PrevButtons.ButBack))
 	 	PauseMenu();
@@ -486,7 +487,7 @@ void CGameBase::UpdateLogic()
 				{
 					if (Game->SubGameState == SGReadyGo)
 					{
-						OnGameStart();
+						result = true;//OnGameStart();
 						Game->SubGameState = SGGame;
 					}
 					else
@@ -497,9 +498,7 @@ void CGameBase::UpdateLogic()
 			}
 		}
 	}
-	UpdateObjects(Game->SubGameState == SGGame);
-	if(Game->SubGameState == SGGame)
-		Game->Sprites->UpdateSprites(Game->Renderer);
+	return result;
 }
 
 void CGameBase::Draw()

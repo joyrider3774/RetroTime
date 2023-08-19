@@ -19,7 +19,13 @@ using namespace std;
 class CGameRamIt;
 class CGameSnake;
 class CGameBlockStacker;
+class CGameFastEddy;
+class CGameBreakOut;
 class CGameBase;
+class CGameFrog;
+class CGameInvaders;
+class CGamePang;
+class CGameSnake;
 
 class CGame {
 
@@ -47,7 +53,15 @@ private:
 public:
 	SDL_Window *SdlWindow;
 	bool ShowFPS = false;
-	CGameBase *ActiveGame;
+	int ActiveGameGameStateId;
+	CGameSnake *GameSnake;
+	CGameBlockStacker *GameBlockStacker;
+	CGameFastEddy *GameFastEddy;
+	CGameBreakOut *GameBreakOut;
+	CGameInvaders *GameInvaders;
+	CGameRamIt *GameRamIt;
+	CGamePang * GamePang;
+	CGameFrog *GameFrog;
 	CAudio *Audio;
 	CFont *Font;
 	CInput *Input;

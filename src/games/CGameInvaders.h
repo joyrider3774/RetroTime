@@ -23,9 +23,10 @@ struct senemyinfo
 typedef struct senemyinfo senemyinfo;
 
 
-class CGameInvaders: public CGameBase {
+class CGameInvaders {
 
 private:
+	CGameBase *GameBase;
 	static const int tweenenemypositions = 0;
 	static const int tweenenemydeath = 1;
 
@@ -108,14 +109,16 @@ private:
 public:
 	CGameInvaders(CGame* aGame, bool aScreenshotMode = false);
 	~CGameInvaders();
-	SDL_Texture* screenshot() override;
-	void init() override;
-	void deinit() override;
-	void UnloadGraphics() override;
-	void LoadGraphics() override;
-	void LoadSound() override;
-	void UnLoadSound() override;
-	void UpdateObjects(bool IsGameState) override;
-	bool DrawObjects() override;
+	SDL_Texture* screenshot();
+	void init();
+	void deinit();
+	void UnloadGraphics();
+	void LoadGraphics();
+	void LoadSound();
+	void UnLoadSound();
+	void UpdateObjects(bool IsGameState);
+	bool DrawObjects();
 	void DrawBackground(bool motionblur);
+	void Draw();
+	void UpdateLogic();
 };

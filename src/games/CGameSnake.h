@@ -10,9 +10,10 @@
 using namespace std;
 
 
-class CGameSnake: public CGameBase {
+class CGameSnake {
 
 private:
+	CGameBase *GameBase;
 	static const int snakesize = 35 * yscale;
 	static const int rows = int(ScreenHeight / snakesize) -1;
 	static const int cols = int(ScreenWidth / snakesize) -1;
@@ -42,12 +43,14 @@ private:
 public:
 	CGameSnake(CGame* aGame, bool aScreenshotMode = false);
 	~CGameSnake();
-	SDL_Texture* screenshot() override;
-	void init() override;
-	void deinit() override;
-	void LoadSound() override;
-	void UnLoadSound() override;
-	void UpdateObjects(bool IsGameState) override;
-	bool DrawObjects() override;
+	SDL_Texture* screenshot();
+	void init();
+	void deinit();
+	void LoadSound();
+	void UnLoadSound();
+	void UpdateObjects(bool IsGameState);
+	bool DrawObjects();
 	void DrawBackground(bool motionblur);
+	void Draw();
+	void UpdateLogic();
 };

@@ -21,9 +21,10 @@ struct sblockinfo
 };
 typedef struct sblockinfo sblockinfo;
 
-class CGameBreakOut: public CGameBase {
+class CGameBreakOut {
 
 private:
+	CGameBase *GameBase;
 	static const int tweenblockpositions = 0;
 	static const int tweenblockdeath = 1;
 	static const int blockstatedeath = 1;
@@ -70,13 +71,15 @@ private:
 public:
 	CGameBreakOut(CGame* aGame, bool aScreenshotMode = false);
 	~CGameBreakOut();
-	SDL_Texture* screenshot() override;
-	void init() override;
-	void deinit() override;
-	void UnloadGraphics() override;
-	void LoadGraphics() override;
-	void LoadSound() override;
-	void UnLoadSound() override;
-	void UpdateObjects(bool IsGameState) override;
-	void DrawBackground(bool motionblur) override;
+	SDL_Texture* screenshot();
+	void init();
+	void deinit();
+	void UnloadGraphics();
+	void LoadGraphics();
+	void LoadSound();
+	void UnLoadSound();
+	void UpdateObjects(bool IsGameState);
+	void DrawBackground(bool motionblur);
+	void Draw();
+	void UpdateLogic();
 };

@@ -8,28 +8,29 @@
 
 using namespace std;
 
+typedef void (*UpdateObjectsFunc)(bool IsGameState);
+typedef void (*OnGameStartFunc)();
 
 
 class CGameBase {
-
-protected:
+	
+public:
+    void DrawScoreBar();
+	void DrawSubStateText();
+	void PauseMenu();
+	virtual void OnGameStart();
 	CGame *Game;
 	string SubStateText;
 	bool ScreenshotMode;
 	bool UsesLevels;
 	int level;
 	int screenleft, screenright, screentop, screenbottom, playfieldwidth, playfieldheight, HealthPoints;
-	void DrawScoreBar();
-	void DrawSubStateText();
-	void PauseMenu();
-	virtual void OnGameStart();
-public:
 	int GameStateID;
 	CGameBase(CGame *aGame, int aGameStateID, bool aUsesLevels, bool aScreenshotMode);
 	virtual ~CGameBase();
 	virtual void init();
 	virtual void deinit();
-	virtual void UpdateLogic();
+	virtual bool UpdateLogic();
 	virtual void Draw();
 	virtual void DrawBackground(bool motionblur);
 	virtual void LoadGraphics();

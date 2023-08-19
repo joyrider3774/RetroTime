@@ -10,20 +10,21 @@
 
 using namespace std;
 
-CGameBlockStacker::CGameBlockStacker(CGame* aGame, bool aScreenshotMode): CGameBase(aGame, GSTetris, true, aScreenshotMode)
+CGameBlockStacker::CGameBlockStacker(CGame* aGame, bool aScreenshotMode)
 {
-	Game = aGame;
+	GameBase = new CGameBase(aGame, GSTetris, true, aScreenshotMode);
+
 	MusMusic = -1;
 	SfxDie = -1;
 	SfxLineClear = -1;
 	SfxDrop = -1;
 	SfxRotate = -1;
-	playfieldwidth = numcols * blocksize;
-	playfieldheight = numrows * blocksize;
-	screenleft = (ScreenWidth - playfieldwidth) / 2;
-	screenright = screenleft + playfieldwidth;
-	screentop = (ScreenHeight - playfieldheight) / 2;
-	screenbottom = screentop + playfieldheight;
+	GameBase->playfieldwidth = numcols * blocksize;
+	GameBase->playfieldheight = numrows * blocksize;
+	GameBase->screenleft = (ScreenWidth - GameBase->playfieldwidth) / 2;
+	GameBase->screenright = GameBase->screenleft + GameBase->playfieldwidth;
+	GameBase->screentop = (ScreenHeight - GameBase->playfieldheight) / 2;
+	GameBase->screenbottom = GameBase->screentop + GameBase->playfieldheight;
 }
 
 CGameBlockStacker::~CGameBlockStacker()
@@ -61,34 +62,34 @@ bool CGameBlockStacker::piecefits(int tetrimo, int rotation, int posx, int posy)
 
 void CGameBlockStacker::updateplayer()
 {
-	if(ScreenshotMode)
+	if(GameBase->ScreenshotMode)
 	{
 		return;
 	}
 
-	if ((Game->Input->Buttons.ButLeft) ||
-		(Game->Input->Buttons.ButLeft2) ||
-		(Game->Input->Buttons.ButDpadLeft))
+	if ((GameBase->Game->Input->Buttons.ButLeft) ||
+		(GameBase->Game->Input->Buttons.ButLeft2) ||
+		(GameBase->Game->Input->Buttons.ButDpadLeft))
 		if (piecefits(currpiece, rotation, plrx - 1, plry))
 			plrx -= 1;
 
-	if ((Game->Input->Buttons.ButRight) ||
-		(Game->Input->Buttons.ButRight2) ||
-		(Game->Input->Buttons.ButDpadRight))
+	if ((GameBase->Game->Input->Buttons.ButRight) ||
+		(GameBase->Game->Input->Buttons.ButRight2) ||
+		(GameBase->Game->Input->Buttons.ButDpadRight))
 		if (piecefits(currpiece, rotation, plrx + 1, plry))
 			plrx += 1;
 
-	if ((Game->Input->Buttons.ButDown) ||
-		(Game->Input->Buttons.ButDown2) ||
-		(Game->Input->Buttons.ButDpadDown))
+	if ((GameBase->Game->Input->Buttons.ButDown) ||
+		(GameBase->Game->Input->Buttons.ButDown2) ||
+		(GameBase->Game->Input->Buttons.ButDpadDown))
 		if (piecefits(currpiece, rotation, plrx, plry + 1))
 			plry += 1;
 
-	if (Game->Input->Buttons.ButA)
+	if (GameBase->Game->Input->Buttons.ButA)
 	{
 		if (rotateblock && piecefits(currpiece, rotation +1, plrx, plry))
 		{
-			Game->Audio->PlaySound(SfxRotate, 0);
+			GameBase->Game->Audio->PlaySound(SfxRotate, 0);
 			rotation += 1;
 			rotateblock = false;
 		}
@@ -96,7 +97,7 @@ void CGameBlockStacker::updateplayer()
 	else
 		rotateblock = true;
 
-	if (Game->Input->Buttons.ButB)
+	if (GameBase->Game->Input->Buttons.ButB)
 	{
 		if (dropblock)
 		{
@@ -169,7 +170,7 @@ void CGameBlockStacker::updateplayfield(bool force)
 				if (speed >= 5)
 				{
 					speed -= 1;
-					level += 1;
+					GameBase->level += 1;
 				}
 
 			//can we move the piece down ?
@@ -178,7 +179,7 @@ void CGameBlockStacker::updateplayfield(bool force)
 			else
 			{
 				if(!force)
-					Game->Audio->PlaySound(SfxDrop, 0);
+					GameBase->Game->Audio->PlaySound(SfxDrop, 0);
 
 
 				//lock it in place
@@ -209,15 +210,15 @@ void CGameBlockStacker::updateplayfield(bool force)
 						}
 					}
 				}
-				if(!ScreenshotMode)
-					Game->AddToScore(7);
+				if(!GameBase->ScreenshotMode)
+					GameBase->Game->AddToScore(7);
 
 				if (numlines > 0)
 				{
-					if(!ScreenshotMode)
-						Game->AddToScore((1 << numlines) * 20);
+					if(!GameBase->ScreenshotMode)
+						GameBase->Game->AddToScore((1 << numlines) * 20);
 					lineclear = 30;
-					Game->Audio->PlaySound(SfxLineClear, 0);
+					GameBase->Game->Audio->PlaySound(SfxLineClear, 0);
 				}
 
 				plrx = numcols / 2 -2;
@@ -227,16 +228,16 @@ void CGameBlockStacker::updateplayfield(bool force)
 
 				if (!piecefits(currpiece, rotation, plrx, plry))
 				{
-					Game->Audio->PlaySound(SfxDie, 0);
-					if(Game->GameMode == GMGame)
+					GameBase->Game->Audio->PlaySound(SfxDie, 0);
+					if(GameBase->Game->GameMode == GMGame)
 					{
-						if(!ScreenshotMode)
-							HealthPoints -= 1;
+						if(!GameBase->ScreenshotMode)
+							GameBase->HealthPoints -= 1;
 					}
 					else
 					{
-						if(!ScreenshotMode)
-							Game->AddToScore(-250);
+						if(!GameBase->ScreenshotMode)
+							GameBase->Game->AddToScore(-250);
 						createplayfield();
 					}
 				}
@@ -278,13 +279,13 @@ void CGameBlockStacker::drawplayfieldcell(int x, int y, int piece)
 		if (piece == -3)
 			color = {0xFF, 0xFF, 0xFF, 0xFF};
 
-		SDL_Rect r = {screenleft + x * blocksize, screentop + y * blocksize, blocksize, blocksize};
-		SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 255);
-		SDL_RenderFillRect(Game->Renderer, &r);
+		SDL_Rect r = {GameBase->screenleft + x * blocksize, GameBase->screentop + y * blocksize, blocksize, blocksize};
+		SDL_SetRenderDrawColor(GameBase->Game->Renderer, 0, 0, 0, 255);
+		SDL_RenderFillRect(GameBase->Game->Renderer, &r);
 
-		r = {screenleft +1 + x * blocksize, screentop +1 + y * blocksize, blocksize-2, blocksize-2};
-		SDL_SetRenderDrawColor(Game->Renderer, color.r, color.g, color.b, color.a);
-		SDL_RenderFillRect(Game->Renderer, &r);
+		r = {GameBase->screenleft +1 + x * blocksize, GameBase->screentop +1 + y * blocksize, blocksize-2, blocksize-2};
+		SDL_SetRenderDrawColor(GameBase->Game->Renderer, color.r, color.g, color.b, color.a);
+		SDL_RenderFillRect(GameBase->Game->Renderer, &r);
 	}
 }
 
@@ -307,25 +308,36 @@ void CGameBlockStacker::drawplayfield()
 		}
 }
 
-//background ----------------------------------------------------------------------------------------------------------------
+//Drawing ----------------------------------------------------------------------------------------------------------------
 
 void CGameBlockStacker::DrawBackground(bool motionblur)
 {
-	Game->Image->DrawImage(Game->Renderer, background, NULL, NULL);
+	GameBase->Game->Image->DrawImage(GameBase->Game->Renderer, background, NULL, NULL);
 }
 
+void CGameBlockStacker::Draw()
+{
+	DrawBackground((GameBase->Game->SubGameState == SGGame) && !GameBase->ScreenshotMode);
+	if (DrawObjects())
+		GameBase->Game->Sprites->DrawSprites(GameBase->Game->Renderer);
+	if(!GameBase->ScreenshotMode)
+	{
+		GameBase->DrawScoreBar();
+		GameBase->DrawSubStateText();
+	}
+}
 
 //init - deinit ----------------------------------------------------------------------------------------------------------------
 
 void CGameBlockStacker::init()
 {
 	LoadGraphics();
-	if(!ScreenshotMode)
+	if(!GameBase->ScreenshotMode)
 	{
 		LoadSound();
-		Game->CurrentGameMusicID = MusMusic;
-		Game->Audio->PlayMusic(MusMusic, -1);
-		HealthPoints = 1;
+		GameBase->Game->CurrentGameMusicID = MusMusic;
+		GameBase->Game->Audio->PlayMusic(MusMusic, -1);
+		GameBase->HealthPoints = 1;
 	}
 	currpiece = rand() % 7;
 	rotation = 0;
@@ -336,50 +348,50 @@ void CGameBlockStacker::init()
 	piececount = 0;
 	rotateblock = true;
 	dropblock = true;
-	level = 1;
+	GameBase->level = 1;
 	lineclear = 0;
 	createplayfield();
 }
 
 void CGameBlockStacker::LoadGraphics()
 {
-	background = Game->Image->LoadImage(Game->Renderer, "blockstacker/background.png");
-	backgroundtz = Game->Image->ImageSize(background);
+	background = GameBase->Game->Image->LoadImage(GameBase->Game->Renderer, "blockstacker/background.png");
+	backgroundtz = GameBase->Game->Image->ImageSize(background);
 }
 
 void CGameBlockStacker::UnloadGraphics()
 {
-	Game->Image->UnLoadImage(background);
+	GameBase->Game->Image->UnLoadImage(background);
 }
 
 void CGameBlockStacker::LoadSound()
 {
-	SfxLineClear = Game->Audio->LoadSound("blockstacker/lineclear.ogg");
-	SfxDrop = Game->Audio->LoadSound("blockstacker/drop.wav");
-	SfxRotate = Game->Audio->LoadSound("blockstacker/rotate.wav");
-	MusMusic = Game->Audio->LoadMusic("blockstacker/music.ogg");
-	SfxDie = Game->Audio->LoadSound("common/die.wav");
+	SfxLineClear = GameBase->Game->Audio->LoadSound("blockstacker/lineclear.ogg");
+	SfxDrop = GameBase->Game->Audio->LoadSound("blockstacker/drop.wav");
+	SfxRotate = GameBase->Game->Audio->LoadSound("blockstacker/rotate.wav");
+	MusMusic = GameBase->Game->Audio->LoadMusic("blockstacker/music.ogg");
+	SfxDie = GameBase->Game->Audio->LoadSound("common/die.wav");
 }
 
 void CGameBlockStacker::UnLoadSound()
 {
-	Game->Audio->StopMusic();
-	Game->Audio->StopSound();
-	Game->Audio->UnLoadMusic(MusMusic);
-	Game->Audio->UnLoadSound(SfxLineClear);
-	Game->Audio->UnLoadSound(SfxDrop);
-	Game->Audio->UnLoadSound(SfxRotate);
-	Game->Audio->UnLoadSound(SfxDie);
+	GameBase->Game->Audio->StopMusic();
+	GameBase->Game->Audio->StopSound();
+	GameBase->Game->Audio->UnLoadMusic(MusMusic);
+	GameBase->Game->Audio->UnLoadSound(SfxLineClear);
+	GameBase->Game->Audio->UnLoadSound(SfxDrop);
+	GameBase->Game->Audio->UnLoadSound(SfxRotate);
+	GameBase->Game->Audio->UnLoadSound(SfxDie);
 }
 
 void CGameBlockStacker::deinit()
 {
-	if (!ScreenshotMode)
+	if (!GameBase->ScreenshotMode)
 	{
 		UnLoadSound();
-		Game->SubStateCounter = 0;
-		Game->SubGameState = SGNone;
-		Game->CurrentGameMusicID = -1;
+		GameBase->Game->SubStateCounter = 0;
+		GameBase->Game->SubGameState = SGNone;
+		GameBase->Game->CurrentGameMusicID = -1;
 	}
 	UnloadGraphics();
 }
@@ -387,11 +399,11 @@ void CGameBlockStacker::deinit()
 
 SDL_Texture* CGameBlockStacker::screenshot()
 {
-	SDL_Texture* prev = SDL_GetRenderTarget(Game->Renderer);
-	SDL_Texture* image = SDL_CreateTexture(Game->Renderer, PixelFormat, SDL_TEXTUREACCESS_TARGET, ScreenWidth, ScreenHeight);
-	SDL_SetRenderTarget(Game->Renderer, image);
-	SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 255);
-	SDL_RenderClear(Game->Renderer);
+	SDL_Texture* prev = SDL_GetRenderTarget(GameBase->Game->Renderer);
+	SDL_Texture* image = SDL_CreateTexture(GameBase->Game->Renderer, PixelFormat, SDL_TEXTUREACCESS_TARGET, ScreenWidth, ScreenHeight);
+	SDL_SetRenderTarget(GameBase->Game->Renderer, image);
+	SDL_SetRenderDrawColor(GameBase->Game->Renderer, 0, 0, 0, 255);
+	SDL_RenderClear(GameBase->Game->Renderer);
 	init();
 
 	for(int i = 0; i < numrows * 2; i++)
@@ -399,13 +411,21 @@ SDL_Texture* CGameBlockStacker::screenshot()
 
 	Draw();
 
-	SDL_RenderPresent(Game->Renderer);
-	SDL_SetRenderTarget(Game->Renderer, prev);
+	SDL_RenderPresent(GameBase->Game->Renderer);
+	SDL_SetRenderTarget(GameBase->Game->Renderer, prev);
 	deinit();
 	return image;
 }
 
 //Update ----------------------------------------------------------------------------------------------------------------
+
+void CGameBlockStacker::UpdateLogic()
+{
+	GameBase->UpdateLogic();
+	UpdateObjects(GameBase->Game->SubGameState == SGGame);
+	if(GameBase->Game->SubGameState == SGGame)
+		GameBase->Game->Sprites->UpdateSprites(GameBase->Game->Renderer);
+}
 
 void CGameBlockStacker::UpdateObjects(bool IsGameState)
 {

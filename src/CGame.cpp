@@ -42,10 +42,42 @@ CGame::~CGame()
 
 void CGame::DeInit()
 {
-	if (ActiveGame != nullptr)
+	switch(ActiveGameGameStateId)
 	{
-		ActiveGame->deinit();
-		delete ActiveGame;
+		case GSSnake:
+			GameSnake->deinit();
+			delete GameSnake;
+			break;
+		case GSRamIt:
+			GameRamIt->deinit();
+			delete GameRamIt;
+			break;
+		case GSPang:
+			GamePang->deinit();
+			delete GamePang;
+			break;
+		case GSSpaceInvaders:
+			GameInvaders->deinit();
+			delete GameInvaders;
+			break;
+		case GSFrog:
+			GameFrog->deinit();
+			delete GameFrog;
+			break;
+		case GSEddy:
+			GameFastEddy->deinit();
+			delete GameFastEddy;
+			break;
+		case GSBreakout:
+			GameBreakOut->deinit();
+			delete GameBreakOut;
+			break;
+		case GSTetris:
+			GameBlockStacker->deinit();
+			delete GameBlockStacker;
+			break;
+		default:
+			break;
 	}
 	for(int i = 0; i < Games; i++)
 		SDL_DestroyTexture(GameScreenShots[i]);
@@ -69,7 +101,7 @@ void CGame::Init()
 	NextSubStateCounter = 0;
 	NextSubStateTimeAdd = 0;
 	TexCrt = nullptr;
-	ActiveGame = nullptr;
+	ActiveGameGameStateId = -1;
 	ReCreateCrt();
 
 	//Clear score values
@@ -84,7 +116,7 @@ void CGame::Init()
 	menubackgrounddx = rand() % 2 == 0 ? 1: -1;
 	menubackgrounddy = rand() % 2 == 0 ? 1: -1;
 
-	ActiveGame = nullptr;
+	ActiveGameGameStateId = -1;
 	for (int i = 0; i < Games; i++)
 		GameScreenShots[i] = nullptr;
 	ScreenShotRandom = nullptr;
@@ -632,41 +664,90 @@ void CGame::UpdateTimer()
 
 void CGame::CreateActiveGame()
 {
-	if(ActiveGame != nullptr)
+	switch(ActiveGameGameStateId)
 	{
-		ActiveGame->deinit();
-		delete ActiveGame;
-		ActiveGame = nullptr;
+		case GSSnake:
+			GameSnake->deinit();
+			delete GameSnake;
+			ActiveGameGameStateId = -1;
+			break;
+		case GSRamIt:
+			GameRamIt->deinit();
+			delete GameRamIt;
+			ActiveGameGameStateId = -1;
+			break;
+		case GSPang:
+			GamePang->deinit();
+			delete GamePang;
+			ActiveGameGameStateId = -1;
+			break;
+		case GSSpaceInvaders:
+			GameInvaders->deinit();
+			delete GameInvaders;
+			ActiveGameGameStateId = -1;
+			break;
+		case GSFrog:
+			GameFrog->deinit();
+			delete GameFrog;
+			ActiveGameGameStateId = -1;
+			break;
+		case GSEddy:
+			GameFastEddy->deinit();
+			delete GameFastEddy;
+			ActiveGameGameStateId = -1;
+			break;
+		case GSBreakout:
+			GameBreakOut->deinit();
+			delete GameBreakOut;
+			ActiveGameGameStateId = -1;
+			break;
+		case GSTetris:
+			GameBlockStacker->deinit();
+			delete GameBlockStacker;
+			ActiveGameGameStateId = -1;
+			break;
+		default:			
+			ActiveGameGameStateId = -1;
+			break;
 	}
 
 	switch (GameState)
 	{
 		case GSSnakeInit:
-			ActiveGame = new CGameSnake(this);
+			GameSnake = new CGameSnake(this);
+			ActiveGameGameStateId = GSSnake;
 			break;
 		case GSTetrisInit:
-			ActiveGame = new CGameBlockStacker(this);
+			GameBlockStacker = new CGameBlockStacker(this);
+			ActiveGameGameStateId = GSTetris;
 			break;
 		case GSRamItInit:
-			ActiveGame = new CGameRamIt(this);
+			GameRamIt = new CGameRamIt(this);
+			ActiveGameGameStateId = GSRamIt;
 			break;
 		case GSEddyInit:
-			ActiveGame = new CGameFastEddy(this);
+			GameFastEddy = new CGameFastEddy(this);
+			ActiveGameGameStateId = GSEddy;
 			break;
 		case GSFrogInit:
-			ActiveGame = new CGameFrog(this);
+			GameFrog = new CGameFrog(this);
+			ActiveGameGameStateId = GSFrog;
 			break;
 		case GSBreakoutInit:
-			ActiveGame = new CGameBreakOut(this);
+			GameBreakOut = new CGameBreakOut(this);
+			ActiveGameGameStateId = GSBreakout;
 			break;
 		case GSPangInit:
-			ActiveGame = new CGamePang(this);
+			GamePang = new CGamePang(this);
+			ActiveGameGameStateId = GSPang;
 			break;
 		case GSSpaceInvadersInit:
-			ActiveGame = new CGameInvaders(this);
+			GameInvaders = new CGameInvaders(this);
+			ActiveGameGameStateId = GSSpaceInvaders;
 			break;
 		default:
-			ActiveGame = nullptr;
+			ActiveGameGameStateId = -1;
+			break;
 	}
 }
 
@@ -699,8 +780,29 @@ void CGame::MainLoop()
 			SDL_Log("Render Reset, Recreating crt and background, Reloading Game Graphics");
 			Image->UnloadImages();
 			LoadGraphics();
-			if(ActiveGame != nullptr)
-				ActiveGame->LoadGraphics();
+			switch(ActiveGameGameStateId)
+			{
+				case GSPang:
+					GamePang->LoadGraphics();
+					break;
+				case GSSpaceInvaders:
+					GameInvaders->LoadGraphics();
+					break;
+				case GSFrog:
+					GameFrog->LoadGraphics();
+					break;
+				case GSEddy:
+					GameFastEddy->LoadGraphics();
+					break;
+				case GSBreakout:
+					GameBreakOut->LoadGraphics();
+					break;
+				case GSTetris:
+					GameBlockStacker->LoadGraphics();
+					break;
+				default:
+					break;
+			}
 			CreateScreenshotsAndBackground();
 			ReCreateCrt();
 			Sprites->ResetDrawTargets();
@@ -785,31 +887,90 @@ void CGame::MainLoop()
 				TitleScreen(this);
 				break;
 
+			case GSSnakeInit:
+			case GSRamItInit:
 			case GSPangInit:
-			case GSBreakoutInit:
+			case GSSpaceInvadersInit:
 			case GSFrogInit:
 			case GSEddyInit:
-			case GSSnakeInit:
+			case GSBreakoutInit:
 			case GSTetrisInit:
-			case GSRamItInit:
-			case GSSpaceInvadersInit:
 				CreateActiveGame();
-				ActiveGame->init();
+				switch (ActiveGameGameStateId)
+				{
+					case GSSnake:
+						GameSnake->init();
+						break;
+					case GSRamIt:
+						GameRamIt->init();
+						break;
+					case GSPang:
+						GamePang->init();
+						break;
+					case GSSpaceInvaders:
+						GameInvaders->init();
+						break;
+					case GSFrog:
+						GameFrog->init();
+						break;
+					case GSEddy:
+						GameFastEddy->init();
+						break;
+					case GSBreakout:
+						GameBreakOut->init();
+						break;
+					case GSTetris:
+						GameBlockStacker->init();
+						break;
+				}
 				ResetTimer();
-				StartCrossFade(ActiveGame->GameStateID, SGReadyGo, 3, 500);
-				break;
-
+				StartCrossFade(ActiveGameGameStateId, SGReadyGo, 3, 500);
+				break;			
+	
+			case GSSnake:
+			case GSRamIt:
 			case GSPang:
-			case GSBreakout:
+			case GSSpaceInvaders:
 			case GSFrog:
 			case GSEddy:
-			case GSSnake:
+			case GSBreakout:
 			case GSTetris:
-			case GSRamIt:
-			case GSSpaceInvaders:
-				ActiveGame->UpdateLogic();
-				ActiveGame->Draw();
-				break;
+				switch (ActiveGameGameStateId)
+				{
+					case GSSnake:
+						GameSnake->UpdateLogic();
+						GameSnake->Draw();
+						break;
+					case GSRamIt:
+						GameRamIt->UpdateLogic();
+						GameRamIt->Draw();
+						break;
+					case GSPang:
+						GamePang->UpdateLogic();
+						GamePang->Draw();
+						break;
+					case GSSpaceInvaders:
+						GameInvaders->UpdateLogic();
+						GameInvaders->Draw();
+						break;
+					case GSFrog:
+						GameFrog->UpdateLogic();
+						GameFrog->Draw();
+						break;
+					case GSEddy:
+						GameFastEddy->UpdateLogic();
+						GameFastEddy->Draw();
+						break;
+					case GSBreakout:
+						GameBreakOut->UpdateLogic();
+						GameBreakOut->Draw();
+						break;
+					case GSTetris:
+						GameBlockStacker->UpdateLogic();
+						GameBlockStacker->Draw();
+						break;
+				}
+				break;		
 			default:
 				break;
 		}
@@ -865,10 +1026,9 @@ void CGame::MainLoop()
 		//Font->WriteText(Renderer, "RobotoMono-Bold", 16, Text, Text.length(), 0, 0, 0, {255, 0, 255, 255});
 
 
-
-		if((ActiveGame != nullptr) && (GameState != GSSubScore) && (GameState != GSTitleScreenInit))
+		if((ActiveGameGameStateId != -1) && (GameState != GSSubScore) && (GameState != GSTitleScreenInit))
 			DrawCrt();
-
+	
 		if (debugInfo || ShowFPS)
 		{
 			Text = "FPS: " + to_string(Fps) + "\n";

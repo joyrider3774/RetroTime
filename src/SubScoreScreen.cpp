@@ -5,6 +5,14 @@
 #include "Common.h"
 #include "SubScoreScreen.h"
 #include "Vec2F.h"
+#include "games/CGameBlockStacker.h"
+#include "games/CGameFastEddy.h"
+#include "games/CGameFrog.h"
+#include "games/CGameBreakOut.h"
+#include "games/CGameInvaders.h"
+#include "games/CGamePang.h"
+#include "games/CGameRamIt.h"
+#include "games/CGameSnake.h"
 
 bool wasnewhighscorecarousel;
 bool wasnewhighscoregame;
@@ -45,7 +53,33 @@ void SubScoreScreen(CGame *Game)
 	}
 
 	SDL_SetRenderTarget(Game->Renderer, Game->TexOffScreen);
-	Game->ActiveGame->Draw();
+	switch (Game->ActiveGameGameStateId)
+	{
+		case GSSnake:
+			Game->GameSnake->Draw();
+			break;
+		case GSRamIt:
+			Game->GameRamIt->Draw();
+			break;
+		case GSPang:
+			Game->GamePang->Draw();
+			break;
+		case GSSpaceInvaders:
+			Game->GameInvaders->Draw();
+			break;
+		case GSEddy:
+			Game->GameFastEddy->Draw();
+			break;
+		case GSBreakout:
+			Game->GameBreakOut->Draw();
+			break;
+		case GSFrog:
+			Game->GameFrog->Draw();
+			break;
+		case GSTetris:
+			Game->GameBlockStacker->Draw();
+			break;
+	}
 	// SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 128);
 	// SDL_RenderFillRect(Renderer, NULL);
 

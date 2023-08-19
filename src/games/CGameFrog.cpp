@@ -9,20 +9,20 @@
 using namespace std;
 
 
-CGameFrog::CGameFrog(CGame* aGame, bool aScreenshotMode): CGameBase(aGame, GSFrog, true, aScreenshotMode)
+CGameFrog::CGameFrog(CGame* aGame, bool ScreenshotMode)
 {
-	Game = aGame;
+	GameBase = new CGameBase(aGame, GSFrog, true, ScreenshotMode);
 	MusMusic = -1;
 	SfxDie = -1;
 	SfxCollect = -1;
 	SfxPlayerMove = -1;
 	prevrowtype = -1;
-	playfieldwidth = numcols * playerspeed;
-	playfieldheight = numrows * playerspeed;
-	screenleft = (ScreenWidth - playfieldwidth) / 2;
-	screenright = screenleft + playfieldwidth;
-	screentop = ScreenHeight - playfieldheight;
-	screenbottom = ScreenHeight;
+	GameBase->playfieldwidth = numcols * playerspeed;
+	GameBase->playfieldheight = numrows * playerspeed;
+	GameBase->screenleft = (ScreenWidth - GameBase->playfieldwidth) / 2;
+	GameBase->screenright = GameBase->screenleft + GameBase->playfieldwidth;
+	GameBase->screentop = ScreenHeight - GameBase->playfieldheight;
+	GameBase->screenbottom = ScreenHeight;
 
 }
 
@@ -174,7 +174,7 @@ void CGameFrog::destroyobject(int index)
 {
 	if (objects[index].alive)
 	{
-		Game->Sprites->RemoveSprite(objects[index].spr);
+		GameBase->Game->Sprites->RemoveSprite(objects[index].spr);
 		objects[index].alive = false;
 		numobjects -=1;
 	}
@@ -194,16 +194,16 @@ int CGameFrog::createobject(int rownr, int col, int id, int arowtype, float spee
 	{
 		if (!objects[i].alive)
 		{
-			object.spr = Game->Sprites->CreateSprite();
+			object.spr = GameBase->Game->Sprites->CreateSprite();
 
 			if ((id == idwater) || (id == idroad) || (id == idgrass))
 			{
 				tilenr = rowtypes[arowtype].backgroundtile;
 				endtilenr = rowtypes[arowtype].backgroundtileend;
-				Game->Sprites->SetSpriteImage(Game->Renderer,object.spr, &spritesheetbackground,5,3);
-				tz = Game->Sprites->TileSize(object.spr);
-				Game->Sprites->SetSpriteAnimation(object.spr, tilenr, endtilenr, 6);
-				Game->Sprites->SetSpriteDepth(object.spr, 0);
+				GameBase->Game->Sprites->SetSpriteImage(GameBase->Game->Renderer,object.spr, &spritesheetbackground,5,3);
+				tz = GameBase->Game->Sprites->TileSize(object.spr);
+				GameBase->Game->Sprites->SetSpriteAnimation(object.spr, tilenr, endtilenr, 6);
+				GameBase->Game->Sprites->SetSpriteDepth(object.spr, 0);
 				//col == 0 is hack to have less drawing calls for the sprites
 				//i made the road water and grass tile equal in size as the width needed for a row
 				//so we only need the 1st tile to be visible
@@ -211,7 +211,7 @@ int CGameFrog::createobject(int rownr, int col, int id, int arowtype, float spee
 				//it introduced a bug with row generating and i have not figured out yet
 				//whats causing that so this is a nasty workaround but still have an optimazation
 				//of only doing 1 big draw call for the road / water per row instead of multiple small ones
-				Game->Sprites->SetSpriteVisibility(object.spr, col == 0);
+				GameBase->Game->Sprites->SetSpriteVisibility(object.spr, col == 0);
 				object.vel = {0,0};
 				//scale = {playerspeed / tz.x, playerspeed / tz.y}
 				scale = {1.0f, 1.0f};
@@ -223,11 +223,11 @@ int CGameFrog::createobject(int rownr, int col, int id, int arowtype, float spee
 			if (id == idenemyplant)
 			{
 				tilenr = 1;
-				Game->Sprites->SetSpriteImage(Game->Renderer,object.spr, &spritesheetplant, 2, 1);
-				tz = Game->Sprites->TileSize(object.spr);
+				GameBase->Game->Sprites->SetSpriteImage(GameBase->Game->Renderer,object.spr, &spritesheetplant, 2, 1);
+				tz = GameBase->Game->Sprites->TileSize(object.spr);
 
-				Game->Sprites->SetSpriteAnimation(object.spr, tilenr, tilenr, 0);
-				Game->Sprites->SetSpriteDepth(object.spr, 1);
+				GameBase->Game->Sprites->SetSpriteAnimation(object.spr, tilenr, tilenr, 0);
+				GameBase->Game->Sprites->SetSpriteDepth(object.spr, 1);
 				//scale = {(playerspeed - int(playerspeed / 48)) / tz.x, (playerspeed - int(playerspeed / 48)) / tz.y}
 				scale = {playerspeed / tz.x, playerspeed / tz.y};
 				visualscale = scale;
@@ -242,10 +242,10 @@ int CGameFrog::createobject(int rownr, int col, int id, int arowtype, float spee
 				if (dir == -1)
 					tilenr = 1;
 
-				Game->Sprites->SetSpriteImage(Game->Renderer,object.spr, &spritesheetcar1, 2, 1);
-				tz = Game->Sprites->TileSize(object.spr);
-				Game->Sprites->SetSpriteAnimation(object.spr, tilenr, tilenr, 0);
-				Game->Sprites->SetSpriteDepth(object.spr, 3);
+				GameBase->Game->Sprites->SetSpriteImage(GameBase->Game->Renderer,object.spr, &spritesheetcar1, 2, 1);
+				tz = GameBase->Game->Sprites->TileSize(object.spr);
+				GameBase->Game->Sprites->SetSpriteAnimation(object.spr, tilenr, tilenr, 0);
+				GameBase->Game->Sprites->SetSpriteDepth(object.spr, 3);
 				object.vel = {dir*speed,0};
 				scale = {(playerspeed - (playerspeed / 6)) / tz.x, (playerspeed - (playerspeed / 6))/ tz.y};
 				visualscale = scale;
@@ -259,10 +259,10 @@ int CGameFrog::createobject(int rownr, int col, int id, int arowtype, float spee
 				if (dir == -1)
 					tilenr = 1;
 
-				Game->Sprites->SetSpriteImage(Game->Renderer,object.spr, &spritesheetcar2, 2, 1);
-				tz = Game->Sprites->TileSize(object.spr);
-				Game->Sprites->SetSpriteAnimation(object.spr, tilenr, tilenr, 0);
-				Game->Sprites->SetSpriteDepth(object.spr, 3);
+				GameBase->Game->Sprites->SetSpriteImage(GameBase->Game->Renderer,object.spr, &spritesheetcar2, 2, 1);
+				tz = GameBase->Game->Sprites->TileSize(object.spr);
+				GameBase->Game->Sprites->SetSpriteAnimation(object.spr, tilenr, tilenr, 0);
+				GameBase->Game->Sprites->SetSpriteDepth(object.spr, 3);
 				object.vel = {dir*speed,0};
 				scale = {(playerspeed - (playerspeed / 6)) / tz.x, (playerspeed - (playerspeed / 6))/ tz.y};
 				visualscale = scale;
@@ -276,10 +276,10 @@ int CGameFrog::createobject(int rownr, int col, int id, int arowtype, float spee
 				if (dir == -1)
 					tilenr = 1;
 
-				Game->Sprites->SetSpriteImage(Game->Renderer,object.spr, &spritesheetcar3, 2, 1);
-				tz = Game->Sprites->TileSize(object.spr);
-				Game->Sprites->SetSpriteAnimation(object.spr, tilenr, tilenr, 0);
-				Game->Sprites->SetSpriteDepth(object.spr, 3);
+				GameBase->Game->Sprites->SetSpriteImage(GameBase->Game->Renderer,object.spr, &spritesheetcar3, 2, 1);
+				tz = GameBase->Game->Sprites->TileSize(object.spr);
+				GameBase->Game->Sprites->SetSpriteAnimation(object.spr, tilenr, tilenr, 0);
+				GameBase->Game->Sprites->SetSpriteDepth(object.spr, 3);
 				object.vel = {dir*speed,0};
 				scale = {(playerspeed - (playerspeed / 6)) / tz.x, (playerspeed - (playerspeed / 6))/ tz.y};
 				visualscale = scale;
@@ -293,10 +293,10 @@ int CGameFrog::createobject(int rownr, int col, int id, int arowtype, float spee
 				if (dir == -1)
 					tilenr = 1;
 
-				Game->Sprites->SetSpriteImage(Game->Renderer,object.spr, &spritesheetcar4, 2, 1);
-				tz = Game->Sprites->TileSize(object.spr);
-				Game->Sprites->SetSpriteAnimation(object.spr, tilenr, tilenr, 0);
-				Game->Sprites->SetSpriteDepth(object.spr, 3);
+				GameBase->Game->Sprites->SetSpriteImage(GameBase->Game->Renderer,object.spr, &spritesheetcar4, 2, 1);
+				tz = GameBase->Game->Sprites->TileSize(object.spr);
+				GameBase->Game->Sprites->SetSpriteAnimation(object.spr, tilenr, tilenr, 0);
+				GameBase->Game->Sprites->SetSpriteDepth(object.spr, 3);
 				object.vel = {dir*speed,0};
 				scale = {(playerspeed - (playerspeed / 6)) / tz.x, (playerspeed - (playerspeed / 6))/ tz.y};
 				visualscale = scale;
@@ -310,10 +310,10 @@ int CGameFrog::createobject(int rownr, int col, int id, int arowtype, float spee
 				if (dir == -1)
 					tilenr = 1;
 
-				Game->Sprites->SetSpriteImage(Game->Renderer,object.spr, &spritesheetcar5, 2, 1);
-				tz = Game->Sprites->TileSize(object.spr);
-				Game->Sprites->SetSpriteAnimation(object.spr, tilenr, tilenr, 0);
-				Game->Sprites->SetSpriteDepth(object.spr, 3);
+				GameBase->Game->Sprites->SetSpriteImage(GameBase->Game->Renderer,object.spr, &spritesheetcar5, 2, 1);
+				tz = GameBase->Game->Sprites->TileSize(object.spr);
+				GameBase->Game->Sprites->SetSpriteAnimation(object.spr, tilenr, tilenr, 0);
+				GameBase->Game->Sprites->SetSpriteDepth(object.spr, 3);
 				object.vel = {dir*speed,0};
 				scale = {(playerspeed - (playerspeed / 6)) / tz.x, (playerspeed - (playerspeed / 6))/ tz.y};
 				visualscale = scale;
@@ -326,47 +326,47 @@ int CGameFrog::createobject(int rownr, int col, int id, int arowtype, float spee
 			{
 				tilenr = 0;
 
-				Game->Sprites->SetSpriteImage(Game->Renderer,object.spr, &spritesheetfruit1);
-				tz = Game->Sprites->TileSize(object.spr);
-				Game->Sprites->SetSpriteAnimation(object.spr, tilenr, tilenr, 0);
+				GameBase->Game->Sprites->SetSpriteImage(GameBase->Game->Renderer,object.spr, &spritesheetfruit1);
+				tz = GameBase->Game->Sprites->TileSize(object.spr);
+				GameBase->Game->Sprites->SetSpriteAnimation(object.spr, tilenr, tilenr, 0);
 				object.vel = {dir*speed,0};
 				scale = {playerspeed / tz.x, playerspeed / tz.y};
 				visualscale = {(playerspeed - (playerspeed / 2)) / tz.x, (playerspeed - (playerspeed / 2))/ tz.y};
-				Game->Sprites->SetSpriteDepth(object.spr, 3);
+				GameBase->Game->Sprites->SetSpriteDepth(object.spr, 3);
 			}
 
 			if (id == idlemon)
 			{
 				tilenr = 0;
 
-				Game->Sprites->SetSpriteImage(Game->Renderer,object.spr, &spritesheetfruit2);
-				tz = Game->Sprites->TileSize(object.spr);
-				Game->Sprites->SetSpriteAnimation(object.spr, tilenr, tilenr, 0);
+				GameBase->Game->Sprites->SetSpriteImage(GameBase->Game->Renderer,object.spr, &spritesheetfruit2);
+				tz = GameBase->Game->Sprites->TileSize(object.spr);
+				GameBase->Game->Sprites->SetSpriteAnimation(object.spr, tilenr, tilenr, 0);
 				object.vel = {dir*speed,0};
 				scale = {playerspeed / tz.x, playerspeed / tz.y};
 				visualscale = {(playerspeed - (playerspeed / 2)) / tz.x, (playerspeed - (playerspeed / 2))/ tz.y};
-				Game->Sprites->SetSpriteDepth(object.spr, 3);
+				GameBase->Game->Sprites->SetSpriteDepth(object.spr, 3);
 			}
 
 			if (id == idapple)
 			{
 				tilenr = 0;
 
-				Game->Sprites->SetSpriteImage(Game->Renderer,object.spr, &spritesheetfruit3);
-				tz = Game->Sprites->TileSize(object.spr);
-				Game->Sprites->SetSpriteAnimation(object.spr, tilenr, tilenr, 0);
+				GameBase->Game->Sprites->SetSpriteImage(GameBase->Game->Renderer,object.spr, &spritesheetfruit3);
+				tz = GameBase->Game->Sprites->TileSize(object.spr);
+				GameBase->Game->Sprites->SetSpriteAnimation(object.spr, tilenr, tilenr, 0);
 				object.vel = {dir*speed,0};
 				scale = {playerspeed / tz.x, playerspeed / tz.y};
 				visualscale = {(playerspeed - (playerspeed / 2)) / tz.x, (playerspeed - (playerspeed / 2))/ tz.y};
-				Game->Sprites->SetSpriteDepth(object.spr, 3);
+				GameBase->Game->Sprites->SetSpriteDepth(object.spr, 3);
 			}
 			//setSpriteRotation(objects[i].spr, 0)
-			Game->Sprites->SetSpriteScale(Game->Renderer,object.spr, visualscale);
+			GameBase->Game->Sprites->SetSpriteScale(GameBase->Game->Renderer,object.spr, visualscale);
 			object.tz.x = tz.x * scale.x;
 			object.tz.y = tz.y * scale.y;
-			object.pos = {screenleft + (col * playerspeed) + (playerspeed / 2),
-				screenbottom - ((rownr+1) * playerspeed) + (playerspeed / 2)};
-			//Game->Sprites->SetSpriteLocation(object.spr, object.pos)
+			object.pos = {GameBase->screenleft + (col * playerspeed) + (playerspeed / 2),
+				GameBase->screenbottom - ((rownr+1) * playerspeed) + (playerspeed / 2)};
+			//GameBase->Game->Sprites->SetSpriteLocation(object.spr, object.pos)
 			object.spr->x = (int)object.pos.x;
 			object.spr->y = (int)object.pos.y;
 			object.rowtype = arowtype;
@@ -458,10 +458,10 @@ void CGameFrog::updateobjects()
 	objectinfo.mostbottom = -1;
 	objectinfo.mosttop = -1;
 
-	int x1 = screenright + 1;
-	int x2 = screenleft - 1;
-	int y = screentop - 1;
-	int y2 = screenbottom + 1;
+	int x1 = GameBase->screenright + 1;
+	int x2 = GameBase->screenleft - 1;
+	int y = GameBase->screentop - 1;
+	int y2 = GameBase->screenbottom + 1;
 	bool playermoved = false;
 	int id = -1;
 	bool plantcol = false;
@@ -481,7 +481,7 @@ void CGameFrog::updateobjects()
 
 			//if (floatequal(objects[i].pos.y,player.pos.y))
 			{
-				if (Game->Sprites->DetectSpriteCollision(objects[i].spr, player.spr))
+				if (GameBase->Game->Sprites->DetectSpriteCollision(objects[i].spr, player.spr))
 				{
 					id = objects[i].id;
 
@@ -492,7 +492,7 @@ void CGameFrog::updateobjects()
 							player.pos = objects[i].pos;
 							player.spr->x = (int)player.pos.x;
 							player.spr->y = (int)player.pos.y;
-							if ((player.pos.x < screenleft) || (player.pos.x > screenright))
+							if ((player.pos.x < GameBase->screenleft) || (player.pos.x > GameBase->screenright))
 								playerdeath = true;
 
 							playermoved = true;
@@ -510,25 +510,25 @@ void CGameFrog::updateobjects()
 						{
 							if (id == idlemon)
 							{
-								Game->AddToScore(lemonscore);
+								GameBase->Game->AddToScore(lemonscore);
 								destroyobject(i);
-								Game->Audio->PlaySound(SfxCollect, 0);
+								GameBase->Game->Audio->PlaySound(SfxCollect, 0);
 							}
 							else
 							{
 								if (id == idapple)
 								{
-									Game->AddToScore(applescore);
+									GameBase->Game->AddToScore(applescore);
 									destroyobject(i);
-									Game->Audio->PlaySound(SfxCollect, 0);
+									GameBase->Game->Audio->PlaySound(SfxCollect, 0);
 								}
 								else
 								{
 									if (id == idcherry)
 									{
-										Game->AddToScore(cherryscore);
+										GameBase->Game->AddToScore(cherryscore);
 										destroyobject(i);
-										Game->Audio->PlaySound(SfxCollect, 0);
+										GameBase->Game->Audio->PlaySound(SfxCollect, 0);
 									}
 								}
 							}
@@ -543,7 +543,7 @@ void CGameFrog::updateobjects()
 						{
 							if ((objects[j].alive) /*&& floatequal(objects[j].pos.y,player.pos.y)*/)
 							{
-								if(Game->Sprites->DetectSpriteCollision(objects[j].spr, player.spr))
+								if(GameBase->Game->Sprites->DetectSpriteCollision(objects[j].spr, player.spr))
 								{
 									if (id == idenemyplant)
 									{
@@ -564,8 +564,8 @@ void CGameFrog::updateobjects()
 
 			if (objects[i].alive)
 			{
-				objects[i].pos.y = objects[i].pos.y + worldspeed + levelincspeeds[level-1];
-				if (objects[i].pos.y - objects[i].tz.y / 2 > screenbottom)
+				objects[i].pos.y = objects[i].pos.y + worldspeed + levelincspeeds[GameBase->level-1];
+				if (objects[i].pos.y - objects[i].tz.y / 2 > GameBase->screenbottom)
 					destroyobject(i);
 				else
 				{
@@ -573,13 +573,13 @@ void CGameFrog::updateobjects()
 					objects[i].pos.y = objects[i].pos.y + objects[i].vel.y;
 					if (objects[i].vel.x < 0)
 					{
-						if (objects[i].pos.x + objects[i].tz.x / 2 < screenleft)
-							objects[i].pos.x = screenright - (screenleft - objects[i].pos.x) + objects[i].tz.x / 2 + objects[i].tz.x / 2;
+						if (objects[i].pos.x + objects[i].tz.x / 2 < GameBase->screenleft)
+							objects[i].pos.x = GameBase->screenright - (GameBase->screenleft - objects[i].pos.x) + objects[i].tz.x / 2 + objects[i].tz.x / 2;
 					}
 					else
 					{
-						if (objects[i].pos.x - objects[i].tz.x / 2 > screenright)
-							objects[i].pos.x = screenleft + (objects[i].pos.x - screenright) - objects[i].tz.x / 2 - objects[i].tz.x / 2;
+						if (objects[i].pos.x - objects[i].tz.x / 2 > GameBase->screenright)
+							objects[i].pos.x = GameBase->screenleft + (objects[i].pos.x - GameBase->screenright) - objects[i].tz.x / 2 - objects[i].tz.x / 2;
 					}
 					objects[i].spr->x = (int)objects[i].pos.x;
 					objects[i].spr->y = (int)objects[i].pos.y;
@@ -621,11 +621,11 @@ void CGameFrog::updateobjects()
 
 	if (objectinfo.mosttop > -1)
 	{
-		if ((screenbottom - (visiblerows * playerspeed)) - (objects[objectinfo.mosttop].pos.y - objects[objectinfo.mosttop].tz.y / 2 ) <= 0.000001f) 
+		if ((GameBase->screenbottom - (visiblerows * playerspeed)) - (objects[objectinfo.mosttop].pos.y - objects[objectinfo.mosttop].tz.y / 2 ) <= 0.000001f) 
 		{
 			createobjects(false);
 			rowsspawned += 1;
-			if (rowsspawned == levelincspawns[level-1])
+			if (rowsspawned == levelincspawns[GameBase->level-1])
 				dolevelinc = true;
 		}
 	}
@@ -638,25 +638,25 @@ void CGameFrog::updateobjects()
 
 void CGameFrog::destroyplayer()
 {
-	Game->Sprites->RemoveSprite(player.spr);
+	GameBase->Game->Sprites->RemoveSprite(player.spr);
 	player.alive = false;
 }
 
 void CGameFrog::createplayer()
 {
-	player.spr = Game->Sprites->CreateSprite();
-	Game->Sprites->SetSpriteDepth(player.spr, 2);
-	Game->Sprites->SetSpriteImage(Game->Renderer,player.spr, &spritesheetfrog, 3, 4);
-	Game->Sprites->SetSpriteAnimation(player.spr, 11, 11, 10);
-	SDL_Point tz = Game->Sprites->TileSize(player.spr);
+	player.spr = GameBase->Game->Sprites->CreateSprite();
+	GameBase->Game->Sprites->SetSpriteDepth(player.spr, 2);
+	GameBase->Game->Sprites->SetSpriteImage(GameBase->Game->Renderer,player.spr, &spritesheetfrog, 3, 4);
+	GameBase->Game->Sprites->SetSpriteAnimation(player.spr, 11, 11, 10);
+	SDL_Point tz = GameBase->Game->Sprites->TileSize(player.spr);
 	Vec2F scale = {((playerspeed -8*xscale)) / tz.x, ((playerspeed -8*yscale)) / tz.y};
-	Game->Sprites->SetSpriteScale(Game->Renderer,player.spr, scale);
-	Game->Sprites->SetSpriteCollisionShape(player.spr, SHAPE_BOX, (int)(playerspeed / 3.0f), (int)(playerspeed/3.0f), 0, 0, (int)(playerspeed/12.0f));
+	GameBase->Game->Sprites->SetSpriteScale(GameBase->Game->Renderer,player.spr, scale);
+	GameBase->Game->Sprites->SetSpriteCollisionShape(player.spr, SHAPE_BOX, (int)(playerspeed / 3.0f), (int)(playerspeed/3.0f), 0, 0, (int)(playerspeed/12.0f));
 	player.tz.x = tz.x * scale.x;
 	player.tz.y = tz.y * scale.y;
-	player.pos = {screenleft + (numcols / 2) * playerspeed + playerspeed / 2, screenbottom - playerstartrow * playerspeed + playerspeed / 2};
-	HealthPoints = 3;
-	Game->Sprites->SetSpriteLocation(player.spr, player.pos);
+	player.pos = {GameBase->screenleft + (numcols / 2) * playerspeed + playerspeed / 2, GameBase->screenbottom - playerstartrow * playerspeed + playerspeed / 2};
+	GameBase->HealthPoints = 3;
+	GameBase->Game->Sprites->SetSpriteLocation(player.spr, player.pos);
 	playermaxrow = 0;
 	playerrow = 0;
 	player.alive = true;
@@ -664,48 +664,48 @@ void CGameFrog::createplayer()
 
 void CGameFrog::updateplayer()
 {
-	Game->Sprites->SetSpriteVisibility(player.spr, player.alive);
+	GameBase->Game->Sprites->SetSpriteVisibility(player.spr, player.alive);
 	if (player.alive)
 	{
-		if ((!Game->Input->PrevButtons.ButLeft && Game->Input->Buttons.ButLeft) ||
-			(!Game->Input->PrevButtons.ButLeft2 && Game->Input->Buttons.ButLeft2) ||
-			(!Game->Input->PrevButtons.ButDpadLeft && Game->Input->Buttons.ButDpadLeft))
+		if ((!GameBase->Game->Input->PrevButtons.ButLeft && GameBase->Game->Input->Buttons.ButLeft) ||
+			(!GameBase->Game->Input->PrevButtons.ButLeft2 && GameBase->Game->Input->Buttons.ButLeft2) ||
+			(!GameBase->Game->Input->PrevButtons.ButDpadLeft && GameBase->Game->Input->Buttons.ButDpadLeft))
 		{
-			Game->Sprites->SetSpriteAnimation(player.spr, 4, 4, 10);
+			GameBase->Game->Sprites->SetSpriteAnimation(player.spr, 4, 4, 10);
 
-			if ((player.pos.x - player.tz.x / 2) - playerspeed >= screenleft)
+			if ((player.pos.x - player.tz.x / 2) - playerspeed >= GameBase->screenleft)
 			{
 				if ((player.pos.x - player.tz.x / 2) - playerspeed >= 0)
 				{
 					player.pos.x -= playerspeed;
-					Game->Audio->PlaySound(SfxPlayerMove, 0);
+					GameBase->Game->Audio->PlaySound(SfxPlayerMove, 0);
 				}
 			}
 		}
 
-		if ((!Game->Input->PrevButtons.ButRight && Game->Input->Buttons.ButRight) ||
-			(!Game->Input->PrevButtons.ButRight2 && Game->Input->Buttons.ButRight2) ||
-			(!Game->Input->PrevButtons.ButDpadRight && Game->Input->Buttons.ButDpadRight))
+		if ((!GameBase->Game->Input->PrevButtons.ButRight && GameBase->Game->Input->Buttons.ButRight) ||
+			(!GameBase->Game->Input->PrevButtons.ButRight2 && GameBase->Game->Input->Buttons.ButRight2) ||
+			(!GameBase->Game->Input->PrevButtons.ButDpadRight && GameBase->Game->Input->Buttons.ButDpadRight))
 		{
-			Game->Sprites->SetSpriteAnimation(player.spr, 7, 7, 10);
+			GameBase->Game->Sprites->SetSpriteAnimation(player.spr, 7, 7, 10);
 
-			if ((player.pos.x + player.tz.x / 2) + playerspeed <= screenright)
+			if ((player.pos.x + player.tz.x / 2) + playerspeed <= GameBase->screenright)
 			{
 				if ((player.pos.x + player.tz.x / 2) + playerspeed <= ScreenWidth)
 				{
 					player.pos.x += playerspeed;
-					Game->Audio->PlaySound(SfxPlayerMove, 0);
+					GameBase->Game->Audio->PlaySound(SfxPlayerMove, 0);
 				}
 			}
 		}
 
-		if ((!Game->Input->PrevButtons.ButUp && Game->Input->Buttons.ButUp) ||
-			(!Game->Input->PrevButtons.ButUp2 && Game->Input->Buttons.ButUp2) ||
-			(!Game->Input->PrevButtons.ButDpadUp && Game->Input->Buttons.ButDpadUp))
+		if ((!GameBase->Game->Input->PrevButtons.ButUp && GameBase->Game->Input->Buttons.ButUp) ||
+			(!GameBase->Game->Input->PrevButtons.ButUp2 && GameBase->Game->Input->Buttons.ButUp2) ||
+			(!GameBase->Game->Input->PrevButtons.ButDpadUp && GameBase->Game->Input->Buttons.ButDpadUp))
 		{
-			Game->Sprites->SetSpriteAnimation(player.spr, 11, 11, 10);
+			GameBase->Game->Sprites->SetSpriteAnimation(player.spr, 11, 11, 10);
 
-			if ((player.pos.y - player.tz.y / 2) - playerspeed >= screentop)
+			if ((player.pos.y - player.tz.y / 2) - playerspeed >= GameBase->screentop)
 			{
 				if ((player.pos.y - player.tz.y / 2) - playerspeed >= 0)
 				{
@@ -713,39 +713,39 @@ void CGameFrog::updateplayer()
 					playerrow += 1;
 					if (playerrow > playermaxrow)
 					{
-						Game->AddToScore(20);
+						GameBase->Game->AddToScore(20);
 						playermaxrow = playerrow;
 					}
-					Game->Audio->PlaySound(SfxPlayerMove, 0);
+					GameBase->Game->Audio->PlaySound(SfxPlayerMove, 0);
 				}
 			}
 		}
 
-		if ((!Game->Input->PrevButtons.ButDown && Game->Input->Buttons.ButDown) ||
-			(!Game->Input->PrevButtons.ButDown2 && Game->Input->Buttons.ButDown2) ||
-			(!Game->Input->PrevButtons.ButDpadDown && Game->Input->Buttons.ButDpadDown))
+		if ((!GameBase->Game->Input->PrevButtons.ButDown && GameBase->Game->Input->Buttons.ButDown) ||
+			(!GameBase->Game->Input->PrevButtons.ButDown2 && GameBase->Game->Input->Buttons.ButDown2) ||
+			(!GameBase->Game->Input->PrevButtons.ButDpadDown && GameBase->Game->Input->Buttons.ButDpadDown))
 		{
-			Game->Sprites->SetSpriteAnimation(player.spr, 2, 2, 10);
+			GameBase->Game->Sprites->SetSpriteAnimation(player.spr, 2, 2, 10);
 
-			if ((player.pos.y + player.tz.y / 2) + playerspeed <= screenbottom)
+			if ((player.pos.y + player.tz.y / 2) + playerspeed <= GameBase->screenbottom)
 			{
 				if ((player.pos.y + player.tz.y / 2) + playerspeed <= ScreenHeight)
 				{
 					player.pos.y += playerspeed;
 					playerrow -= 1;
 				}
-				Game->Audio->PlaySound(SfxPlayerMove, 0);
+				GameBase->Game->Audio->PlaySound(SfxPlayerMove, 0);
 			}
 		}
 
-		player.pos.y = player.pos.y + worldspeed + levelincspeeds[level-1];
-//		Game->Sprites->SetSpriteLocation(player.spr, player.pos)
+		player.pos.y = player.pos.y + worldspeed + levelincspeeds[GameBase->level-1];
+//		GameBase->Game->Sprites->SetSpriteLocation(player.spr, player.pos)
 //		player.spr.x = int(player.spr.x)
 //		player.spr.y = int(player.spr.y)
 		player.spr->x = (int)player.pos.x;
 		player.spr->y = (int)player.pos.y;
 
-		if (player.pos.y >= screenbottom)
+		if (player.pos.y >= GameBase->screenbottom)
 			playerdeath = true;
 	}
 	else
@@ -761,7 +761,7 @@ void CGameFrog::updateplayer()
 
 void CGameFrog::DrawBackground(bool motionblur)
 {
-	Game->Image->DrawImage(Game->Renderer, background, NULL, NULL);
+	GameBase->Game->Image->DrawImage(GameBase->Game->Renderer, background, NULL, NULL);
 }
 
 //init - deinit ----------------------------------------------------------------------------------------------------------------
@@ -769,7 +769,7 @@ void CGameFrog::DrawBackground(bool motionblur)
 void CGameFrog::init()
 {
 	LoadGraphics();
-	level = 1;
+	GameBase->level = 1;
 	dolevelinc = false;
 	rowsspawned = 0;
 	plantsspawned = 0;
@@ -777,11 +777,11 @@ void CGameFrog::init()
 	worldspeed = globalworldspeed;
 	createplayer();
 	createobjects(true);
-	if(!ScreenshotMode)
+	if(!GameBase->ScreenshotMode)
 	{
 		LoadSound();
-		Game->CurrentGameMusicID = MusMusic;
-		Game->Audio->PlayMusic(MusMusic, -1);
+		GameBase->Game->CurrentGameMusicID = MusMusic;
+		GameBase->Game->Audio->PlayMusic(MusMusic, -1);
 	}
 }
 
@@ -789,106 +789,106 @@ void CGameFrog::deinit()
 {
 	destroyplayer();
 	destroyallobjects();
-	if (!ScreenshotMode)
+	if (!GameBase->ScreenshotMode)
 	{
 		UnLoadSound();
-		Game->SubStateCounter = 0;
-		Game->SubGameState = SGNone;
-		Game->CurrentGameMusicID = -1;
+		GameBase->Game->SubStateCounter = 0;
+		GameBase->Game->SubGameState = SGNone;
+		GameBase->Game->CurrentGameMusicID = -1;
 	}
 	UnloadGraphics();
 }
 
 void CGameFrog::LoadSound()
 {
-	SfxDie = Game->Audio->LoadSound("common/die.wav");
-	SfxCollect = Game->Audio->LoadSound("common/coin.wav");
-	SfxPlayerMove = Game->Audio->LoadSound("frog/move.wav");
-	MusMusic = Game->Audio->LoadMusic("frog/music.ogg");
+	SfxDie = GameBase->Game->Audio->LoadSound("common/die.wav");
+	SfxCollect = GameBase->Game->Audio->LoadSound("common/coin.wav");
+	SfxPlayerMove = GameBase->Game->Audio->LoadSound("frog/move.wav");
+	MusMusic = GameBase->Game->Audio->LoadMusic("frog/music.ogg");
 }
 
 void CGameFrog::UnLoadSound()
 {
-	Game->Audio->StopMusic();
-	Game->Audio->StopSound();
-	Game->Audio->UnLoadMusic(MusMusic);
-	Game->Audio->UnLoadSound(SfxDie);
-	Game->Audio->UnLoadSound(SfxCollect);
-	Game->Audio->UnLoadSound(SfxPlayerMove);
+	GameBase->Game->Audio->StopMusic();
+	GameBase->Game->Audio->StopSound();
+	GameBase->Game->Audio->UnLoadMusic(MusMusic);
+	GameBase->Game->Audio->UnLoadSound(SfxDie);
+	GameBase->Game->Audio->UnLoadSound(SfxCollect);
+	GameBase->Game->Audio->UnLoadSound(SfxPlayerMove);
 }
 
 void CGameFrog::LoadGraphics()
 {
-	background = Game->Image->LoadImage(Game->Renderer, "frog/background.png");
-	backgroundtz = Game->Image->ImageSize(background);
+	background = GameBase->Game->Image->LoadImage(GameBase->Game->Renderer, "frog/background.png");
+	backgroundtz = GameBase->Game->Image->ImageSize(background);
 
 
-	spritesheetfrog = Game->Image->LoadImage(Game->Renderer, "frog/player.png", 0, 128, dumpScaledBitmaps);
-	spritesheetbackground = Game->Image->LoadImage(Game->Renderer, "frog/watergrass.png", 0, 128, dumpScaledBitmaps);
-	spritesheetcar1 = Game->Image->LoadImage(Game->Renderer, "frog/carblue.png", 0, 80, dumpScaledBitmaps);
-	spritesheetcar2 = Game->Image->LoadImage(Game->Renderer, "frog/garbagetruck.png", 0, 80, dumpScaledBitmaps);
-	spritesheetcar3 = Game->Image->LoadImage(Game->Renderer, "frog/ambulance.png", 0, 80, dumpScaledBitmaps);
-	spritesheetcar4 = Game->Image->LoadImage(Game->Renderer, "frog/taxi.png", 0, 80, dumpScaledBitmaps);
-	spritesheetcar5 = Game->Image->LoadImage(Game->Renderer, "frog/police.png", 0, 80, dumpScaledBitmaps);
-	spritesheetplant = Game->Image->LoadImage(Game->Renderer, "frog/waterplant.png", 0, 140, dumpScaledBitmaps);
-	spritesheetfruit1 = Game->Image->LoadImage(Game->Renderer, "frog/apple.png",0, 10, dumpScaledBitmaps);
-	spritesheetfruit2 = Game->Image->LoadImage(Game->Renderer, "frog/lemon.png",0, 10, dumpScaledBitmaps);
-	spritesheetfruit3 = Game->Image->LoadImage(Game->Renderer, "frog/cherry.png",0, 10, dumpScaledBitmaps);
+	spritesheetfrog = GameBase->Game->Image->LoadImage(GameBase->Game->Renderer, "frog/player.png", 0, 128, dumpScaledBitmaps);
+	spritesheetbackground = GameBase->Game->Image->LoadImage(GameBase->Game->Renderer, "frog/watergrass.png", 0, 128, dumpScaledBitmaps);
+	spritesheetcar1 = GameBase->Game->Image->LoadImage(GameBase->Game->Renderer, "frog/carblue.png", 0, 80, dumpScaledBitmaps);
+	spritesheetcar2 = GameBase->Game->Image->LoadImage(GameBase->Game->Renderer, "frog/garbagetruck.png", 0, 80, dumpScaledBitmaps);
+	spritesheetcar3 = GameBase->Game->Image->LoadImage(GameBase->Game->Renderer, "frog/ambulance.png", 0, 80, dumpScaledBitmaps);
+	spritesheetcar4 = GameBase->Game->Image->LoadImage(GameBase->Game->Renderer, "frog/taxi.png", 0, 80, dumpScaledBitmaps);
+	spritesheetcar5 = GameBase->Game->Image->LoadImage(GameBase->Game->Renderer, "frog/police.png", 0, 80, dumpScaledBitmaps);
+	spritesheetplant = GameBase->Game->Image->LoadImage(GameBase->Game->Renderer, "frog/waterplant.png", 0, 140, dumpScaledBitmaps);
+	spritesheetfruit1 = GameBase->Game->Image->LoadImage(GameBase->Game->Renderer, "frog/apple.png",0, 10, dumpScaledBitmaps);
+	spritesheetfruit2 = GameBase->Game->Image->LoadImage(GameBase->Game->Renderer, "frog/lemon.png",0, 10, dumpScaledBitmaps);
+	spritesheetfruit3 = GameBase->Game->Image->LoadImage(GameBase->Game->Renderer, "frog/cherry.png",0, 10, dumpScaledBitmaps);
 
-	// SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/frog/player.bmp", Game->Image->GetImage(spritesheetfrog), 1,1, true, 0, 128);
-	// SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/frog/watergrass.bmp", Game->Image->GetImage(spritesheetbackground), 1,1, true, 0, 128);
-	// SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/frog/carblue.bmp", Game->Image->GetImage(spritesheetcar1), 1,1, true, 0, 80);
-	// SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/frog/garbagetruck.bmp", Game->Image->GetImage(spritesheetcar2), 1,1, true, 0, 80);
-	// SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/frog/ambulance.bmp", Game->Image->GetImage(spritesheetcar3), 1,1, true,0,  80);
-	// SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/frog/taxi.bmp", Game->Image->GetImage(spritesheetcar4), 1,1, true, 0, 80);
-	// SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/frog/police.bmp", Game->Image->GetImage(spritesheetcar5), 1,1, true, 0, 80);
-	// SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/frog/waterplant.bmp", Game->Image->GetImage(spritesheetplant), 1,1, true,0, 140); //173
-	// SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/frog/apple.bmp", Game->Image->GetImage(spritesheetfruit1), 1,1, true,0, 10);
-	// SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/frog/lemon.bmp", Game->Image->GetImage(spritesheetfruit2), 1,1, true,0, 10);
-	// SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/frog/cherry.bmp", Game->Image->GetImage(spritesheetfruit3), 1,1, true,0, 10);
+	// SDL_SaveBMPTextureScaled(GameBase->Game->Renderer, "./retrotimefs/graphics/frog/player.bmp", GameBase->Game->Image->GetImage(spritesheetfrog), 1,1, true, 0, 128);
+	// SDL_SaveBMPTextureScaled(GameBase->Game->Renderer, "./retrotimefs/graphics/frog/watergrass.bmp", GameBase->Game->Image->GetImage(spritesheetbackground), 1,1, true, 0, 128);
+	// SDL_SaveBMPTextureScaled(GameBase->Game->Renderer, "./retrotimefs/graphics/frog/carblue.bmp", GameBase->Game->Image->GetImage(spritesheetcar1), 1,1, true, 0, 80);
+	// SDL_SaveBMPTextureScaled(GameBase->Game->Renderer, "./retrotimefs/graphics/frog/garbagetruck.bmp", GameBase->Game->Image->GetImage(spritesheetcar2), 1,1, true, 0, 80);
+	// SDL_SaveBMPTextureScaled(GameBase->Game->Renderer, "./retrotimefs/graphics/frog/ambulance.bmp", GameBase->Game->Image->GetImage(spritesheetcar3), 1,1, true,0,  80);
+	// SDL_SaveBMPTextureScaled(GameBase->Game->Renderer, "./retrotimefs/graphics/frog/taxi.bmp", GameBase->Game->Image->GetImage(spritesheetcar4), 1,1, true, 0, 80);
+	// SDL_SaveBMPTextureScaled(GameBase->Game->Renderer, "./retrotimefs/graphics/frog/police.bmp", GameBase->Game->Image->GetImage(spritesheetcar5), 1,1, true, 0, 80);
+	// SDL_SaveBMPTextureScaled(GameBase->Game->Renderer, "./retrotimefs/graphics/frog/waterplant.bmp", GameBase->Game->Image->GetImage(spritesheetplant), 1,1, true,0, 140); //173
+	// SDL_SaveBMPTextureScaled(GameBase->Game->Renderer, "./retrotimefs/graphics/frog/apple.bmp", GameBase->Game->Image->GetImage(spritesheetfruit1), 1,1, true,0, 10);
+	// SDL_SaveBMPTextureScaled(GameBase->Game->Renderer, "./retrotimefs/graphics/frog/lemon.bmp", GameBase->Game->Image->GetImage(spritesheetfruit2), 1,1, true,0, 10);
+	// SDL_SaveBMPTextureScaled(GameBase->Game->Renderer, "./retrotimefs/graphics/frog/cherry.bmp", GameBase->Game->Image->GetImage(spritesheetfruit3), 1,1, true,0, 10);
 	if(!useDefaultColorAssets)
 	{
 		UnloadGraphics();
-		background = Game->Image->LoadImage(Game->Renderer, "frog/background.png");
-		backgroundtz = Game->Image->ImageSize(background);
-		spritesheetfrog = Game->Image->LoadImage(Game->Renderer, "frog/player.bmp");
-		spritesheetbackground = Game->Image->LoadImage(Game->Renderer, "frog/watergrass.bmp");
-		spritesheetcar1 = Game->Image->LoadImage(Game->Renderer, "frog/carblue.bmp");
-		spritesheetcar2 = Game->Image->LoadImage(Game->Renderer, "frog/garbagetruck.bmp");
-		spritesheetcar3 = Game->Image->LoadImage(Game->Renderer, "frog/ambulance.bmp");
-		spritesheetcar4 = Game->Image->LoadImage(Game->Renderer, "frog/taxi.bmp");
-		spritesheetcar5 = Game->Image->LoadImage(Game->Renderer, "frog/police.bmp");
-		spritesheetplant = Game->Image->LoadImage(Game->Renderer, "frog/waterplant.bmp");
-		spritesheetfruit1 = Game->Image->LoadImage(Game->Renderer, "frog/apple.bmp");
-		spritesheetfruit2 = Game->Image->LoadImage(Game->Renderer, "frog/lemon.bmp");
-		spritesheetfruit3 = Game->Image->LoadImage(Game->Renderer, "frog/cherry.bmp");
+		background = GameBase->Game->Image->LoadImage(GameBase->Game->Renderer, "frog/background.png");
+		backgroundtz = GameBase->Game->Image->ImageSize(background);
+		spritesheetfrog = GameBase->Game->Image->LoadImage(GameBase->Game->Renderer, "frog/player.bmp");
+		spritesheetbackground = GameBase->Game->Image->LoadImage(GameBase->Game->Renderer, "frog/watergrass.bmp");
+		spritesheetcar1 = GameBase->Game->Image->LoadImage(GameBase->Game->Renderer, "frog/carblue.bmp");
+		spritesheetcar2 = GameBase->Game->Image->LoadImage(GameBase->Game->Renderer, "frog/garbagetruck.bmp");
+		spritesheetcar3 = GameBase->Game->Image->LoadImage(GameBase->Game->Renderer, "frog/ambulance.bmp");
+		spritesheetcar4 = GameBase->Game->Image->LoadImage(GameBase->Game->Renderer, "frog/taxi.bmp");
+		spritesheetcar5 = GameBase->Game->Image->LoadImage(GameBase->Game->Renderer, "frog/police.bmp");
+		spritesheetplant = GameBase->Game->Image->LoadImage(GameBase->Game->Renderer, "frog/waterplant.bmp");
+		spritesheetfruit1 = GameBase->Game->Image->LoadImage(GameBase->Game->Renderer, "frog/apple.bmp");
+		spritesheetfruit2 = GameBase->Game->Image->LoadImage(GameBase->Game->Renderer, "frog/lemon.bmp");
+		spritesheetfruit3 = GameBase->Game->Image->LoadImage(GameBase->Game->Renderer, "frog/cherry.bmp");
 	}
 
 }
 
 void CGameFrog::UnloadGraphics()
 {
-	Game->Image->UnLoadImage(background);
-	Game->Image->UnLoadImage(spritesheetfrog);
-	Game->Image->UnLoadImage(spritesheetbackground);
-	Game->Image->UnLoadImage(spritesheetcar1);
-	Game->Image->UnLoadImage(spritesheetcar2);
-	Game->Image->UnLoadImage(spritesheetcar3);
-	Game->Image->UnLoadImage(spritesheetcar4);
-	Game->Image->UnLoadImage(spritesheetcar5);
-	Game->Image->UnLoadImage(spritesheetplant);
-	Game->Image->UnLoadImage(spritesheetfruit1);
-	Game->Image->UnLoadImage(spritesheetfruit2);
-	Game->Image->UnLoadImage(spritesheetfruit3);
+	GameBase->Game->Image->UnLoadImage(background);
+	GameBase->Game->Image->UnLoadImage(spritesheetfrog);
+	GameBase->Game->Image->UnLoadImage(spritesheetbackground);
+	GameBase->Game->Image->UnLoadImage(spritesheetcar1);
+	GameBase->Game->Image->UnLoadImage(spritesheetcar2);
+	GameBase->Game->Image->UnLoadImage(spritesheetcar3);
+	GameBase->Game->Image->UnLoadImage(spritesheetcar4);
+	GameBase->Game->Image->UnLoadImage(spritesheetcar5);
+	GameBase->Game->Image->UnLoadImage(spritesheetplant);
+	GameBase->Game->Image->UnLoadImage(spritesheetfruit1);
+	GameBase->Game->Image->UnLoadImage(spritesheetfruit2);
+	GameBase->Game->Image->UnLoadImage(spritesheetfruit3);
 }
 
 SDL_Texture* CGameFrog::screenshot()
 {
-	SDL_Texture* prev = SDL_GetRenderTarget(Game->Renderer);
-	SDL_Texture* image = SDL_CreateTexture(Game->Renderer, PixelFormat, SDL_TEXTUREACCESS_TARGET, ScreenWidth, ScreenHeight);
-	SDL_SetRenderTarget(Game->Renderer, image);
-	SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 255);
-	SDL_RenderClear(Game->Renderer);
+	SDL_Texture* prev = SDL_GetRenderTarget(GameBase->Game->Renderer);
+	SDL_Texture* image = SDL_CreateTexture(GameBase->Game->Renderer, PixelFormat, SDL_TEXTUREACCESS_TARGET, ScreenWidth, ScreenHeight);
+	SDL_SetRenderTarget(GameBase->Game->Renderer, image);
+	SDL_SetRenderDrawColor(GameBase->Game->Renderer, 0, 0, 0, 255);
+	SDL_RenderClear(GameBase->Game->Renderer);
 	init();
 
 	worldspeed = playerspeed;
@@ -896,12 +896,12 @@ SDL_Texture* CGameFrog::screenshot()
 	{
 		updateplayer();
 		updateobjects();
-		Game->Sprites->UpdateSprites(Game->Renderer);
+		GameBase->Game->Sprites->UpdateSprites(GameBase->Game->Renderer);
 	}
 	Draw();
 
-	SDL_RenderPresent(Game->Renderer);
-	SDL_SetRenderTarget(Game->Renderer, prev);
+	SDL_RenderPresent(GameBase->Game->Renderer);
+	SDL_SetRenderTarget(GameBase->Game->Renderer, prev);
 	deinit();
 	return image;
 }
@@ -915,8 +915,9 @@ void CGameFrog::OnGameStart()
 
 void CGameFrog::UpdateLogic()
 {
-	CGameBase::UpdateLogic();
-	if (Game->SubGameState == SGGame)
+	if (GameBase->UpdateLogic())
+		OnGameStart();
+	if (GameBase->Game->SubGameState == SGGame)
 	{
 		updateplayer();
 		//needs to be done after player update and before object update
@@ -925,44 +926,44 @@ void CGameFrog::UpdateLogic()
 		//so if not done here weird collisions and false deaths happen
 		if (dolevelinc)
 		{
-			if (level-1 < lenlevelincspeeds - 1)
+			if (GameBase->level-1 < lenlevelincspeeds - 1)
 			{
-				level += 1;
+				GameBase->level += 1;
 				dolevelinc = false;
 			}
 		}
 
 		updateobjects();
-		Game->Sprites->UpdateSprites(Game->Renderer);
+		GameBase->Game->Sprites->UpdateSprites(GameBase->Game->Renderer);
 
 
 		if (playerdeath)
 		{
-			Game->Audio->PlaySound(SfxDie, 0);
-			Game->AddToScore(-150);
-			if(HealthPoints > 1)
+			GameBase->Game->Audio->PlaySound(SfxDie, 0);
+			GameBase->Game->AddToScore(-150);
+			if(GameBase->HealthPoints > 1)
 			{
 				destroyallobjects();
 				destroyplayer();
 				createobjects(true);
 				createplayer();
-				HealthPoints = HealthPoints - 1;
-				Game->SubGameState = SGReadyGo;
-				Game->SubStateTime = SDL_GetTicks() + 500;
+				GameBase->HealthPoints = GameBase->HealthPoints - 1;
+				GameBase->Game->SubGameState = SGReadyGo;
+				GameBase->Game->SubStateTime = SDL_GetTicks() + 500;
 			}
-			if(Game->GameMode == GMGame)
-				HealthPoints -= 1;
+			if(GameBase->Game->GameMode == GMGame)
+				GameBase->HealthPoints -= 1;
 		}
 	}
 }
 
 void CGameFrog::Draw()
 {
-	Game->Sprites->DrawSprites(Game->Renderer);
+	GameBase->Game->Sprites->DrawSprites(GameBase->Game->Renderer);
 	DrawBackground(false);
-	if(!ScreenshotMode)
+	if(!GameBase->ScreenshotMode)
 	{
-		DrawScoreBar();
-		DrawSubStateText();
+		GameBase->DrawScoreBar();
+		GameBase->DrawSubStateText();
 	}
 }

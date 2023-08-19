@@ -13,9 +13,10 @@
 
 using namespace std;
 
-class CGamePang: public CGameBase {
+class CGamePang {
 
 private:
+	CGameBase *GameBase;
 	static const int backgroundcopyheight = 30;
 	Vec2F playerscale = {2.0f*yscale,2.0f*yscale};
 	Vec2F bulletscale = {1.0f*yscale,0.8f*yscale};
@@ -78,14 +79,16 @@ private:
 public:
 	CGamePang(CGame* aGame, bool aScreenshotMode = false);
 	~CGamePang();
-	SDL_Texture* screenshot() override;
-	void init() override;
-	void deinit() override;
-	void UnloadGraphics() override;
-	void LoadGraphics() override;
-	void LoadSound() override;
-	void UnLoadSound() override;
-	void UpdateObjects(bool IsGameState) override;
-	bool DrawObjects() override;
+	SDL_Texture* screenshot();
+	void init();
+	void deinit();
+	void UnloadGraphics();
+	void LoadGraphics();
+	void LoadSound();
+	void UnLoadSound();
+	void UpdateObjects(bool IsGameState);
+	bool DrawObjects();
 	void DrawBackground(bool motionblur);
+	void Draw();
+	void UpdateLogic();
 };

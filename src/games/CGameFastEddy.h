@@ -12,9 +12,10 @@
 
 using namespace std;
 
-class CGameFastEddy: public CGameBase {
+class CGameFastEddy {
 
 private:
+	CGameBase *GameBase;
 	static const int playerstateunknown = -1;
 	static const int playerstateidle = 0;
 	static const int playerstateleft = 1;
@@ -108,13 +109,15 @@ private:
 public:
 	CGameFastEddy(CGame* aGame, bool aScreenshotMode = false);
 	~CGameFastEddy();
-	SDL_Texture* screenshot() override;
-	void init() override;
-	void deinit() override;
-	void UnloadGraphics() override;
-	void LoadGraphics() override;
-	void LoadSound() override;
-	void UnLoadSound() override;
-	void UpdateObjects(bool IsGameState) override;
+	SDL_Texture* screenshot();
+	void init();
+	void deinit();
+	void UnloadGraphics();
+	void LoadGraphics();
+	void LoadSound();
+	void UnLoadSound();
+	void UpdateObjects(bool IsGameState);
 	void DrawBackground(bool motionblur);
+	void Draw();
+	void UpdateLogic();
 };

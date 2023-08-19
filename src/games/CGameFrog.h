@@ -37,10 +37,10 @@ struct SObjectInfo {
 typedef struct SObjectInfo SObjectInfo;
 
 
-class CGameFrog: public CGameBase {
+class CGameFrog {
 
 private:
-
+	CGameBase *GameBase;
 	static const int debugmode = false;
 	static constexpr float playerspeed = 16.0f*3.0f*yscale;
 	static constexpr float globalworldspeed = 0.5f*yscale;
@@ -154,18 +154,18 @@ private:
 	void destroyobject(int index);
 	void destroyallobjects();
 	void createobjects(bool initialize);
-	void OnGameStart() override;
+	void OnGameStart();
 public:
 	CGameFrog(CGame* aGame, bool aScreenshotMode = false);
 	~CGameFrog();
-	SDL_Texture* screenshot() override;
-	void init() override;
-	void deinit() override;
-	void UpdateLogic() override;
-	void Draw() override;
-	void UnloadGraphics() override;
-	void LoadGraphics() override;
-	void LoadSound() override;
-	void UnLoadSound() override;
+	SDL_Texture* screenshot();
+	void init();
+	void deinit();
+	void UpdateLogic();
+	void Draw();
+	void UnloadGraphics();
+	void LoadGraphics();
+	void LoadSound();
+	void UnLoadSound();
 	void DrawBackground(bool motionblur);
 };

@@ -19,9 +19,10 @@ struct ramitblock
 	SDL_Color color;
 };
 
-class CGameRamIt: public CGameBase {
+class CGameRamIt {
 
 private:
+	CGameBase *GameBase;
 	static const int bulletsteps = 8;
 	static const int playerrailwidth = 10*xscale;
 	static constexpr float playerspeed = 10*xscale;
@@ -55,13 +56,14 @@ private:
 public:
 	CGameRamIt(CGame* aGame, bool aScreenshotMode = false);
 	~CGameRamIt();
-
-	SDL_Texture* screenshot() override;
-	void init() override;
-	void deinit() override;
-	void LoadSound() override;
-	void UnLoadSound() override;
-	void UpdateObjects(bool IsGameState) override;
-	bool DrawObjects() override;
+	SDL_Texture* screenshot();
+	void init();
+	void deinit();
+	void LoadSound();
+	void UnLoadSound();
+	void UpdateObjects(bool IsGameState);
+	bool DrawObjects();
 	void DrawBackground(bool motionblur);
+	void Draw();
+	void UpdateLogic();
 };
