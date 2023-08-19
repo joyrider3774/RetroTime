@@ -10,9 +10,9 @@
 
 using namespace std;
 
-CGameBreakOut::CGameBreakOut(CGame* aGame, bool aScreenshotMode)
+CGameBreakOut::CGameBreakOut(CGame* aGame)
 {
-	GameBase = new CGameBase(aGame, GSBreakout, false, aScreenshotMode);
+	GameBase = new CGameBase(aGame, GSBreakout, false);
 	MusMusic = -1;
 	SfxSucces = -1;
 	SfxDie = -1;
@@ -463,29 +463,23 @@ void CGameBreakOut::DrawBackground(bool motionblur)
 
 void CGameBreakOut::Draw()
 {
-	DrawBackground((GameBase->Game->SubGameState == SGGame) && !GameBase->ScreenshotMode);
+	DrawBackground((GameBase->Game->SubGameState == SGGame));
 	GameBase->Game->Sprites->DrawSprites(GameBase->Game->Renderer);
-	if(!GameBase->ScreenshotMode)
-	{
-		GameBase->DrawScoreBar();
-		GameBase->DrawSubStateText();
-	}
+	GameBase->DrawScoreBar();
+	GameBase->DrawSubStateText();
 }
 //init - deinit ----------------------------------------------------------------------------------------------------------------
 
 void CGameBreakOut::init()
 {
 	LoadGraphics();
-	createblocks(GameBase->ScreenshotMode);
+	createblocks(false);
 	createplayer();
 	createball();
 
-	if(!GameBase->ScreenshotMode)
-	{
-		LoadSound();
-		GameBase->Game->CurrentGameMusicID = MusMusic;
-		GameBase->Game->Audio->PlayMusic(MusMusic, -1);
-	}
+	LoadSound();
+	GameBase->Game->CurrentGameMusicID = MusMusic;
+	GameBase->Game->Audio->PlayMusic(MusMusic, -1);
 }
 
 void CGameBreakOut::LoadSound()
@@ -513,13 +507,10 @@ void CGameBreakOut::deinit()
 	destroyplayer();
 	destroyallblocks();
 	destroyball();
-	if (!GameBase->ScreenshotMode)
-	{
-		UnLoadSound();
-		GameBase->Game->SubStateCounter = 0;
-		GameBase->Game->SubGameState = SGNone;
-		GameBase->Game->CurrentGameMusicID = -1;
-	}
+	UnLoadSound();
+	GameBase->Game->SubStateCounter = 0;
+	GameBase->Game->SubGameState = SGNone;
+	GameBase->Game->CurrentGameMusicID = -1;
 	UnloadGraphics();
 }
 
@@ -554,23 +545,6 @@ void CGameBreakOut::UnloadGraphics()
 	GameBase->Game->Image->UnLoadImage(spritesheetblocks);
 	GameBase->Game->Image->UnLoadImage(spritesheetbat);
 	GameBase->Game->Image->UnLoadImage(spritesheetball);
-}
-
-SDL_Texture* CGameBreakOut::screenshot()
-{
-	SDL_Texture* prev = SDL_GetRenderTarget(GameBase->Game->Renderer);
-	SDL_Texture* image = SDL_CreateTexture(GameBase->Game->Renderer, PixelFormat, SDL_TEXTUREACCESS_TARGET, ScreenWidth, ScreenHeight);
-	SDL_SetRenderTarget(GameBase->Game->Renderer, image);
-	SDL_SetRenderDrawColor(GameBase->Game->Renderer, 0, 0, 0, 255);
-	SDL_RenderClear(GameBase->Game->Renderer);
-	init();
-
-	Draw();
-
-	SDL_RenderPresent(GameBase->Game->Renderer);
-	SDL_SetRenderTarget(GameBase->Game->Renderer, prev);
-	deinit();
-	return image;
 }
 
 //Update ----------------------------------------------------------------------------------------------------------------

@@ -37,9 +37,8 @@ private:
 	void drawplayfieldcell(int x, int y, int piece);
 	void drawplayfield();
 public:
-	CGameBlockStacker(CGame* aGame, bool aScreenshotMode = false);
+	CGameBlockStacker(CGame* aGame);
 	~CGameBlockStacker();
-	SDL_Texture* screenshot();
 	void DrawBackground(bool motionblur);
 	void Draw();
 	void UpdateLogic();

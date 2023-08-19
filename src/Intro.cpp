@@ -13,7 +13,6 @@ float archalpha = 0;
 int scene = 0;
 int sceneticks = 0;
 int tsize = 70;
-SDL_Texture* screenshot;
 
 
 void Intro(CGame *Game)
@@ -64,17 +63,7 @@ void Intro(CGame *Game)
 
 	if (scene >= 2)
 	{
-		tsize = 30;
-
-		int sheight = (0.75 * ScreenHeight);
-		int swidth = (0.75 * ScreenWidth);
-		int sy = (ScreenHeight - sheight) / 2 - tsize - 15;
-		SDL_Rect DstRect = {(ScreenWidth - swidth) / 2, sy, swidth, sheight};
-		Game->Image->DrawImage(Game->Renderer, Game->GameScreenShots[scene -2], NULL, &DstRect);
-
-		s = string(GSGames[scene -2].name) + " " + string(GSGames[scene -2].shortdescription);
-		w = Game->Font->TextWidth("Roboto-Regular", tsize, s, s.length());
-		Game->Font->WriteText(Game->Renderer, "Roboto-Regular", tsize, s, s.length(), (ScreenWidth - w) / 2, sy + sheight + 15 + tsize/2, tsize, ClWhite);
+		Game->GameState = GSTitleScreenInit;
 	}
 
 	SDL_SetRenderTarget(Game->Renderer, Game->TexOffScreen);

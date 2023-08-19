@@ -41,9 +41,7 @@ private:
 	//for main (menu) background drawing
 	int menubackground, menubackgroundcounter, menubackgroundx, menubackgroundy, menubackgrounddx, menubackgrounddy;
 	int pinc;
-	SDL_Texture* ScreenShotRandom;
 
-	SDL_Texture* RandomScreenshot(float Scale);
 	void UpdateTimer();
 	void MainLoop();
 	void Init();
@@ -69,7 +67,6 @@ public:
 	CSprites *Sprites;
 	SDL_Renderer *Renderer;
 	SDL_Texture *TexOffScreen, *TexScreen, *TexCrt, *TexTmp;
-	SDL_Texture* GameScreenShots[Games];
 	long long int RetroCarouselHighScore, RetroCarouselScore;
 	long long int HighScores[Games][Modes];
 	long long int Scores[Games][Modes];
@@ -107,7 +104,6 @@ public:
 	void DrawCrt();
 	void Run(int argc, char **argv);
 	void ReCreateCrt();
-	void CreateScreenshotsAndBackground();
 	void StartCrossFade(int SetGameState, int SetNextSubState, int SetNextSubStateCounter, Uint32 SetNextSubStateTimeAdd);
 	void ToggleFullscreen();
 };

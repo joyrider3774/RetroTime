@@ -9,9 +9,9 @@
 using namespace std;
 
 
-CGameFrog::CGameFrog(CGame* aGame, bool ScreenshotMode)
+CGameFrog::CGameFrog(CGame* aGame)
 {
-	GameBase = new CGameBase(aGame, GSFrog, true, ScreenshotMode);
+	GameBase = new CGameBase(aGame, GSFrog, true);
 	MusMusic = -1;
 	SfxDie = -1;
 	SfxCollect = -1;
@@ -777,25 +777,19 @@ void CGameFrog::init()
 	worldspeed = globalworldspeed;
 	createplayer();
 	createobjects(true);
-	if(!GameBase->ScreenshotMode)
-	{
-		LoadSound();
-		GameBase->Game->CurrentGameMusicID = MusMusic;
-		GameBase->Game->Audio->PlayMusic(MusMusic, -1);
-	}
+	LoadSound();
+	GameBase->Game->CurrentGameMusicID = MusMusic;
+	GameBase->Game->Audio->PlayMusic(MusMusic, -1);
 }
 
 void CGameFrog::deinit()
 {
 	destroyplayer();
 	destroyallobjects();
-	if (!GameBase->ScreenshotMode)
-	{
-		UnLoadSound();
-		GameBase->Game->SubStateCounter = 0;
-		GameBase->Game->SubGameState = SGNone;
-		GameBase->Game->CurrentGameMusicID = -1;
-	}
+	UnLoadSound();
+	GameBase->Game->SubStateCounter = 0;
+	GameBase->Game->SubGameState = SGNone;
+	GameBase->Game->CurrentGameMusicID = -1;
 	UnloadGraphics();
 }
 
@@ -882,30 +876,6 @@ void CGameFrog::UnloadGraphics()
 	GameBase->Game->Image->UnLoadImage(spritesheetfruit3);
 }
 
-SDL_Texture* CGameFrog::screenshot()
-{
-	SDL_Texture* prev = SDL_GetRenderTarget(GameBase->Game->Renderer);
-	SDL_Texture* image = SDL_CreateTexture(GameBase->Game->Renderer, PixelFormat, SDL_TEXTUREACCESS_TARGET, ScreenWidth, ScreenHeight);
-	SDL_SetRenderTarget(GameBase->Game->Renderer, image);
-	SDL_SetRenderDrawColor(GameBase->Game->Renderer, 0, 0, 0, 255);
-	SDL_RenderClear(GameBase->Game->Renderer);
-	init();
-
-	worldspeed = playerspeed;
-	for (int i = 0; i < 5; i++)
-	{
-		updateplayer();
-		updateobjects();
-		GameBase->Game->Sprites->UpdateSprites(GameBase->Game->Renderer);
-	}
-	Draw();
-
-	SDL_RenderPresent(GameBase->Game->Renderer);
-	SDL_SetRenderTarget(GameBase->Game->Renderer, prev);
-	deinit();
-	return image;
-}
-
 //Update ----------------------------------------------------------------------------------------------------------------
 
 void CGameFrog::OnGameStart()
@@ -961,9 +931,6 @@ void CGameFrog::Draw()
 {
 	GameBase->Game->Sprites->DrawSprites(GameBase->Game->Renderer);
 	DrawBackground(false);
-	if(!GameBase->ScreenshotMode)
-	{
-		GameBase->DrawScoreBar();
-		GameBase->DrawSubStateText();
-	}
+	GameBase->DrawScoreBar();
+	GameBase->DrawSubStateText();
 }

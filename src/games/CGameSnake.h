@@ -41,9 +41,8 @@ private:
 	void drawsnake();
 	void updatesnake();
 public:
-	CGameSnake(CGame* aGame, bool aScreenshotMode = false);
+	CGameSnake(CGame* aGame);
 	~CGameSnake();
-	SDL_Texture* screenshot();
 	void init();
 	void deinit();
 	void LoadSound();

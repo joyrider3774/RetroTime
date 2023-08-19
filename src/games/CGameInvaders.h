@@ -107,9 +107,8 @@ private:
 	void destroyallexplosion();
 	void checkexplosions();
 public:
-	CGameInvaders(CGame* aGame, bool aScreenshotMode = false);
+	CGameInvaders(CGame* aGame);
 	~CGameInvaders();
-	SDL_Texture* screenshot();
 	void init();
 	void deinit();
 	void UnloadGraphics();

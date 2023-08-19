@@ -9,9 +9,9 @@
 
 using namespace std;
 
-CGameFastEddy::CGameFastEddy(CGame* aGame, bool aScreenshotMode)
+CGameFastEddy::CGameFastEddy(CGame* aGame)
 {
-	GameBase = new CGameBase(aGame, GSEddy, true, aScreenshotMode);
+	GameBase = new CGameBase(aGame, GSEddy, true);
 
 	MusMusic = -1;
 	SfxSucces = -1;
@@ -918,12 +918,9 @@ void CGameFastEddy::init()
 	createcollectables(-1);
 	createkey();
 	createplayer();
-	if(!GameBase->ScreenshotMode)
-	{
-		LoadSound();
-		GameBase->Game->CurrentGameMusicID = MusMusic;
-		GameBase->Game->Audio->PlayMusic(MusMusic, -1);
-	}
+	LoadSound();
+	GameBase->Game->CurrentGameMusicID = MusMusic;
+	GameBase->Game->Audio->PlayMusic(MusMusic, -1);
 }
 
 void CGameFastEddy::deinit()
@@ -934,13 +931,10 @@ void CGameFastEddy::deinit()
 	destroyallcollectables();
 	destroykey();
 	destroyplayer();
-	if (!GameBase->ScreenshotMode)
-	{
-		UnLoadSound();
-		GameBase->Game->SubStateCounter = 0;
-		GameBase->Game->SubGameState = SGNone;
-		GameBase->Game->CurrentGameMusicID = -1;
-	}
+	UnLoadSound();
+	GameBase->Game->SubStateCounter = 0;
+	GameBase->Game->SubGameState = SGNone;
+	GameBase->Game->CurrentGameMusicID = -1;
 	UnloadGraphics();
 }
 
@@ -1018,23 +1012,6 @@ void CGameFastEddy::UnloadGraphics()
 	GameBase->Game->Image->UnLoadImage(spritesheetkey);
 }
 
-SDL_Texture* CGameFastEddy::screenshot()
-{
-	SDL_Texture* prev = SDL_GetRenderTarget(GameBase->Game->Renderer);
-	SDL_Texture* image = SDL_CreateTexture(GameBase->Game->Renderer, PixelFormat, SDL_TEXTUREACCESS_TARGET, ScreenWidth, ScreenHeight);
-	SDL_SetRenderTarget(GameBase->Game->Renderer, image);
-	SDL_SetRenderDrawColor(GameBase->Game->Renderer, 0, 0, 0, 255);
-	SDL_RenderClear(GameBase->Game->Renderer);
-	init();
-
-	Draw();
-
-	SDL_RenderPresent(GameBase->Game->Renderer);
-	SDL_SetRenderTarget(GameBase->Game->Renderer, prev);
-	deinit();
-	return image;
-}
-
 //Update ----------------------------------------------------------------------------------------------------------------
 
 void CGameFastEddy::UpdateObjects(bool IsGameState)
@@ -1058,11 +1035,8 @@ void CGameFastEddy::UpdateLogic()
 
 void CGameFastEddy::Draw()
 {
-	DrawBackground((GameBase->Game->SubGameState == SGGame) && !GameBase->ScreenshotMode);
+	DrawBackground((GameBase->Game->SubGameState == SGGame));
 	GameBase->Game->Sprites->DrawSprites(GameBase->Game->Renderer);
-	if(!GameBase->ScreenshotMode)
-	{
-		GameBase->DrawScoreBar();
-		GameBase->DrawSubStateText();
-	}
+	GameBase->DrawScoreBar();
+	GameBase->DrawSubStateText();
 }

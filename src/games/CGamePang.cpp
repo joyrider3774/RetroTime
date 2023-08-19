@@ -9,9 +9,9 @@
 
 using namespace std;
 
-CGamePang::CGamePang(CGame* aGame, bool aScreenshotMode)
+CGamePang::CGamePang(CGame* aGame)
 {
-	GameBase = new CGameBase(aGame, GSPang, true, aScreenshotMode);
+	GameBase = new CGameBase(aGame, GSPang, true);
 
 	MusMusic = -1;
 	SfxSucces = -1;
@@ -456,14 +456,11 @@ void CGamePang::init()
 {
 	LoadGraphics();
 	GameBase->level = 1;
-	if(!GameBase->ScreenshotMode)
-	{
-		LoadSound();
-		createplayer();
-		createballs();
-		GameBase->Game->CurrentGameMusicID = MusMusic;
-		GameBase->Game->Audio->PlayMusic(MusMusic, -1);
-	}
+	LoadSound();
+	createplayer();
+	createballs();
+	GameBase->Game->CurrentGameMusicID = MusMusic;
+	GameBase->Game->Audio->PlayMusic(MusMusic, -1);
 }
 
 void CGamePang::deinit()
@@ -471,13 +468,10 @@ void CGamePang::deinit()
 	destroyplayer();
 	destroyallballs();
 	destroybullet();
-	if (!GameBase->ScreenshotMode)
-	{
-		UnLoadSound();
-		GameBase->Game->SubStateCounter = 0;
-		GameBase->Game->SubGameState = SGNone;
-		GameBase->Game->CurrentGameMusicID = -1;
-	}
+	UnLoadSound();
+	GameBase->Game->SubStateCounter = 0;
+	GameBase->Game->SubGameState = SGNone;
+	GameBase->Game->CurrentGameMusicID = -1;
 	UnloadGraphics();
 }
 
@@ -535,34 +529,6 @@ void CGamePang::UnloadGraphics()
 	GameBase->Game->Image->UnLoadImage(background);
 }
 
-SDL_Texture* CGamePang::screenshot()
-{
-	SDL_Texture* prev = SDL_GetRenderTarget(GameBase->Game->Renderer);
-	SDL_Texture* image = SDL_CreateTexture(GameBase->Game->Renderer, PixelFormat, SDL_TEXTUREACCESS_TARGET, ScreenWidth, ScreenHeight);
-	SDL_SetRenderTarget(GameBase->Game->Renderer, image);
-	SDL_SetRenderDrawColor(GameBase->Game->Renderer, 0, 0, 0, 255);
-	SDL_RenderClear(GameBase->Game->Renderer);
-	init();
-	GameBase->level = 3;
-
-	createplayer();
-	createballs();
-	createbullet();
-
-	for (int i = 0; i < 35; i++)
-	{
-		updateballs();
-		updatebullet();
-	}
-
-	Draw();
-
-	SDL_RenderPresent(GameBase->Game->Renderer);
-	SDL_SetRenderTarget(GameBase->Game->Renderer, prev);
-	deinit();
-	return image;
-}
-
 //Update ----------------------------------------------------------------------------------------------------------------
 
 void CGamePang::UpdateObjects(bool IsGameState)
@@ -594,12 +560,9 @@ bool CGamePang::DrawObjects()
 
 void CGamePang::Draw()
 {
-	DrawBackground((GameBase->Game->SubGameState == SGGame) && !GameBase->ScreenshotMode);
+	DrawBackground((GameBase->Game->SubGameState == SGGame));
 	if (DrawObjects())
 		GameBase->Game->Sprites->DrawSprites(GameBase->Game->Renderer);
-	if(!GameBase->ScreenshotMode)
-	{
-		GameBase->DrawScoreBar();
-		GameBase->DrawSubStateText();
-	}
+	GameBase->DrawScoreBar();
+	GameBase->DrawSubStateText();
 }

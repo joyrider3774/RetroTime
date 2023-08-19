@@ -79,9 +79,6 @@ void CGame::DeInit()
 		default:
 			break;
 	}
-	for(int i = 0; i < Games; i++)
-		SDL_DestroyTexture(GameScreenShots[i]);
-	SDL_DestroyTexture(ScreenShotRandom);
 }
 
 void CGame::Init()
@@ -117,56 +114,6 @@ void CGame::Init()
 	menubackgrounddy = rand() % 2 == 0 ? 1: -1;
 
 	ActiveGameGameStateId = -1;
-	for (int i = 0; i < Games; i++)
-		GameScreenShots[i] = nullptr;
-	ScreenShotRandom = nullptr;
-
-	CreateScreenshotsAndBackground();
-}
-
-void CGame::CreateScreenshotsAndBackground()
-{
-	//need to create a temporary sprites holder & replace it because
-	//games could be running and already have sprites assigned
-	CSprites *TmpSprites = Sprites;
-	Sprites = new CSprites(Image);
-	CGameRamIt *TmpGameRamIt = new CGameRamIt(this, true);
-	CGameBlockStacker *TmpGameBlockStacker = new CGameBlockStacker(this, true);
-	CGameSnake *TmpGameSnake = new CGameSnake(this, true);
-	CGameFastEddy *TmpGameFastEddy = new CGameFastEddy(this, true);
-	CGameFrog *TmpGameFrog = new CGameFrog(this, true);
-	CGameBreakOut *TmpGameBreakOut = new CGameBreakOut(this, true);
-	CGamePang *TmpGamePang = new CGamePang(this,true);
-	CGameInvaders *TmpGameInvaders = new CGameInvaders(this,true);
-	int ScreenShotNr = 0;
-	SDL_DestroyTexture(GameScreenShots[ScreenShotNr]);
-	GameScreenShots[ScreenShotNr++] = TmpGameInvaders->screenshot();
-	SDL_DestroyTexture(GameScreenShots[ScreenShotNr]);
-	GameScreenShots[ScreenShotNr++] = TmpGameBreakOut->screenshot();
-	SDL_DestroyTexture(GameScreenShots[ScreenShotNr]);
-	GameScreenShots[ScreenShotNr++] = TmpGameFrog->screenshot();
-	SDL_DestroyTexture(GameScreenShots[ScreenShotNr]);
-	GameScreenShots[ScreenShotNr++] = TmpGameSnake->screenshot();
-	SDL_DestroyTexture(GameScreenShots[ScreenShotNr]);
-	GameScreenShots[ScreenShotNr++] = TmpGamePang->screenshot();
-	SDL_DestroyTexture(GameScreenShots[ScreenShotNr]);
-	GameScreenShots[ScreenShotNr++] = TmpGameBlockStacker->screenshot();
-	SDL_DestroyTexture(GameScreenShots[ScreenShotNr]);
-	GameScreenShots[ScreenShotNr++] = TmpGameRamIt->screenshot();
-	SDL_DestroyTexture(GameScreenShots[ScreenShotNr]);
-	GameScreenShots[ScreenShotNr++] = TmpGameFastEddy->screenshot();
-	SDL_DestroyTexture(ScreenShotRandom);
-	ScreenShotRandom = RandomScreenshot(0.25);
-	delete TmpGameInvaders;
-	delete TmpGamePang;
-	delete TmpGameBreakOut;
-	delete TmpGameFrog;
-	delete TmpGameRamIt;
-	delete TmpGameBlockStacker;
-	delete TmpGameSnake;
-	delete TmpGameFastEddy;
-	delete Sprites;
-	Sprites = TmpSprites;
 }
 
 void CGame::ResetHighScores()
@@ -201,21 +148,10 @@ void CGame::UnLoadGraphics()
 
 void CGame::DrawTitleBackground(bool k)
 {
-	string msg = "Happy Easter (egg) to everyone on Fuze Arena and thanks to the FUZE Team and Wireframe magazine for doing this competition!!!!";
-	menubackgroundx += menubackgrounddx;
-	menubackgroundy += menubackgrounddy;
-	if ((menubackgroundx == 0) || (menubackgroundx == ScreenWidth))
-		menubackgrounddx *= -1;
-
-	if ((menubackgroundy == 0) || (menubackgroundy == ScreenHeight))
-		menubackgrounddy *= -1;
-
-	SDL_Rect Src = {menubackgroundx, menubackgroundy, ScreenWidth, ScreenHeight};
 	SDL_Rect Dst = {0, 0, ScreenWidth, ScreenHeight};
-	SDL_RenderCopy(Renderer, ScreenShotRandom, &Src, &Dst);
 
 	SDL_SetRenderDrawBlendMode(Renderer, SDL_BLENDMODE_BLEND);
-	SDL_SetRenderDrawColor(Renderer, 0,0,0,128);
+	SDL_SetRenderDrawColor(Renderer, 0,0,0,255);
 	SDL_RenderFillRect(Renderer, &Dst);
 
 	// //DrawCrt();
@@ -223,57 +159,8 @@ void CGame::DrawTitleBackground(bool k)
 	// SDL_Point Pos = {ScreenWidth / 2, ScreenHeight / 2};
 	// Vec2F Scale = {10.6f / 4, 10.6f};
 	// Image->DrawImageFuze(Renderer, GFXFrameID, &Pos, 0, &Scale, 255, 255, 255, 255);
-
-	if (k)
-	{
-		for(size_t i = 0; i < msg.length(); i++)
-		{
-			SDL_Color color = {255, Uint8(128 + (sin(i*25 % 360))*127), 0, 64*3};
-			string T = msg.substr(i, 1);
-			Font->WriteText(Renderer, "Roboto-Regular", 100, T, T.length(), pinc + i * 75, ((ScreenHeight / 2) -100) + (sin((((pinc + (i*15)) % 360)*3.14159265/180)) * 200), 0, color);
-		}
-		pinc = pinc- 3;
-		if (pinc < int(msg.length() * -75))
-		{
-			pinc = ScreenWidth;
-		}
-	}
 }
 
-SDL_Texture* CGame::RandomScreenshot(float Scale)
-{
-	SDL_Texture* prev = SDL_GetRenderTarget(Renderer);
-	SDL_Texture* image = SDL_CreateTexture(Renderer, PixelFormat, SDL_TEXTUREACCESS_TARGET, ScreenWidth*2, ScreenHeight*2);
-	SDL_SetRenderTarget(Renderer, image);
-	SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
-	SDL_RenderClear(Renderer);
-	int x = 0;
-	int y = 0;
-	int r = rand() % Games;
-	int prevr = r;
-
-	while (y < ScreenHeight * 2)
-	{
-		x = 0;
-		while(r == prevr)
-			r = rand() % Games;
-		prevr = r;
-
-		while (x < ScreenWidth * 2)
-		{
-			r += 1;
-			if (r == Games)
-				r = 0;
-			SDL_Rect Dst = {x, y, int(ScreenWidth * Scale), int(ScreenHeight * Scale)};
-			SDL_Rect Src = {0, 0, ScreenWidth, ScreenHeight};
-			SDL_RenderCopy(Renderer, GameScreenShots[r], &Src, &Dst);
-			x += int(ScreenWidth * Scale);
-		}
-		y += int(ScreenHeight * Scale);
-	}
-	SDL_SetRenderTarget(Renderer, prev);
-	return image;
-}
 
 void CGame::AddToScore(long long int Value)
 {
@@ -460,7 +347,6 @@ void CGame::ToggleFullscreen()
 		//SDL_SetWindowPosition(SdlWindow, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
 	}
 	//SDL_ShowCursor(SDL_ENABLE);
-	//ScreenShotRandom = RandomScreenshot(0.25);
 }
 
 void CGame::LoadHighScores()
@@ -774,7 +660,6 @@ void CGame::MainLoop()
 
 		Input->Update();
 
-		//Need to recreate screenshots and background
 		if(Input->Buttons.RenderReset)
 		{
 			SDL_Log("Render Reset, Recreating crt and background, Reloading Game Graphics");
@@ -803,7 +688,7 @@ void CGame::MainLoop()
 				default:
 					break;
 			}
-			CreateScreenshotsAndBackground();
+
 			ReCreateCrt();
 			Sprites->ResetDrawTargets();
 		}

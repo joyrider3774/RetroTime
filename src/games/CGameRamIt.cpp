@@ -8,9 +8,9 @@
 
 using namespace std;
 
-CGameRamIt::CGameRamIt(CGame* aGame, bool aScreenshotMode)
+CGameRamIt::CGameRamIt(CGame* aGame)
 {
-	GameBase = new CGameBase(aGame, GSRamIt, true, aScreenshotMode);
+	GameBase = new CGameBase(aGame, GSRamIt, true);
 
 	speed = 0;
 	speedcount = 0;
@@ -81,8 +81,7 @@ void CGameRamIt::updatebullet()
 								{
 									playfield[side][block].segments -= 1;
 									if (playfield[side][block].segments == 0)
-										if(!GameBase->ScreenshotMode)
-											GameBase->Game->AddToScore((GameBase->level + 1) * 2*playfield[side][block].maxsegments);
+										GameBase->Game->AddToScore((GameBase->level + 1) * 2*playfield[side][block].maxsegments);
 
 									playaudiobullet = true;
 									destroybullet = true;
@@ -95,8 +94,7 @@ void CGameRamIt::updatebullet()
 								{
 									playfield[side][block].segments -= 1;
 									if (playfield[side][block].segments == 0)
-										if(!GameBase->ScreenshotMode)
-											GameBase->Game->AddToScore((GameBase->level + 2) * 2 * playfield[side][block].maxsegments);
+										GameBase->Game->AddToScore((GameBase->level + 2) * 2 * playfield[side][block].maxsegments);
 
 									playaudiobullet = true;
 									destroybullet = true;
@@ -159,11 +157,6 @@ void CGameRamIt::drawplayer()
 
 void CGameRamIt::updateplayer()
 {
-	if(GameBase->ScreenshotMode)
-	{
-		return;
-	}
-
 	if ((GameBase->Game->Input->Buttons.ButLeft) ||
 		(GameBase->Game->Input->Buttons.ButLeft2) ||
 		(GameBase->Game->Input->Buttons.ButDpadLeft))
@@ -299,8 +292,7 @@ void CGameRamIt::updateplayfield(bool force)
 			GameBase->Game->Audio->PlaySound(SfxSucces, 0);
 			createplayfield();
 			GameBase->level += 1;
-			if(!GameBase->ScreenshotMode)
-				GameBase->Game->AddToScore((GameBase->level-1) * 100);
+			GameBase->Game->AddToScore((GameBase->level-1) * 100);
 		}
 
 		if (!stageclear)
@@ -380,24 +372,18 @@ void CGameRamIt::init()
 	playerdeath = false;
 	createplayer();
 	createplayfield();
-	if(!GameBase->ScreenshotMode)
-	{
-		GameBase->HealthPoints = 3;
-		LoadSound();
-		GameBase->Game->CurrentGameMusicID = MusMusic;
-		GameBase->Game->Audio->PlayMusic(MusMusic, -1);
-	}
+	GameBase->HealthPoints = 3;
+	LoadSound();
+	GameBase->Game->CurrentGameMusicID = MusMusic;
+	GameBase->Game->Audio->PlayMusic(MusMusic, -1);
 }
 
 void CGameRamIt::deinit()
 {
-	if (!GameBase->ScreenshotMode)
-	{
-		UnLoadSound();
-		GameBase->Game->SubStateCounter = 0;
-		GameBase->Game->SubGameState = SGNone;
-		GameBase->Game->CurrentGameMusicID = -1;
-	}
+	UnLoadSound();
+	GameBase->Game->SubStateCounter = 0;
+	GameBase->Game->SubGameState = SGNone;
+	GameBase->Game->CurrentGameMusicID = -1;
 }
 
 void CGameRamIt::LoadSound()
@@ -420,30 +406,6 @@ void CGameRamIt::UnLoadSound()
 	GameBase->Game->Audio->UnLoadSound(SfxSucces);
 }
 
-SDL_Texture* CGameRamIt::screenshot()
-{
-	SDL_Texture* prev = SDL_GetRenderTarget(GameBase->Game->Renderer);
-	SDL_Texture* image = SDL_CreateTexture(GameBase->Game->Renderer, PixelFormat, SDL_TEXTUREACCESS_TARGET, ScreenWidth, ScreenHeight);
-	SDL_SetRenderTarget(GameBase->Game->Renderer, image);
-	SDL_SetRenderDrawColor(GameBase->Game->Renderer, 0, 0, 0, 255);
-	SDL_RenderClear(GameBase->Game->Renderer);
-	init();
-
-	for(int i = 0; i < 30; i++)
-		updateplayfield(true);
-	createbullet();
-	updatebullet();
-	updatebullet();
-	updatebullet();
-
-	Draw();
-
-	SDL_RenderPresent(GameBase->Game->Renderer);
-	SDL_SetRenderTarget(GameBase->Game->Renderer, prev);
-	deinit();
-	return image;
-}
-
 //Update ----------------------------------------------------------------------------------------------------------------
 
 void CGameRamIt::UpdateObjects(bool IsGameState)
@@ -458,8 +420,7 @@ void CGameRamIt::UpdateObjects(bool IsGameState)
 		{
 			GameBase->Game->Audio->PlaySound(SfxDie, 0);
 			if (GameBase->Game->GameMode == GMGame)
-				if (!GameBase->ScreenshotMode)
-					GameBase->HealthPoints -= 1;
+				GameBase->HealthPoints -= 1;
 
 			if (GameBase->HealthPoints > 0)
 			{
@@ -491,12 +452,9 @@ bool CGameRamIt::DrawObjects()
 
 void CGameRamIt::Draw()
 {
-	DrawBackground((GameBase->Game->SubGameState == SGGame) && !GameBase->ScreenshotMode);
+	DrawBackground((GameBase->Game->SubGameState == SGGame));
 	if (DrawObjects())
 		GameBase->Game->Sprites->DrawSprites(GameBase->Game->Renderer);
-	if(!GameBase->ScreenshotMode)
-	{
-		GameBase->DrawScoreBar();
-		GameBase->DrawSubStateText();
-	}
+	GameBase->DrawScoreBar();
+	GameBase->DrawSubStateText();
 }

@@ -2,10 +2,9 @@
 #include "CGameBase.h"
 #include "../Vec2F.h"
 
-CGameBase::CGameBase(CGame *aGame, int aGameStateID, bool aUsesLevels, bool aScreenshotMode)
+CGameBase::CGameBase(CGame *aGame, int aGameStateID, bool aUsesLevels)
 {
 	Game = aGame;
-	ScreenshotMode = aScreenshotMode;
 	UsesLevels = aUsesLevels;
 	GameStateID = aGameStateID;
 	level = 0;
@@ -120,13 +119,11 @@ void CGameBase::PauseMenu()
 			Game->SubGameState = GSGame;
 		}
 
-		//Need to recreate screenshots and background
 		if(Game->Input->Buttons.RenderReset)
 		{
 			SDL_Log("Render Reset, Recreating crt and background, Reloading Game Graphics");
 			Game->Image->UnloadImages();
 			Game->LoadGraphics();
-			Game->CreateScreenshotsAndBackground();
 			Game->ReCreateCrt();
 		}
 

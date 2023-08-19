@@ -54,9 +54,8 @@ private:
 	void updateplayfield(bool force);
 	void drawplayfield();
 public:
-	CGameRamIt(CGame* aGame, bool aScreenshotMode = false);
+	CGameRamIt(CGame* aGame);
 	~CGameRamIt();
-	SDL_Texture* screenshot();
 	void init();
 	void deinit();
 	void LoadSound();

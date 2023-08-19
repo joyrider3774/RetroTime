@@ -77,9 +77,8 @@ private:
 	void destroyball(int index, bool nocreate);
 	void destroyallballs();
 public:
-	CGamePang(CGame* aGame, bool aScreenshotMode = false);
+	CGamePang(CGame* aGame);
 	~CGamePang();
-	SDL_Texture* screenshot();
 	void init();
 	void deinit();
 	void UnloadGraphics();

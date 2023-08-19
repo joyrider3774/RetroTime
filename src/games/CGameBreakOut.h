@@ -69,9 +69,8 @@ private:
 	void drawbackground(bool motionblur);
 	void updateblockinfo();
 public:
-	CGameBreakOut(CGame* aGame, bool aScreenshotMode = false);
+	CGameBreakOut(CGame* aGame);
 	~CGameBreakOut();
-	SDL_Texture* screenshot();
 	void init();
 	void deinit();
 	void UnloadGraphics();

@@ -107,9 +107,8 @@ private:
 	void destroycollectable(int index);
 	void destroyallcollectables();
 public:
-	CGameFastEddy(CGame* aGame, bool aScreenshotMode = false);
+	CGameFastEddy(CGame* aGame);
 	~CGameFastEddy();
-	SDL_Texture* screenshot();
 	void init();
 	void deinit();
 	void UnloadGraphics();

@@ -1,9 +1,9 @@
 #include <SDL.h>
 #include "CGameSnake.h"
 
-CGameSnake::CGameSnake(CGame* aGame, bool aScreenshotMode)
+CGameSnake::CGameSnake(CGame* aGame)
 {
-	GameBase = new CGameBase(aGame, GSRamIt, true, aScreenshotMode);
+	GameBase = new CGameBase(aGame, GSRamIt, true);
 	MusMusic = -1;
 	SfxFood = -1;
 	SfxDie = -1;
@@ -48,8 +48,7 @@ void CGameSnake::updatefood()
 		GameBase->Game->Audio->PlaySound(SfxFood, 0);
 		snakelength += 1;
 		createfood();
-		if(!GameBase->ScreenshotMode)
-			GameBase->Game->AddToScore(snakelength*2);
+		GameBase->Game->AddToScore(snakelength*2);
 	}
 }
 
@@ -80,53 +79,50 @@ void CGameSnake::drawsnake()
 
 void CGameSnake::updatesnake()
 {
-	if(!GameBase->ScreenshotMode)
+	if ((GameBase->Game->Input->Buttons.ButLeft) ||
+		(GameBase->Game->Input->Buttons.ButLeft2) ||
+		(GameBase->Game->Input->Buttons.ButDpadLeft))
 	{
-		if ((GameBase->Game->Input->Buttons.ButLeft) ||
-			(GameBase->Game->Input->Buttons.ButLeft2) ||
-			(GameBase->Game->Input->Buttons.ButDpadLeft))
+		if(movedone && dir.x == 0)
+		{
+			movedone = false;
+			dir = {-1,0};
+		}
+	}
+	else
+	{
+		if ((GameBase->Game->Input->Buttons.ButRight) ||
+			(GameBase->Game->Input->Buttons.ButRight2) ||
+			(GameBase->Game->Input->Buttons.ButDpadRight))
 		{
 			if(movedone && dir.x == 0)
 			{
 				movedone = false;
-				dir = {-1,0};
+				dir = {1,0};
 			}
 		}
 		else
 		{
-			if ((GameBase->Game->Input->Buttons.ButRight) ||
-				(GameBase->Game->Input->Buttons.ButRight2) ||
-				(GameBase->Game->Input->Buttons.ButDpadRight))
+			if ((GameBase->Game->Input->Buttons.ButUp) ||
+				(GameBase->Game->Input->Buttons.ButUp2) ||
+				(GameBase->Game->Input->Buttons.ButDpadUp))
 			{
-				if(movedone && dir.x == 0)
+				if(movedone && dir.y == 0)
 				{
 					movedone = false;
-					dir = {1,0};
+					dir = {0,-1};
 				}
 			}
 			else
 			{
-				if ((GameBase->Game->Input->Buttons.ButUp) ||
-					(GameBase->Game->Input->Buttons.ButUp2) ||
-					(GameBase->Game->Input->Buttons.ButDpadUp))
+				if ((GameBase->Game->Input->Buttons.ButDown) ||
+					(GameBase->Game->Input->Buttons.ButDown2) ||
+					(GameBase->Game->Input->Buttons.ButDpadDown))
 				{
 					if(movedone && dir.y == 0)
 					{
 						movedone = false;
-						dir = {0,-1};
-					}
-				}
-				else
-				{
-					if ((GameBase->Game->Input->Buttons.ButDown) ||
-						(GameBase->Game->Input->Buttons.ButDown2) ||
-						(GameBase->Game->Input->Buttons.ButDpadDown))
-					{
-						if(movedone && dir.y == 0)
-						{
-							movedone = false;
-							dir = {0,1};
-						}
+						dir = {0,1};
 					}
 				}
 			}
@@ -134,7 +130,8 @@ void CGameSnake::updatesnake()
 	}
 
 	ticks += 1;
-	if(GameBase->ScreenshotMode || (ticks >= updateticks))
+
+	if(ticks >= updateticks)
 	{
 		movedone = true;
 		ticks = 0;
@@ -168,30 +165,6 @@ void CGameSnake::DrawBackground(bool motionblur)
 	SDL_RenderFillRect(GameBase->Game->Renderer, &r);
 }
 
-SDL_Texture* CGameSnake::screenshot()
-{
-	SDL_Texture* prev = SDL_GetRenderTarget(GameBase->Game->Renderer);
-	SDL_Texture* image = SDL_CreateTexture(GameBase->Game->Renderer, PixelFormat, SDL_TEXTUREACCESS_TARGET, ScreenWidth, ScreenHeight);
-	SDL_SetRenderTarget(GameBase->Game->Renderer, image);
-	SDL_SetRenderDrawColor(GameBase->Game->Renderer, 0, 0, 0, 255);
-	SDL_RenderClear(GameBase->Game->Renderer);
-	init();
-
-	for (int i = 0; i < 7; i++)
-	{
-		updatesnake();
-		snakelength += 1;
-	}
-	food = {GameBase->screenleft + (int(cols / 2)-2) * snakesize, GameBase->screentop + (int(rows / 2) -2) * snakesize};
-
-	Draw();
-
-	SDL_RenderPresent(GameBase->Game->Renderer);
-	SDL_SetRenderTarget(GameBase->Game->Renderer, prev);
-	deinit();
-	return image;
-}
-
 //init - deinit ----------------------------------------------------------------------------------------------------------------
 
 void CGameSnake::init()
@@ -201,24 +174,18 @@ void CGameSnake::init()
 	createfood();
 
 	movedone = true;
-	if (!GameBase->ScreenshotMode)
-	{
-		GameBase->HealthPoints = 2;
-		LoadSound();
-		GameBase->Game->CurrentGameMusicID = MusMusic;
-		GameBase->Game->Audio->PlayMusic(MusMusic, -1);
-	}
+	GameBase->HealthPoints = 2;
+	LoadSound();
+	GameBase->Game->CurrentGameMusicID = MusMusic;
+	GameBase->Game->Audio->PlayMusic(MusMusic, -1);
 }
 
 void CGameSnake::deinit()
 {
-	if (!GameBase->ScreenshotMode)
-	{
-		UnLoadSound();
-		GameBase->Game->SubStateCounter = 0;
-		GameBase->Game->SubGameState = SGNone;
-		GameBase->Game->CurrentGameMusicID = -1;
-	}
+	UnLoadSound();
+	GameBase->Game->SubStateCounter = 0;
+	GameBase->Game->SubGameState = SGNone;
+	GameBase->Game->CurrentGameMusicID = -1;
 }
 
 void CGameSnake::LoadSound()
@@ -250,8 +217,7 @@ void CGameSnake::UpdateObjects(bool IsGameState)
 	if (IsGameState && playerdeath)
 	{
 		GameBase->Game->Audio->PlaySound(SfxDie, 0);
-		if(!GameBase->ScreenshotMode)
-			GameBase->Game->AddToScore(-50);
+		GameBase->Game->AddToScore(-50);
 
 		if (GameBase->HealthPoints > 1)
 		{
@@ -264,8 +230,7 @@ void CGameSnake::UpdateObjects(bool IsGameState)
 		}
 		else
 			if(GameBase->Game->GameMode == GMGame)
-				if (!GameBase->ScreenshotMode)
-					GameBase->HealthPoints -= 1;
+				GameBase->HealthPoints -= 1;
 	}
 }
 
@@ -288,12 +253,9 @@ bool CGameSnake::DrawObjects()
 
 void CGameSnake::Draw()
 {
-	DrawBackground((GameBase->Game->SubGameState == SGGame) && !GameBase->ScreenshotMode);
+	DrawBackground((GameBase->Game->SubGameState == SGGame));
 	if (DrawObjects())
 		GameBase->Game->Sprites->DrawSprites(GameBase->Game->Renderer);
-	if(!GameBase->ScreenshotMode)
-	{
-		GameBase->DrawScoreBar();
-		GameBase->DrawSubStateText();
-	}
+	GameBase->DrawScoreBar();
+	GameBase->DrawSubStateText();
 }

@@ -156,9 +156,8 @@ private:
 	void createobjects(bool initialize);
 	void OnGameStart();
 public:
-	CGameFrog(CGame* aGame, bool aScreenshotMode = false);
+	CGameFrog(CGame* aGame);
 	~CGameFrog();
-	SDL_Texture* screenshot();
 	void init();
 	void deinit();
 	void UpdateLogic();

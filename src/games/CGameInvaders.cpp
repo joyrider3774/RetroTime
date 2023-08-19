@@ -9,9 +9,9 @@
 
 using namespace std;
 
-CGameInvaders::CGameInvaders(CGame* aGame, bool aScreenshotMode)
+CGameInvaders::CGameInvaders(CGame* aGame)
 {
-	GameBase = new CGameBase(aGame, GSSpaceInvaders, false, aScreenshotMode);
+	GameBase = new CGameBase(aGame, GSSpaceInvaders, false);
 
 	MusMusic = -1;
 	SfxSucces = -1;
@@ -629,16 +629,13 @@ void CGameInvaders::init()
 	backgroundfadeinc = 1;
 	enemyvel = {enemyspeed, 0};
 
-	createinvaders(GameBase->ScreenshotMode);
+	createinvaders(false);
 	createplayer();
 	createasteroids();
 
-	if(!GameBase->ScreenshotMode)
-	{
-		LoadSound();
-		GameBase->Game->CurrentGameMusicID = MusMusic;
-		GameBase->Game->Audio->PlayMusic(MusMusic, -1);
-	}
+	LoadSound();
+	GameBase->Game->CurrentGameMusicID = MusMusic;
+	GameBase->Game->Audio->PlayMusic(MusMusic, -1);
 }
 
 void CGameInvaders::deinit()
@@ -649,13 +646,10 @@ void CGameInvaders::deinit()
 	destroyallasteroids();
 	destroyallenemybullet();
 	destroyallexplosion();
-	if (!GameBase->ScreenshotMode)
-	{
-		UnLoadSound();
-		GameBase->Game->SubStateCounter = 0;
-		GameBase->Game->SubGameState = SGNone;
-		GameBase->Game->CurrentGameMusicID = -1;
-	}
+	UnLoadSound();
+	GameBase->Game->SubStateCounter = 0;
+	GameBase->Game->SubGameState = SGNone;
+	GameBase->Game->CurrentGameMusicID = -1;
 	UnloadGraphics();
 }
 
@@ -730,23 +724,6 @@ void CGameInvaders::UnloadGraphics()
 	GameBase->Game->Image->UnLoadImage(background);
 }
 
-SDL_Texture* CGameInvaders::screenshot()
-{
-	SDL_Texture* prev = SDL_GetRenderTarget(GameBase->Game->Renderer);
-	SDL_Texture* image = SDL_CreateTexture(GameBase->Game->Renderer, PixelFormat, SDL_TEXTUREACCESS_TARGET, ScreenWidth, ScreenHeight);
-	SDL_SetRenderTarget(GameBase->Game->Renderer, image);
-	SDL_SetRenderDrawColor(GameBase->Game->Renderer, 0, 0, 0, 255);
-	SDL_RenderClear(GameBase->Game->Renderer);
-	init();
-
-	Draw();
-
-	SDL_RenderPresent(GameBase->Game->Renderer);
-	SDL_SetRenderTarget(GameBase->Game->Renderer, prev);
-	deinit();
-	return image;
-}
-
 //Update ----------------------------------------------------------------------------------------------------------------
 
 void CGameInvaders::UpdateObjects(bool IsGameState)
@@ -779,12 +756,9 @@ bool CGameInvaders::DrawObjects()
 
 void CGameInvaders::Draw()
 {
-	DrawBackground((GameBase->Game->SubGameState == SGGame) && !GameBase->ScreenshotMode);
+	DrawBackground((GameBase->Game->SubGameState == SGGame));
 	if (DrawObjects())
 		GameBase->Game->Sprites->DrawSprites(GameBase->Game->Renderer);
-	if(!GameBase->ScreenshotMode)
-	{
-		GameBase->DrawScoreBar();
-		GameBase->DrawSubStateText();
-	}
+	GameBase->DrawScoreBar();
+	GameBase->DrawSubStateText();
 }
