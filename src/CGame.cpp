@@ -752,8 +752,6 @@ void CGame::MainLoop()
 		SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
 		SDL_RenderClear(Renderer);
 
-		SDL_SetTextureColorMod(TexScreen, ColorModR, ColorModG, ColorModB);
-
 		int w, h, w2, h2, x, y;
 		SDL_GetWindowSize(SdlWindow, &w , &h);
 		float ScaleX = (float)w / (float)ScreenWidth;
