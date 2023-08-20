@@ -24,7 +24,7 @@ struct CGameBreakOut;
 class CGameBase;
 struct CGameFrog;
 struct CGameInvaders;
-class CGamePang;
+struct CGamePang;
 class CGameSnake;
 
 class CGame {
