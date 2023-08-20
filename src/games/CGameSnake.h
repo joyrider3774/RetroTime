@@ -69,4 +69,4 @@ void CGameSnake_updatefood(CGameSnake* GameSnake);
 void CGameSnake_drawfood(CGameSnake* GameSnake);
 void CGameSnake_createfood(CGameSnake* GameSnake);
 void Destroy_CGameSnake(CGameSnake* GameSnake);
-CGameSnake* Create_CGameSnake(CGame* aGame);
+CGameSnake* Create_CGameSnake();

@@ -1,10 +1,10 @@
 #include <SDL.h>
 #include "CGameSnake.h"
 
-CGameSnake* Create_CGameSnake(CGame* aGame)
+CGameSnake* Create_CGameSnake()
 {
 	CGameSnake* GameSnake = (CGameSnake*) malloc(sizeof(CGameSnake));
-	GameSnake->GameBase = Create_CGameBase(aGame, GSRamIt, true);
+	GameSnake->GameBase = Create_CGameBase(GSRamIt, true);
 	GameSnake->MusMusic = -1;
 	GameSnake->SfxFood = -1;
 	GameSnake->SfxDie = -1;
@@ -59,19 +59,19 @@ void CGameSnake_createfood(CGameSnake* GameSnake)
 
 void CGameSnake_drawfood(CGameSnake* GameSnake)
 {
-	SDL_SetRenderDrawColor(GameSnake->GameBase->Game->Renderer, GameSnake->snakefoodcolor.r, GameSnake->snakefoodcolor.g, GameSnake->snakefoodcolor.b, GameSnake->snakefoodcolor.a);
+	SDL_SetRenderDrawColor(Renderer, GameSnake->snakefoodcolor.r, GameSnake->snakefoodcolor.g, GameSnake->snakefoodcolor.b, GameSnake->snakefoodcolor.a);
 	SDL_Rect r = {GameSnake->food.x, GameSnake->food.y, GameSnake->snakesize, GameSnake->snakesize};
-	SDL_RenderFillRect(GameSnake->GameBase->Game->Renderer, &r);
+	SDL_RenderFillRect(Renderer, &r);
 }
 
 void CGameSnake_updatefood(CGameSnake* GameSnake)
 {
 	if ((GameSnake->head.x == GameSnake->food.x) && (GameSnake->head.y == GameSnake->food.y))
 	{
-		GameSnake->GameBase->Game->Audio->PlaySound(GameSnake->SfxFood, 0);
+		Audio->PlaySound(GameSnake->SfxFood, 0);
 		GameSnake->snakelength += 1;
 		GameSnake->createfood(GameSnake);
-		GameSnake->GameBase->Game->AddToScore(GameSnake->snakelength*2);
+		CGame_AddToScore(GameSnake->snakelength*2);
 	}
 }
 
@@ -89,22 +89,22 @@ void CGameSnake_createsnake(CGameSnake* GameSnake)
 void CGameSnake_drawsnake(CGameSnake* GameSnake)
 {
 	SDL_Rect r;
-	SDL_SetRenderDrawColor(GameSnake->GameBase->Game->Renderer, GameSnake->snakebodycolor.r, GameSnake->snakebodycolor.g, GameSnake->snakebodycolor.b, GameSnake->snakebodycolor.a);
+	SDL_SetRenderDrawColor(Renderer, GameSnake->snakebodycolor.r, GameSnake->snakebodycolor.g, GameSnake->snakebodycolor.b, GameSnake->snakebodycolor.a);
 	for (int i = 0; i < GameSnake->snakelength; i++)
 	{
 		r = {GameSnake->body[i].x, GameSnake->body[i].y, GameSnake->snakesize, GameSnake->snakesize};
-		SDL_RenderFillRect(GameSnake->GameBase->Game->Renderer, &r);
+		SDL_RenderFillRect(Renderer, &r);
 	}
-	SDL_SetRenderDrawColor(GameSnake->GameBase->Game->Renderer, GameSnake->snakeheadcolor.r, GameSnake->snakeheadcolor.g, GameSnake->snakeheadcolor.b, GameSnake->snakeheadcolor.a);
+	SDL_SetRenderDrawColor(Renderer, GameSnake->snakeheadcolor.r, GameSnake->snakeheadcolor.g, GameSnake->snakeheadcolor.b, GameSnake->snakeheadcolor.a);
 	r = {GameSnake->head.x, GameSnake->head.y, GameSnake->snakesize, GameSnake->snakesize};
-	SDL_RenderFillRect(GameSnake->GameBase->Game->Renderer, &r);
+	SDL_RenderFillRect(Renderer, &r);
 }
 
 void CGameSnake_updatesnake(CGameSnake* GameSnake)
 {
-	if ((GameSnake->GameBase->Game->Input->Buttons.ButLeft) ||
-		(GameSnake->GameBase->Game->Input->Buttons.ButLeft2) ||
-		(GameSnake->GameBase->Game->Input->Buttons.ButDpadLeft))
+	if ((Input->Buttons.ButLeft) ||
+		(Input->Buttons.ButLeft2) ||
+		(Input->Buttons.ButDpadLeft))
 	{
 		if(GameSnake->movedone && GameSnake->dir.x == 0)
 		{
@@ -114,9 +114,9 @@ void CGameSnake_updatesnake(CGameSnake* GameSnake)
 	}
 	else
 	{
-		if ((GameSnake->GameBase->Game->Input->Buttons.ButRight) ||
-			(GameSnake->GameBase->Game->Input->Buttons.ButRight2) ||
-			(GameSnake->GameBase->Game->Input->Buttons.ButDpadRight))
+		if ((Input->Buttons.ButRight) ||
+			(Input->Buttons.ButRight2) ||
+			(Input->Buttons.ButDpadRight))
 		{
 			if(GameSnake->movedone && GameSnake->dir.x == 0)
 			{
@@ -126,9 +126,9 @@ void CGameSnake_updatesnake(CGameSnake* GameSnake)
 		}
 		else
 		{
-			if ((GameSnake->GameBase->Game->Input->Buttons.ButUp) ||
-				(GameSnake->GameBase->Game->Input->Buttons.ButUp2) ||
-				(GameSnake->GameBase->Game->Input->Buttons.ButDpadUp))
+			if ((Input->Buttons.ButUp) ||
+				(Input->Buttons.ButUp2) ||
+				(Input->Buttons.ButDpadUp))
 			{
 				if(GameSnake->movedone && GameSnake->dir.y == 0)
 				{
@@ -138,9 +138,9 @@ void CGameSnake_updatesnake(CGameSnake* GameSnake)
 			}
 			else
 			{
-				if ((GameSnake->GameBase->Game->Input->Buttons.ButDown) ||
-					(GameSnake->GameBase->Game->Input->Buttons.ButDown2) ||
-					(GameSnake->GameBase->Game->Input->Buttons.ButDpadDown))
+				if ((Input->Buttons.ButDown) ||
+					(Input->Buttons.ButDown2) ||
+					(Input->Buttons.ButDpadDown))
 				{
 					if(GameSnake->movedone && GameSnake->dir.y == 0)
 					{
@@ -181,11 +181,11 @@ void CGameSnake_updatesnake(CGameSnake* GameSnake)
 
 void CGameSnake_DrawBackground(CGameSnake* GameSnake)
 {
-	SDL_SetRenderDrawColor(GameSnake->GameBase->Game->Renderer, 0x65, 0x65, 0xFF, 0xFF);
-	SDL_RenderClear(GameSnake->GameBase->Game->Renderer);
-	SDL_SetRenderDrawColor(GameSnake->GameBase->Game->Renderer, 0, 0, 0, 255);
+	SDL_SetRenderDrawColor(Renderer, 0x65, 0x65, 0xFF, 0xFF);
+	SDL_RenderClear(Renderer);
+	SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
 	SDL_Rect r = {GameSnake->GameBase->screenleft, GameSnake->GameBase->screentop, GameSnake->GameBase->playfieldwidth, GameSnake->GameBase->playfieldheight};
-	SDL_RenderFillRect(GameSnake->GameBase->Game->Renderer, &r);
+	SDL_RenderFillRect(Renderer, &r);
 }
 
 //init - deinit ----------------------------------------------------------------------------------------------------------------
@@ -199,32 +199,32 @@ void CGameSnake_init(CGameSnake* GameSnake)
 	GameSnake->movedone = true;
 	GameSnake->GameBase->HealthPoints = 2;
 	GameSnake->LoadSound(GameSnake);
-	GameSnake->GameBase->Game->CurrentGameMusicID = GameSnake->MusMusic;
-	GameSnake->GameBase->Game->Audio->PlayMusic(GameSnake->MusMusic, -1);
+	CurrentGameMusicID = GameSnake->MusMusic;
+	Audio->PlayMusic(GameSnake->MusMusic, -1);
 }
 
 void CGameSnake_deinit(CGameSnake* GameSnake)
 {
 	GameSnake->UnLoadSound(GameSnake);
-	GameSnake->GameBase->Game->SubStateCounter = 0;
-	GameSnake->GameBase->Game->SubGameState = SGNone;
-	GameSnake->GameBase->Game->CurrentGameMusicID = -1;
+	SubStateCounter = 0;
+	SubGameState = SGNone;
+	CurrentGameMusicID = -1;
 }
 
 void CGameSnake_LoadSound(CGameSnake* GameSnake)
 {
-	GameSnake->SfxFood = GameSnake->GameBase->Game->Audio->LoadSound("snakey/food.wav");
-	GameSnake->SfxDie = GameSnake->GameBase->Game->Audio->LoadSound("common/die.wav");
-	GameSnake->MusMusic = GameSnake->GameBase->Game->Audio->LoadMusic("snakey/music.ogg");
+	GameSnake->SfxFood = Audio->LoadSound("snakey/food.wav");
+	GameSnake->SfxDie = Audio->LoadSound("common/die.wav");
+	GameSnake->MusMusic = Audio->LoadMusic("snakey/music.ogg");
 }
 
 void CGameSnake_UnLoadSound(CGameSnake* GameSnake)
 {
-	GameSnake->GameBase->Game->Audio->StopMusic();
-	GameSnake->GameBase->Game->Audio->StopSound();
-	GameSnake->GameBase->Game->Audio->UnLoadMusic(GameSnake->MusMusic);
-	GameSnake->GameBase->Game->Audio->UnLoadSound(GameSnake->SfxFood);
-	GameSnake->GameBase->Game->Audio->UnLoadSound(GameSnake->SfxDie);
+	Audio->StopMusic();
+	Audio->StopSound();
+	Audio->UnLoadMusic(GameSnake->MusMusic);
+	Audio->UnLoadSound(GameSnake->SfxFood);
+	Audio->UnLoadSound(GameSnake->SfxDie);
 }
 
 //Update ----------------------------------------------------------------------------------------------------------------
@@ -239,20 +239,20 @@ void CGameSnake_UpdateObjects(CGameSnake* GameSnake, bool IsGameState)
 
 	if (IsGameState && GameSnake->playerdeath)
 	{
-		GameSnake->GameBase->Game->Audio->PlaySound(GameSnake->SfxDie, 0);
-		GameSnake->GameBase->Game->AddToScore(-50);
+		Audio->PlaySound(GameSnake->SfxDie, 0);
+		CGame_AddToScore(-50);
 
 		if (GameSnake->GameBase->HealthPoints > 1)
 		{
 			GameSnake->createsnake(GameSnake);
 			GameSnake->createfood(GameSnake);
-			if (GameSnake->GameBase->Game->GameMode == GMGame)
+			if (GameMode == GMGame)
 				GameSnake->GameBase->HealthPoints -= 1;
-			GameSnake->GameBase->Game->SubGameState = SGReadyGo;
-			GameSnake->GameBase->Game->SubStateTime = SDL_GetTicks() + 500;
+			SubGameState = SGReadyGo;
+			SubStateTime = SDL_GetTicks() + 500;
 		}
 		else
-			if(GameSnake->GameBase->Game->GameMode == GMGame)
+			if(GameMode == GMGame)
 				GameSnake->GameBase->HealthPoints -= 1;
 	}
 }
@@ -260,9 +260,9 @@ void CGameSnake_UpdateObjects(CGameSnake* GameSnake, bool IsGameState)
 void CGameSnake_UpdateLogic(CGameSnake* GameSnake)
 {
 	GameSnake->GameBase->UpdateLogic(GameSnake->GameBase);
-	GameSnake->UpdateObjects(GameSnake, GameSnake->GameBase->Game->SubGameState == SGGame);
-	if(GameSnake->GameBase->Game->SubGameState == SGGame)
-		GameSnake->GameBase->Game->Sprites->UpdateSprites(GameSnake->GameBase->Game->Renderer);
+	GameSnake->UpdateObjects(GameSnake, SubGameState == SGGame);
+	if(SubGameState == SGGame)
+		Sprites->UpdateSprites(Renderer);
 }
 
 
@@ -278,7 +278,7 @@ void CGameSnake_Draw(CGameSnake* GameSnake)
 {
 	GameSnake->DrawBackground(GameSnake);
 	if (GameSnake->DrawObjects(GameSnake))
-		GameSnake->GameBase->Game->Sprites->DrawSprites(GameSnake->GameBase->Game->Renderer);
+		Sprites->DrawSprites(Renderer);
 	GameSnake->GameBase->DrawScoreBar(GameSnake->GameBase);
 	GameSnake->GameBase->DrawSubStateText(GameSnake->GameBase);
 }

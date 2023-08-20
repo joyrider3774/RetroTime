@@ -2,8 +2,6 @@
 
 int main(int argc, char *argv[])
 {
-	CGame *Game = new CGame();
-	Game->Run(argc, argv);
-	delete Game;
+	CGame_Run(argc, argv);
 	return 0;
 }

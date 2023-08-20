@@ -120,4 +120,4 @@ void CGamePang_createball(CGamePang* GamePang, int size, float x, float y, float
 void CGamePang_destroyball(CGamePang* GamePang, int index, bool nocreate);
 void CGamePang_destroyallballs(CGamePang* GamePang);
 void Destroy_CGamePang(CGamePang* GamePang);
-CGamePang* Create_CGamePang(CGame* aGame);
+CGamePang* Create_CGamePang();

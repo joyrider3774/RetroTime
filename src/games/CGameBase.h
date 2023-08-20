@@ -10,7 +10,6 @@ using namespace std;
 
 
 struct CGameBase {
-	CGame *Game;
 	char SubStateText[500];
 	bool UsesLevels;
 	int level;
@@ -24,7 +23,7 @@ struct CGameBase {
 };
 typedef struct CGameBase CGameBase;
 
-CGameBase* Create_CGameBase(CGame *aGame, int aGameStateID, bool aUsesLevels);	
+CGameBase* Create_CGameBase(int aGameStateID, bool aUsesLevels);	
 void Destroy_CGameBase(CGameBase* GameBase);
 void CGameBase_PauseMenu(CGameBase* GameBase);
 void CGameBase_DrawScoreBar(CGameBase* GameBase);

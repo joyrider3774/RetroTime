@@ -15,63 +15,63 @@ int sceneticks = 0;
 int tsize = 70;
 
 
-void Intro(CGame *Game)
+void Intro()
 {
-	if(Game->GameState == GSIntroInit)
+	if(GameState == GSIntroInit)
 	{
-		Game->GameState -= initDiff;
+		GameState -= initDiff;
 	}
 
 	SDL_Color ClWhite = {255, 255, 255, 255};
 	string s;
 	int w,h;
 
-	SDL_SetRenderTarget(Game->Renderer, Game->TexTmp);
-	SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 255);
-	SDL_RenderClear(Game->Renderer);
+	SDL_SetRenderTarget(Renderer, TexTmp);
+	SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
+	SDL_RenderClear(Renderer);
 	if (scene == 0)
 	{
 		s = "Willems Davy aka Joyrider3774";
-		w = Game->Font->TextWidth("Roboto-Regular", tsize, s, s.length());
+		w = Font->TextWidth("Roboto-Regular", tsize, s, s.length());
 		h = tsize*2;
-		Game->Font->WriteText(Game->Renderer, "Roboto-Regular", tsize, s, s.length(), (ScreenWidth - w) / 2, (ScreenHeight - h) /2, tsize, ClWhite);
+		Font->WriteText(Renderer, "Roboto-Regular", tsize, s, s.length(), (ScreenWidth - w) / 2, (ScreenHeight - h) /2, tsize, ClWhite);
 
 		s = "presents";
-		w = Game->Font->TextWidth("Roboto-Regular", tsize, s, s.length());
+		w = Font->TextWidth("Roboto-Regular", tsize, s, s.length());
 		h = tsize;
-		Game->Font->WriteText(Game->Renderer, "Roboto-Regular", tsize, s, s.length(), (ScreenWidth - w) / 2, (ScreenHeight) /2, tsize, ClWhite);
+		Font->WriteText(Renderer, "Roboto-Regular", tsize, s, s.length(), (ScreenWidth - w) / 2, (ScreenHeight) /2, tsize, ClWhite);
 	}
 
 	if (scene == 1)
 	{
 		s = "Retro Time";
-		w = Game->Font->TextWidth("Roboto-Regular", tsize, s, s.length());
-		Game->Font->WriteText(Game->Renderer, "Roboto-Regular", tsize, s, s.length(), (ScreenWidth - w) / 2, 40, tsize*2, ClWhite);
+		w = Font->TextWidth("Roboto-Regular", tsize, s, s.length());
+		Font->WriteText(Renderer, "Roboto-Regular", tsize, s, s.length(), (ScreenWidth - w) / 2, 40, tsize*2, ClWhite);
 
 		s = "A game containing";
-		w = Game->Font->TextWidth("Roboto-Regular", tsize, s, s.length());
-		Game->Font->WriteText(Game->Renderer, "Roboto-Regular", tsize, s, s.length(),(ScreenWidth - w) / 2, (ScreenHeight - 3 * (tsize + 10)) /2, tsize, ClWhite);
+		w = Font->TextWidth("Roboto-Regular", tsize, s, s.length());
+		Font->WriteText(Renderer, "Roboto-Regular", tsize, s, s.length(),(ScreenWidth - w) / 2, (ScreenHeight - 3 * (tsize + 10)) /2, tsize, ClWhite);
 
 		s = to_string(Games) + " retro based games";
-		w = Game->Font->TextWidth("Roboto-Regular", tsize, s, s.length());
-		Game->Font->WriteText(Game->Renderer, "Roboto-Regular", tsize, s, s.length(), (ScreenWidth - w) / 2, (ScreenHeight - 1 * (tsize + 10)) / 2, tsize, ClWhite);
+		w = Font->TextWidth("Roboto-Regular", tsize, s, s.length());
+		Font->WriteText(Renderer, "Roboto-Regular", tsize, s, s.length(), (ScreenWidth - w) / 2, (ScreenHeight - 1 * (tsize + 10)) / 2, tsize, ClWhite);
 
 		s = "playable in " + to_string(Modes) + " game modes";
-		w = Game->Font->TextWidth("Roboto-Regular", tsize, s, s.length());
-		Game->Font->WriteText(Game->Renderer, "Roboto-Regular", tsize, s, s.length(), (ScreenWidth - w) / 2, (ScreenHeight + 1 * (tsize + 10)) /2, tsize, ClWhite);
+		w = Font->TextWidth("Roboto-Regular", tsize, s, s.length());
+		Font->WriteText(Renderer, "Roboto-Regular", tsize, s, s.length(), (ScreenWidth - w) / 2, (ScreenHeight + 1 * (tsize + 10)) /2, tsize, ClWhite);
 	}
 
 	if (scene >= 2)
 	{
-		Game->GameState = GSTitleScreenInit;
+		GameState = GSTitleScreenInit;
 	}
 
-	SDL_SetRenderTarget(Game->Renderer, Game->TexOffScreen);
-	//SDL_SetRenderDrawColor(Game->Renderer, 0, 0, 0, 255);
-	SDL_RenderClear(Game->Renderer);
+	SDL_SetRenderTarget(Renderer, TexOffScreen);
+	//SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
+	SDL_RenderClear(Renderer);
 	SDL_Point Pos = {0,0};
 	Vec2F Scale = {1,1};
-	Game->Image->DrawImageFuzeTintFloat(Game->Renderer, Game->TexTmp, false, &Pos, 0, &Scale, 1, 1, 1, archalpha);
+	Image->DrawImageFuzeTintFloat(Renderer, TexTmp, false, &Pos, 0, &Scale, 1, 1, 1, archalpha);
 	sceneticks += 1;
 
 	if (sceneticks >= maxticks)
@@ -81,8 +81,8 @@ void Intro(CGame *Game)
 		sceneticks = 0;
 	}
 
-	if (Game->Input->Buttons.ButA || Game->Input->Buttons.ButB || Game->Input->Buttons.ButBack || Game->Input->Buttons.ButStart || (scene -2 >= Games))
-		Game->GameState = GSTitleScreenInit;
+	if (Input->Buttons.ButA || Input->Buttons.ButB || Input->Buttons.ButBack || Input->Buttons.ButStart || (scene -2 >= Games))
+		GameState = GSTitleScreenInit;
 
 	if (alpha < 1)
 		alpha += alphastep;

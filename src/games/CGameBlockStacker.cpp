@@ -11,10 +11,10 @@
 
 using namespace std;
 
-CGameBlockStacker* Create_CGameBlockStacker(CGame* aGame)
+CGameBlockStacker* Create_CGameBlockStacker()
 {
 	CGameBlockStacker* BlockStacker = (CGameBlockStacker*) malloc(sizeof(CGameBlockStacker));
-	BlockStacker->GameBase = Create_CGameBase(aGame, GSTetris, true);
+	BlockStacker->GameBase = Create_CGameBase(GSTetris, true);
 
 	BlockStacker->MusMusic = -1;
 	BlockStacker->SfxDie = -1;
@@ -83,29 +83,29 @@ bool CGameBlockStacker_piecefits(CGameBlockStacker* BlockStacker, int tetrimo, i
 
 void CGameBlockStacker_updateplayer(CGameBlockStacker* BlockStacker)
 {
-	if ((BlockStacker->GameBase->Game->Input->Buttons.ButLeft) ||
-		(BlockStacker->GameBase->Game->Input->Buttons.ButLeft2) ||
-		(BlockStacker->GameBase->Game->Input->Buttons.ButDpadLeft))
+	if ((Input->Buttons.ButLeft) ||
+		(Input->Buttons.ButLeft2) ||
+		(Input->Buttons.ButDpadLeft))
 		if (BlockStacker->piecefits(BlockStacker, BlockStacker->currpiece, BlockStacker->rotation, BlockStacker->plrx - 1, BlockStacker->plry))
 			BlockStacker->plrx -= 1;
 
-	if ((BlockStacker->GameBase->Game->Input->Buttons.ButRight) ||
-		(BlockStacker->GameBase->Game->Input->Buttons.ButRight2) ||
-		(BlockStacker->GameBase->Game->Input->Buttons.ButDpadRight))
+	if ((Input->Buttons.ButRight) ||
+		(Input->Buttons.ButRight2) ||
+		(Input->Buttons.ButDpadRight))
 		if (BlockStacker->piecefits(BlockStacker, BlockStacker->currpiece, BlockStacker->rotation, BlockStacker->plrx + 1, BlockStacker->plry))
 			BlockStacker->plrx += 1;
 
-	if ((BlockStacker->GameBase->Game->Input->Buttons.ButDown) ||
-		(BlockStacker->GameBase->Game->Input->Buttons.ButDown2) ||
-		(BlockStacker->GameBase->Game->Input->Buttons.ButDpadDown))
+	if ((Input->Buttons.ButDown) ||
+		(Input->Buttons.ButDown2) ||
+		(Input->Buttons.ButDpadDown))
 		if (BlockStacker->piecefits(BlockStacker, BlockStacker->currpiece, BlockStacker->rotation, BlockStacker->plrx, BlockStacker->plry + 1))
 			BlockStacker->plry += 1;
 
-	if (BlockStacker->GameBase->Game->Input->Buttons.ButA)
+	if (Input->Buttons.ButA)
 	{
 		if (BlockStacker->rotateblock && BlockStacker->piecefits(BlockStacker, BlockStacker->currpiece, BlockStacker->rotation +1, BlockStacker->plrx, BlockStacker->plry))
 		{
-			BlockStacker->GameBase->Game->Audio->PlaySound(BlockStacker->SfxRotate, 0);
+			Audio->PlaySound(BlockStacker->SfxRotate, 0);
 			BlockStacker->rotation += 1;
 			BlockStacker->rotateblock = false;
 		}
@@ -113,7 +113,7 @@ void CGameBlockStacker_updateplayer(CGameBlockStacker* BlockStacker)
 	else
 		BlockStacker->rotateblock = true;
 
-	if (BlockStacker->GameBase->Game->Input->Buttons.ButB)
+	if (Input->Buttons.ButB)
 	{
 		if (BlockStacker->dropblock)
 		{
@@ -195,7 +195,7 @@ void CGameBlockStacker_updateplayfield(CGameBlockStacker* BlockStacker, bool for
 			else
 			{
 				if(!force)
-					BlockStacker->GameBase->Game->Audio->PlaySound(BlockStacker->SfxDrop, 0);
+					Audio->PlaySound(BlockStacker->SfxDrop, 0);
 
 
 				//lock it in place
@@ -226,13 +226,13 @@ void CGameBlockStacker_updateplayfield(CGameBlockStacker* BlockStacker, bool for
 						}
 					}
 				}
-				BlockStacker->GameBase->Game->AddToScore(7);
+				CGame_AddToScore(7);
 
 				if (numlines > 0)
 				{
-					BlockStacker->GameBase->Game->AddToScore((1 << numlines) * 20);
+					CGame_AddToScore((1 << numlines) * 20);
 					BlockStacker->lineclear = 30;
-					BlockStacker->GameBase->Game->Audio->PlaySound(BlockStacker->SfxLineClear, 0);
+					Audio->PlaySound(BlockStacker->SfxLineClear, 0);
 				}
 
 				BlockStacker->plrx = BlockStacker->numcols / 2 -2;
@@ -242,14 +242,14 @@ void CGameBlockStacker_updateplayfield(CGameBlockStacker* BlockStacker, bool for
 
 				if (!BlockStacker->piecefits(BlockStacker, BlockStacker->currpiece, BlockStacker->rotation, BlockStacker->plrx, BlockStacker->plry))
 				{
-					BlockStacker->GameBase->Game->Audio->PlaySound(BlockStacker->SfxDie, 0);
-					if(BlockStacker->GameBase->Game->GameMode == GMGame)
+					Audio->PlaySound(BlockStacker->SfxDie, 0);
+					if(GameMode == GMGame)
 					{
 						BlockStacker->GameBase->HealthPoints -= 1;
 					}
 					else
 					{
-						BlockStacker->GameBase->Game->AddToScore(-250);
+						CGame_AddToScore(-250);
 						BlockStacker->createplayfield(BlockStacker);
 					}
 				}
@@ -292,12 +292,12 @@ void CGameBlockStacker_drawplayfieldcell(CGameBlockStacker* BlockStacker, int x,
 			color = {0xFF, 0xFF, 0xFF, 0xFF};
 
 		SDL_Rect r = {BlockStacker->GameBase->screenleft + x * BlockStacker->blocksize, BlockStacker->GameBase->screentop + y * BlockStacker->blocksize, BlockStacker->blocksize, BlockStacker->blocksize};
-		SDL_SetRenderDrawColor(BlockStacker->GameBase->Game->Renderer, 0, 0, 0, 255);
-		SDL_RenderFillRect(BlockStacker->GameBase->Game->Renderer, &r);
+		SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
+		SDL_RenderFillRect(Renderer, &r);
 
 		r = {BlockStacker->GameBase->screenleft +1 + x * BlockStacker->blocksize, BlockStacker->GameBase->screentop +1 + y * BlockStacker->blocksize, BlockStacker->blocksize-2, BlockStacker->blocksize-2};
-		SDL_SetRenderDrawColor(BlockStacker->GameBase->Game->Renderer, color.r, color.g, color.b, color.a);
-		SDL_RenderFillRect(BlockStacker->GameBase->Game->Renderer, &r);
+		SDL_SetRenderDrawColor(Renderer, color.r, color.g, color.b, color.a);
+		SDL_RenderFillRect(Renderer, &r);
 	}
 }
 
@@ -324,14 +324,14 @@ void CGameBlockStacker_drawplayfield(CGameBlockStacker* BlockStacker)
 
 void CGameBlockStacker_DrawBackground(CGameBlockStacker* BlockStacker)
 {
-	BlockStacker->GameBase->Game->Image->DrawImage(BlockStacker->GameBase->Game->Renderer, BlockStacker->background, NULL, NULL);
+	Image->DrawImage(Renderer, BlockStacker->background, NULL, NULL);
 }
 
 void CGameBlockStacker_Draw(CGameBlockStacker* BlockStacker)
 {
 	BlockStacker->DrawBackground(BlockStacker);
 	if (BlockStacker->DrawObjects(BlockStacker))
-		BlockStacker->GameBase->Game->Sprites->DrawSprites(BlockStacker->GameBase->Game->Renderer);
+		Sprites->DrawSprites(Renderer);
 	BlockStacker->GameBase->DrawScoreBar(BlockStacker->GameBase);
 	BlockStacker->GameBase->DrawSubStateText(BlockStacker->GameBase);
 }
@@ -342,8 +342,8 @@ void CGameBlockStacker_init(CGameBlockStacker* BlockStacker)
 {
 	BlockStacker->LoadGraphics(BlockStacker);
 	BlockStacker->LoadSound(BlockStacker);
-	BlockStacker->GameBase->Game->CurrentGameMusicID = BlockStacker->MusMusic;
-	BlockStacker->GameBase->Game->Audio->PlayMusic(BlockStacker->MusMusic, -1);
+	CurrentGameMusicID = BlockStacker->MusMusic;
+	Audio->PlayMusic(BlockStacker->MusMusic, -1);
 	BlockStacker->GameBase->HealthPoints = 1;
 	BlockStacker->currpiece = rand() % 7;
 	BlockStacker->rotation = 0;
@@ -361,41 +361,41 @@ void CGameBlockStacker_init(CGameBlockStacker* BlockStacker)
 
 void CGameBlockStacker_LoadGraphics(CGameBlockStacker* BlockStacker)
 {
-	BlockStacker->background = BlockStacker->GameBase->Game->Image->LoadImage(BlockStacker->GameBase->Game->Renderer, "blockstacker/background.png");
-	BlockStacker->backgroundtz = BlockStacker->GameBase->Game->Image->ImageSize(BlockStacker->background);
+	BlockStacker->background = Image->LoadImage(Renderer, "blockstacker/background.png");
+	BlockStacker->backgroundtz = Image->ImageSize(BlockStacker->background);
 }
 
 void CGameBlockStacker_UnloadGraphics(CGameBlockStacker* BlockStacker)
 {
-	BlockStacker->GameBase->Game->Image->UnLoadImage(BlockStacker->background);
+	Image->UnLoadImage(BlockStacker->background);
 }
 
 void CGameBlockStacker_LoadSound(CGameBlockStacker* BlockStacker)
 {
-	BlockStacker->SfxLineClear = BlockStacker->GameBase->Game->Audio->LoadSound("blockstacker/lineclear.ogg");
-	BlockStacker->SfxDrop = BlockStacker->GameBase->Game->Audio->LoadSound("blockstacker/drop.wav");
-	BlockStacker->SfxRotate = BlockStacker->GameBase->Game->Audio->LoadSound("blockstacker/rotate.wav");
-	BlockStacker->MusMusic = BlockStacker->GameBase->Game->Audio->LoadMusic("blockstacker/music.ogg");
-	BlockStacker->SfxDie = BlockStacker->GameBase->Game->Audio->LoadSound("common/die.wav");
+	BlockStacker->SfxLineClear = Audio->LoadSound("blockstacker/lineclear.ogg");
+	BlockStacker->SfxDrop = Audio->LoadSound("blockstacker/drop.wav");
+	BlockStacker->SfxRotate = Audio->LoadSound("blockstacker/rotate.wav");
+	BlockStacker->MusMusic = Audio->LoadMusic("blockstacker/music.ogg");
+	BlockStacker->SfxDie = Audio->LoadSound("common/die.wav");
 }
 
 void CGameBlockStacker_UnLoadSound(CGameBlockStacker* BlockStacker)
 {
-	BlockStacker->GameBase->Game->Audio->StopMusic();
-	BlockStacker->GameBase->Game->Audio->StopSound();
-	BlockStacker->GameBase->Game->Audio->UnLoadMusic(BlockStacker->MusMusic);
-	BlockStacker->GameBase->Game->Audio->UnLoadSound(BlockStacker->SfxLineClear);
-	BlockStacker->GameBase->Game->Audio->UnLoadSound(BlockStacker->SfxDrop);
-	BlockStacker->GameBase->Game->Audio->UnLoadSound(BlockStacker->SfxRotate);
-	BlockStacker->GameBase->Game->Audio->UnLoadSound(BlockStacker->SfxDie);
+	Audio->StopMusic();
+	Audio->StopSound();
+	Audio->UnLoadMusic(BlockStacker->MusMusic);
+	Audio->UnLoadSound(BlockStacker->SfxLineClear);
+	Audio->UnLoadSound(BlockStacker->SfxDrop);
+	Audio->UnLoadSound(BlockStacker->SfxRotate);
+	Audio->UnLoadSound(BlockStacker->SfxDie);
 }
 
 void CGameBlockStacker_deinit(CGameBlockStacker* BlockStacker)
 {
 	BlockStacker->UnLoadSound(BlockStacker);
-	BlockStacker->GameBase->Game->SubStateCounter = 0;
-	BlockStacker->GameBase->Game->SubGameState = SGNone;
-	BlockStacker->GameBase->Game->CurrentGameMusicID = -1;
+	SubStateCounter = 0;
+	SubGameState = SGNone;
+	CurrentGameMusicID = -1;
 	BlockStacker->UnloadGraphics(BlockStacker);
 }
 
@@ -404,9 +404,9 @@ void CGameBlockStacker_deinit(CGameBlockStacker* BlockStacker)
 void CGameBlockStacker_UpdateLogic(CGameBlockStacker* BlockStacker)
 {
 	BlockStacker->GameBase->UpdateLogic(BlockStacker->GameBase);
-	BlockStacker->UpdateObjects(BlockStacker, BlockStacker->GameBase->Game->SubGameState == SGGame);
-	if(BlockStacker->GameBase->Game->SubGameState == SGGame)
-		BlockStacker->GameBase->Game->Sprites->UpdateSprites(BlockStacker->GameBase->Game->Renderer);
+	BlockStacker->UpdateObjects(BlockStacker, SubGameState == SGGame);
+	if(SubGameState == SGGame)
+		Sprites->UpdateSprites(Renderer);
 }
 
 void CGameBlockStacker_UpdateObjects(CGameBlockStacker* BlockStacker, bool IsGameState)

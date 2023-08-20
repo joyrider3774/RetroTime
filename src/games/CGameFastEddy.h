@@ -147,4 +147,4 @@ void CGameFastEddy_updatekey(CGameFastEddy* GameFastEddy);
 void CGameFastEddy_destroykey(CGameFastEddy* GameFastEddy);
 void CGameFastEddy_createkey(CGameFastEddy* GameFastEddy);
 void Destroy_CGameFastEddy(CGameFastEddy* GameFastEddy);
-CGameFastEddy* Create_CGameFastEddy(CGame* aGame);
+CGameFastEddy* Create_CGameFastEddy();

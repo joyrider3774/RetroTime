@@ -85,4 +85,4 @@ void CGameRamIt_drawbullet(CGameRamIt* GameRamIt);
 void CGameRamIt_updatebullet(CGameRamIt* GameRamIt);
 bool CGameRamIt_createbullet(CGameRamIt* GameRamIt);
 void Destroy_CGameRamIt(CGameRamIt* GameRamIt);
-CGameRamIt* Create_CGameRamIt(CGame* aGame);
+CGameRamIt* Create_CGameRamIt();

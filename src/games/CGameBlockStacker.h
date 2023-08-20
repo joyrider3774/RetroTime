@@ -66,4 +66,4 @@ void CGameBlockStacker_createplayfield(CGameBlockStacker* BlockStacker);
 void CGameBlockStacker_updateplayer(CGameBlockStacker* BlockStacker);
 bool CGameBlockStacker_piecefits(CGameBlockStacker* BlockStacker, int tetrimo, int rotation, int posx, int posy);
 void Destroy_CGameBlockStacker(CGameBlockStacker* BlockStacker);
-CGameBlockStacker* Create_CGameBlockStacker(CGame* aGame);
+CGameBlockStacker* Create_CGameBlockStacker();

@@ -30,17 +30,49 @@ using namespace std;
 #undef LoadImage
 #undef PlaySound
 
-CGame::CGame()
-{
+bool ShowFPS = false;
+Uint8 GameAlpha = 0;
+string DataPath;
 
-}
+Uint32 AlphaTimer;
+Uint32 TimerTicks;
+Uint64 Score;
+int NextSubStateCounter, NextSubState, NextSubStateTimeAdd;
 
-CGame::~CGame()
-{
+//for main (menu) background drawing
+int menubackground, menubackgroundcounter, menubackgroundx, menubackgroundy, menubackgrounddx, menubackgrounddy;
+int pinc;
 
-}
+SDL_Window *SdlWindow;
+int ActiveGameGameStateId;
+CGameSnake *GameSnake;
+CGameBlockStacker *GameBlockStacker;
+CGameFastEddy *GameFastEddy;
+CGameBreakOut *GameBreakOut;
+CGameInvaders *GameInvaders;
+CGameRamIt *GameRamIt;
+CGamePang * GamePang;
+CGameFrog *GameFrog;
+CAudio *Audio;
+CFont *Font;
+CInput *Input;
+CImage *Image;
+CSprites *Sprites;
+SDL_Renderer *Renderer;
+SDL_Texture *TexOffScreen, *TexScreen, *TexTmp;
+long long int RetroCarouselHighScore, RetroCarouselScore;
+long long int HighScores[Games][Modes];
+long long int Scores[Games][Modes];
+int GameState, SubGameState, GameMode, Game;
+float SubStateCounter;
+int MusMenu;
+int SfxConfirm, SfxBack, SfxSelect, SfxScore, SfxOne, SfxTwo, SfxThree, SfxTimeOver, SfxReadyGo, SfxOneMinute;
+float Timer;
+Uint32 SubStateTime;
+int GFXFrameID, GFXMedal;
+int CurrentGameMusicID;
 
-void CGame::DeInit()
+void CGame_DeInit()
 {
 	switch(ActiveGameGameStateId)
 	{
@@ -81,14 +113,14 @@ void CGame::DeInit()
 	}
 }
 
-void CGame::Init()
+void CGame_Init()
 {
 	//Main State Variables and such
 	CurrentGameMusicID = -1;
 	GameState = GSIntroInit;
 	Game = 0;
 	GameMode = GMGame;
-	Alpha = MaxAlpha;
+	GameAlpha = MaxAlpha;
 	SubStateTime = 0;
 	Timer = 0.0f;
 	SubStateCounter = 0;
@@ -100,7 +132,7 @@ void CGame::Init()
 	ActiveGameGameStateId = -1;
 
 	//Clear score values
-	ResetScores();
+	CGame_ResetScores();
 
 	//menubackground related
 	pinc = ScreenWidth;
@@ -114,7 +146,7 @@ void CGame::Init()
 	ActiveGameGameStateId = -1;
 }
 
-void CGame::ResetHighScores()
+void CGame_ResetHighScores()
 {
 	for(int x = 0; x < Games; x++)
 		for(int y = 0; y < Modes; y++)
@@ -122,29 +154,29 @@ void CGame::ResetHighScores()
 	RetroCarouselHighScore = 0;
 }
 
-void CGame::ResetScores()
+void CGame_ResetScores()
 {
 	for(int x = 0; x < Games; x++)
 		for(int y = 0; y < Modes; y++)
 			Scores[x][y] = 0;
 	RetroCarouselScore = 0;
 }
-void CGame::LoadMusic()
+void CGame_LoadMusic()
 {
 	MusMenu = Audio->LoadMusic("main/music.ogg");
 }
 
-void CGame::UnLoadMusic()
+void CGame_UnLoadMusic()
 {
 	Audio->UnloadMusics();
 }
 
-void CGame::UnLoadGraphics()
+void CGame_UnLoadGraphics()
 {
 	Image->UnloadImages();
 }
 
-void CGame::DrawTitleBackground()
+void CGame_DrawTitleBackground()
 {
 	SDL_Rect Dst = {0, 0, ScreenWidth, ScreenHeight};
 
@@ -158,7 +190,7 @@ void CGame::DrawTitleBackground()
 }
 
 
-void CGame::AddToScore(long long int Value)
+void CGame_AddToScore(long long int Value)
 {
 	long long int AScore = Value;
 	if (AScore < 0)
@@ -170,7 +202,7 @@ void CGame::AddToScore(long long int Value)
 		Scores[Game][GameMode] = 0;
 }
 
-void CGame::LoadSound()
+void CGame_LoadSound()
 {
 	SfxTimeOver = Audio->LoadSound("common/timeover.wav");
 	SfxReadyGo = Audio->LoadSound("common/readygo.wav");
@@ -184,12 +216,12 @@ void CGame::LoadSound()
 	SfxScore = Audio->LoadSound("main/score.ogg");
 }
 
-void CGame::UnLoadSound()
+void CGame_UnLoadSound()
 {
 	Audio->UnloadSounds();
 }
 
-void CGame::LoadGraphics()
+void CGame_LoadGraphics()
 {
 	GFXFrameID = Image->LoadImage(Renderer, "main/frame.png");
 	GFXMedal = Image->LoadImage(Renderer, "main/medal.png");
@@ -203,7 +235,7 @@ void CGame::LoadGraphics()
 	GFXMedal = Image->LoadImage(Renderer, "main/medal.bmp");
 }
 
-void CGame::ToggleFullscreen()
+void CGame_ToggleFullscreen()
 {
 
 	//return;
@@ -224,7 +256,7 @@ void CGame::ToggleFullscreen()
 	//SDL_ShowCursor(SDL_ENABLE);
 }
 
-void CGame::LoadHighScores()
+void CGame_LoadHighScores()
 {
 	FILE *ScoreFile;
 	string FileName = "./.retrotimesscores";
@@ -250,11 +282,11 @@ void CGame::LoadHighScores()
 	}
 	else
 	{
-		ResetHighScores();
+		CGame_ResetHighScores();
 	}
 }
 
-void CGame::SaveHighScores()
+void CGame_SaveHighScores()
 {
 	FILE *ScoreFile;
 	string FileName = "./.retrotimesscores";
@@ -280,7 +312,7 @@ void CGame::SaveHighScores()
 	}
 }
 
-void CGame::LoadSettings()
+void CGame_LoadSettings()
 {
 	FILE *SettingsFile;
 	string FileName = "./.retrotimesettings";
@@ -315,7 +347,7 @@ void CGame::LoadSettings()
 	}
 }
 
-void CGame::SaveSettings()
+void CGame_SaveSettings()
 {
 	FILE *SettingsFile;
 	string FileName = "./.retrotimesettings";
@@ -341,10 +373,10 @@ void CGame::SaveSettings()
 	}
 }
 
-void CGame::StartCrossFade(int SetGameState, int SetNextSubState, int SetNextSubStateCounter, Uint32 SetNextSubStateTimeAdd)
+void CGame_StartCrossFade(int SetGameState, int SetNextSubState, int SetNextSubStateCounter, Uint32 SetNextSubStateTimeAdd)
 {
 	AlphaTimer = SDL_GetTicks();
-	Alpha = 0;
+	GameAlpha = 0;
 	SubGameState = SGFadeIn;
 	GameState = SetGameState;
 	NextSubState = SetNextSubState;
@@ -352,7 +384,7 @@ void CGame::StartCrossFade(int SetGameState, int SetNextSubState, int SetNextSub
 	NextSubStateCounter = SetNextSubStateCounter;
 }
 
-string CGame::GetFilePath(string InputFile)
+string CGame_GetFilePath(string InputFile)
 {
 	int Teller, Pos = 0;
 	string Result = InputFile;
@@ -366,7 +398,7 @@ string CGame::GetFilePath(string InputFile)
 	return Result;
 }
 
-void CGame::ResetTimer()
+void CGame_ResetTimer()
 {
 	Timer = 120;
 	if (GameMode == GMRetroCarousel)
@@ -380,7 +412,7 @@ void CGame::ResetTimer()
 	TimerTicks = SDL_GetTicks();
 }
 
-void CGame::UpdateTimer()
+void CGame_UpdateTimer()
 {
 	if (TimerTicks + 250 < SDL_GetTicks())
 	{
@@ -418,7 +450,7 @@ void CGame::UpdateTimer()
 	}
 }
 
-void CGame::CreateActiveGame()
+void CGame_CreateActiveGame()
 {
 	switch(ActiveGameGameStateId)
 	{
@@ -470,35 +502,35 @@ void CGame::CreateActiveGame()
 	switch (GameState)
 	{
 		case GSSnakeInit:
-			GameSnake = Create_CGameSnake(this);
+			GameSnake = Create_CGameSnake();
 			ActiveGameGameStateId = GSSnake;
 			break;
 		case GSTetrisInit:
-			GameBlockStacker = Create_CGameBlockStacker(this);
+			GameBlockStacker = Create_CGameBlockStacker();
 			ActiveGameGameStateId = GSTetris;
 			break;
 		case GSRamItInit:
-			GameRamIt = Create_CGameRamIt(this);
+			GameRamIt = Create_CGameRamIt();
 			ActiveGameGameStateId = GSRamIt;
 			break;
 		case GSEddyInit:
-			GameFastEddy = Create_CGameFastEddy(this);
+			GameFastEddy = Create_CGameFastEddy();
 			ActiveGameGameStateId = GSEddy;
 			break;
 		case GSFrogInit:
-			GameFrog = Create_CGameFrog(this);
+			GameFrog = Create_CGameFrog();
 			ActiveGameGameStateId = GSFrog;
 			break;
 		case GSBreakoutInit:
-			GameBreakOut = Create_CGameBreakOut(this);
+			GameBreakOut = Create_CGameBreakOut();
 			ActiveGameGameStateId = GSBreakout;
 			break;
 		case GSPangInit:
-			GamePang = Create_CGamePang(this);
+			GamePang = Create_CGamePang();
 			ActiveGameGameStateId = GSPang;
 			break;
 		case GSSpaceInvadersInit:
-			GameInvaders = Create_CGameInvaders(this);
+			GameInvaders = Create_CGameInvaders();
 			ActiveGameGameStateId = GSSpaceInvaders;
 			break;
 		default:
@@ -507,9 +539,9 @@ void CGame::CreateActiveGame()
 	}
 }
 
-void CGame::MainLoop()
+void CGame_MainLoop()
 {
-	Init();
+	CGame_Init();
 	Uint64 TotalFrames = 0;
 	Uint64 TotalFramePerf = 0;
 	Uint32 Fps = 0;
@@ -526,7 +558,7 @@ void CGame::MainLoop()
 		TotalFrames++;
 		Uint64 FrameStartPerf = SDL_GetPerformanceCounter();
 
-		UpdateTimer();
+		CGame_UpdateTimer();
 
 		Input->Update();
 
@@ -534,7 +566,7 @@ void CGame::MainLoop()
 		{
 			SDL_Log("Render Reset, Reloading Game Graphics");
 			Image->UnloadImages();
-			LoadGraphics();
+			CGame_LoadGraphics();
 			switch(ActiveGameGameStateId)
 			{
 				case GSPang:
@@ -615,7 +647,7 @@ void CGame::MainLoop()
 
 
 		if(Input->Buttons.ButFullscreen && !Input->PrevButtons.ButFullscreen)
-			ToggleFullscreen();
+			CGame_ToggleFullscreen();
 
 		if(Input->Buttons.ButQuit)
 			GameState = GSQuit;
@@ -626,19 +658,19 @@ void CGame::MainLoop()
 		{
 			case GSIntroInit:
 			case GSIntro:
-				Intro(this);
+				Intro();
 				break;
 
 			case GSSubScoreInit:
 			case GSSubScore:
-				SubScoreScreen(this);
+				SubScoreScreen();
 				break;
 
 			case GSTitleScreenInit:
 			case GSTitleScreen:
 				//to clear the game data & set nullptr to ActiveGame
-				CreateActiveGame();
-				TitleScreen(this);
+				CGame_CreateActiveGame();
+				TitleScreen();
 				break;
 
 			case GSSnakeInit:
@@ -649,7 +681,7 @@ void CGame::MainLoop()
 			case GSEddyInit:
 			case GSBreakoutInit:
 			case GSTetrisInit:
-				CreateActiveGame();
+				CGame_CreateActiveGame();
 				switch (ActiveGameGameStateId)
 				{
 					case GSSnake:
@@ -677,8 +709,8 @@ void CGame::MainLoop()
 						GameBlockStacker->init(GameBlockStacker);
 						break;
 				}
-				ResetTimer();
-				StartCrossFade(ActiveGameGameStateId, SGReadyGo, 3, 500);
+				CGame_ResetTimer();
+				CGame_StartCrossFade(ActiveGameGameStateId, SGReadyGo, 3, 500);
 				break;			
 	
 			case GSSnake:
@@ -730,13 +762,13 @@ void CGame::MainLoop()
 			default:
 				break;
 		}
-		if (Alpha < MaxAlpha)
+		if (GameAlpha < MaxAlpha)
 		{
-			Alpha = trunc(MaxAlpha * ((double)(SDL_GetTicks() - AlphaTimer) / MaxAlphaTime));
-			if (Alpha >= MaxAlpha)
+			GameAlpha = trunc(MaxAlpha * ((double)(SDL_GetTicks() - AlphaTimer) / MaxAlphaTime));
+			if (GameAlpha >= MaxAlpha)
 			{
 				//SDL_SetTextureBlendMode(TexOffScreen, SDL_BLENDMODE_NONE);
-				Alpha = MaxAlpha;
+				GameAlpha = MaxAlpha;
 				SubGameState = NextSubState;
 				SubStateTime = SDL_GetTicks() + NextSubStateTimeAdd;
 				SubStateCounter = NextSubStateCounter;
@@ -744,7 +776,7 @@ void CGame::MainLoop()
 			else
 			{
 				SDL_SetTextureBlendMode(TexOffScreen, SDL_BLENDMODE_BLEND);
-				SDL_SetTextureAlphaMod(TexOffScreen, Alpha);
+				SDL_SetTextureAlphaMod(TexOffScreen, GameAlpha);
 			}
 		}
 		SDL_SetRenderTarget(Renderer, TexScreen);
@@ -820,16 +852,16 @@ void CGame::MainLoop()
 				SDL_Delay(RequiredDelay);
 		}
 	}
-	DeInit();
+	CGame_DeInit();
 }
 
-void CGame::Run(int argc, char *argv[])
+void CGame_Run(int argc, char *argv[])
 {
 	bool useSoftwareRenderer = false;
 	bool useLinear = false; //causes issues in for example frog from scaling textures and then bleeding into each other
 	bool useVsync = false;
 	bool useFullScreenAtStartup = true;
-	string StartPath = GetFilePath(string(argv[0]));
+	string StartPath = CGame_GetFilePath(string(argv[0]));
 	DataPath = StartPath + "retrotimefs/";
 	int c;
 	while ((c = getopt(argc, argv, "?dsfw")) != -1)
@@ -909,11 +941,11 @@ Possible options are:\n\
 
 				// Main game loop that loops untile the gamestate = GSQuit
 				// and calls the procedure according to the gamestate.
-				LoadSettings();
-				LoadHighScores();
-				LoadGraphics();
-				LoadMusic();
-				LoadSound();
+				CGame_LoadSettings();
+				CGame_LoadHighScores();
+				CGame_LoadGraphics();
+				CGame_LoadMusic();
+				CGame_LoadSound();
 
 				SDL_SetRenderTarget(Renderer, NULL);
 				SDL_SetRenderDrawColor(Renderer, 0x00, 0x00, 0x00, 0xFF);
@@ -937,16 +969,16 @@ Possible options are:\n\
 
 				SDL_SetRenderDrawBlendMode(Renderer, SDL_BLENDMODE_BLEND);
 
-				MainLoop();
+				CGame_MainLoop();
 
 				SDL_DestroyTexture(TexOffScreen);
 				SDL_DestroyTexture(TexScreen);
 				SDL_DestroyTexture(TexTmp);
-				UnLoadMusic();
-				UnLoadGraphics();
-				UnLoadSound();
-				SaveSettings();
-				SaveHighScores();
+				CGame_UnLoadMusic();
+				CGame_UnLoadGraphics();
+				CGame_UnLoadSound();
+				CGame_SaveSettings();
+				CGame_SaveHighScores();
 
 				delete Audio;
 				delete Font;

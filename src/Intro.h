@@ -2,4 +2,4 @@
 
 #include "CGame.h"
 
-void Intro(CGame *Game);
+void Intro();

@@ -8,10 +8,10 @@
 
 using namespace std;
 
-CGameRamIt* Create_CGameRamIt(CGame* aGame)
+CGameRamIt* Create_CGameRamIt()
 {
 	CGameRamIt* GameRamIt = (CGameRamIt*) malloc(sizeof(CGameRamIt));
-	GameRamIt->GameBase = Create_CGameBase(aGame, GSRamIt, true);
+	GameRamIt->GameBase = Create_CGameBase(GSRamIt, true);
 
 	GameRamIt->speed = 0;
 	GameRamIt->speedcount = 0;
@@ -110,7 +110,7 @@ void CGameRamIt_updatebullet(CGameRamIt* GameRamIt)
 								{
 									GameRamIt->playfield[side][block].segments -= 1;
 									if (GameRamIt->playfield[side][block].segments == 0)
-										GameRamIt->GameBase->Game->AddToScore((GameRamIt->GameBase->level + 1) * 2*GameRamIt->playfield[side][block].maxsegments);
+										CGame_AddToScore((GameRamIt->GameBase->level + 1) * 2*GameRamIt->playfield[side][block].maxsegments);
 
 									playaudiobullet = true;
 									destroybullet = true;
@@ -123,7 +123,7 @@ void CGameRamIt_updatebullet(CGameRamIt* GameRamIt)
 								{
 									GameRamIt->playfield[side][block].segments -= 1;
 									if (GameRamIt->playfield[side][block].segments == 0)
-										GameRamIt->GameBase->Game->AddToScore((GameRamIt->GameBase->level + 2) * 2 * GameRamIt->playfield[side][block].maxsegments);
+										CGame_AddToScore((GameRamIt->GameBase->level + 2) * 2 * GameRamIt->playfield[side][block].maxsegments);
 
 									playaudiobullet = true;
 									destroybullet = true;
@@ -137,7 +137,7 @@ void CGameRamIt_updatebullet(CGameRamIt* GameRamIt)
 			if(destroybullet)
 			{
 				if (playaudiobullet)
-					GameRamIt->GameBase->Game->Audio->PlaySound(GameRamIt->SfxHit, 0);
+					Audio->PlaySound(GameRamIt->SfxHit, 0);
 				GameRamIt->bulletalive = false;
 				break;
 			}
@@ -150,8 +150,8 @@ void CGameRamIt_drawbullet(CGameRamIt* GameRamIt)
 	if (GameRamIt->bulletalive)
 	{
 		SDL_Rect r = {GameRamIt->bulletpos.x - GameRamIt->riblocksize / 2, GameRamIt->bulletpos.y - GameRamIt->riblocksize / 6, GameRamIt->riblocksize, GameRamIt->riblocksize / 3};
-		SDL_SetRenderDrawColor(GameRamIt->GameBase->Game->Renderer, 255, 255, 255, 255);
-		SDL_RenderFillRect(GameRamIt->GameBase->Game->Renderer, &r);
+		SDL_SetRenderDrawColor(Renderer, 255, 255, 255, 255);
+		SDL_RenderFillRect(Renderer, &r);
 	}
 }
 
@@ -168,37 +168,37 @@ void CGameRamIt_drawplayer(CGameRamIt* GameRamIt)
 {
 	SDL_Rect r;
 
-	SDL_SetRenderDrawColor(GameRamIt->GameBase->Game->Renderer, 0x80, 0x80, 0x80, 0xFF);
+	SDL_SetRenderDrawColor(Renderer, 0x80, 0x80, 0x80, 0xFF);
 	r = {GameRamIt->GameBase->screenleft + (GameRamIt->GameBase->screenright - GameRamIt->GameBase->screenleft -GameRamIt->playerrailwidth) / 2, GameRamIt->GameBase->screentop, GameRamIt->playerrailwidth, GameRamIt->GameBase->screenbottom - GameRamIt->GameBase->screentop };
-	SDL_RenderFillRect(GameRamIt->GameBase->Game->Renderer, &r);
+	SDL_RenderFillRect(Renderer, &r);
 
-	SDL_SetRenderDrawColor(GameRamIt->GameBase->Game->Renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+	SDL_SetRenderDrawColor(Renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 	r = {GameRamIt->playerpos.x - GameRamIt->riblocksize / 2, GameRamIt->playerpos.y - GameRamIt->riblocksize / 2, GameRamIt->riblocksize, GameRamIt->riblocksize};
-	SDL_RenderFillRect(GameRamIt->GameBase->Game->Renderer, &r);
+	SDL_RenderFillRect(Renderer, &r);
 
-	SDL_SetRenderDrawColor(GameRamIt->GameBase->Game->Renderer, 0xFF, 0x40, 0x40, 0xFF);
+	SDL_SetRenderDrawColor(Renderer, 0xFF, 0x40, 0x40, 0xFF);
 	if (GameRamIt->playerdx == 1)
 		r ={GameRamIt->playerpos.x + GameRamIt->riblocksize / 2, GameRamIt->playerpos.y - GameRamIt->riblocksize / 4, GameRamIt->riblocksize / 2, GameRamIt->riblocksize / 2};
 	else
 		r ={GameRamIt->playerpos.x - GameRamIt->riblocksize, GameRamIt->playerpos.y - GameRamIt->riblocksize / 4, GameRamIt->riblocksize / 2, GameRamIt->riblocksize / 2};
-	SDL_RenderFillRect(GameRamIt->GameBase->Game->Renderer, &r);
+	SDL_RenderFillRect(Renderer, &r);
 }
 
 void CGameRamIt_updateplayer(CGameRamIt* GameRamIt)
 {
-	if ((GameRamIt->GameBase->Game->Input->Buttons.ButLeft) ||
-		(GameRamIt->GameBase->Game->Input->Buttons.ButLeft2) ||
-		(GameRamIt->GameBase->Game->Input->Buttons.ButDpadLeft))
+	if ((Input->Buttons.ButLeft) ||
+		(Input->Buttons.ButLeft2) ||
+		(Input->Buttons.ButDpadLeft))
 		GameRamIt->playerdx = -1;
 
-	if ((GameRamIt->GameBase->Game->Input->Buttons.ButRight) ||
-		(GameRamIt->GameBase->Game->Input->Buttons.ButRight2) ||
-		(GameRamIt->GameBase->Game->Input->Buttons.ButDpadRight))
+	if ((Input->Buttons.ButRight) ||
+		(Input->Buttons.ButRight2) ||
+		(Input->Buttons.ButDpadRight))
 		GameRamIt->playerdx = 1;
 
-	if ((GameRamIt->GameBase->Game->Input->Buttons.ButDown) ||
-		(GameRamIt->GameBase->Game->Input->Buttons.ButDown2) ||
-		(GameRamIt->GameBase->Game->Input->Buttons.ButDpadDown))
+	if ((Input->Buttons.ButDown) ||
+		(Input->Buttons.ButDown2) ||
+		(Input->Buttons.ButDpadDown))
 	{
 		if (GameRamIt->playerpos.y + GameRamIt->riblocksize / 2 + GameRamIt->playerspeed < GameRamIt->GameBase->screenbottom)
 			GameRamIt->playerpos.y += GameRamIt->playerspeed;
@@ -206,9 +206,9 @@ void CGameRamIt_updateplayer(CGameRamIt* GameRamIt)
 			GameRamIt->playerpos.y = GameRamIt->GameBase->screenbottom - GameRamIt->riblocksize / 2;
 	}
 
-	if ((GameRamIt->GameBase->Game->Input->Buttons.ButUp) ||
-		(GameRamIt->GameBase->Game->Input->Buttons.ButUp2) ||
-		(GameRamIt->GameBase->Game->Input->Buttons.ButDpadUp))
+	if ((Input->Buttons.ButUp) ||
+		(Input->Buttons.ButUp2) ||
+		(Input->Buttons.ButDpadUp))
 	{
 		if (GameRamIt->playerpos.y - GameRamIt->riblocksize / 2 - GameRamIt->playerspeed > GameRamIt->GameBase->screentop)
 			GameRamIt->playerpos.y -= GameRamIt->playerspeed;
@@ -216,10 +216,10 @@ void CGameRamIt_updateplayer(CGameRamIt* GameRamIt)
 			GameRamIt->playerpos.y = GameRamIt->GameBase->screentop + GameRamIt->riblocksize / 2;
 	}
 
-	if (GameRamIt->GameBase->Game->Input->Buttons.ButA && !GameRamIt->GameBase->Game->Input->PrevButtons.ButA)
+	if (Input->Buttons.ButA && !Input->PrevButtons.ButA)
 		if (GameRamIt->createbullet(GameRamIt))
 		{
-			GameRamIt->GameBase->Game->Audio->PlaySound(GameRamIt->SfxShoot, 0);
+			Audio->PlaySound(GameRamIt->SfxShoot, 0);
 		}
 }
 
@@ -318,10 +318,10 @@ void CGameRamIt_updateplayfield(CGameRamIt* GameRamIt, bool force)
 
 		if (stageclear)
 		{
-			GameRamIt->GameBase->Game->Audio->PlaySound(GameRamIt->SfxSucces, 0);
+			Audio->PlaySound(GameRamIt->SfxSucces, 0);
 			GameRamIt->createplayfield(GameRamIt);
 			GameRamIt->GameBase->level += 1;
-			GameRamIt->GameBase->Game->AddToScore((GameRamIt->GameBase->level-1) * 100);
+			CGame_AddToScore((GameRamIt->GameBase->level-1) * 100);
 		}
 
 		if (!stageclear)
@@ -374,9 +374,9 @@ void CGameRamIt_drawplayfield(CGameRamIt* GameRamIt)
 					GameRamIt->GameBase->screentop + block * GameRamIt->riblocksizespacing + GameRamIt->blockspacing,
 					GameRamIt->playfield[side][block].segments * GameRamIt->segmentwidth,
 					GameRamIt->riblocksize};
-			SDL_SetRenderDrawColor(GameRamIt->GameBase->Game->Renderer, GameRamIt->playfield[side][block].color.r, GameRamIt->playfield[side][block].color.g, GameRamIt->playfield[side][block].color.b,
+			SDL_SetRenderDrawColor(Renderer, GameRamIt->playfield[side][block].color.r, GameRamIt->playfield[side][block].color.g, GameRamIt->playfield[side][block].color.b,
 					GameRamIt->playfield[side][block].color.a);
-			SDL_RenderFillRect(GameRamIt->GameBase->Game->Renderer, &r);
+			SDL_RenderFillRect(Renderer, &r);
 		}
 }
 
@@ -384,11 +384,11 @@ void CGameRamIt_drawplayfield(CGameRamIt* GameRamIt)
 
 void CGameRamIt_DrawBackground(CGameRamIt* GameRamIt)
 {
-	SDL_SetRenderDrawColor(GameRamIt->GameBase->Game->Renderer, 150, 150, 150, 255);
-	SDL_RenderClear(GameRamIt->GameBase->Game->Renderer);
-	SDL_SetRenderDrawColor(GameRamIt->GameBase->Game->Renderer, 0, 0, 0, 255);
+	SDL_SetRenderDrawColor(Renderer, 150, 150, 150, 255);
+	SDL_RenderClear(Renderer);
+	SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
 	SDL_Rect r = {GameRamIt->GameBase->screenleft, GameRamIt->GameBase->screentop, GameRamIt->GameBase->playfieldwidth, GameRamIt->GameBase->playfieldheight};
-	SDL_RenderFillRect(GameRamIt->GameBase->Game->Renderer, &r);
+	SDL_RenderFillRect(Renderer, &r);
 }
 
 //init - deinit ----------------------------------------------------------------------------------------------------------------
@@ -403,36 +403,36 @@ void CGameRamIt_init(CGameRamIt* GameRamIt)
 	GameRamIt->createplayfield(GameRamIt);
 	GameRamIt->GameBase->HealthPoints = 3;
 	GameRamIt->LoadSound(GameRamIt);
-	GameRamIt->GameBase->Game->CurrentGameMusicID = GameRamIt->MusMusic;
-	GameRamIt->GameBase->Game->Audio->PlayMusic(GameRamIt->MusMusic, -1);
+	CurrentGameMusicID = GameRamIt->MusMusic;
+	Audio->PlayMusic(GameRamIt->MusMusic, -1);
 }
 
 void CGameRamIt_deinit(CGameRamIt* GameRamIt)
 {
 	GameRamIt->UnLoadSound(GameRamIt);
-	GameRamIt->GameBase->Game->SubStateCounter = 0;
-	GameRamIt->GameBase->Game->SubGameState = SGNone;
-	GameRamIt->GameBase->Game->CurrentGameMusicID = -1;
+	SubStateCounter = 0;
+	SubGameState = SGNone;
+	CurrentGameMusicID = -1;
 }
 
 void CGameRamIt_LoadSound(CGameRamIt* GameRamIt)
 {
-	GameRamIt->SfxShoot = GameRamIt->GameBase->Game->Audio->LoadSound("ramit/shoot.wav");
-	GameRamIt->SfxHit = GameRamIt->GameBase->Game->Audio->LoadSound("ramit/hit.wav");
-	GameRamIt->SfxDie = GameRamIt->GameBase->Game->Audio->LoadSound("common/die.wav");
-	GameRamIt->SfxSucces = GameRamIt->GameBase->Game->Audio->LoadSound("common/succes.wav");
-	GameRamIt->MusMusic = GameRamIt->GameBase->Game->Audio->LoadMusic("ramit/music.ogg");
+	GameRamIt->SfxShoot = Audio->LoadSound("ramit/shoot.wav");
+	GameRamIt->SfxHit = Audio->LoadSound("ramit/hit.wav");
+	GameRamIt->SfxDie = Audio->LoadSound("common/die.wav");
+	GameRamIt->SfxSucces = Audio->LoadSound("common/succes.wav");
+	GameRamIt->MusMusic = Audio->LoadMusic("ramit/music.ogg");
 }
 
 void CGameRamIt_UnLoadSound(CGameRamIt* GameRamIt)
 {
-	GameRamIt->GameBase->Game->Audio->StopMusic();
-	GameRamIt->GameBase->Game->Audio->StopSound();
-	GameRamIt->GameBase->Game->Audio->UnLoadMusic(GameRamIt->MusMusic);
-	GameRamIt->GameBase->Game->Audio->UnLoadSound(GameRamIt->SfxShoot);
-	GameRamIt->GameBase->Game->Audio->UnLoadSound(GameRamIt->SfxHit);
-	GameRamIt->GameBase->Game->Audio->UnLoadSound(GameRamIt->SfxDie);
-	GameRamIt->GameBase->Game->Audio->UnLoadSound(GameRamIt->SfxSucces);
+	Audio->StopMusic();
+	Audio->StopSound();
+	Audio->UnLoadMusic(GameRamIt->MusMusic);
+	Audio->UnLoadSound(GameRamIt->SfxShoot);
+	Audio->UnLoadSound(GameRamIt->SfxHit);
+	Audio->UnLoadSound(GameRamIt->SfxDie);
+	Audio->UnLoadSound(GameRamIt->SfxSucces);
 }
 
 //Update ----------------------------------------------------------------------------------------------------------------
@@ -447,8 +447,8 @@ void CGameRamIt_UpdateObjects(CGameRamIt* GameRamIt, bool IsGameState)
 
 		if (GameRamIt->playerdeath)
 		{
-			GameRamIt->GameBase->Game->Audio->PlaySound(GameRamIt->SfxDie, 0);
-			if (GameRamIt->GameBase->Game->GameMode == GMGame)
+			Audio->PlaySound(GameRamIt->SfxDie, 0);
+			if (GameMode == GMGame)
 				GameRamIt->GameBase->HealthPoints -= 1;
 
 			if (GameRamIt->GameBase->HealthPoints > 0)
@@ -464,9 +464,9 @@ void CGameRamIt_UpdateObjects(CGameRamIt* GameRamIt, bool IsGameState)
 void CGameRamIt_UpdateLogic(CGameRamIt* GameRamIt)
 {
 	GameRamIt->GameBase->UpdateLogic(GameRamIt->GameBase);
-	GameRamIt->UpdateObjects(GameRamIt, GameRamIt->GameBase->Game->SubGameState == SGGame);
-	if(GameRamIt->GameBase->Game->SubGameState == SGGame)
-		GameRamIt->GameBase->Game->Sprites->UpdateSprites(GameRamIt->GameBase->Game->Renderer);
+	GameRamIt->UpdateObjects(GameRamIt, SubGameState == SGGame);
+	if(SubGameState == SGGame)
+		Sprites->UpdateSprites(Renderer);
 }
 
 bool CGameRamIt_DrawObjects(CGameRamIt* GameRamIt)
@@ -483,7 +483,7 @@ void CGameRamIt_Draw(CGameRamIt* GameRamIt)
 {
 	GameRamIt->DrawBackground(GameRamIt);
 	if (GameRamIt->DrawObjects(GameRamIt))
-		GameRamIt->GameBase->Game->Sprites->DrawSprites(GameRamIt->GameBase->Game->Renderer);
+		Sprites->DrawSprites(Renderer);
 	GameRamIt->GameBase->DrawScoreBar(GameRamIt->GameBase);
 	GameRamIt->GameBase->DrawSubStateText(GameRamIt->GameBase);
 }

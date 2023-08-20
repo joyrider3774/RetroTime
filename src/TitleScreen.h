@@ -2,5 +2,5 @@
 
 #include "CGame.h"
 
-void TitleScreen(CGame *Game);
-void InitTitleScreen(CGame *Game);
+void TitleScreen();
+void InitTitleScreen();

@@ -156,4 +156,4 @@ void CGameInvaders_destroyexploison(CGameInvaders* GameInvaders, int index);
 void CGameInvaders_destroyallexplosion(CGameInvaders* GameInvaders);
 void CGameInvaders_checkexplosions(CGameInvaders* GameInvaders);
 void Destroy_CGameInvaders(CGameInvaders* GameInvaders);
-CGameInvaders* Create_CGameInvaders(CGame* aGame);
+CGameInvaders* Create_CGameInvaders();

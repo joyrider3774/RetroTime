@@ -173,4 +173,4 @@ void CGameFrog_destroyobject(CGameFrog* GameFrog, int index);
 void CGameFrog_destroyallobjects(CGameFrog* GameFrog);
 void CGameFrog_createobjects(CGameFrog* GameFrog, bool initialize);
 void Destroy_CGameFrog(CGameFrog* GameFrog);
-CGameFrog* Create_CGameFrog(CGame* aGame);
+CGameFrog* Create_CGameFrog();

@@ -96,4 +96,4 @@ void CGameBreakOut_destroyblock(CGameBreakOut* GameBreakOut, int index);
 void CGameBreakOut_destroyallblocks(CGameBreakOut* GameBreakOut);
 void CGameBreakOut_updateblockinfo(CGameBreakOut* GameBreakOut);
 void Destroy_CGameBreakOut(CGameBreakOut* GameBreakOut);
-CGameBreakOut* Create_CGameBreakOut(CGame* aGame);
+CGameBreakOut* Create_CGameBreakOut();
