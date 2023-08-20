@@ -6,7 +6,6 @@
 #include "CImage.h"
 #include "Vec2F.h"
 
-constexpr int SPR_Max = 1000;
 
 enum ECollisionShape
 {

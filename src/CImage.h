@@ -10,8 +10,6 @@
 using namespace std;
 
 
-constexpr int GFX_Max = 100;
-
 struct CTexture {
 	public:
 		SDL_Texture* Img;
@@ -22,12 +20,6 @@ struct CTexture {
 };
 
 typedef struct CTexture CTexture;
-
-extern CTexture *CImage_Images[GFX_Max];
-extern string CImage_DataPath;
-extern bool CImage_ImgEnabled;
-extern bool CImage_DebugInfo;
-extern int CImage_ScaledImagesLoaded;
 
 void CImage_Init(string AssetsPath, bool ADebugInfo);
 void CImage_DeInit();

@@ -11,13 +11,6 @@ using namespace std;
 constexpr int SND_Max = 100;
 constexpr int MUS_Max = 20;
 
-extern bool CAudio_DebugInfo;
-extern int CAudio_VolumeMusic, CAudio_VolumeSound;
-extern Mix_Chunk *CAudio_Sounds[SND_Max];
-extern Mix_Music *CAudio_Music[MUS_Max];
-extern string CAudio_DataPath;
-extern bool CAudio_GlobalSoundEnabled;
-
 void CAudio_Init(string AssetsPath, bool ADebugInfo);
 void CAudio_DeInit();
 void CAudio_IncVolumeMusic();

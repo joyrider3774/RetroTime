@@ -9,8 +9,10 @@
 #include "Vec2F.h"
 #include "Common.h"
 
+const int SPR_Max = 1000;
 
-#define SAVEDSCALINGS_MAX 1000
+const int SavedScalingsMax = 1000;
+
 int SavedScalingsCount = 0;
 struct SavedScalingsStruct {
 	int gfxid;
@@ -18,7 +20,7 @@ struct SavedScalingsStruct {
 };
 typedef struct SavedScalingsStruct SavedScalingsStruct;
 
-SavedScalingsStruct CSprites_SavedScalings[SAVEDSCALINGS_MAX];
+SavedScalingsStruct CSprites_SavedScalings[SavedScalingsMax];
 
 
 CSprite* CSprites_Sprites[SPR_Max];
@@ -382,7 +384,7 @@ void CSprites_UpdateImage(SDL_Renderer* renderer, CSprite* Spr)
 		
 		Vec2F Vec2FScale = {abs(Spr->xscale), abs(Spr->yscale)};
 		
-		if (SavedScalingsCount < SAVEDSCALINGS_MAX)
+		if (SavedScalingsCount < SavedScalingsMax)
 		{
 			bool bfound = false;
 			for (int i = 0; i < SavedScalingsCount; i++)

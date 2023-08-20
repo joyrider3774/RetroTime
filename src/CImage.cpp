@@ -10,6 +10,7 @@
 #include "Common.h"
 using namespace std;
 
+const int GFX_Max = 100;
 const int CImage_ScaledImagesLoadedMaxCount = 200;
 
 struct ScaledImagesStruct {

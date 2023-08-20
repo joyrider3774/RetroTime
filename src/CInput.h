@@ -11,9 +11,7 @@ struct SButtons {
 		 RenderReset;
 };
 
-extern SDL_GameController* CInput_GameController;
 extern SButtons CInput_Buttons, CInput_PrevButtons;
-extern int CInput_JoystickDeadZone, CInput_TriggerDeadZone;
 void CInput_Init();
 void CInput_DeInit();
 void CInput_Update();
