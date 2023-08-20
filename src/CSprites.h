@@ -17,8 +17,7 @@ enum ECollisionShape
 };
 typedef enum ECollisionShape ECollisionShape;
 
-class CSprite {
-	public:
+struct CSprite {
 		SDL_Texture *Img;
 		int animInc;
 		Uint32 animTimer;
@@ -58,49 +57,46 @@ class CSprite {
 		float rotation_speed;
 		bool show_collision_shape;		
 };
+typedef struct CSprite CSprite;
 
-class CSprites {
+extern CSprite* CSprites_Sprites[SPR_Max];
+extern vector<pair<int,pair<float,float>>> CSprites_SavedScalings;
+extern vector<pair<SDL_Texture*,pair<int, Vec2F>>> CSprites_LoadedScaledTextures;
+extern int CSprites_UpdateImageResets;
+extern int CSprites_SpritesDrawn;
+extern bool CSprites_ForceShowCollisionShape;
+extern bool CSprites_needSpriteSorting;
 
-private:
-	CSprite* Sprites[SPR_Max];
-	vector<pair<int,pair<float,float>>> SavedScalings;
-	vector<pair<SDL_Texture*,pair<int, Vec2F>>> LoadedScaledTextures;
-	int UpdateImageResets;
-	int SpritesDrawn;
-	bool ForceShowCollisionShape;
-	bool needSpriteSorting;
-	void SortSprites();
-	bool DetectRectRectCollsion(CSprite* Spr, CSprite* SprOther);
-	bool DetectRectCircleCollsion(CSprite* SprRect, CSprite* SprCircle);
-public:
-	CSprites();
-	~CSprites();
-	void ResetDrawTargets();
-	void UpdateImage(SDL_Renderer* renderer, CSprite* Spr);
-	CSprite* CreateSprite();
-	void RemoveSprite(CSprite* Spr);
-	Vec2F GetSpriteLocation(CSprite* Spr);
-	void SetForceShowCollisionShape(bool val);
-	void UpdateSprites(SDL_Renderer* renderer);
-	void DrawSprite(SDL_Renderer* Renderer, CSprite* Spr);
-	void DrawSprites(SDL_Renderer* Renderer);
-	int GetSpriteAnimFrame(CSprite* Spr);
-	int GetSpriteAnimFrameCount(CSprite* Spr);
-	void SetSpriteImage(SDL_Renderer* renderer, CSprite* Spr, int *AImageID);
-	void SetSpriteImage(SDL_Renderer* renderer, CSprite* Spr, int *AImageID, int TilesX, int TilesY);
-	void SetSpriteRotation(CSprite* Spr, float AAngle);
-	void SetSpriteScale(SDL_Renderer* renderer, CSprite* Spr, Vec2F AScale);
-	void SetSpriteAnimation(CSprite* Spr, int StartTile, int EndTile, int animSpeed);
-	void SetSpriteCollisionShape(CSprite* Spr, ECollisionShape shape, float width, float height, float rotation, float xoffset, float yoffset);
-	void SetSpriteLocation(CSprite* Spr, Vec2F pos );
-	void SetSpriteDepth(CSprite* Spr, int depth);
-	void SetSpriteColour(CSprite* Spr, float red, float green, float blue, float alpha);
-	void SetSpriteVisibility(CSprite* Spr, bool visibility);
-	void SetSpriteRotationSpeed(CSprite* Spr, float rotationSpeed);
-	bool DetectSpriteCollision(CSprite* Spr, CSprite* SprOther);
-	SDL_Point TileSize(CSprite* Spr);
-	int SpriteSlotsUsed();
-	int SpriteSlotsMax();
-	int UpdateImageResetsCount();
-	int SpritesDrawnCount();
-};
+void CSprites_SortSprites();
+bool CSprites_DetectRectRectCollsion(CSprite* Spr, CSprite* SprOther);
+bool CSprites_DetectRectCircleCollsion(CSprite* SprRect, CSprite* SprCircle);
+void CSprites_Init();
+void CSprites_DeInit();
+void CSprites_ResetDrawTargets();
+void CSprites_UpdateImage(SDL_Renderer* renderer, CSprite* Spr);
+CSprite* CSprites_CreateSprite();
+void CSprites_RemoveSprite(CSprite* Spr);
+Vec2F CSprites_GetSpriteLocation(CSprite* Spr);
+void CSprites_SetForceShowCollisionShape(bool val);
+void CSprites_UpdateSprites(SDL_Renderer* renderer);
+void CSprites_DrawSprite(SDL_Renderer* Renderer, CSprite* Spr);
+void CSprites_DrawSprites(SDL_Renderer* Renderer);
+int CSprites_GetSpriteAnimFrame(CSprite* Spr);
+int CSprites_GetSpriteAnimFrameCount(CSprite* Spr);
+void CSprites_SetSpriteImage(SDL_Renderer* renderer, CSprite* Spr, int *AImageID);
+void CSprites_SetSpriteImage(SDL_Renderer* renderer, CSprite* Spr, int *AImageID, int TilesX, int TilesY);
+void CSprites_SetSpriteRotation(CSprite* Spr, float AAngle);
+void CSprites_SetSpriteScale(SDL_Renderer* renderer, CSprite* Spr, Vec2F AScale);
+void CSprites_SetSpriteAnimation(CSprite* Spr, int StartTile, int EndTile, int animSpeed);
+void CSprites_SetSpriteCollisionShape(CSprite* Spr, ECollisionShape shape, float width, float height, float rotation, float xoffset, float yoffset);
+void CSprites_SetSpriteLocation(CSprite* Spr, Vec2F pos );
+void CSprites_SetSpriteDepth(CSprite* Spr, int depth);
+void CSprites_SetSpriteColour(CSprite* Spr, float red, float green, float blue, float alpha);
+void CSprites_SetSpriteVisibility(CSprite* Spr, bool visibility);
+void CSprites_SetSpriteRotationSpeed(CSprite* Spr, float rotationSpeed);
+bool CSprites_DetectSpriteCollision(CSprite* Spr, CSprite* SprOther);
+SDL_Point CSprites_TileSize(CSprite* Spr);
+int CSprites_SpriteSlotsUsed();
+int CSprites_SpriteSlotsMax();
+int CSprites_UpdateImageResetsCount();
+int CSprites_SpritesDrawnCount();

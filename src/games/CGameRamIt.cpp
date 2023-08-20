@@ -466,7 +466,7 @@ void CGameRamIt_UpdateLogic(CGameRamIt* GameRamIt)
 	GameRamIt->GameBase->UpdateLogic(GameRamIt->GameBase);
 	GameRamIt->UpdateObjects(GameRamIt, SubGameState == SGGame);
 	if(SubGameState == SGGame)
-		Sprites->UpdateSprites(Renderer);
+		CSprites_UpdateSprites(Renderer);
 }
 
 bool CGameRamIt_DrawObjects(CGameRamIt* GameRamIt)
@@ -483,7 +483,7 @@ void CGameRamIt_Draw(CGameRamIt* GameRamIt)
 {
 	GameRamIt->DrawBackground(GameRamIt);
 	if (GameRamIt->DrawObjects(GameRamIt))
-		Sprites->DrawSprites(Renderer);
+		CSprites_DrawSprites(Renderer);
 	GameRamIt->GameBase->DrawScoreBar(GameRamIt->GameBase);
 	GameRamIt->GameBase->DrawSubStateText(GameRamIt->GameBase);
 }

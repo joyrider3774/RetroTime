@@ -9,46 +9,55 @@
 #include "Vec2F.h"
 #include "Common.h"
 
-CSprites::CSprites()
+
+CSprite* CSprites_Sprites[SPR_Max];
+vector<pair<int,pair<float,float>>> CSprites_SavedScalings;
+vector<pair<SDL_Texture*,pair<int, Vec2F>>> CSprites_LoadedScaledTextures;
+int CSprites_UpdateImageResets;
+int CSprites_SpritesDrawn;
+bool CSprites_ForceShowCollisionShape;
+bool CSprites_needSpriteSorting;
+
+void CSprites_Init()
 {
-	UpdateImageResets = 0;
-	ForceShowCollisionShape = false;
-	needSpriteSorting = false;
-	SpritesDrawn = 0;
+	CSprites_UpdateImageResets = 0;
+	CSprites_ForceShowCollisionShape = false;
+	CSprites_needSpriteSorting = false;
+	CSprites_SpritesDrawn = 0;
 	for (int i=0; i < SPR_Max; i++)
 	{
-		Sprites[i] = nullptr;
+		CSprites_Sprites[i] = nullptr;
 	}
 }
 
-CSprites::~CSprites()
+void CSprites_DeInit()
 {
 	for (int i=0; i < SPR_Max; i++)
 	{
-		RemoveSprite(Sprites[i]);
+		CSprites_RemoveSprite(CSprites_Sprites[i]);
 	}
 }
 
-void CSprites::SetForceShowCollisionShape(bool val)
+void CSprites_SetForceShowCollisionShape(bool val)
 {
-	ForceShowCollisionShape = val;
+	CSprites_ForceShowCollisionShape = val;
 }
 
-int CSprites::UpdateImageResetsCount()
+int CSprites_UpdateImageResetsCount()
 {
-	return  UpdateImageResets;
+	return  CSprites_UpdateImageResets;
 }
 
-int CSprites::SpritesDrawnCount()
+int CSprites_SpritesDrawnCount()
 {
-	return SpritesDrawn;
+	return CSprites_SpritesDrawn;
 }
 
-CSprite* CSprites::CreateSprite()
+CSprite* CSprites_CreateSprite()
 {
 	for (int i= 0; i < SPR_Max; i++)
 	{
-		if(Sprites[i] == nullptr)
+		if(CSprites_Sprites[i] == nullptr)
 		{
 			CSprite* Spr = new CSprite();
 			Spr->index = i;
@@ -86,14 +95,14 @@ CSprite* CSprites::CreateSprite()
 			Spr->tilesY = 1;
 			Spr->rotation_speed = 0.0;
 			Spr->Img = nullptr;
-			Sprites[i] = Spr;
+			CSprites_Sprites[i] = Spr;
 			return Spr;
 		}
 	}
 	return nullptr;
 }
 
-void CSprites::RemoveSprite(CSprite* Spr)
+void CSprites_RemoveSprite(CSprite* Spr)
 {
 	if(Spr == nullptr)
 		return;
@@ -103,95 +112,95 @@ void CSprites::RemoveSprite(CSprite* Spr)
 	
 	//dumped scaled bitmaps are handled in image class
 	if(!loadDumpedScaledBitmaps)
-		if(Sprites[Spr->index]->Img != nullptr)
+		if(CSprites_Sprites[Spr->index]->Img != nullptr)
 		{
-			SDL_DestroyTexture(Sprites[Spr->index]->Img);
-			Sprites[Spr->index]->Img = nullptr;
+			SDL_DestroyTexture(CSprites_Sprites[Spr->index]->Img);
+			CSprites_Sprites[Spr->index]->Img = nullptr;
 		}
 	
-	Sprites[Spr->index] = nullptr;
+	CSprites_Sprites[Spr->index] = nullptr;
 		
 	delete Spr;
 }
 
-void CSprites::UpdateSprites(SDL_Renderer* renderer)
+void CSprites_UpdateSprites(SDL_Renderer* renderer)
 {
-	SortSprites();
+	CSprites_SortSprites();
 	for (int i = 0; i < SPR_Max; i++)
 	{
-		if (Sprites[i] == nullptr)
+		if (CSprites_Sprites[i] == nullptr)
 			continue;
 
-		if (Sprites[i]->animSpeed != 0)
+		if (CSprites_Sprites[i]->animSpeed != 0)
 		{
-			if (SDL_GetTicks() > Sprites[i]->animTimer)
+			if (SDL_GetTicks() > CSprites_Sprites[i]->animTimer)
 			{
-				Sprites[i]->animTile += Sprites[i]->animInc;
-				if (Sprites[i]->animInc > 0)
+				CSprites_Sprites[i]->animTile += CSprites_Sprites[i]->animInc;
+				if (CSprites_Sprites[i]->animInc > 0)
 				{
-					if(Sprites[i]->animTile > Sprites[i]->animEndTile)
-						Sprites[i]->animTile = Sprites[i]->animStartTile;
+					if(CSprites_Sprites[i]->animTile > CSprites_Sprites[i]->animEndTile)
+						CSprites_Sprites[i]->animTile = CSprites_Sprites[i]->animStartTile;
 				}
 				else
 				{
-					if (Sprites[i]->animInc < 0)
+					if (CSprites_Sprites[i]->animInc < 0)
 					{
-						if(Sprites[i]->animTile < Sprites[i]->animEndTile)
-							Sprites[i]->animTile = Sprites[i]->animStartTile;
+						if(CSprites_Sprites[i]->animTile < CSprites_Sprites[i]->animEndTile)
+							CSprites_Sprites[i]->animTile = CSprites_Sprites[i]->animStartTile;
 					}
 				}
-				Sprites[i]->animTimer = SDL_GetTicks() + (int)floor(1000 / Sprites[i]->animSpeed);
+				CSprites_Sprites[i]->animTimer = SDL_GetTicks() + (int)floor(1000 / CSprites_Sprites[i]->animSpeed);
 			}
 		}
 
-		Sprites[i]->x += Sprites[i]->xspeed;
-		Sprites[i]->y += Sprites[i]->yspeed;
-		Sprites[i]->xscale += Sprites[i]->xscale_speed;
-		Sprites[i]->yscale += Sprites[i]->yscale_speed;
-		Sprites[i]->rotation += Sprites[i]->rotation_speed;
-		Sprites[i]->collisionAngle += Sprites[i]->rotation_speed;
-		Sprites[i]->collisionWidth += Sprites[i]->xscale_speed;
-		Sprites[i]->collisionHeight += Sprites[i]->yscale_speed;
+		CSprites_Sprites[i]->x += CSprites_Sprites[i]->xspeed;
+		CSprites_Sprites[i]->y += CSprites_Sprites[i]->yspeed;
+		CSprites_Sprites[i]->xscale += CSprites_Sprites[i]->xscale_speed;
+		CSprites_Sprites[i]->yscale += CSprites_Sprites[i]->yscale_speed;
+		CSprites_Sprites[i]->rotation += CSprites_Sprites[i]->rotation_speed;
+		CSprites_Sprites[i]->collisionAngle += CSprites_Sprites[i]->rotation_speed;
+		CSprites_Sprites[i]->collisionWidth += CSprites_Sprites[i]->xscale_speed;
+		CSprites_Sprites[i]->collisionHeight += CSprites_Sprites[i]->yscale_speed;
 
-		UpdateImage(renderer, Sprites[i]);
+		CSprites_UpdateImage(renderer, CSprites_Sprites[i]);
 	}
 }
 
-void CSprites::SortSprites()
+void CSprites_SortSprites()
 {
-	if (needSpriteSorting)
+	if (CSprites_needSpriteSorting)
 	{
 		for (int i = 0; i< SPR_Max; i++)
 		{
 			for(int j=i+1; j < SPR_Max; j++)
 			{
-				if ((Sprites[i] != nullptr) && (Sprites[j] != nullptr))
+				if ((CSprites_Sprites[i] != nullptr) && (CSprites_Sprites[j] != nullptr))
 				{
-					if(Sprites[i]->depth > Sprites[j]->depth)
+					if(CSprites_Sprites[i]->depth > CSprites_Sprites[j]->depth)
 					{
-						CSprite* Tmp = Sprites[i];
-						Sprites[i] = Sprites[j];
-						Sprites[i]->index = i;
-						Sprites[j] = Tmp;
-						Sprites[j]->index = j;
+						CSprite* Tmp = CSprites_Sprites[i];
+						CSprites_Sprites[i] = CSprites_Sprites[j];
+						CSprites_Sprites[i]->index = i;
+						CSprites_Sprites[j] = Tmp;
+						CSprites_Sprites[j]->index = j;
 					}
 				}
 			}
 		}
-		needSpriteSorting = false;
+		CSprites_needSpriteSorting = false;
 	}
 }
 
-void CSprites::DrawSprite(SDL_Renderer* Renderer, CSprite* Spr)
+void CSprites_DrawSprite(SDL_Renderer* Renderer, CSprite* Spr)
 {
 	if (Spr == nullptr)
 		return;
 
-	SortSprites();
+	CSprites_SortSprites();
 
 	if (Spr->show && ((*Spr->imageID > -1) && (Spr->Img != nullptr) && (*Spr->imageID < CImage_ImageSlotsMax())))
 	{
-		SpritesDrawn++;
+		CSprites_SpritesDrawn++;
 		SDL_Point pos = {(int)(Spr->x), (int)(Spr->y)};
 	
 		Vec2F scale = {Spr->xscale, Spr->yscale};
@@ -205,7 +214,7 @@ void CSprites::DrawSprite(SDL_Renderer* Renderer, CSprite* Spr)
 		CImage_DrawImageFuzeSrcRectTintFloat(Renderer, Spr->Img, &SrcRect, true, &pos, Spr->rotation, &scale, Spr->r, Spr->g, Spr->b, Spr->a);
 		
 
-		if (Spr->show_collision_shape || ForceShowCollisionShape)
+		if (Spr->show_collision_shape || CSprites_ForceShowCollisionShape)
 		{
 			SDL_SetRenderDrawColor(Renderer, 255, 0, 255, 255);
 			switch(Spr->collisionShape)
@@ -229,29 +238,29 @@ void CSprites::DrawSprite(SDL_Renderer* Renderer, CSprite* Spr)
 	}
 }
 
-void CSprites::ResetDrawTargets()
+void CSprites_ResetDrawTargets()
 {
 	for (int i = 0; i < SPR_Max; i++)
 	{
-		if (Sprites[i] == nullptr)
+		if (CSprites_Sprites[i] == nullptr)
 			continue;
 
 		//by reseting prevxscale
 		//   it will be redrawn
-		Sprites[i]->prevxscale = 0;
-		Sprites[i]->prevyscale = 0;
+		CSprites_Sprites[i]->prevxscale = 0;
+		CSprites_Sprites[i]->prevyscale = 0;
 	}
 }
 
-void CSprites::DrawSprites(SDL_Renderer* Renderer)
+void CSprites_DrawSprites(SDL_Renderer* Renderer)
 {
-	SpritesDrawn = 0;
+	CSprites_SpritesDrawn = 0;
 	for (int i = 0; i < SPR_Max; i++)
 	{
-		if (Sprites[i] == nullptr)
+		if (CSprites_Sprites[i] == nullptr)
 			continue;
 
-		DrawSprite(Renderer, Sprites[i]);
+		CSprites_DrawSprite(Renderer, CSprites_Sprites[i]);
 	}
 }
 
@@ -260,7 +269,7 @@ void SetSpriteRotationSpeed(CSprite* Spr, float rotationSpeed)
 	Spr->rotation_speed = rotationSpeed;
 }
 
-void CSprites::SetSpriteColour (CSprite* Spr, float red, float green, float blue, float alpha)
+void CSprites_SetSpriteColour (CSprite* Spr, float red, float green, float blue, float alpha)
 {
 	Spr->r = red;
 	Spr->g = green;
@@ -268,23 +277,23 @@ void CSprites::SetSpriteColour (CSprite* Spr, float red, float green, float blue
 	Spr->a = alpha;
 }
 
-void CSprites::SetSpriteVisibility(CSprite* Spr, bool visibility)
+void CSprites_SetSpriteVisibility(CSprite* Spr, bool visibility)
 {
 	Spr->show = visibility;
 }
 
-Vec2F CSprites::GetSpriteLocation(CSprite* Spr)
+Vec2F CSprites_GetSpriteLocation(CSprite* Spr)
 {
 	Vec2F Result = {Spr->x, Spr->y};
 	return Result;
 }
 
-void CSprites::SetSpriteImage(SDL_Renderer* renderer, CSprite* Spr, int *AImageID)
+void CSprites_SetSpriteImage(SDL_Renderer* renderer, CSprite* Spr, int *AImageID)
 {
-	SetSpriteImage(renderer, Spr, AImageID, 1, 1);
+	CSprites_SetSpriteImage(renderer, Spr, AImageID, 1, 1);
 }
 
-void CSprites::UpdateImage(SDL_Renderer* renderer, CSprite* Spr) 
+void CSprites_UpdateImage(SDL_Renderer* renderer, CSprite* Spr) 
 {
 	if(Spr == nullptr)
 		return;
@@ -302,7 +311,7 @@ void CSprites::UpdateImage(SDL_Renderer* renderer, CSprite* Spr)
 		//remember current scale
 		Spr->prevyscale = Spr->yscale;
 		Spr->prevxscale = Spr->xscale;
-		UpdateImageResets++;
+		CSprites_UpdateImageResets++;
 	}
 	else
 	{
@@ -360,30 +369,30 @@ void CSprites::UpdateImage(SDL_Renderer* renderer, CSprite* Spr)
 		//remember current scale
 		Spr->prevyscale = Spr->yscale;
 		Spr->prevxscale = Spr->xscale;
-		UpdateImageResets++;
+		CSprites_UpdateImageResets++;
 		
 		Vec2F Vec2FScale = {abs(Spr->xscale), abs(Spr->yscale)};
 		auto search = make_pair(*Spr->imageID, make_pair(Vec2FScale.x,Vec2FScale.y));
-		auto it  = find(SavedScalings.begin(), SavedScalings.end(), search);
-		if (it == SavedScalings.end()) 
+		auto it  = find(CSprites_SavedScalings.begin(), CSprites_SavedScalings.end(), search);
+		if (it == CSprites_SavedScalings.end()) 
 		{
-			SavedScalings.push_back(search);
+			CSprites_SavedScalings.push_back(search);
 			CImage_SaveImage(renderer, *Spr->imageID, Vec2FScale);
 		}
 	}
 }
 
-void CSprites::SetSpriteImage(SDL_Renderer* renderer, CSprite* Spr, int *AImageID, int TilesX, int TilesY)
+void CSprites_SetSpriteImage(SDL_Renderer* renderer, CSprite* Spr, int *AImageID, int TilesX, int TilesY)
 {
-	bool needUpdateImage = Spr->imageID != AImageID;
+	bool needCSprites_UpdateImage = Spr->imageID != AImageID;
 	Spr->imageID = AImageID;
 	SDL_Point Tz = CImage_ImageSize(*AImageID);
-	if(needUpdateImage)
+	if(needCSprites_UpdateImage)
 	{
 		//to force an update
 		Spr->prevyscale = 0;
 		Spr->prevxscale = 0;
-		UpdateImage(renderer, Spr);
+		CSprites_UpdateImage(renderer, Spr);
 	}
 	Spr->tileSizeX = (int)floor(Tz.x / TilesX);
 	Spr->tileSizeY = (int)floor(Tz.y / TilesY);
@@ -396,21 +405,21 @@ void CSprites::SetSpriteImage(SDL_Renderer* renderer, CSprite* Spr, int *AImageI
 	}
 }
 
-void CSprites::SetSpriteScale(SDL_Renderer* renderer, CSprite* Spr, Vec2F AScale)
+void CSprites_SetSpriteScale(SDL_Renderer* renderer, CSprite* Spr, Vec2F AScale)
 {
 	Spr->xscale = AScale.x;
 	Spr->yscale = AScale.y;
-	UpdateImage(renderer, Spr);
+	CSprites_UpdateImage(renderer, Spr);
 }
 
-void CSprites::SetSpriteRotation(CSprite* Spr, float AAngle)
+void CSprites_SetSpriteRotation(CSprite* Spr, float AAngle)
 {
 	float diffAngle = AAngle - Spr->rotation;
 	Spr->collisionAngle += diffAngle;
 	Spr->rotation = AAngle;
 }
 
-void CSprites::SetSpriteAnimation(CSprite* Spr, int StartTile, int EndTile, int animSpeed)
+void CSprites_SetSpriteAnimation(CSprite* Spr, int StartTile, int EndTile, int animSpeed)
 {
 	Spr->animStartTile = StartTile;
 	Spr->animEndTile = EndTile;
@@ -432,7 +441,7 @@ void CSprites::SetSpriteAnimation(CSprite* Spr, int StartTile, int EndTile, int 
 	}
 }
 
-void CSprites::SetSpriteCollisionShape(CSprite* Spr, ECollisionShape shape, float width, float height, float rotation, float xoffset, float yoffset)
+void CSprites_SetSpriteCollisionShape(CSprite* Spr, ECollisionShape shape, float width, float height, float rotation, float xoffset, float yoffset)
 {
 	Spr->collisionShape = shape;
 	Spr->collisionWidth = width;
@@ -442,35 +451,35 @@ void CSprites::SetSpriteCollisionShape(CSprite* Spr, ECollisionShape shape, floa
 	Spr->collisionyoffset = yoffset;
 }
 
-void CSprites::SetSpriteLocation(CSprite* Spr, Vec2F pos )
+void CSprites_SetSpriteLocation(CSprite* Spr, Vec2F pos )
 {
 	Spr->x = pos.x;
 	Spr->y = pos.y;
 }
 
-void CSprites::SetSpriteDepth(CSprite* Spr, int depth)
+void CSprites_SetSpriteDepth(CSprite* Spr, int depth)
 {
 	Spr->depth = depth;
-	needSpriteSorting = true;
+	CSprites_needSpriteSorting = true;
 }
 
-int CSprites::GetSpriteAnimFrameCount(CSprite* Spr)
+int CSprites_GetSpriteAnimFrameCount(CSprite* Spr)
 {
 	return max(Spr->animEndTile, Spr->animStartTile) - min(Spr->animEndTile, Spr->animStartTile) + 1;
 }
 
-int CSprites::GetSpriteAnimFrame(CSprite* Spr)
+int CSprites_GetSpriteAnimFrame(CSprite* Spr)
 {
 	return Spr->animTile - min(Spr->animEndTile, Spr->animStartTile);
 }
 
-SDL_Point CSprites::TileSize(CSprite* Spr)
+SDL_Point CSprites_TileSize(CSprite* Spr)
 {
 	return {Spr->tileSizeX, Spr->tileSizeY};
 }
 
 //https://learnopengl.com/In-Practice/2D-Game/Collisions/Collision-Detection#
-bool CSprites::DetectRectCircleCollsion(CSprite* SprRect, CSprite* SprCircle)
+bool CSprites_DetectRectCircleCollsion(CSprite* SprRect, CSprite* SprCircle)
 {
 	Vec2F center = {SprCircle->x + SprCircle->collisionxoffset /2.0f, SprCircle->y + SprCircle->collisionyoffset / 2.0f};
 	// calculate AABB info (center, half-extents)
@@ -496,7 +505,7 @@ bool CSprites::DetectRectCircleCollsion(CSprite* SprRect, CSprite* SprCircle)
 	return length(difference) < (abs(SprCircle->collisionWidth) * abs(SprCircle->xscale) / 2.0f);
 }
 
-bool CSprites::DetectRectRectCollsion(CSprite* Spr, CSprite* SprOther)
+bool CSprites_DetectRectRectCollsion(CSprite* Spr, CSprite* SprOther)
 {
 	float widthA = (abs(Spr->collisionWidth) * abs(Spr->xscale));
 	float heightA = (abs(Spr->collisionHeight) * abs(Spr->yscale));
@@ -518,7 +527,7 @@ bool CSprites::DetectRectRectCollsion(CSprite* Spr, CSprite* SprOther)
 }
 
 //takes no rotations into account !
-bool CSprites::DetectSpriteCollision(CSprite* Spr, CSprite* SprOther)
+bool CSprites_DetectSpriteCollision(CSprite* Spr, CSprite* SprOther)
 {
 	if((Spr == nullptr) || (SprOther == nullptr))
 		return false;
@@ -530,14 +539,14 @@ bool CSprites::DetectSpriteCollision(CSprite* Spr, CSprite* SprOther)
 			switch(SprOther->collisionShape)
 			{
 				case SHAPE_BOX:
-					return DetectRectRectCollsion(Spr, SprOther);
+					return CSprites_DetectRectRectCollsion(Spr, SprOther);
 					break;
 				case SHAPE_CIRCLE:
 					//only works for true circles not ovals!
 					if ((SprOther->collisionWidth == SprOther->collisionHeight) && (SprOther->xscale == SprOther->yscale))
 					{	// check normal rect first
-						//if (DetectRectRectCollsion(Spr, SprOther))
-							return DetectRectCircleCollsion(Spr, SprOther);
+						//if (CSprites_DetectRectRectCollsion(Spr, SprOther))
+							return CSprites_DetectRectCircleCollsion(Spr, SprOther);
 						//else
 						//	return false;
 					}
@@ -558,8 +567,8 @@ bool CSprites::DetectSpriteCollision(CSprite* Spr, CSprite* SprOther)
 					if ((Spr->collisionWidth == Spr->collisionHeight) && (Spr->xscale == Spr->yscale))
 					{
 						// check normal rect first
-						//if (DetectRectRectCollsion(Spr, SprOther))
-							return DetectRectCircleCollsion(SprOther, Spr);
+						//if (CSprites_DetectRectRectCollsion(Spr, SprOther))
+							return CSprites_DetectRectCircleCollsion(SprOther, Spr);
 						//else
 						//	return false;
 					}
@@ -576,18 +585,18 @@ bool CSprites::DetectSpriteCollision(CSprite* Spr, CSprite* SprOther)
 	}
 }
 
-int CSprites::SpriteSlotsUsed()
+int CSprites_SpriteSlotsUsed()
 {
 	int c = 0;
 	for (int i=0; i < SPR_Max; i++)
 	{
-		if(Sprites[i] != nullptr)
+		if(CSprites_Sprites[i] != nullptr)
 			c++;
 	}
 	return c;
 }
 
-int CSprites::SpriteSlotsMax()
+int CSprites_SpriteSlotsMax()
 {
 	return SPR_Max;
 }

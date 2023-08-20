@@ -53,7 +53,6 @@ CGameInvaders *GameInvaders;
 CGameRamIt *GameRamIt;
 CGamePang * GamePang;
 CGameFrog *GameFrog;
-CSprites *Sprites;
 SDL_Renderer *Renderer;
 SDL_Texture *TexOffScreen, *TexScreen, *TexTmp;
 long long int RetroCarouselHighScore, RetroCarouselScore;
@@ -587,7 +586,7 @@ void CGame_MainLoop()
 					break;
 			}
 
-			Sprites->ResetDrawTargets();
+			CSprites_ResetDrawTargets();
 		}
 
 		if(CInput_Buttons.ButLB && !CInput_PrevButtons.ButLB)
@@ -816,9 +815,9 @@ void CGame_MainLoop()
 				Text += "GFX Slots: " + to_string(CImage_ImageSlotsUsed()) + "/" + to_string(CImage_ImageSlotsMax()) + "\n";
 				Text += "SND Slots: " + to_string(CAudio_SoundSlotsUsed()) + "/" + to_string(CAudio_SoundSlotsMax()) + "\n";
 				Text += "MUS Slots: " + to_string(CAudio_MusicSlotsUsed()) + "/" + to_string(CAudio_MusicSlotsMax()) + "\n";
-				Text += "SPR Slots: " + to_string(Sprites->SpriteSlotsUsed()) + "/" + to_string(Sprites->SpriteSlotsMax()) + "\n";
-				Text += "SPR Resets: " + to_string(Sprites->UpdateImageResetsCount()) + "\n";
-				Text += "SPR Draws: " + to_string(Sprites->SpritesDrawnCount()) + "\n";
+				Text += "SPR Slots: " + to_string(CSprites_SpriteSlotsUsed()) + "/" + to_string(CSprites_SpriteSlotsMax()) + "\n";
+				Text += "SPR Resets: " + to_string(CSprites_UpdateImageResetsCount()) + "\n";
+				Text += "SPR Draws: " + to_string(CSprites_SpritesDrawnCount()) + "\n";
 				Text += "SCL Loaded: " + to_string(CImage_ScaledImagesLoadedCount()) + "\n";
 				
 			}
@@ -932,8 +931,8 @@ Possible options are:\n\
 				CFont_Init(DataPath, debugInfo);
 				CImage_Init(DataPath, debugInfo);
 				CInput_Init();
-				Sprites = new CSprites();
-				Sprites->SetForceShowCollisionShape(debugShowCollisionShapes);
+				CSprites_Init();
+				CSprites_SetForceShowCollisionShape(debugShowCollisionShapes);
 
 				// Main game loop that loops untile the gamestate = GSQuit
 				// and calls the procedure according to the gamestate.
@@ -980,7 +979,7 @@ Possible options are:\n\
 				CFont_DeInit();
 				CImage_DeInit();
 				CInput_DeInit();
-				delete Sprites;
+				CSprites_DeInit();
 				SDL_DestroyRenderer(Renderer);
 			}
 			else

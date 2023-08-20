@@ -95,26 +95,26 @@ void Destroy_CGameFastEddy(CGameFastEddy* GameFastEddy)
 
 void CGameFastEddy_createkey(CGameFastEddy* GameFastEddy)
 {
-	GameFastEddy->key.spr = Sprites->CreateSprite();
+	GameFastEddy->key.spr = CSprites_CreateSprite();
 	GameFastEddy->key.alive = true;
 	SDL_Point tz = CImage_ImageSize(GameFastEddy->spritesheetkey);
 	Vec2F scale = {GameFastEddy->keyheight / tz.y, GameFastEddy->keyheight / tz.y};
 	GameFastEddy->key.tz.x = tz.x * scale.x;
 	GameFastEddy->key.tz.y = tz.y * scale.y;
-	Sprites->SetSpriteImage(Renderer,GameFastEddy->key.spr, &GameFastEddy->spritesheetkey, 1, 1);
-	Sprites->SetSpriteScale(Renderer,GameFastEddy->key.spr, scale);
-	Sprites->SetSpriteAnimation(GameFastEddy->key.spr, 0, 0, 0);
-	Sprites->SetSpriteCollisionShape(GameFastEddy->key.spr, SHAPE_BOX, tz.x - 20, tz.y, 0, 0, 0);
+	CSprites_SetSpriteImage(Renderer,GameFastEddy->key.spr, &GameFastEddy->spritesheetkey, 1, 1);
+	CSprites_SetSpriteScale(Renderer,GameFastEddy->key.spr, scale);
+	CSprites_SetSpriteAnimation(GameFastEddy->key.spr, 0, 0, 0);
+	CSprites_SetSpriteCollisionShape(GameFastEddy->key.spr, SHAPE_BOX, tz.x - 20, tz.y, 0, 0, 0);
 	GameFastEddy->key.pos.y = GameFastEddy->enemies[GameFastEddy->rowzeroenemyindex].pos.y - GameFastEddy->enemies[GameFastEddy->rowzeroenemyindex].tz.y;
 	GameFastEddy->key.pos.x = GameFastEddy->enemies[GameFastEddy->rowzeroenemyindex].pos.x;
-	Sprites->SetSpriteLocation(GameFastEddy->key.spr, GameFastEddy->key.pos);
+	CSprites_SetSpriteLocation(GameFastEddy->key.spr, GameFastEddy->key.pos);
 }
 
 void CGameFastEddy_destroykey(CGameFastEddy* GameFastEddy)
 {
 	if (GameFastEddy->key.alive)
 	{
-		Sprites->RemoveSprite(GameFastEddy->key.spr);
+		CSprites_RemoveSprite(GameFastEddy->key.spr);
 		GameFastEddy->key.alive = false;
 	}
 }
@@ -125,9 +125,9 @@ void CGameFastEddy_updatekey(CGameFastEddy* GameFastEddy)
 	{
 		GameFastEddy->key.pos.x = GameFastEddy->enemies[GameFastEddy->rowzeroenemyindex].pos.x;
 		GameFastEddy->key.pos.y = GameFastEddy->enemies[GameFastEddy->rowzeroenemyindex].pos.y - GameFastEddy->enemies[GameFastEddy->rowzeroenemyindex].tz.y;
-		Sprites->SetSpriteLocation(GameFastEddy->key.spr, GameFastEddy->key.pos);
+		CSprites_SetSpriteLocation(GameFastEddy->key.spr, GameFastEddy->key.pos);
 
-		if (Sprites->DetectSpriteCollision(GameFastEddy->key.spr, GameFastEddy->player.spr))
+		if (CSprites_DetectSpriteCollision(GameFastEddy->key.spr, GameFastEddy->player.spr))
 		{
 			CAudio_PlaySound(GameFastEddy->SfxSucces, 0);
 			CGame_AddToScore(200);
@@ -161,7 +161,7 @@ void CGameFastEddy_destroycollectable(CGameFastEddy* GameFastEddy, int index)
 {
 	if (GameFastEddy->collectables[index].alive)
 	{
-		Sprites->RemoveSprite(GameFastEddy->collectables[index].spr);
+		CSprites_RemoveSprite(GameFastEddy->collectables[index].spr);
 		GameFastEddy->collectables[index].alive = false;
 	}
 }
@@ -197,22 +197,22 @@ void CGameFastEddy_createcollectables(CGameFastEddy* GameFastEddy, int ignorerow
 					bok = bnocollision;
 				}
 
-				GameFastEddy->collectables[i].spr = Sprites->CreateSprite();
+				GameFastEddy->collectables[i].spr = CSprites_CreateSprite();
 				GameFastEddy->collectables[i].alive = true;
 				GameFastEddy->collectables[i].row = row;
 				GameFastEddy->collectables[i].state = rand() % 3;
 				Vec2F scale = {GameFastEddy->collectableheight / tz.y, GameFastEddy->collectableheight / tz.y};
 				GameFastEddy->collectables[i].tz.x = tz.x * scale.x;
 				GameFastEddy->collectables[i].tz.y = tz.y * scale.y;
-				Sprites->SetSpriteImage(Renderer,GameFastEddy->collectables[i].spr, &GameFastEddy->spritesheetcollectable, 5, 1);
-				Sprites->SetSpriteScale(Renderer,GameFastEddy->collectables[i].spr, scale);
-				Sprites->SetSpriteAnimation(GameFastEddy->collectables[i].spr, ((GameFastEddy->GameBase->level-1) % 5), ((GameFastEddy->GameBase->level-1) % 5), 0);
-				Sprites->SetSpriteCollisionShape(GameFastEddy->collectables[i].spr, SHAPE_CIRCLE, tz.x - 66, tz.y - 66, 0, 0, 0);
-				//Game->Sprites->SetSpriteCollisionShape(GameFastEddy->collectables[i].spr, SHAPE_BOX, tz.x - 66, tz.y - 66, 0, 0, 0);
+				CSprites_SetSpriteImage(Renderer,GameFastEddy->collectables[i].spr, &GameFastEddy->spritesheetcollectable, 5, 1);
+				CSprites_SetSpriteScale(Renderer,GameFastEddy->collectables[i].spr, scale);
+				CSprites_SetSpriteAnimation(GameFastEddy->collectables[i].spr, ((GameFastEddy->GameBase->level-1) % 5), ((GameFastEddy->GameBase->level-1) % 5), 0);
+				CSprites_SetSpriteCollisionShape(GameFastEddy->collectables[i].spr, SHAPE_CIRCLE, tz.x - 66, tz.y - 66, 0, 0, 0);
+				//Game->CSprites_SetSpriteCollisionShape(GameFastEddy->collectables[i].spr, SHAPE_BOX, tz.x - 66, tz.y - 66, 0, 0, 0);
 				GameFastEddy->collectables[i].pos.y = (row) * GameFastEddy->rowspacingsize + GameFastEddy->rowfloorsizey / 2;
 				GameFastEddy->collectables[i].pos.x = ((GameFastEddy->GameBase->screenright - GameFastEddy->GameBase->screenleft) /7) +
 					(rand() % (GameFastEddy->GameBase->screenright - GameFastEddy->GameBase->screenleft - ((GameFastEddy->GameBase->screenright - GameFastEddy->GameBase->screenleft) /6 )));
-				Sprites->SetSpriteLocation(GameFastEddy->collectables[i].spr, GameFastEddy->collectables[i].pos);
+				CSprites_SetSpriteLocation(GameFastEddy->collectables[i].spr, GameFastEddy->collectables[i].pos);
 				GameFastEddy->collectedcreated += 1;
 			}
 		}
@@ -230,7 +230,7 @@ void CGameFastEddy_updatecollectables(CGameFastEddy* GameFastEddy)
 				GameFastEddy->collectables[i].pos.x -= GameFastEddy->collectablespeed;
 				if (GameFastEddy->collectables[i].pos.x + GameFastEddy->collectables[i].tz.x / 2 < GameFastEddy->GameBase->screenleft)
 					GameFastEddy->collectables[i].pos.x = GameFastEddy->GameBase->screenright + GameFastEddy->collectables[i].tz.x / 2;
-				Sprites->SetSpriteLocation(GameFastEddy->collectables[i].spr, GameFastEddy->collectables[i].pos);
+				CSprites_SetSpriteLocation(GameFastEddy->collectables[i].spr, GameFastEddy->collectables[i].pos);
 			}
 
 			if (GameFastEddy->collectables[i].state == GameFastEddy->collectablestatemoveright)
@@ -238,10 +238,10 @@ void CGameFastEddy_updatecollectables(CGameFastEddy* GameFastEddy)
 				GameFastEddy->collectables[i].pos.x += GameFastEddy->collectablespeed;
 				if(GameFastEddy->collectables[i].pos.x - GameFastEddy->collectables[i].tz.x / 2 > GameFastEddy->GameBase->screenright)
 					GameFastEddy->collectables[i].pos.x = GameFastEddy->GameBase->screenleft - GameFastEddy->collectables[i].tz.x / 2;
-				Sprites->SetSpriteLocation(GameFastEddy->collectables[i].spr, GameFastEddy->collectables[i].pos);
+				CSprites_SetSpriteLocation(GameFastEddy->collectables[i].spr, GameFastEddy->collectables[i].pos);
 			}
 
-			if (Sprites->DetectSpriteCollision(GameFastEddy->collectables[i].spr, GameFastEddy->player.spr))
+			if (CSprites_DetectSpriteCollision(GameFastEddy->collectables[i].spr, GameFastEddy->player.spr))
 			{
 				CAudio_PlaySound(GameFastEddy->SfxCollect, 0);
 				int ignorerow = GameFastEddy->collectables[i].row;
@@ -264,7 +264,7 @@ void CGameFastEddy_destroyenemies(CGameFastEddy* GameFastEddy)
 	{
 		if (GameFastEddy->enemies[i].alive)
 		{
-			Sprites->RemoveSprite(GameFastEddy->enemies[i].spr);
+			CSprites_RemoveSprite(GameFastEddy->enemies[i].spr);
 			GameFastEddy->enemies[i].alive = false;
 		}
 	}
@@ -278,9 +278,9 @@ void CGameFastEddy_enemyenablelevelend(CGameFastEddy* GameFastEddy)
 	GameFastEddy->enemies[index].tz.x = tz.x * scale.x;
 	GameFastEddy->enemies[index].tz.y = tz.y * scale.y;
 	GameFastEddy->enemies[index].pos.y = (0 + 1) * GameFastEddy->rowspacingsize - GameFastEddy->rowfloorsizey / 2 - GameFastEddy->enemies[index].tz.y / 2;
-	Sprites->SetSpriteScale(Renderer,GameFastEddy->enemies[index].spr, scale);
-	Sprites->SetSpriteCollisionShape(GameFastEddy->enemies[index].spr, SHAPE_BOX, tz.x - 10, tz.y-10,0, 0, 0);
-	Sprites->SetSpriteLocation(GameFastEddy->enemies[index].spr, GameFastEddy->enemies[index].pos);
+	CSprites_SetSpriteScale(Renderer,GameFastEddy->enemies[index].spr, scale);
+	CSprites_SetSpriteCollisionShape(GameFastEddy->enemies[index].spr, SHAPE_BOX, tz.x - 10, tz.y-10,0, 0, 0);
+	CSprites_SetSpriteLocation(GameFastEddy->enemies[index].spr, GameFastEddy->enemies[index].pos);
 }
 
 void CGameFastEddy_createenemy(CGameFastEddy* GameFastEddy, int row, float x, int state, int group, int multiply)
@@ -292,7 +292,7 @@ void CGameFastEddy_createenemy(CGameFastEddy* GameFastEddy, int row, float x, in
 		{
 			if(row == 0)
 				GameFastEddy->rowzeroenemyindex = i;
-			GameFastEddy->enemies[i].spr = Sprites->CreateSprite();
+			GameFastEddy->enemies[i].spr = CSprites_CreateSprite();
 			GameFastEddy->enemies[i].alive = true;
 			GameFastEddy->enemies[i].row = row;
 			GameFastEddy->enemies[i].group = group;
@@ -300,27 +300,27 @@ void CGameFastEddy_createenemy(CGameFastEddy* GameFastEddy, int row, float x, in
 			Vec2F scale = {GameFastEddy->enemyheight / tz.y * multiply, GameFastEddy->enemyheight / tz.y * multiply};
 			GameFastEddy->enemies[i].tz.x = tz.x * scale.x;
 			GameFastEddy->enemies[i].tz.y = tz.y * scale.y;
-			Sprites->SetSpriteImage(Renderer,GameFastEddy->enemies[i].spr, &GameFastEddy->spritesheetenemy, 3, 4);
-			Sprites->SetSpriteScale(Renderer,GameFastEddy->enemies[i].spr, scale);
+			CSprites_SetSpriteImage(Renderer,GameFastEddy->enemies[i].spr, &GameFastEddy->spritesheetenemy, 3, 4);
+			CSprites_SetSpriteScale(Renderer,GameFastEddy->enemies[i].spr, scale);
 			if (GameFastEddy->enemies[i].state == GameFastEddy->enemystatemoveright)
-				Sprites->SetSpriteAnimation(GameFastEddy->enemies[i].spr, 6, 8, 10);
+				CSprites_SetSpriteAnimation(GameFastEddy->enemies[i].spr, 6, 8, 10);
 
 			if (GameFastEddy->enemies[i].state == GameFastEddy->enemystateidle)
-				Sprites->SetSpriteAnimation(GameFastEddy->enemies[i].spr, 0, 2, 10);
+				CSprites_SetSpriteAnimation(GameFastEddy->enemies[i].spr, 0, 2, 10);
 
 			if (GameFastEddy->enemies[i].state == GameFastEddy->enemystatemoveleft)
-				Sprites->SetSpriteAnimation(GameFastEddy->enemies[i].spr, 3, 5, 10);
+				CSprites_SetSpriteAnimation(GameFastEddy->enemies[i].spr, 3, 5, 10);
 
 			if (GameFastEddy->enemies[i].state == GameFastEddy->enemystatewaitmove)
 			{
 				GameFastEddy->enemies[i].stateticks = 60 * 6;
-				Sprites->SetSpriteAnimation(GameFastEddy->enemies[i].spr, 0, 2, 10);
+				CSprites_SetSpriteAnimation(GameFastEddy->enemies[i].spr, 0, 2, 10);
 			}
 
-			Sprites->SetSpriteCollisionShape(GameFastEddy->enemies[i].spr, SHAPE_BOX, tz.x - 10, tz.y-10,0, 0, 0);
+			CSprites_SetSpriteCollisionShape(GameFastEddy->enemies[i].spr, SHAPE_BOX, tz.x - 10, tz.y-10,0, 0, 0);
 			GameFastEddy->enemies[i].pos.y = (row + 1) * GameFastEddy->rowspacingsize - GameFastEddy->rowfloorsizey / 2 - GameFastEddy->enemies[i].tz.y / 2;
 			GameFastEddy->enemies[i].pos.x = x;
-			Sprites->SetSpriteLocation(GameFastEddy->enemies[i].spr, GameFastEddy->enemies[i].pos);
+			CSprites_SetSpriteLocation(GameFastEddy->enemies[i].spr, GameFastEddy->enemies[i].pos);
 			break;
 		}
 	}
@@ -394,7 +394,7 @@ void CGameFastEddy_updateenemies(CGameFastEddy* GameFastEddy)
 				else
 				{
 					GameFastEddy->enemies[i].state = GameFastEddy->enemystatemoveright;
-					Sprites->SetSpriteAnimation(GameFastEddy->enemies[i].spr, 6, 8, 10);
+					CSprites_SetSpriteAnimation(GameFastEddy->enemies[i].spr, 6, 8, 10);
 				}
 			}
 
@@ -411,7 +411,7 @@ void CGameFastEddy_updateenemies(CGameFastEddy* GameFastEddy)
 							if(GameFastEddy->enemies[i].group == GameFastEddy->enemies[j].group)
 							{
 								GameFastEddy->enemies[j].state = GameFastEddy->enemystatemoveleft;
-								Sprites->SetSpriteAnimation(GameFastEddy->enemies[j].spr, 3, 5, 10);
+								CSprites_SetSpriteAnimation(GameFastEddy->enemies[j].spr, 3, 5, 10);
 							}
 						}
 					}
@@ -431,16 +431,16 @@ void CGameFastEddy_updateenemies(CGameFastEddy* GameFastEddy)
 							if(GameFastEddy->enemies[i].group == GameFastEddy->enemies[j].group)
 							{
 								GameFastEddy->enemies[j].state = GameFastEddy->enemystatemoveright;
-								Sprites->SetSpriteAnimation(GameFastEddy->enemies[j].spr, 6, 8, 10);
+								CSprites_SetSpriteAnimation(GameFastEddy->enemies[j].spr, 6, 8, 10);
 							}
 						}
 					}
 				}
 			}
 
-			Sprites->SetSpriteLocation(GameFastEddy->enemies[i].spr, GameFastEddy->enemies[i].pos);
+			CSprites_SetSpriteLocation(GameFastEddy->enemies[i].spr, GameFastEddy->enemies[i].pos);
 
-			if (Sprites->DetectSpriteCollision(GameFastEddy->enemies[i].spr, GameFastEddy->player.spr))
+			if (CSprites_DetectSpriteCollision(GameFastEddy->enemies[i].spr, GameFastEddy->player.spr))
 			{
 				if (((GameFastEddy->player.state != GameFastEddy->playerstateclimbup) &&
 					(GameFastEddy->player.state != GameFastEddy->playerstateclimbdown) &&
@@ -477,27 +477,27 @@ void CGameFastEddy_destroyplayer(CGameFastEddy* GameFastEddy)
 {
 	if (GameFastEddy->player.alive)
 	{
-		Sprites->RemoveSprite(GameFastEddy->player.spr);
+		CSprites_RemoveSprite(GameFastEddy->player.spr);
 		GameFastEddy->player.alive = false;
 	}
 }
 
 void CGameFastEddy_createplayer(CGameFastEddy* GameFastEddy)
 {
-	GameFastEddy->player.spr = Sprites->CreateSprite();
+	GameFastEddy->player.spr = CSprites_CreateSprite();
 	GameFastEddy->player.alive = true;
 	SDL_Point tz = {238, 342};
 	Vec2F scale = {GameFastEddy->playerheight / tz.y, GameFastEddy->playerheight / tz.y};
 	GameFastEddy->player.tz.x = tz.x * scale.x;
 	GameFastEddy->player.tz.y = tz.y * scale.y;
 	GameFastEddy->player.state = GameFastEddy->playerstateunknown;
-	Sprites->SetSpriteDepth(GameFastEddy->player.spr, 5);
-	Sprites->SetSpriteImage(Renderer,GameFastEddy->player.spr, &GameFastEddy->spritesheetplayeridle, 1, 15);
-	Sprites->SetSpriteScale(Renderer,GameFastEddy->player.spr, scale);
-	Sprites->SetSpriteAnimation(GameFastEddy->player.spr, 0, 14, 10);
-	Sprites->SetSpriteCollisionShape(GameFastEddy->player.spr, SHAPE_BOX, tz.x - 120, tz.y-30,0,0,0);
+	CSprites_SetSpriteDepth(GameFastEddy->player.spr, 5);
+	CSprites_SetSpriteImage(Renderer,GameFastEddy->player.spr, &GameFastEddy->spritesheetplayeridle, 1, 15);
+	CSprites_SetSpriteScale(Renderer,GameFastEddy->player.spr, scale);
+	CSprites_SetSpriteAnimation(GameFastEddy->player.spr, 0, 14, 10);
+	CSprites_SetSpriteCollisionShape(GameFastEddy->player.spr, SHAPE_BOX, tz.x - 120, tz.y-30,0,0,0);
 	GameFastEddy->player.pos = { (float)(GameFastEddy->GameBase->screenright - GameFastEddy->GameBase->screenleft) / 2, 5 * GameFastEddy->rowspacingsize - GameFastEddy->rowfloorsizey / 2 - GameFastEddy->player.tz.y / 2};
-	Sprites->SetSpriteLocation(GameFastEddy->player.spr, GameFastEddy->player.pos);
+	CSprites_SetSpriteLocation(GameFastEddy->player.spr, GameFastEddy->player.pos);
 }
 
 void CGameFastEddy_updateplayer(CGameFastEddy* GameFastEddy)
@@ -549,8 +549,8 @@ void CGameFastEddy_updateplayer(CGameFastEddy* GameFastEddy)
 				{
 					if (GameFastEddy->player.state != GameFastEddy->playerstateleftjump)
 					{
-						Sprites->SetSpriteImage(Renderer,GameFastEddy->player.spr, &GameFastEddy->spritesheetplayerjump, 1, 6);
-						Sprites->SetSpriteAnimation(GameFastEddy->player.spr, 3, 3, 10);
+						CSprites_SetSpriteImage(Renderer,GameFastEddy->player.spr, &GameFastEddy->spritesheetplayerjump, 1, 6);
+						CSprites_SetSpriteAnimation(GameFastEddy->player.spr, 3, 3, 10);
 
 						GameFastEddy->player.state = GameFastEddy->playerstateleftjump;
 						GameFastEddy->player.floory = GameFastEddy->player.pos.y;
@@ -564,8 +564,8 @@ void CGameFastEddy_updateplayer(CGameFastEddy* GameFastEddy)
 					{
 						if (GameFastEddy->player.state != GameFastEddy->playerstaterightjump)
 						{
-							Sprites->SetSpriteImage(Renderer,GameFastEddy->player.spr, &GameFastEddy->spritesheetplayerjump, 1, 6);
-							Sprites->SetSpriteAnimation(GameFastEddy->player.spr, 3, 3, 10);
+							CSprites_SetSpriteImage(Renderer,GameFastEddy->player.spr, &GameFastEddy->spritesheetplayerjump, 1, 6);
+							CSprites_SetSpriteAnimation(GameFastEddy->player.spr, 3, 3, 10);
 
 							GameFastEddy->player.floory = GameFastEddy->player.pos.y;
 							GameFastEddy->player.state = GameFastEddy->playerstaterightjump;
@@ -577,8 +577,8 @@ void CGameFastEddy_updateplayer(CGameFastEddy* GameFastEddy)
 					{
 						if(GameFastEddy->player.state != GameFastEddy->playerstatejump)
 						{
-							Sprites->SetSpriteImage(Renderer,GameFastEddy->player.spr, &GameFastEddy->spritesheetplayerjump, 1, 6);
-							Sprites->SetSpriteAnimation(GameFastEddy->player.spr, 3, 3, 10);
+							CSprites_SetSpriteImage(Renderer,GameFastEddy->player.spr, &GameFastEddy->spritesheetplayerjump, 1, 6);
+							CSprites_SetSpriteAnimation(GameFastEddy->player.spr, 3, 3, 10);
 							GameFastEddy->player.floory = GameFastEddy->player.pos.y;
 							GameFastEddy->player.state = GameFastEddy->playerstatejump;
 							GameFastEddy->player.jumpdown = false;
@@ -592,14 +592,14 @@ void CGameFastEddy_updateplayer(CGameFastEddy* GameFastEddy)
 				if(up)
 				{
 					GameFastEddy->player.pos.y -= GameFastEddy->rowspacingsize/4;
-					Sprites->SetSpriteLocation(GameFastEddy->player.spr, GameFastEddy->player.pos);
+					CSprites_SetSpriteLocation(GameFastEddy->player.spr, GameFastEddy->player.pos);
 					bool found = false;
 					for (int i = 0; i < GameFastEddy->maxladders; i++)
 					{
-						if (Sprites->DetectSpriteCollision(GameFastEddy->player.spr, GameFastEddy->ladders[i].spr))
+						if (CSprites_DetectSpriteCollision(GameFastEddy->player.spr, GameFastEddy->ladders[i].spr))
 						{
-							Sprites->SetSpriteImage(Renderer,GameFastEddy->player.spr, &GameFastEddy->spritesheetplayerclimb, 1, 15);
-							Sprites->SetSpriteAnimation(GameFastEddy->player.spr, 0, 14, 20);
+							CSprites_SetSpriteImage(Renderer,GameFastEddy->player.spr, &GameFastEddy->spritesheetplayerclimb, 1, 15);
+							CSprites_SetSpriteAnimation(GameFastEddy->player.spr, 0, 14, 20);
 
 							GameFastEddy->player.pos.x = GameFastEddy->ladders[i].pos.x;
 							GameFastEddy->player.state = GameFastEddy->playerstateclimbup;
@@ -609,13 +609,13 @@ void CGameFastEddy_updateplayer(CGameFastEddy* GameFastEddy)
 						};
 					};
 					GameFastEddy->player.pos.y += GameFastEddy->rowspacingsize/4;
-					Sprites->SetSpriteLocation(GameFastEddy->player.spr, GameFastEddy->player.pos);
+					CSprites_SetSpriteLocation(GameFastEddy->player.spr, GameFastEddy->player.pos);
 					if (!found)
 					{
 						if (GameFastEddy->player.state != GameFastEddy->playerstateidle)
 						{
-							Sprites->SetSpriteImage(Renderer,GameFastEddy->player.spr, &GameFastEddy->spritesheetplayeridle, 1, 15);
-							Sprites->SetSpriteAnimation(GameFastEddy->player.spr, 0, 14, 10);
+							CSprites_SetSpriteImage(Renderer,GameFastEddy->player.spr, &GameFastEddy->spritesheetplayeridle, 1, 15);
+							CSprites_SetSpriteAnimation(GameFastEddy->player.spr, 0, 14, 10);
 							GameFastEddy->player.state = GameFastEddy->playerstateidle;
 						}
 					}
@@ -625,14 +625,14 @@ void CGameFastEddy_updateplayer(CGameFastEddy* GameFastEddy)
 					if (down)
 					{
 						GameFastEddy->player.pos.y += GameFastEddy->rowspacingsize - GameFastEddy->playerheight / 4;
-						Sprites->SetSpriteLocation(GameFastEddy->player.spr, GameFastEddy->player.pos);
+						CSprites_SetSpriteLocation(GameFastEddy->player.spr, GameFastEddy->player.pos);
 						bool found = false;
 						for (int i = 0; i < GameFastEddy->maxladders; i++)
 						{
-							if (Sprites->DetectSpriteCollision(GameFastEddy->player.spr, GameFastEddy->ladders[i].spr))
+							if (CSprites_DetectSpriteCollision(GameFastEddy->player.spr, GameFastEddy->ladders[i].spr))
 							{
-								Sprites->SetSpriteImage(Renderer,GameFastEddy->player.spr, &GameFastEddy->spritesheetplayerclimb, 1, 15);
-								Sprites->SetSpriteAnimation(GameFastEddy->player.spr, 14, 0, 20);
+								CSprites_SetSpriteImage(Renderer,GameFastEddy->player.spr, &GameFastEddy->spritesheetplayerclimb, 1, 15);
+								CSprites_SetSpriteAnimation(GameFastEddy->player.spr, 14, 0, 20);
 
 								GameFastEddy->player.pos.x = GameFastEddy->ladders[i].pos.x;
 								GameFastEddy->player.state = GameFastEddy->playerstateclimbdown;
@@ -642,13 +642,13 @@ void CGameFastEddy_updateplayer(CGameFastEddy* GameFastEddy)
 							};
 						};
 						GameFastEddy->player.pos.y -= GameFastEddy->rowspacingsize - GameFastEddy->playerheight / 4;
-						Sprites->SetSpriteLocation(GameFastEddy->player.spr, GameFastEddy->player.pos);
+						CSprites_SetSpriteLocation(GameFastEddy->player.spr, GameFastEddy->player.pos);
 						if (!found)
 						{
 							if (GameFastEddy->player.state != GameFastEddy->playerstateidle)
 							{
-								Sprites->SetSpriteImage(Renderer,GameFastEddy->player.spr, &GameFastEddy->spritesheetplayeridle, 1, 15);
-								Sprites->SetSpriteAnimation(GameFastEddy->player.spr, 0, 14, 10);
+								CSprites_SetSpriteImage(Renderer,GameFastEddy->player.spr, &GameFastEddy->spritesheetplayeridle, 1, 15);
+								CSprites_SetSpriteAnimation(GameFastEddy->player.spr, 0, 14, 10);
 								GameFastEddy->player.state = GameFastEddy->playerstateidle;
 							}
 						}
@@ -659,8 +659,8 @@ void CGameFastEddy_updateplayer(CGameFastEddy* GameFastEddy)
 						{
 							if (GameFastEddy->player.state != GameFastEddy->playerstateleft)
 							{
-								Sprites->SetSpriteImage(Renderer,GameFastEddy->player.spr, &GameFastEddy->spritesheetplayerrun, 1, 7);
-								Sprites->SetSpriteAnimation(GameFastEddy->player.spr, 0, 6, 10);
+								CSprites_SetSpriteImage(Renderer,GameFastEddy->player.spr, &GameFastEddy->spritesheetplayerrun, 1, 7);
+								CSprites_SetSpriteAnimation(GameFastEddy->player.spr, 0, 6, 10);
 								GameFastEddy->player.spr->xscale = -(abs(GameFastEddy->player.spr->xscale));
 								GameFastEddy->player.state = GameFastEddy->playerstateleft;
 							}
@@ -671,8 +671,8 @@ void CGameFastEddy_updateplayer(CGameFastEddy* GameFastEddy)
 							{
 								if (GameFastEddy->player.state != GameFastEddy->playerstateright)
 								{
-									Sprites->SetSpriteImage(Renderer,GameFastEddy->player.spr, &GameFastEddy->spritesheetplayerrun, 1, 7);
-									Sprites->SetSpriteAnimation(GameFastEddy->player.spr, 0, 6, 10);
+									CSprites_SetSpriteImage(Renderer,GameFastEddy->player.spr, &GameFastEddy->spritesheetplayerrun, 1, 7);
+									CSprites_SetSpriteAnimation(GameFastEddy->player.spr, 0, 6, 10);
 									GameFastEddy->player.spr->xscale = (abs(GameFastEddy->player.spr->xscale));
 									GameFastEddy->player.state = GameFastEddy->playerstateright;
 								}
@@ -681,8 +681,8 @@ void CGameFastEddy_updateplayer(CGameFastEddy* GameFastEddy)
 							{
 								if (GameFastEddy->player.state != GameFastEddy->playerstateidle)
 								{
-									Sprites->SetSpriteImage(Renderer,GameFastEddy->player.spr, &GameFastEddy->spritesheetplayeridle, 1, 15);
-									Sprites->SetSpriteAnimation(GameFastEddy->player.spr, 0, 14, 10);
+									CSprites_SetSpriteImage(Renderer,GameFastEddy->player.spr, &GameFastEddy->spritesheetplayeridle, 1, 15);
+									CSprites_SetSpriteAnimation(GameFastEddy->player.spr, 0, 14, 10);
 									GameFastEddy->player.state = GameFastEddy->playerstateidle;
 								}
 							}
@@ -702,7 +702,7 @@ void CGameFastEddy_updateplayer(CGameFastEddy* GameFastEddy)
 				GameFastEddy->player.state = GameFastEddy->playerstateunknown;
 			}
 
-			Sprites->SetSpriteLocation(GameFastEddy->player.spr, GameFastEddy->player.pos);
+			CSprites_SetSpriteLocation(GameFastEddy->player.spr, GameFastEddy->player.pos);
 		}
 
 		if (GameFastEddy->player.state == GameFastEddy->playerstateclimbdown)
@@ -714,7 +714,7 @@ void CGameFastEddy_updateplayer(CGameFastEddy* GameFastEddy)
 				GameFastEddy->player.pos.y = GameFastEddy->player.floory + GameFastEddy->rowspacingsize;
 				GameFastEddy->player.state = GameFastEddy->playerstateunknown;
 			}
-			Sprites->SetSpriteLocation(GameFastEddy->player.spr, GameFastEddy->player.pos);
+			CSprites_SetSpriteLocation(GameFastEddy->player.spr, GameFastEddy->player.pos);
 		};
 
 		if (GameFastEddy->player.state == GameFastEddy->playerstatejump)
@@ -742,29 +742,29 @@ void CGameFastEddy_updateplayer(CGameFastEddy* GameFastEddy)
 					GameFastEddy->player.state = GameFastEddy->playerstateunknown;
 				}
 			}
-			Sprites->SetSpriteLocation(GameFastEddy->player.spr, GameFastEddy->player.pos);
+			CSprites_SetSpriteLocation(GameFastEddy->player.spr, GameFastEddy->player.pos);
 			if (GameFastEddy->player.pos.y < GameFastEddy->player.floory - 5/6 * GameFastEddy->playerjumpheight)
-				Sprites->SetSpriteAnimation(GameFastEddy->player.spr, 5, 5, 0);
+				CSprites_SetSpriteAnimation(GameFastEddy->player.spr, 5, 5, 0);
 			else
 			{
 				if (GameFastEddy->player.pos.y < GameFastEddy->player.floory - 4/6 * GameFastEddy->playerjumpheight)
-					Sprites->SetSpriteAnimation(GameFastEddy->player.spr, 4, 4, 0);
+					CSprites_SetSpriteAnimation(GameFastEddy->player.spr, 4, 4, 0);
 				else
 				{
 					if(GameFastEddy->player.pos.y < GameFastEddy->player.floory - 3/6 * GameFastEddy->playerjumpheight)
-						Sprites->SetSpriteAnimation(GameFastEddy->player.spr, 3, 3, 0);
+						CSprites_SetSpriteAnimation(GameFastEddy->player.spr, 3, 3, 0);
 					else
 					{
 						if(GameFastEddy->player.pos.y < GameFastEddy->player.floory - 2/6 * GameFastEddy->playerjumpheight)
-							Sprites->SetSpriteAnimation(GameFastEddy->player.spr, 2, 2, 0);
+							CSprites_SetSpriteAnimation(GameFastEddy->player.spr, 2, 2, 0);
 						else
 						{
 							if(GameFastEddy->player.pos.y < GameFastEddy->player.floory - 1/6 * GameFastEddy->playerjumpheight)
-								Sprites->SetSpriteAnimation(GameFastEddy->player.spr, 1, 1, 0);
+								CSprites_SetSpriteAnimation(GameFastEddy->player.spr, 1, 1, 0);
 							else
 							{
 								if (GameFastEddy->player.pos.y < GameFastEddy->player.floory - 0/6 * GameFastEddy->playerjumpheight)
-									Sprites->SetSpriteAnimation(GameFastEddy->player.spr, 0, 0, 0);
+									CSprites_SetSpriteAnimation(GameFastEddy->player.spr, 0, 0, 0);
 							}
 						}
 					}
@@ -815,34 +815,34 @@ void CGameFastEddy_updateplayer(CGameFastEddy* GameFastEddy)
 			}
 
 			if (GameFastEddy->player.pos.y < GameFastEddy->player.floory - 5/6 * GameFastEddy->playerjumpheight)
-				Sprites->SetSpriteAnimation(GameFastEddy->player.spr, 5, 5, 0);
+				CSprites_SetSpriteAnimation(GameFastEddy->player.spr, 5, 5, 0);
 			else
 			{
 				if (GameFastEddy->player.pos.y < GameFastEddy->player.floory - 4/6 * GameFastEddy->playerjumpheight)
-					Sprites->SetSpriteAnimation(GameFastEddy->player.spr, 4, 4, 0);
+					CSprites_SetSpriteAnimation(GameFastEddy->player.spr, 4, 4, 0);
 				else
 				{
 					if (GameFastEddy->player.pos.y < GameFastEddy->player.floory - 3/6 * GameFastEddy->playerjumpheight)
-						Sprites->SetSpriteAnimation(GameFastEddy->player.spr, 3, 3, 0);
+						CSprites_SetSpriteAnimation(GameFastEddy->player.spr, 3, 3, 0);
 					else
 					{
 						if (GameFastEddy->player.pos.y < GameFastEddy->player.floory - 2/6 * GameFastEddy->playerjumpheight)
-							Sprites->SetSpriteAnimation(GameFastEddy->player.spr, 2, 2, 0);
+							CSprites_SetSpriteAnimation(GameFastEddy->player.spr, 2, 2, 0);
 						else
 						{
 							if(GameFastEddy->player.pos.y < GameFastEddy->player.floory - 1/6 * GameFastEddy->playerjumpheight)
-								Sprites->SetSpriteAnimation(GameFastEddy->player.spr, 1, 1, 0);
+								CSprites_SetSpriteAnimation(GameFastEddy->player.spr, 1, 1, 0);
 							else
 							{
 								if(GameFastEddy->player.pos.y < GameFastEddy->player.floory - 0/6 * GameFastEddy->playerjumpheight)
-									Sprites->SetSpriteAnimation(GameFastEddy->player.spr, 0, 0, 0);
+									CSprites_SetSpriteAnimation(GameFastEddy->player.spr, 0, 0, 0);
 							}
 						}
 					}
 				}
 			}
 
-			Sprites->SetSpriteLocation(GameFastEddy->player.spr, GameFastEddy->player.pos);
+			CSprites_SetSpriteLocation(GameFastEddy->player.spr, GameFastEddy->player.pos);
 		}
 
 		if (GameFastEddy->player.state == GameFastEddy->playerstateright)
@@ -851,7 +851,7 @@ void CGameFastEddy_updateplayer(CGameFastEddy* GameFastEddy)
 				GameFastEddy->player.pos.x += GameFastEddy->playerspeed;
 			else
 				GameFastEddy->player.pos.x = GameFastEddy->GameBase->screenright - GameFastEddy->player.tz.x / 2;
-			Sprites->SetSpriteLocation(GameFastEddy->player.spr, GameFastEddy->player.pos);
+			CSprites_SetSpriteLocation(GameFastEddy->player.spr, GameFastEddy->player.pos);
 		}
 
 		if (GameFastEddy->player.state == GameFastEddy->playerstateleft)
@@ -860,7 +860,7 @@ void CGameFastEddy_updateplayer(CGameFastEddy* GameFastEddy)
 				GameFastEddy->player.pos.x -= GameFastEddy->playerspeed;
 			else
 				GameFastEddy->player.pos.x = GameFastEddy->GameBase->screenleft + GameFastEddy->player.tz.x / 2;
-			Sprites->SetSpriteLocation(GameFastEddy->player.spr, GameFastEddy->player.pos);
+			CSprites_SetSpriteLocation(GameFastEddy->player.spr, GameFastEddy->player.pos);
 		}
 	}
 }
@@ -872,7 +872,7 @@ void CGameFastEddy_updateplayer(CGameFastEddy* GameFastEddy)
 void CGameFastEddy_destroyfloors(CGameFastEddy* GameFastEddy)
 {
 	for (int i = 0; i < GameFastEddy->maxfloortiles; i++)
-		Sprites->RemoveSprite(GameFastEddy->floors[i].spr);
+		CSprites_RemoveSprite(GameFastEddy->floors[i].spr);
 }
 
 void CGameFastEddy_createfloors(CGameFastEddy* GameFastEddy)
@@ -887,11 +887,11 @@ void CGameFastEddy_createfloors(CGameFastEddy* GameFastEddy)
 	{
 		for (int x = 0; x < GameFastEddy->numfloortilesperrow; x++)
 		{
-			GameFastEddy->floors[i].spr = Sprites->CreateSprite();
+			GameFastEddy->floors[i].spr = CSprites_CreateSprite();
 			GameFastEddy->floors[i].alive = true;
-			Sprites->SetSpriteImage(Renderer,GameFastEddy->floors[i].spr, &GameFastEddy->spritesheet, 9, 10);
-			Sprites->SetSpriteLocation(GameFastEddy->floors[i].spr, {(float)x * GameFastEddy->rowfloorsizex + GameFastEddy->rowfloorsizex / 2, (float)(y + 1) * GameFastEddy->rowspacingsize - GameFastEddy->rowfloorsizey / 2});
-			Sprites->SetSpriteScale(Renderer,GameFastEddy->floors[i].spr, {(float)GameFastEddy->rowfloorsizex / tz.x , (float)GameFastEddy->rowfloorsizey / tz.y});
+			CSprites_SetSpriteImage(Renderer,GameFastEddy->floors[i].spr, &GameFastEddy->spritesheet, 9, 10);
+			CSprites_SetSpriteLocation(GameFastEddy->floors[i].spr, {(float)x * GameFastEddy->rowfloorsizex + GameFastEddy->rowfloorsizex / 2, (float)(y + 1) * GameFastEddy->rowspacingsize - GameFastEddy->rowfloorsizey / 2});
+			CSprites_SetSpriteScale(Renderer,GameFastEddy->floors[i].spr, {(float)GameFastEddy->rowfloorsizex / tz.x , (float)GameFastEddy->rowfloorsizey / tz.y});
 			if (x == 0)
 				tilenr = 36;
 			else
@@ -901,7 +901,7 @@ void CGameFastEddy_createfloors(CGameFastEddy* GameFastEddy)
 				else
 					tilenr = 37;
 			}
-			Sprites->SetSpriteAnimation(GameFastEddy->floors[i].spr, tilenr, tilenr, 0);
+			CSprites_SetSpriteAnimation(GameFastEddy->floors[i].spr, tilenr, tilenr, 0);
 			i += 1;
 		}
 	}
@@ -912,7 +912,7 @@ void CGameFastEddy_createfloors(CGameFastEddy* GameFastEddy)
 void CGameFastEddy_destroyladders(CGameFastEddy* GameFastEddy)
 {
 	for (int i = 0; i < GameFastEddy->maxladders; i++)
-		Sprites->RemoveSprite(GameFastEddy->ladders[i].spr);
+		CSprites_RemoveSprite(GameFastEddy->ladders[i].spr);
 }
 
 void CGameFastEddy_createladders(CGameFastEddy* GameFastEddy)
@@ -922,24 +922,24 @@ void CGameFastEddy_createladders(CGameFastEddy* GameFastEddy)
 	for (int y = 1; y < GameFastEddy->rows; y++)
 	{
 		int x1 = 1 + rand() % (int(GameFastEddy->laddersfitrows / 2)-1);
-		GameFastEddy->ladders[i].spr = Sprites->CreateSprite();
+		GameFastEddy->ladders[i].spr = CSprites_CreateSprite();
 		GameFastEddy->ladders[i].alive = true;
 		GameFastEddy->ladders[i].pos = {x1 * GameFastEddy->ladderwidth + GameFastEddy->ladderwidth / 2 , y * GameFastEddy->rowspacingsize + GameFastEddy->rowspacingsize / 2 - GameFastEddy->rowfloorsizey / 2};
-		Sprites->SetSpriteImage(Renderer,GameFastEddy->ladders[i].spr, &GameFastEddy->spritesheetladder);
-		Sprites->SetSpriteCollisionShape(GameFastEddy->ladders[i].spr, SHAPE_BOX, tz.x - 20, tz.y-10,0,0,0);
+		CSprites_SetSpriteImage(Renderer,GameFastEddy->ladders[i].spr, &GameFastEddy->spritesheetladder);
+		CSprites_SetSpriteCollisionShape(GameFastEddy->ladders[i].spr, SHAPE_BOX, tz.x - 20, tz.y-10,0,0,0);
 
-		Sprites->SetSpriteLocation(GameFastEddy->ladders[i].spr, GameFastEddy->ladders[i].pos );
-		Sprites->SetSpriteScale(Renderer,GameFastEddy->ladders[i].spr, {GameFastEddy->ladderwidth / tz.x , (GameFastEddy->rowspacingsize + GameFastEddy->rowfloorsizey/2) / tz.y});
+		CSprites_SetSpriteLocation(GameFastEddy->ladders[i].spr, GameFastEddy->ladders[i].pos );
+		CSprites_SetSpriteScale(Renderer,GameFastEddy->ladders[i].spr, {GameFastEddy->ladderwidth / tz.x , (GameFastEddy->rowspacingsize + GameFastEddy->rowfloorsizey/2) / tz.y});
 
 		i += 1;
 		int x2 = x1 + int(GameFastEddy->laddersfitrows / 2);
-		GameFastEddy->ladders[i].spr = Sprites->CreateSprite();
+		GameFastEddy->ladders[i].spr = CSprites_CreateSprite();
 		GameFastEddy->ladders[i].alive = true;
 		GameFastEddy->ladders[i].pos = {x2 * GameFastEddy->ladderwidth + GameFastEddy->ladderwidth / 2 , y * GameFastEddy->rowspacingsize + GameFastEddy->rowspacingsize / 2 - GameFastEddy->rowfloorsizey / 2};
-		Sprites->SetSpriteImage(Renderer,GameFastEddy->ladders[i].spr, &GameFastEddy->spritesheetladder);
-		Sprites->SetSpriteCollisionShape(GameFastEddy->ladders[i].spr, SHAPE_BOX, tz.x - 20, tz.y-10,0,0,0);
-		Sprites->SetSpriteLocation(GameFastEddy->ladders[i].spr, GameFastEddy->ladders[i].pos );
-		Sprites->SetSpriteScale(Renderer,GameFastEddy->ladders[i].spr, {GameFastEddy->ladderwidth / tz.x , (GameFastEddy->rowspacingsize + GameFastEddy->rowfloorsizey/2) / tz.y});
+		CSprites_SetSpriteImage(Renderer,GameFastEddy->ladders[i].spr, &GameFastEddy->spritesheetladder);
+		CSprites_SetSpriteCollisionShape(GameFastEddy->ladders[i].spr, SHAPE_BOX, tz.x - 20, tz.y-10,0,0,0);
+		CSprites_SetSpriteLocation(GameFastEddy->ladders[i].spr, GameFastEddy->ladders[i].pos );
+		CSprites_SetSpriteScale(Renderer,GameFastEddy->ladders[i].spr, {GameFastEddy->ladderwidth / tz.x , (GameFastEddy->rowspacingsize + GameFastEddy->rowfloorsizey/2) / tz.y});
 		i += 1;
 	}
 }
@@ -1078,13 +1078,13 @@ void CGameFastEddy_UpdateLogic(CGameFastEddy* GameFastEddy)
 	GameFastEddy->GameBase->UpdateLogic(GameFastEddy->GameBase);
 	GameFastEddy->UpdateObjects(GameFastEddy, SubGameState == SGGame);
 	if(SubGameState == SGGame)
-		Sprites->UpdateSprites(Renderer);
+		CSprites_UpdateSprites(Renderer);
 }
 
 void CGameFastEddy_Draw(CGameFastEddy* GameFastEddy)
 {
 	GameFastEddy->DrawBackground(GameFastEddy);
-	Sprites->DrawSprites(Renderer);
+	CSprites_DrawSprites(Renderer);
 	GameFastEddy->GameBase->DrawScoreBar(GameFastEddy->GameBase);
 	GameFastEddy->GameBase->DrawSubStateText(GameFastEddy->GameBase);
 }

@@ -49,7 +49,6 @@ extern CGameInvaders *GameInvaders;
 extern CGameRamIt *GameRamIt;
 extern CGamePang * GamePang;
 extern CGameFrog *GameFrog;
-extern CSprites *Sprites;
 extern SDL_Renderer *Renderer;
 extern SDL_Texture *TexOffScreen, *TexScreen, *TexTmp;
 extern long long int RetroCarouselHighScore, RetroCarouselScore;

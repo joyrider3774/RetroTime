@@ -262,7 +262,7 @@ void CGameSnake_UpdateLogic(CGameSnake* GameSnake)
 	GameSnake->GameBase->UpdateLogic(GameSnake->GameBase);
 	GameSnake->UpdateObjects(GameSnake, SubGameState == SGGame);
 	if(SubGameState == SGGame)
-		Sprites->UpdateSprites(Renderer);
+		CSprites_UpdateSprites(Renderer);
 }
 
 
@@ -278,7 +278,7 @@ void CGameSnake_Draw(CGameSnake* GameSnake)
 {
 	GameSnake->DrawBackground(GameSnake);
 	if (GameSnake->DrawObjects(GameSnake))
-		Sprites->DrawSprites(Renderer);
+		CSprites_DrawSprites(Renderer);
 	GameSnake->GameBase->DrawScoreBar(GameSnake->GameBase);
 	GameSnake->GameBase->DrawSubStateText(GameSnake->GameBase);
 }

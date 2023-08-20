@@ -311,7 +311,7 @@ void CGameBase_PauseMenu(CGameBase* GameBase)
 				Text += "GFX Slots: " + to_string(CImage_ImageSlotsUsed()) + "/" + to_string(CImage_ImageSlotsMax()) + "\n";
 				Text += "SND Slots: " + to_string(CAudio_SoundSlotsUsed()) + "/" + to_string(CAudio_SoundSlotsMax()) + "\n";
 				Text += "MUS Slots: " + to_string(CAudio_MusicSlotsUsed()) + "/" + to_string(CAudio_MusicSlotsMax()) + "\n";
-				Text += "SPR Slots: " + to_string(Sprites->SpriteSlotsUsed()) + "/" + to_string(Sprites->SpriteSlotsMax()) + "\n";
+				Text += "SPR Slots: " + to_string(CSprites_SpriteSlotsUsed()) + "/" + to_string(CSprites_SpriteSlotsMax()) + "\n";
 			}
 			int tw = CFont_TextWidth("RobotoMono-Bold", 16, Text, Text.length());
 			CFont_WriteText(Renderer, "RobotoMono-Bold", 16, Text, Text.length(), w - tw, 0, 0, {255, 0, 255, 255});

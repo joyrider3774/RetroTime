@@ -331,7 +331,7 @@ void CGameBlockStacker_Draw(CGameBlockStacker* BlockStacker)
 {
 	BlockStacker->DrawBackground(BlockStacker);
 	if (BlockStacker->DrawObjects(BlockStacker))
-		Sprites->DrawSprites(Renderer);
+		CSprites_DrawSprites(Renderer);
 	BlockStacker->GameBase->DrawScoreBar(BlockStacker->GameBase);
 	BlockStacker->GameBase->DrawSubStateText(BlockStacker->GameBase);
 }
@@ -406,7 +406,7 @@ void CGameBlockStacker_UpdateLogic(CGameBlockStacker* BlockStacker)
 	BlockStacker->GameBase->UpdateLogic(BlockStacker->GameBase);
 	BlockStacker->UpdateObjects(BlockStacker, SubGameState == SGGame);
 	if(SubGameState == SGGame)
-		Sprites->UpdateSprites(Renderer);
+		CSprites_UpdateSprites(Renderer);
 }
 
 void CGameBlockStacker_UpdateObjects(CGameBlockStacker* BlockStacker, bool IsGameState)
