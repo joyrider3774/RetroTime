@@ -81,7 +81,7 @@ void Intro()
 		sceneticks = 0;
 	}
 
-	if (Input->Buttons.ButA || Input->Buttons.ButB || Input->Buttons.ButBack || Input->Buttons.ButStart || (scene -2 >= Games))
+	if (CInput_Buttons.ButA || CInput_Buttons.ButB || CInput_Buttons.ButBack || CInput_Buttons.ButStart || (scene -2 >= Games))
 		GameState = GSTitleScreenInit;
 
 	if (alpha < 1)

@@ -639,9 +639,9 @@ void CGameInvaders_updateplayer(CGameInvaders* GameInvaders)
 	{
 		Sprites->SetSpriteAnimation(GameInvaders->player.spr, 0, 0, 0);
 
-		if ((Input->Buttons.ButLeft) ||
-			(Input->Buttons.ButLeft2) ||
-			(Input->Buttons.ButDpadLeft))
+		if ((CInput_Buttons.ButLeft) ||
+			(CInput_Buttons.ButLeft2) ||
+			(CInput_Buttons.ButDpadLeft))
 		{
 			if (GameInvaders->player.pos.x - GameInvaders->player.tz.x / 2 - GameInvaders->playerspeed > GameInvaders->GameBase->screenleft)
 				GameInvaders->player.pos.x -= GameInvaders->playerspeed;
@@ -650,9 +650,9 @@ void CGameInvaders_updateplayer(CGameInvaders* GameInvaders)
 			Sprites->SetSpriteAnimation(GameInvaders->player.spr, 1, 1, 0);
 		}
 
-		if ((Input->Buttons.ButRight) ||
-			(Input->Buttons.ButRight2) ||
-			(Input->Buttons.ButDpadRight))
+		if ((CInput_Buttons.ButRight) ||
+			(CInput_Buttons.ButRight2) ||
+			(CInput_Buttons.ButDpadRight))
 		{
 			if ( GameInvaders->player.pos.x + GameInvaders->player.tz.x / 2 + GameInvaders->playerspeed < GameInvaders->GameBase->screenright)
 				GameInvaders->player.pos.x += GameInvaders->playerspeed;
@@ -662,7 +662,7 @@ void CGameInvaders_updateplayer(CGameInvaders* GameInvaders)
 		}
 		Sprites->SetSpriteLocation(GameInvaders->player.spr, GameInvaders->player.pos);
 
-		if (!Input->PrevButtons.ButA && Input->Buttons.ButA)
+		if (!CInput_PrevButtons.ButA && CInput_Buttons.ButA)
 			GameInvaders->createbullet(GameInvaders);
 	}
 	else

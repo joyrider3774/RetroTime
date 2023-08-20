@@ -102,9 +102,9 @@ void CGameSnake_drawsnake(CGameSnake* GameSnake)
 
 void CGameSnake_updatesnake(CGameSnake* GameSnake)
 {
-	if ((Input->Buttons.ButLeft) ||
-		(Input->Buttons.ButLeft2) ||
-		(Input->Buttons.ButDpadLeft))
+	if ((CInput_Buttons.ButLeft) ||
+		(CInput_Buttons.ButLeft2) ||
+		(CInput_Buttons.ButDpadLeft))
 	{
 		if(GameSnake->movedone && GameSnake->dir.x == 0)
 		{
@@ -114,9 +114,9 @@ void CGameSnake_updatesnake(CGameSnake* GameSnake)
 	}
 	else
 	{
-		if ((Input->Buttons.ButRight) ||
-			(Input->Buttons.ButRight2) ||
-			(Input->Buttons.ButDpadRight))
+		if ((CInput_Buttons.ButRight) ||
+			(CInput_Buttons.ButRight2) ||
+			(CInput_Buttons.ButDpadRight))
 		{
 			if(GameSnake->movedone && GameSnake->dir.x == 0)
 			{
@@ -126,9 +126,9 @@ void CGameSnake_updatesnake(CGameSnake* GameSnake)
 		}
 		else
 		{
-			if ((Input->Buttons.ButUp) ||
-				(Input->Buttons.ButUp2) ||
-				(Input->Buttons.ButDpadUp))
+			if ((CInput_Buttons.ButUp) ||
+				(CInput_Buttons.ButUp2) ||
+				(CInput_Buttons.ButDpadUp))
 			{
 				if(GameSnake->movedone && GameSnake->dir.y == 0)
 				{
@@ -138,9 +138,9 @@ void CGameSnake_updatesnake(CGameSnake* GameSnake)
 			}
 			else
 			{
-				if ((Input->Buttons.ButDown) ||
-					(Input->Buttons.ButDown2) ||
-					(Input->Buttons.ButDpadDown))
+				if ((CInput_Buttons.ButDown) ||
+					(CInput_Buttons.ButDown2) ||
+					(CInput_Buttons.ButDpadDown))
 				{
 					if(GameSnake->movedone && GameSnake->dir.y == 0)
 					{

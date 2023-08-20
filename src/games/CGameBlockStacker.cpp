@@ -83,25 +83,25 @@ bool CGameBlockStacker_piecefits(CGameBlockStacker* BlockStacker, int tetrimo, i
 
 void CGameBlockStacker_updateplayer(CGameBlockStacker* BlockStacker)
 {
-	if ((Input->Buttons.ButLeft) ||
-		(Input->Buttons.ButLeft2) ||
-		(Input->Buttons.ButDpadLeft))
+	if ((CInput_Buttons.ButLeft) ||
+		(CInput_Buttons.ButLeft2) ||
+		(CInput_Buttons.ButDpadLeft))
 		if (BlockStacker->piecefits(BlockStacker, BlockStacker->currpiece, BlockStacker->rotation, BlockStacker->plrx - 1, BlockStacker->plry))
 			BlockStacker->plrx -= 1;
 
-	if ((Input->Buttons.ButRight) ||
-		(Input->Buttons.ButRight2) ||
-		(Input->Buttons.ButDpadRight))
+	if ((CInput_Buttons.ButRight) ||
+		(CInput_Buttons.ButRight2) ||
+		(CInput_Buttons.ButDpadRight))
 		if (BlockStacker->piecefits(BlockStacker, BlockStacker->currpiece, BlockStacker->rotation, BlockStacker->plrx + 1, BlockStacker->plry))
 			BlockStacker->plrx += 1;
 
-	if ((Input->Buttons.ButDown) ||
-		(Input->Buttons.ButDown2) ||
-		(Input->Buttons.ButDpadDown))
+	if ((CInput_Buttons.ButDown) ||
+		(CInput_Buttons.ButDown2) ||
+		(CInput_Buttons.ButDpadDown))
 		if (BlockStacker->piecefits(BlockStacker, BlockStacker->currpiece, BlockStacker->rotation, BlockStacker->plrx, BlockStacker->plry + 1))
 			BlockStacker->plry += 1;
 
-	if (Input->Buttons.ButA)
+	if (CInput_Buttons.ButA)
 	{
 		if (BlockStacker->rotateblock && BlockStacker->piecefits(BlockStacker, BlockStacker->currpiece, BlockStacker->rotation +1, BlockStacker->plrx, BlockStacker->plry))
 		{
@@ -113,7 +113,7 @@ void CGameBlockStacker_updateplayer(CGameBlockStacker* BlockStacker)
 	else
 		BlockStacker->rotateblock = true;
 
-	if (Input->Buttons.ButB)
+	if (CInput_Buttons.ButB)
 	{
 		if (BlockStacker->dropblock)
 		{

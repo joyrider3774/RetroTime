@@ -42,7 +42,7 @@ void CGameBase_PauseMenu(CGameBase* GameBase)
 	int maxmenus = 5;
 	int menutextsize = 60*yscale;
 	int menuspacing = 85*yscale;
-	Input->ResetButtons();
+	CInput_ResetButtons();
 
 	Uint64 TotalFrames = 0;
 	Uint64 TotalFramePerf = 0;
@@ -124,9 +124,9 @@ void CGameBase_PauseMenu(CGameBase* GameBase)
 			CFont_WriteText(Renderer, "Roboto-Regular", 34*yscale, Text, Text.length(), 485*xscale, 630*yscale, 0, {255, 255, 255, 255});
 		}
 
-		Input->Update();
+		CInput_Update();
 
-		if (Input->Buttons.ButQuit)
+		if (CInput_Buttons.ButQuit)
 		{
 			GameState = GSQuit;
 			SubGameState = GSGame;
@@ -134,22 +134,22 @@ void CGameBase_PauseMenu(CGameBase* GameBase)
 
 		if (SubGameState == SGGameHelp)
 		{
-			if ((Input->Buttons.ButB && !Input->PrevButtons.ButB) ||
-				(Input->Buttons.ButA && !Input->PrevButtons.ButA) ||
-				(!Input->PrevButtons.ButBack && Input->Buttons.ButBack) ||
-				(!Input->PrevButtons.ButStart && Input->Buttons.ButStart))
+			if ((CInput_Buttons.ButB && !CInput_PrevButtons.ButB) ||
+				(CInput_Buttons.ButA && !CInput_PrevButtons.ButA) ||
+				(!CInput_PrevButtons.ButBack && CInput_Buttons.ButBack) ||
+				(!CInput_PrevButtons.ButStart && CInput_Buttons.ButStart))
 			{
 				CAudio_PlaySound(SfxBack, 0);
 				SubGameState = SGPauseMenu;
-				Input->ResetButtons();
+				CInput_ResetButtons();
 			}
 		}
 
 		if (SubGameState == SGPauseMenu)
 		{
-			if ((!Input->PrevButtons.ButLeft && Input->Buttons.ButLeft) ||
-				(!Input->PrevButtons.ButLeft2 && Input->Buttons.ButLeft2) ||
-				(!Input->PrevButtons.ButDpadLeft && Input->Buttons.ButDpadLeft))
+			if ((!CInput_PrevButtons.ButLeft && CInput_Buttons.ButLeft) ||
+				(!CInput_PrevButtons.ButLeft2 && CInput_Buttons.ButLeft2) ||
+				(!CInput_PrevButtons.ButDpadLeft && CInput_Buttons.ButDpadLeft))
 			{
 				CAudio_PlaySound(SfxSelect, 0);
 
@@ -173,9 +173,9 @@ void CGameBase_PauseMenu(CGameBase* GameBase)
 				}
 			}
 
-			if ((!Input->PrevButtons.ButRight && Input->Buttons.ButRight) ||
-				(!Input->PrevButtons.ButRight2 && Input->Buttons.ButRight2) ||
-				(!Input->PrevButtons.ButDpadRight && Input->Buttons.ButDpadRight))
+			if ((!CInput_PrevButtons.ButRight && CInput_Buttons.ButRight) ||
+				(!CInput_PrevButtons.ButRight2 && CInput_Buttons.ButRight2) ||
+				(!CInput_PrevButtons.ButDpadRight && CInput_Buttons.ButDpadRight))
 			{
 				CAudio_PlaySound(SfxSelect, 0);
 				switch(selectedmenu)
@@ -197,9 +197,9 @@ void CGameBase_PauseMenu(CGameBase* GameBase)
 				}
 			}
 
-			if ((!Input->PrevButtons.ButDown && Input->Buttons.ButDown) ||
-				(!Input->PrevButtons.ButDown2 && Input->Buttons.ButDown2) ||
-				(!Input->PrevButtons.ButDpadDown && Input->Buttons.ButDpadDown))
+			if ((!CInput_PrevButtons.ButDown && CInput_Buttons.ButDown) ||
+				(!CInput_PrevButtons.ButDown2 && CInput_Buttons.ButDown2) ||
+				(!CInput_PrevButtons.ButDpadDown && CInput_Buttons.ButDpadDown))
 			{
 				CAudio_PlaySound(SfxSelect, 0);
 
@@ -208,9 +208,9 @@ void CGameBase_PauseMenu(CGameBase* GameBase)
 					selected = 0;
 			}
 
-			if ((!Input->PrevButtons.ButUp && Input->Buttons.ButUp) ||
-				(!Input->PrevButtons.ButUp2 && Input->Buttons.ButUp2) ||
-				(!Input->PrevButtons.ButDpadUp && Input->Buttons.ButDpadUp))
+			if ((!CInput_PrevButtons.ButUp && CInput_Buttons.ButUp) ||
+				(!CInput_PrevButtons.ButUp2 && CInput_Buttons.ButUp2) ||
+				(!CInput_PrevButtons.ButDpadUp && CInput_Buttons.ButDpadUp))
 			{
 				CAudio_PlaySound(SfxSelect, 0);
 
@@ -219,7 +219,7 @@ void CGameBase_PauseMenu(CGameBase* GameBase)
 					selected = maxmenus - 1;
 			}
 
-			if (!Input->PrevButtons.ButBack && Input->Buttons.ButBack)
+			if (!CInput_PrevButtons.ButBack && CInput_Buttons.ButBack)
 			{
 				CAudio_PlaySound(SfxConfirm, 0);
 
@@ -227,8 +227,8 @@ void CGameBase_PauseMenu(CGameBase* GameBase)
 				SubStateCounter = prevsubstatecounter;
 			}
 
-			if ((!Input->PrevButtons.ButA && Input->Buttons.ButA) ||
-				(!Input->PrevButtons.ButStart && Input->Buttons.ButStart))
+			if ((!CInput_PrevButtons.ButA && CInput_Buttons.ButA) ||
+				(!CInput_PrevButtons.ButStart && CInput_Buttons.ButStart))
 			{
 				CAudio_PlaySound(SfxConfirm, 0);
 
@@ -238,8 +238,8 @@ void CGameBase_PauseMenu(CGameBase* GameBase)
 					{
 						//to fix tetris block rotating or dropping
 						//when choosing continue with a or a with b pressed
-						while (Input->Buttons.ButA || Input->Buttons.ButB)
-							Input->Update();
+						while (CInput_Buttons.ButA || CInput_Buttons.ButB)
+							CInput_Update();
 
 						SubGameState = prevsubgamestate;
 						SubStateCounter = prevsubstatecounter;
@@ -270,7 +270,7 @@ void CGameBase_PauseMenu(CGameBase* GameBase)
 					case PMGameHelp:
 					{
 						SubGameState = SGGameHelp;
-						Input->ResetButtons();
+						CInput_ResetButtons();
 						break;
 					}
 				}
@@ -338,7 +338,7 @@ void CGameBase_PauseMenu(CGameBase* GameBase)
 				SDL_Delay(RequiredDelay);
 		}
 	}
-	Input->ResetButtons();
+	CInput_ResetButtons();
 }
 
 void CGameBase_DrawScoreBar(CGameBase* GameBase)
@@ -381,8 +381,8 @@ void CGameBase_DrawSubstateText(CGameBase* GameBase)
 bool CGameBase_UpdateLogic(CGameBase* GameBase)
 {
 	bool result = false;
-	if ((Input->Buttons.ButStart && !Input->PrevButtons.ButStart) ||
-		(Input->Buttons.ButBack && !Input->PrevButtons.ButBack))
+	if ((CInput_Buttons.ButStart && !CInput_PrevButtons.ButStart) ||
+		(CInput_Buttons.ButBack && !CInput_PrevButtons.ButBack))
 	 	GameBase->PauseMenu(GameBase);
 
 	if (GameMode == GMGame)

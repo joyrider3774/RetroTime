@@ -520,27 +520,27 @@ void CGameFastEddy_updateplayer(CGameFastEddy* GameFastEddy)
 			//	feenemyenablelevelend()
 			//endif
 
-			if (!Input->PrevButtons.ButA && Input->Buttons.ButA)
+			if (!CInput_PrevButtons.ButA && CInput_Buttons.ButA)
 				jump = true;
 
-			if ((Input->Buttons.ButUp) ||
-				(Input->Buttons.ButUp2) ||
-				(Input->Buttons.ButDpadUp))
+			if ((CInput_Buttons.ButUp) ||
+				(CInput_Buttons.ButUp2) ||
+				(CInput_Buttons.ButDpadUp))
 				up = true;
 
-			if ((Input->Buttons.ButDown) ||
-				(Input->Buttons.ButDown2) ||
-				(Input->Buttons.ButDpadDown))
+			if ((CInput_Buttons.ButDown) ||
+				(CInput_Buttons.ButDown2) ||
+				(CInput_Buttons.ButDpadDown))
 				down = true;
 
-			if ((Input->Buttons.ButLeft) ||
-				(Input->Buttons.ButLeft2) ||
-				(Input->Buttons.ButDpadLeft))
+			if ((CInput_Buttons.ButLeft) ||
+				(CInput_Buttons.ButLeft2) ||
+				(CInput_Buttons.ButDpadLeft))
 				left = true;
 
-			if ((Input->Buttons.ButRight) ||
-				(Input->Buttons.ButRight2) ||
-				(Input->Buttons.ButDpadRight))
+			if ((CInput_Buttons.ButRight) ||
+				(CInput_Buttons.ButRight2) ||
+				(CInput_Buttons.ButDpadRight))
 				right = true;
 
 			if (jump)

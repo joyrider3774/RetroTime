@@ -78,9 +78,9 @@ void TitleScreen()
 			Text = "Use dpad to switch between options. (A) to select and (B) for back";
 			CFont_WriteText(Renderer, "Roboto-Regular", 34*yscale, Text, Text.length(), 90*xscale, 630*yscale, 0, {255, 255, 255, 255});
 
-			if ((!Input->PrevButtons.ButDown && Input->Buttons.ButDown) ||
-				(!Input->PrevButtons.ButDown2 && Input->Buttons.ButDown2) ||
-				(!Input->PrevButtons.ButDpadDown && Input->Buttons.ButDpadDown))
+			if ((!CInput_PrevButtons.ButDown && CInput_Buttons.ButDown) ||
+				(!CInput_PrevButtons.ButDown2 && CInput_Buttons.ButDown2) ||
+				(!CInput_PrevButtons.ButDpadDown && CInput_Buttons.ButDpadDown))
 			{
 				CAudio_PlaySound(SfxSelect, 0);
 				SelOptions += 1;
@@ -88,9 +88,9 @@ void TitleScreen()
 					SelOptions = 0;
 			}
 
-			if ((!Input->PrevButtons.ButUp && Input->Buttons.ButUp) ||
-				(!Input->PrevButtons.ButUp2 && Input->Buttons.ButUp2) ||
-				(!Input->PrevButtons.ButDpadUp && Input->Buttons.ButDpadUp))
+			if ((!CInput_PrevButtons.ButUp && CInput_Buttons.ButUp) ||
+				(!CInput_PrevButtons.ButUp2 && CInput_Buttons.ButUp2) ||
+				(!CInput_PrevButtons.ButDpadUp && CInput_Buttons.ButDpadUp))
 			{
 				CAudio_PlaySound(SfxSelect, 0);
 
@@ -99,9 +99,9 @@ void TitleScreen()
 					SelOptions = OptionMenus - 1;
 			}
 
-			if ((!Input->PrevButtons.ButLeft && Input->Buttons.ButLeft) ||
-				(!Input->PrevButtons.ButLeft2 && Input->Buttons.ButLeft2) ||
-				(!Input->PrevButtons.ButDpadLeft && Input->Buttons.ButDpadLeft))
+			if ((!CInput_PrevButtons.ButLeft && CInput_Buttons.ButLeft) ||
+				(!CInput_PrevButtons.ButLeft2 && CInput_Buttons.ButLeft2) ||
+				(!CInput_PrevButtons.ButDpadLeft && CInput_Buttons.ButDpadLeft))
 			{
 				CAudio_PlaySound(SfxSelect, 0);
 				bool wasplaying;
@@ -123,9 +123,9 @@ void TitleScreen()
 				//savehighscoresoptions()
 			}
 
-			if ((!Input->PrevButtons.ButRight && Input->Buttons.ButRight) ||
-				(!Input->PrevButtons.ButRight2 && Input->Buttons.ButRight2) ||
-				(!Input->PrevButtons.ButDpadRight && Input->Buttons.ButDpadRight))
+			if ((!CInput_PrevButtons.ButRight && CInput_Buttons.ButRight) ||
+				(!CInput_PrevButtons.ButRight2 && CInput_Buttons.ButRight2) ||
+				(!CInput_PrevButtons.ButDpadRight && CInput_Buttons.ButDpadRight))
 			{
 				CAudio_PlaySound(SfxSelect, 0);
 				bool wasplaying;
@@ -147,16 +147,16 @@ void TitleScreen()
 			}
 
 
-			if ((!Input->PrevButtons.ButBack && Input->Buttons.ButBack) ||
-				(!Input->PrevButtons.ButB && Input->Buttons.ButB))
+			if ((!CInput_PrevButtons.ButBack && CInput_Buttons.ButBack) ||
+				(!CInput_PrevButtons.ButB && CInput_Buttons.ButB))
 			{
 				CAudio_PlaySound(SfxBack, 0);
 
 				CurrentMainMenu = -1;
 			}
 
-			if ((!Input->PrevButtons.ButStart && Input->Buttons.ButStart) ||
-				(!Input->PrevButtons.ButA && Input->Buttons.ButA))
+			if ((!CInput_PrevButtons.ButStart && CInput_Buttons.ButStart) ||
+				(!CInput_PrevButtons.ButA && CInput_Buttons.ButA))
 			{
 				CAudio_PlaySound(SfxSelect, 0);
 				bool wasplaying;
@@ -204,10 +204,10 @@ void TitleScreen()
 			CFont_WriteText(Renderer, "Roboto-Regular", 38*yscale, Text, Text.length(), (ScreenWidth-tw)/2, 140*yscale, 0, {255, 255, 255, 255});
 
 
-			if ((!Input->PrevButtons.ButA && Input->Buttons.ButA) ||
-				(!Input->PrevButtons.ButB && Input->Buttons.ButB) ||
-				(!Input->PrevButtons.ButBack && Input->Buttons.ButBack) ||
-				(!Input->PrevButtons.ButStart && Input->Buttons.ButStart))
+			if ((!CInput_PrevButtons.ButA && CInput_Buttons.ButA) ||
+				(!CInput_PrevButtons.ButB && CInput_Buttons.ButB) ||
+				(!CInput_PrevButtons.ButBack && CInput_Buttons.ButBack) ||
+				(!CInput_PrevButtons.ButStart && CInput_Buttons.ButStart))
 			{
 				CAudio_PlaySound(SfxBack, 0);
 
@@ -242,10 +242,10 @@ void TitleScreen()
 			int tw = CFont_TextWidth("Roboto-Regular", 35*yscale, Text, Text.length());
 			CFont_WriteText(Renderer, "Roboto-Regular", 35*yscale, Text, Text.length(), (ScreenWidth - tw) / 2, 140*yscale, 0, {255, 255, 255, 255});
 
-			if ((!Input->PrevButtons.ButA && Input->Buttons.ButA) ||
-				(!Input->PrevButtons.ButB && Input->Buttons.ButB) ||
-				(!Input->PrevButtons.ButBack && Input->Buttons.ButBack) ||
-				(!Input->PrevButtons.ButStart && Input->Buttons.ButStart))
+			if ((!CInput_PrevButtons.ButA && CInput_Buttons.ButA) ||
+				(!CInput_PrevButtons.ButB && CInput_Buttons.ButB) ||
+				(!CInput_PrevButtons.ButBack && CInput_Buttons.ButBack) ||
+				(!CInput_PrevButtons.ButStart && CInput_Buttons.ButStart))
 			{
 				CAudio_PlaySound(SfxBack, 0);
 
@@ -272,19 +272,19 @@ void TitleScreen()
 			Text = "Use dpad or (A) to switch between games. (B) for back";
 			CFont_WriteText(Renderer, "Roboto-Regular", 34*yscale, Text, Text.length(), 200*xscale, 630*yscale, 0, {255, 255, 255, 255});
 
-			 if ((!Input->PrevButtons.ButBack && Input->Buttons.ButBack) ||
-				(!Input->PrevButtons.ButB && Input->Buttons.ButB))
+			 if ((!CInput_PrevButtons.ButBack && CInput_Buttons.ButBack) ||
+				(!CInput_PrevButtons.ButB && CInput_Buttons.ButB))
 			 {
 				CAudio_PlaySound(SfxBack, 0);
 
 				CurrentMainMenu = -1;
 			 }
 
-			if ((!Input->PrevButtons.ButStart && Input->Buttons.ButStart) ||
-				(!Input->PrevButtons.ButRight && Input->Buttons.ButRight) ||
-				(!Input->PrevButtons.ButRight2 && Input->Buttons.ButRight2) ||
-				(!Input->PrevButtons.ButDpadRight && Input->Buttons.ButDpadRight) ||
-				(!Input->PrevButtons.ButA && Input->Buttons.ButA))
+			if ((!CInput_PrevButtons.ButStart && CInput_Buttons.ButStart) ||
+				(!CInput_PrevButtons.ButRight && CInput_Buttons.ButRight) ||
+				(!CInput_PrevButtons.ButRight2 && CInput_Buttons.ButRight2) ||
+				(!CInput_PrevButtons.ButDpadRight && CInput_Buttons.ButDpadRight) ||
+				(!CInput_PrevButtons.ButA && CInput_Buttons.ButA))
 			{
 				CAudio_PlaySound(SfxSelect, 0);
 
@@ -293,9 +293,9 @@ void TitleScreen()
 					Game = 0;
 			}
 
-			 if ((!Input->PrevButtons.ButLeft && Input->Buttons.ButLeft) ||
-				 (!Input->PrevButtons.ButLeft2 && Input->Buttons.ButLeft2) ||
-				 (!Input->PrevButtons.ButDpadLeft && Input->Buttons.ButDpadLeft))
+			 if ((!CInput_PrevButtons.ButLeft && CInput_Buttons.ButLeft) ||
+				 (!CInput_PrevButtons.ButLeft2 && CInput_Buttons.ButLeft2) ||
+				 (!CInput_PrevButtons.ButDpadLeft && CInput_Buttons.ButDpadLeft))
 			 {
 				CAudio_PlaySound(SfxSelect, 0);
 
@@ -321,27 +321,27 @@ void TitleScreen()
 			Text = "Use dpad to switch between games. (A) to select and (B) for back";
 			CFont_WriteText(Renderer, "Roboto-Regular", 34*yscale, Text, Text.length(), 90*xscale, 630*yscale, 0, {255, 255, 255, 255});
 
-			if ((!Input->PrevButtons.ButBack && Input->Buttons.ButBack) ||
-				(!Input->PrevButtons.ButB && Input->Buttons.ButB))
+			if ((!CInput_PrevButtons.ButBack && CInput_Buttons.ButBack) ||
+				(!CInput_PrevButtons.ButB && CInput_Buttons.ButB))
 			{
 				CAudio_PlaySound(SfxBack, 0);
 				CurrentMainMenu = MMSelectGameMode;
 			}
 
-			if ((!Input->PrevButtons.ButStart && Input->Buttons.ButStart) ||
-				(!Input->PrevButtons.ButA && Input->Buttons.ButA))
+			if ((!CInput_PrevButtons.ButStart && CInput_Buttons.ButStart) ||
+				(!CInput_PrevButtons.ButA && CInput_Buttons.ButA))
 			{
 				CAudio_PlaySound(SfxConfirm, 0);
 
 				GameState = gamestate;
 				CGame_ResetScores();
 				CurrentMainMenu = -1;
-				Input->ResetButtons();
+				CInput_ResetButtons();
 			}
 
-			if ((!Input->PrevButtons.ButLeft && Input->Buttons.ButLeft) ||
-				(!Input->PrevButtons.ButLeft2 && Input->Buttons.ButLeft2) ||
-				(!Input->PrevButtons.ButDpadLeft && Input->Buttons.ButDpadLeft))
+			if ((!CInput_PrevButtons.ButLeft && CInput_Buttons.ButLeft) ||
+				(!CInput_PrevButtons.ButLeft2 && CInput_Buttons.ButLeft2) ||
+				(!CInput_PrevButtons.ButDpadLeft && CInput_Buttons.ButDpadLeft))
 			{
 				CAudio_PlaySound(SfxSelect, 0);
 
@@ -349,9 +349,9 @@ void TitleScreen()
 				if (Game == -1)
 					Game = Games - 1;
 			}
-			if ((!Input->PrevButtons.ButRight && Input->Buttons.ButRight) ||
-				(!Input->PrevButtons.ButRight2 && Input->Buttons.ButRight2) ||
-				(!Input->PrevButtons.ButDpadRight && Input->Buttons.ButDpadRight))
+			if ((!CInput_PrevButtons.ButRight && CInput_Buttons.ButRight) ||
+				(!CInput_PrevButtons.ButRight2 && CInput_Buttons.ButRight2) ||
+				(!CInput_PrevButtons.ButDpadRight && CInput_Buttons.ButDpadRight))
 			{
 				CAudio_PlaySound(SfxSelect, 0);
 
@@ -383,9 +383,9 @@ void TitleScreen()
 			Text = "Use dpad to switch between game modes. (A) to select and (B) for back";
 			CFont_WriteText(Renderer, "Roboto-Regular", 34*yscale, Text, Text.length(), 90*xscale, 630*yscale, 0, {255,255,255,255});
 
-			if ((!Input->PrevButtons.ButDown && Input->Buttons.ButDown) ||
-				(!Input->PrevButtons.ButDown2 && Input->Buttons.ButDown2) ||
-				(!Input->PrevButtons.ButDpadDown && Input->Buttons.ButDpadDown))
+			if ((!CInput_PrevButtons.ButDown && CInput_Buttons.ButDown) ||
+				(!CInput_PrevButtons.ButDown2 && CInput_Buttons.ButDown2) ||
+				(!CInput_PrevButtons.ButDpadDown && CInput_Buttons.ButDpadDown))
 			{
 				CAudio_PlaySound(SfxSelect, 0);
 				GameMode += 1;
@@ -393,9 +393,9 @@ void TitleScreen()
 					GameMode = 0;
 			}
 
-			if ((!Input->PrevButtons.ButUp && Input->Buttons.ButUp) ||
-				(!Input->PrevButtons.ButUp2 && Input->Buttons.ButUp2) ||
-				(!Input->PrevButtons.ButDpadUp && Input->Buttons.ButDpadUp))
+			if ((!CInput_PrevButtons.ButUp && CInput_Buttons.ButUp) ||
+				(!CInput_PrevButtons.ButUp2 && CInput_Buttons.ButUp2) ||
+				(!CInput_PrevButtons.ButDpadUp && CInput_Buttons.ButDpadUp))
 			{
 				CAudio_PlaySound(SfxSelect, 0);
 
@@ -404,15 +404,15 @@ void TitleScreen()
 					GameMode = Modes - 1;
 			}
 
-			if ((!Input->PrevButtons.ButB && Input->Buttons.ButB) ||
-				(!Input->PrevButtons.ButBack && Input->Buttons.ButBack))
+			if ((!CInput_PrevButtons.ButB && CInput_Buttons.ButB) ||
+				(!CInput_PrevButtons.ButBack && CInput_Buttons.ButBack))
 			{
 				CAudio_PlaySound(SfxBack, 0);
 				CurrentMainMenu = -1;
 			}
 
-			if ((!Input->PrevButtons.ButStart && Input->Buttons.ButStart) ||
-				(!Input->PrevButtons.ButA && Input->Buttons.ButA))
+			if ((!CInput_PrevButtons.ButStart && CInput_Buttons.ButStart) ||
+				(!CInput_PrevButtons.ButA && CInput_Buttons.ButA))
 			{
 				CAudio_PlaySound(SfxConfirm, 0);
 
@@ -447,9 +447,9 @@ void TitleScreen()
 				CFont_WriteText(Renderer, "Roboto-Regular", menutextsize, MMMainMenus[i].name, MMMainMenus[i].name.length(), 500*xscale, 150*yscale + i * menuspacing, 0, color);
 			}
 
-			if ((!Input->PrevButtons.ButDown && Input->Buttons.ButDown) ||
-				(!Input->PrevButtons.ButDown2 && Input->Buttons.ButDown2) ||
-				(!Input->PrevButtons.ButDpadDown && Input->Buttons.ButDpadDown))
+			if ((!CInput_PrevButtons.ButDown && CInput_Buttons.ButDown) ||
+				(!CInput_PrevButtons.ButDown2 && CInput_Buttons.ButDown2) ||
+				(!CInput_PrevButtons.ButDpadDown && CInput_Buttons.ButDpadDown))
 			{
 				CAudio_PlaySound(SfxSelect, 0);
 				SelectedMenu += 1;
@@ -457,9 +457,9 @@ void TitleScreen()
 					SelectedMenu = 0;
 			}
 
-			if ((!Input->PrevButtons.ButUp && Input->Buttons.ButUp) ||
-				(!Input->PrevButtons.ButUp2 && Input->Buttons.ButUp2) ||
-				(!Input->PrevButtons.ButDpadUp && Input->Buttons.ButDpadUp))
+			if ((!CInput_PrevButtons.ButUp && CInput_Buttons.ButUp) ||
+				(!CInput_PrevButtons.ButUp2 && CInput_Buttons.ButUp2) ||
+				(!CInput_PrevButtons.ButDpadUp && CInput_Buttons.ButDpadUp))
 
 			{
 				CAudio_PlaySound(SfxSelect, 0);
@@ -469,8 +469,8 @@ void TitleScreen()
 					SelectedMenu = MainMenus - 1;
 			}
 
-			if ((!Input->PrevButtons.ButStart && Input->Buttons.ButStart) ||
-				(!Input->PrevButtons.ButA && Input->Buttons.ButA))
+			if ((!CInput_PrevButtons.ButStart && CInput_Buttons.ButStart) ||
+				(!CInput_PrevButtons.ButA && CInput_Buttons.ButA))
 			{
 				CurrentMainMenu = SelMenu;
 				CAudio_PlaySound(SfxConfirm, 0);

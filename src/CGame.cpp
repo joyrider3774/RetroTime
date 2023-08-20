@@ -53,8 +53,6 @@ CGameInvaders *GameInvaders;
 CGameRamIt *GameRamIt;
 CGamePang * GamePang;
 CGameFrog *GameFrog;
-
-CInput *Input;
 CSprites *Sprites;
 SDL_Renderer *Renderer;
 SDL_Texture *TexOffScreen, *TexScreen, *TexTmp;
@@ -558,9 +556,9 @@ void CGame_MainLoop()
 
 		CGame_UpdateTimer();
 
-		Input->Update();
+		CInput_Update();
 
-		if(Input->Buttons.RenderReset)
+		if(CInput_Buttons.RenderReset)
 		{
 			SDL_Log("Render Reset, Reloading Game Graphics");
 			CImage_UnloadImages();
@@ -592,7 +590,7 @@ void CGame_MainLoop()
 			Sprites->ResetDrawTargets();
 		}
 
-		if(Input->Buttons.ButLB && !Input->PrevButtons.ButLB)
+		if(CInput_Buttons.ButLB && !CInput_PrevButtons.ButLB)
 		{
 
 			wtrs -= 1;
@@ -600,7 +598,7 @@ void CGame_MainLoop()
 			printf("%s\n", Text.c_str());
 		}
 
-		if(Input->Buttons.ButRB && !Input->PrevButtons.ButRB)
+		if(CInput_Buttons.ButRB && !CInput_PrevButtons.ButRB)
 		{
 			wtrs += 1;
 			Text = "wtrs: " + std::to_string(wtrs) + "ver: " + std::to_string(ver) + "\n";
@@ -608,7 +606,7 @@ void CGame_MainLoop()
 
 		}
 
-		if(Input->Buttons.ButLT && !Input->PrevButtons.ButLT)
+		if(CInput_Buttons.ButLT && !CInput_PrevButtons.ButLT)
 		{
 			if(ver == 2)
 			{
@@ -625,7 +623,7 @@ void CGame_MainLoop()
 			printf("%s\n", Text.c_str());
 		}
 
-		if(Input->Buttons.ButRT && !Input->PrevButtons.ButRT)
+		if(CInput_Buttons.ButRT && !CInput_PrevButtons.ButRT)
 		{
 			if(ver == 2)
 			{
@@ -644,10 +642,10 @@ void CGame_MainLoop()
 
 
 
-		if(Input->Buttons.ButFullscreen && !Input->PrevButtons.ButFullscreen)
+		if(CInput_Buttons.ButFullscreen && !CInput_PrevButtons.ButFullscreen)
 			CGame_ToggleFullscreen();
 
-		if(Input->Buttons.ButQuit)
+		if(CInput_Buttons.ButQuit)
 			GameState = GSQuit;
 
 		SDL_SetRenderTarget(Renderer, TexOffScreen);
@@ -933,7 +931,7 @@ Possible options are:\n\
 				CAudio_Init(DataPath, debugInfo);
 				CFont_Init(DataPath, debugInfo);
 				CImage_Init(DataPath, debugInfo);
-				Input = new CInput();
+				CInput_Init();
 				Sprites = new CSprites();
 				Sprites->SetForceShowCollisionShape(debugShowCollisionShapes);
 
@@ -981,7 +979,7 @@ Possible options are:\n\
 				CAudio_DeInit();
 				CFont_DeInit();
 				CImage_DeInit();
-				delete Input;
+				CInput_DeInit();
 				delete Sprites;
 				SDL_DestroyRenderer(Renderer);
 			}

@@ -196,9 +196,9 @@ void SubScoreScreen()
 	SDL_SetRenderTarget(Renderer, TexScreen);
 	SDL_RenderCopy(Renderer, TexOffScreen, NULL, NULL);
 
-	if ((!Input->PrevButtons.ButA && Input->Buttons.ButA) ||
-		(!Input->PrevButtons.ButBack && Input->Buttons.ButBack) ||
-		(!Input->PrevButtons.ButStart && Input->Buttons.ButStart))
+	if ((!CInput_PrevButtons.ButA && CInput_Buttons.ButA) ||
+		(!CInput_PrevButtons.ButBack && CInput_Buttons.ButBack) ||
+		(!CInput_PrevButtons.ButStart && CInput_Buttons.ButStart))
 	{
 		CAudio_PlaySound(SfxSelect, 0);
 

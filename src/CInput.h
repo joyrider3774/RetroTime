@@ -11,18 +11,13 @@ struct SButtons {
 		 RenderReset;
 };
 
-class CInput {
-
-private:
-	SDL_GameController* GameController = NULL;
-	void HandleJoystickAxisEvent(int Axis, int Value);
-	void HandleJoystickButtonEvent(int Button, bool Value);
-	void HandleKeyboardEvent(int Key, bool Value);
-public:
-	SButtons Buttons, PrevButtons;
-	int JoystickDeadZone, TriggerDeadZone;
-	CInput();
-	~CInput();
-	void Update();
-	void ResetButtons();
-};
+extern SDL_GameController* CInput_GameController;
+extern SButtons CInput_Buttons, CInput_PrevButtons;
+extern int CInput_JoystickDeadZone, CInput_TriggerDeadZone;
+void CInput_Init();
+void CInput_DeInit();
+void CInput_Update();
+void CInput_ResetButtons();
+void CInput_HandleJoystickAxisEvent(int Axis, int Value);
+void CInput_HandleJoystickButtonEvent(int Button, bool Value);
+void CInput_HandleKeyboardEvent(int Key, bool Value);

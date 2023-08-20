@@ -186,19 +186,19 @@ void CGameRamIt_drawplayer(CGameRamIt* GameRamIt)
 
 void CGameRamIt_updateplayer(CGameRamIt* GameRamIt)
 {
-	if ((Input->Buttons.ButLeft) ||
-		(Input->Buttons.ButLeft2) ||
-		(Input->Buttons.ButDpadLeft))
+	if ((CInput_Buttons.ButLeft) ||
+		(CInput_Buttons.ButLeft2) ||
+		(CInput_Buttons.ButDpadLeft))
 		GameRamIt->playerdx = -1;
 
-	if ((Input->Buttons.ButRight) ||
-		(Input->Buttons.ButRight2) ||
-		(Input->Buttons.ButDpadRight))
+	if ((CInput_Buttons.ButRight) ||
+		(CInput_Buttons.ButRight2) ||
+		(CInput_Buttons.ButDpadRight))
 		GameRamIt->playerdx = 1;
 
-	if ((Input->Buttons.ButDown) ||
-		(Input->Buttons.ButDown2) ||
-		(Input->Buttons.ButDpadDown))
+	if ((CInput_Buttons.ButDown) ||
+		(CInput_Buttons.ButDown2) ||
+		(CInput_Buttons.ButDpadDown))
 	{
 		if (GameRamIt->playerpos.y + GameRamIt->riblocksize / 2 + GameRamIt->playerspeed < GameRamIt->GameBase->screenbottom)
 			GameRamIt->playerpos.y += GameRamIt->playerspeed;
@@ -206,9 +206,9 @@ void CGameRamIt_updateplayer(CGameRamIt* GameRamIt)
 			GameRamIt->playerpos.y = GameRamIt->GameBase->screenbottom - GameRamIt->riblocksize / 2;
 	}
 
-	if ((Input->Buttons.ButUp) ||
-		(Input->Buttons.ButUp2) ||
-		(Input->Buttons.ButDpadUp))
+	if ((CInput_Buttons.ButUp) ||
+		(CInput_Buttons.ButUp2) ||
+		(CInput_Buttons.ButDpadUp))
 	{
 		if (GameRamIt->playerpos.y - GameRamIt->riblocksize / 2 - GameRamIt->playerspeed > GameRamIt->GameBase->screentop)
 			GameRamIt->playerpos.y -= GameRamIt->playerspeed;
@@ -216,7 +216,7 @@ void CGameRamIt_updateplayer(CGameRamIt* GameRamIt)
 			GameRamIt->playerpos.y = GameRamIt->GameBase->screentop + GameRamIt->riblocksize / 2;
 	}
 
-	if (Input->Buttons.ButA && !Input->PrevButtons.ButA)
+	if (CInput_Buttons.ButA && !CInput_PrevButtons.ButA)
 		if (GameRamIt->createbullet(GameRamIt))
 		{
 			CAudio_PlaySound(GameRamIt->SfxShoot, 0);

@@ -721,9 +721,9 @@ void CGameFrog_updateplayer(CGameFrog* GameFrog)
 	Sprites->SetSpriteVisibility(GameFrog->player.spr, GameFrog->player.alive);
 	if (GameFrog->player.alive)
 	{
-		if ((!Input->PrevButtons.ButLeft && Input->Buttons.ButLeft) ||
-			(!Input->PrevButtons.ButLeft2 && Input->Buttons.ButLeft2) ||
-			(!Input->PrevButtons.ButDpadLeft && Input->Buttons.ButDpadLeft))
+		if ((!CInput_PrevButtons.ButLeft && CInput_Buttons.ButLeft) ||
+			(!CInput_PrevButtons.ButLeft2 && CInput_Buttons.ButLeft2) ||
+			(!CInput_PrevButtons.ButDpadLeft && CInput_Buttons.ButDpadLeft))
 		{
 			Sprites->SetSpriteAnimation(GameFrog->player.spr, 4, 4, 10);
 
@@ -737,9 +737,9 @@ void CGameFrog_updateplayer(CGameFrog* GameFrog)
 			}
 		}
 
-		if ((!Input->PrevButtons.ButRight && Input->Buttons.ButRight) ||
-			(!Input->PrevButtons.ButRight2 && Input->Buttons.ButRight2) ||
-			(!Input->PrevButtons.ButDpadRight && Input->Buttons.ButDpadRight))
+		if ((!CInput_PrevButtons.ButRight && CInput_Buttons.ButRight) ||
+			(!CInput_PrevButtons.ButRight2 && CInput_Buttons.ButRight2) ||
+			(!CInput_PrevButtons.ButDpadRight && CInput_Buttons.ButDpadRight))
 		{
 			Sprites->SetSpriteAnimation(GameFrog->player.spr, 7, 7, 10);
 
@@ -753,9 +753,9 @@ void CGameFrog_updateplayer(CGameFrog* GameFrog)
 			}
 		}
 
-		if ((!Input->PrevButtons.ButUp && Input->Buttons.ButUp) ||
-			(!Input->PrevButtons.ButUp2 && Input->Buttons.ButUp2) ||
-			(!Input->PrevButtons.ButDpadUp && Input->Buttons.ButDpadUp))
+		if ((!CInput_PrevButtons.ButUp && CInput_Buttons.ButUp) ||
+			(!CInput_PrevButtons.ButUp2 && CInput_Buttons.ButUp2) ||
+			(!CInput_PrevButtons.ButDpadUp && CInput_Buttons.ButDpadUp))
 		{
 			Sprites->SetSpriteAnimation(GameFrog->player.spr, 11, 11, 10);
 
@@ -775,9 +775,9 @@ void CGameFrog_updateplayer(CGameFrog* GameFrog)
 			}
 		}
 
-		if ((!Input->PrevButtons.ButDown && Input->Buttons.ButDown) ||
-			(!Input->PrevButtons.ButDown2 && Input->Buttons.ButDown2) ||
-			(!Input->PrevButtons.ButDpadDown && Input->Buttons.ButDpadDown))
+		if ((!CInput_PrevButtons.ButDown && CInput_Buttons.ButDown) ||
+			(!CInput_PrevButtons.ButDown2 && CInput_Buttons.ButDown2) ||
+			(!CInput_PrevButtons.ButDpadDown && CInput_Buttons.ButDpadDown))
 		{
 			Sprites->SetSpriteAnimation(GameFrog->player.spr, 2, 2, 10);
 

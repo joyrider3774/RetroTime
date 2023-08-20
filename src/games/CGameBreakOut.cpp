@@ -280,12 +280,12 @@ void CGameBreakOut_updateplayer(CGameBreakOut* GameBreakOut)
 	{
 		float speedmultiplier = 1;
 
-		if (Input->Buttons.ButA)
+		if (CInput_Buttons.ButA)
 			speedmultiplier = 2;
 
-		if ((Input->Buttons.ButLeft) ||
-			(Input->Buttons.ButLeft2) ||
-			(Input->Buttons.ButDpadLeft))
+		if ((CInput_Buttons.ButLeft) ||
+			(CInput_Buttons.ButLeft2) ||
+			(CInput_Buttons.ButDpadLeft))
 		{
 			if (GameBreakOut->player.pos.x - GameBreakOut->player.tz.x / 2 - (GameBreakOut->playerspeed * speedmultiplier) > GameBreakOut->GameBase->screenleft)
 				GameBreakOut->player.pos.x -= GameBreakOut->playerspeed * speedmultiplier;
@@ -293,9 +293,9 @@ void CGameBreakOut_updateplayer(CGameBreakOut* GameBreakOut)
 				GameBreakOut->player.pos.x = GameBreakOut->GameBase->screenleft + GameBreakOut->player.tz.x / 2;
 		}
 
-		if ((Input->Buttons.ButRight) ||
-			(Input->Buttons.ButRight2) ||
-			(Input->Buttons.ButDpadRight))
+		if ((CInput_Buttons.ButRight) ||
+			(CInput_Buttons.ButRight2) ||
+			(CInput_Buttons.ButDpadRight))
 		{
 			if ( GameBreakOut->player.pos.x + GameBreakOut->player.tz.x / 2 + (GameBreakOut->playerspeed * speedmultiplier) < GameBreakOut->GameBase->screenright)
 				GameBreakOut->player.pos.x += GameBreakOut->playerspeed * speedmultiplier;

@@ -387,9 +387,9 @@ void CGamePang_updateplayer(CGamePang* GamePang)
 
 		if (!GamePang->playerstate(GamePang,GamePang->playerstateshoot))
 		{
-			if ((Input->Buttons.ButLeft) ||
-				(Input->Buttons.ButLeft2) ||
-				(Input->Buttons.ButDpadLeft))
+			if ((CInput_Buttons.ButLeft) ||
+				(CInput_Buttons.ButLeft2) ||
+				(CInput_Buttons.ButDpadLeft))
 			{
 				if ( GamePang->player.pos.x - GamePang->player.tz.x / 2 - GamePang->playerspeed > GamePang->GameBase->screenleft)
 				{
@@ -412,9 +412,9 @@ void CGamePang_updateplayer(CGamePang* GamePang)
 			}
 			else
 			{
-				if ((Input->Buttons.ButRight) ||
-					(Input->Buttons.ButRight2) ||
-					(Input->Buttons.ButDpadRight))
+				if ((CInput_Buttons.ButRight) ||
+					(CInput_Buttons.ButRight2) ||
+					(CInput_Buttons.ButDpadRight))
 				{
 					if ( GamePang->player.pos.x + GamePang->player.tz.x / 2 + GamePang->playerspeed < GamePang->GameBase->screenright)
 					{
@@ -443,7 +443,7 @@ void CGamePang_updateplayer(CGamePang* GamePang)
 				}
 			}
 
-			if ((!GamePang->playerstate(GamePang,GamePang->playerstatereviving)) && (!Input->PrevButtons.ButA && Input->Buttons.ButA))
+			if ((!GamePang->playerstate(GamePang,GamePang->playerstatereviving)) && (!CInput_PrevButtons.ButA && CInput_Buttons.ButA))
 			{
 				if (!GamePang->bullet.alive)
 				{
