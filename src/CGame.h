@@ -16,16 +16,15 @@
 
 using namespace std;
 
-class CGameRamIt;
+struct CGameRamIt;
 class CGameSnake;
 struct CGameBlockStacker;
 struct CGameFastEddy;
 struct CGameBreakOut;
-class CGameBase;
+struct CGameBase;
 struct CGameFrog;
 struct CGameInvaders;
 struct CGamePang;
-class CGameSnake;
 
 class CGame {
 

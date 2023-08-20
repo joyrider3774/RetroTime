@@ -59,7 +59,7 @@ void SubScoreScreen(CGame *Game)
 			Game->GameSnake->Draw();
 			break;
 		case GSRamIt:
-			Game->GameRamIt->Draw();
+			Game->GameRamIt->Draw(Game->GameRamIt);
 			break;
 		case GSPang:
 			Game->GamePang->Draw(Game->GamePang);

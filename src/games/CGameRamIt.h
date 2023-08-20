@@ -19,9 +19,8 @@ struct ramitblock
 	SDL_Color color;
 };
 
-class CGameRamIt {
+struct CGameRamIt {
 
-private:
 	CGameBase *GameBase;
 	static const int bulletsteps = 8;
 	static const int playerrailwidth = 10*xscale;
@@ -42,27 +41,48 @@ private:
 	bool bulletalive = false;
 	ramitblock playfield[sides][numblocks];
 
-	bool createbullet();
-	void updatebullet();
-	void drawbullet();
+	bool (*createbullet)(CGameRamIt* GameRamIt);
+	void (*updatebullet)(CGameRamIt* GameRamIt);
+	void (*drawbullet)(CGameRamIt* GameRamIt);
 
-	void createplayer();
-	void drawplayer();
-	void updateplayer();
+	void (*createplayer)(CGameRamIt* GameRamIt);
+	void (*drawplayer)(CGameRamIt* GameRamIt);
+	void (*updateplayer)(CGameRamIt* GameRamIt);
 
-	void createplayfield();
-	void updateplayfield(bool force);
-	void drawplayfield();
-public:
-	CGameRamIt(CGame* aGame);
-	~CGameRamIt();
-	void init();
-	void deinit();
-	void LoadSound();
-	void UnLoadSound();
-	void UpdateObjects(bool IsGameState);
-	bool DrawObjects();
-	void DrawBackground();
-	void Draw();
-	void UpdateLogic();
+	void (*createplayfield)(CGameRamIt* GameRamIt);
+	void (*updateplayfield)(CGameRamIt* GameRamIt, bool force);
+	void (*drawplayfield)(CGameRamIt* GameRamIt);
+
+	void (*init)(CGameRamIt* GameRamIt);
+	void (*deinit)(CGameRamIt* GameRamIt);
+	void (*LoadSound)(CGameRamIt* GameRamIt);
+	void (*UnLoadSound)(CGameRamIt* GameRamIt);
+	void (*UpdateObjects)(CGameRamIt* GameRamIt,bool IsGameState);
+	bool (*DrawObjects)(CGameRamIt* GameRamIt);
+	void (*DrawBackground)(CGameRamIt* GameRamIt);
+	void (*Draw)(CGameRamIt* GameRamIt);
+	void (*UpdateLogic)(CGameRamIt* GameRamIt);
 };
+
+typedef struct CGameRamIt CGameRamIt;
+
+void CGameRamIt_Draw(CGameRamIt* GameRamIt);
+bool CGameRamIt_DrawObjects(CGameRamIt* GameRamIt);
+void CGameRamIt_UpdateLogic(CGameRamIt* GameRamIt);
+void CGameRamIt_UpdateObjects(CGameRamIt* GameRamIt, bool IsGameState);
+void CGameRamIt_UnLoadSound(CGameRamIt* GameRamIt);
+void CGameRamIt_LoadSound(CGameRamIt* GameRamIt);
+void CGameRamIt_deinit(CGameRamIt* GameRamIt);
+void CGameRamIt_init(CGameRamIt* GameRamIt);
+void CGameRamIt_DrawBackground(CGameRamIt* GameRamIt);
+void CGameRamIt_drawplayfield(CGameRamIt* GameRamIt);
+void CGameRamIt_updateplayfield(CGameRamIt* GameRamIt, bool force);
+void CGameRamIt_createplayfield(CGameRamIt* GameRamIt);
+void CGameRamIt_updateplayer(CGameRamIt* GameRamIt);
+void CGameRamIt_drawplayer(CGameRamIt* GameRamIt);
+void CGameRamIt_createplayer(CGameRamIt* GameRamIt);
+void CGameRamIt_drawbullet(CGameRamIt* GameRamIt);
+void CGameRamIt_updatebullet(CGameRamIt* GameRamIt);
+bool CGameRamIt_createbullet(CGameRamIt* GameRamIt);
+void Destroy_CGameRamIt(CGameRamIt* GameRamIt);
+CGameRamIt* Create_CGameRamIt(CGame* aGame);
