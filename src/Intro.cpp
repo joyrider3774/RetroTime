@@ -71,7 +71,7 @@ void Intro()
 	SDL_RenderClear(Renderer);
 	SDL_Point Pos = {0,0};
 	Vec2F Scale = {1,1};
-	Image->DrawImageFuzeTintFloat(Renderer, TexTmp, false, &Pos, 0, &Scale, 1, 1, 1, archalpha);
+	CImage_DrawImageFuzeTintFloat(Renderer, TexTmp, false, &Pos, 0, &Scale, 1, 1, 1, archalpha);
 	sceneticks += 1;
 
 	if (sceneticks >= maxticks)

@@ -70,7 +70,7 @@ void CGameBase_PauseMenu(CGameBase* GameBase)
 		//so we can can copy the transparant part with the blue and text from this image
 		SDL_Point FramePos = {ScreenWidth / 2, ScreenHeight / 2};
 		Vec2F FrameScale = {16.0f / 4 * xscale, 12.8f *yscale};
-		Image->DrawImageFuze(Renderer, GFXFrameID, true, &FramePos, 0, &FrameScale, 255, 255, 255, 255);
+		CImage_DrawImageFuze(Renderer, GFXFrameID, true, &FramePos, 0, &FrameScale, 255, 255, 255, 255);
 
 		if (SubGameState == SGPauseMenu)
 		{
@@ -308,7 +308,7 @@ void CGameBase_PauseMenu(CGameBase* GameBase)
 			if(debugInfo)
 			{
 				Text += "FrameTime: " + to_string(AvgFrameTime) + "\n";
-				Text += "GFX Slots: " + to_string(Image->ImageSlotsUsed()) + "/" + to_string(Image->ImageSlotsMax()) + "\n";
+				Text += "GFX Slots: " + to_string(CImage_ImageSlotsUsed()) + "/" + to_string(CImage_ImageSlotsMax()) + "\n";
 				Text += "SND Slots: " + to_string(Audio->SoundSlotsUsed()) + "/" + to_string(Audio->SoundSlotsMax()) + "\n";
 				Text += "MUS Slots: " + to_string(Audio->MusicSlotsUsed()) + "/" + to_string(Audio->MusicSlotsMax()) + "\n";
 				Text += "SPR Slots: " + to_string(Sprites->SpriteSlotsUsed()) + "/" + to_string(Sprites->SpriteSlotsMax()) + "\n";

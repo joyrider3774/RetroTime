@@ -324,7 +324,7 @@ void CGameBlockStacker_drawplayfield(CGameBlockStacker* BlockStacker)
 
 void CGameBlockStacker_DrawBackground(CGameBlockStacker* BlockStacker)
 {
-	Image->DrawImage(Renderer, BlockStacker->background, NULL, NULL);
+	CImage_DrawImage(Renderer, BlockStacker->background, NULL, NULL);
 }
 
 void CGameBlockStacker_Draw(CGameBlockStacker* BlockStacker)
@@ -361,13 +361,13 @@ void CGameBlockStacker_init(CGameBlockStacker* BlockStacker)
 
 void CGameBlockStacker_LoadGraphics(CGameBlockStacker* BlockStacker)
 {
-	BlockStacker->background = Image->LoadImage(Renderer, "blockstacker/background.png");
-	BlockStacker->backgroundtz = Image->ImageSize(BlockStacker->background);
+	BlockStacker->background = CImage_LoadImage(Renderer, "blockstacker/background.png");
+	BlockStacker->backgroundtz = CImage_ImageSize(BlockStacker->background);
 }
 
 void CGameBlockStacker_UnloadGraphics(CGameBlockStacker* BlockStacker)
 {
-	Image->UnLoadImage(BlockStacker->background);
+	CImage_UnLoadImage(BlockStacker->background);
 }
 
 void CGameBlockStacker_LoadSound(CGameBlockStacker* BlockStacker)

@@ -94,9 +94,9 @@ void SubScoreScreen()
 	//so we can can copy the transparant part with the blue and text from this image
 	SDL_Point pos = {ScreenWidth / 2, ScreenHeight / 2};
 	Vec2F Scale = {SubStateCounter / 4*xscale, std::max(0.0f, SubStateCounter-3.2f)*yscale};
-	Image->DrawImageFuze(Renderer, GFXFrameID, true, &pos, 0, &Scale, 255, 255, 255, 240);
+	CImage_DrawImageFuze(Renderer, GFXFrameID, true, &pos, 0, &Scale, 255, 255, 255, 240);
 	string Text;
-	SDL_Point MedalTz = Image->ImageSize(GFXMedal);
+	SDL_Point MedalTz = CImage_ImageSize(GFXMedal);
 	Vec2F MedalScale = {50.0f/MedalTz.y*xscale, 50.0f/MedalTz.y*yscale};
 	if (SubGameState == SGCalcScore)
 	{
@@ -142,7 +142,7 @@ void SubScoreScreen()
 				Text = "New Game High Score: " + to_string(HighScores[Game][GameMode]);
 				Font->WriteText(Renderer, "Roboto-Regular", 50*yscale, Text, Text.length(), 150*xscale, 425*yscale, 0, {255,255,255,255});
 				SDL_Point pos = {(int)(120*xscale),(int) (425*yscale)};
-				Image->DrawImageFuze(Renderer, GFXMedal, false, &pos, 0, &MedalScale, 255, 255, 255, 255);
+				CImage_DrawImageFuze(Renderer, GFXMedal, false, &pos, 0, &MedalScale, 255, 255, 255, 255);
 			}
 			else
 			{
@@ -155,7 +155,7 @@ void SubScoreScreen()
 				Text = "New All Rounds High Score: " + to_string(RetroCarouselHighScore);
 				Font->WriteText(Renderer, "Roboto-Regular", 50*yscale, Text, Text.length(), 150*xscale, 470*yscale, 0, {255,255,255,255});
 				SDL_Point pos = {(int)(120*xscale),(int)( 470*yscale)};
-				Image->DrawImageFuze(Renderer, GFXMedal, false, &pos, 0, &MedalScale, 255, 255, 255, 255);
+				CImage_DrawImageFuze(Renderer, GFXMedal, false, &pos, 0, &MedalScale, 255, 255, 255, 255);
 			}
 			else
 			{
@@ -180,7 +180,7 @@ void SubScoreScreen()
 				Text = "New Game High Score: " + to_string(HighScores[Game][GameMode]);
 				Font->WriteText(Renderer, "Roboto-Regular", 50*yscale, Text, Text.length(), 150*xscale, 330*yscale, 0, {255,255,255,255});
 				SDL_Point pos = {(int)(120*xscale),(int)(330*yscale)};
-				Image->DrawImageFuze(Renderer, GFXMedal, false, &pos, 0, &MedalScale, 255, 255, 255, 255);
+				CImage_DrawImageFuze(Renderer, GFXMedal, false, &pos, 0, &MedalScale, 255, 255, 255, 255);
 			}
 			else
 			{

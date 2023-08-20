@@ -65,7 +65,6 @@ private:
 	CSprite* Sprites[SPR_Max];
 	vector<pair<int,pair<float,float>>> SavedScalings;
 	vector<pair<SDL_Texture*,pair<int, Vec2F>>> LoadedScaledTextures;
-	CImage* Images;
 	int UpdateImageResets;
 	int SpritesDrawn;
 	bool ForceShowCollisionShape;
@@ -74,7 +73,7 @@ private:
 	bool DetectRectRectCollsion(CSprite* Spr, CSprite* SprOther);
 	bool DetectRectCircleCollsion(CSprite* SprRect, CSprite* SprCircle);
 public:
-	CSprites(CImage* ACImage);
+	CSprites();
 	~CSprites();
 	void ResetDrawTargets();
 	void UpdateImage(SDL_Renderer* renderer, CSprite* Spr);

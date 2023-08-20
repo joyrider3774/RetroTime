@@ -264,7 +264,7 @@ void CGameBreakOut_createplayer(CGameBreakOut* GameBreakOut)
 	GameBreakOut->player.spr = Sprites->CreateSprite();
 	Sprites->SetSpriteImage(Renderer,GameBreakOut->player.spr, &GameBreakOut->spritesheetbat);
 	Sprites->SetSpriteScale(Renderer,GameBreakOut->player.spr, GameBreakOut->spritescale);
-	GameBreakOut->player.tz = Image->ImageSize(GameBreakOut->spritesheetbat);
+	GameBreakOut->player.tz = CImage_ImageSize(GameBreakOut->spritesheetbat);
 	GameBreakOut->player.tz.x = GameBreakOut->player.tz.x * GameBreakOut->spritescale.x;
 	GameBreakOut->player.tz.y = GameBreakOut->player.tz.y * GameBreakOut->spritescale.y;
 	GameBreakOut->player.pos = { (float)(GameBreakOut->GameBase->screenright - GameBreakOut->GameBase->screenleft) / 2,(float)GameBreakOut->GameBase->screenbottom - 20*yscale - (GameBreakOut->player.tz.y / 2)};
@@ -333,7 +333,7 @@ void CGameBreakOut_createball(CGameBreakOut* GameBreakOut)
 	GameBreakOut->ball.spr = Sprites->CreateSprite();
 	Sprites->SetSpriteImage(Renderer,GameBreakOut->ball.spr, &GameBreakOut->spritesheetball);
 	Sprites->SetSpriteScale(Renderer,GameBreakOut->ball.spr, {xscale,yscale});
-	GameBreakOut->ball.tz = Image->ImageSize(GameBreakOut->spritesheetball);
+	GameBreakOut->ball.tz = CImage_ImageSize(GameBreakOut->spritesheetball);
 	GameBreakOut->ball.tz.x = GameBreakOut->ball.tz.x * xscale;
 	GameBreakOut->ball.tz.y = GameBreakOut->ball.tz.y * yscale;
 	
@@ -508,7 +508,7 @@ void CGameBreakOut_updateball(CGameBreakOut* GameBreakOut)
 
 void CGameBreakOut_DrawBackground(CGameBreakOut* GameBreakOut)
 {
-	Image->DrawImage(Renderer, GameBreakOut->background, NULL, NULL);
+	CImage_DrawImage(Renderer, GameBreakOut->background, NULL, NULL);
 }
 
 void CGameBreakOut_Draw(CGameBreakOut* GameBreakOut)
@@ -566,24 +566,24 @@ void CGameBreakOut_deinit(CGameBreakOut* GameBreakOut)
 
 void CGameBreakOut_LoadGraphics(CGameBreakOut* GameBreakOut)
 {
-	GameBreakOut->background = Image->LoadImage(Renderer, "breakout/background.png");
-	GameBreakOut->backgroundtz = Image->ImageSize(GameBreakOut->background);
-	GameBreakOut->spritesheetblocks = Image->LoadImage(Renderer, "breakout/blocks.png", 8, 128, dumpScaledBitmaps); 
-	GameBreakOut->spritesheetbat = Image->LoadImage(Renderer, "breakout/paddle.png",0, 128, dumpScaledBitmaps);
-	GameBreakOut->spritesheetball = Image->LoadImage(Renderer, "breakout/ball.png", 0, 128, dumpScaledBitmaps);
+	GameBreakOut->background = CImage_LoadImage(Renderer, "breakout/background.png");
+	GameBreakOut->backgroundtz = CImage_ImageSize(GameBreakOut->background);
+	GameBreakOut->spritesheetblocks = CImage_LoadImage(Renderer, "breakout/blocks.png", 8, 128, dumpScaledBitmaps); 
+	GameBreakOut->spritesheetbat = CImage_LoadImage(Renderer, "breakout/paddle.png",0, 128, dumpScaledBitmaps);
+	GameBreakOut->spritesheetball = CImage_LoadImage(Renderer, "breakout/ball.png", 0, 128, dumpScaledBitmaps);
 
-	//SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/breakout/blocks.bmp", Game->Image->GetImage(GameBreakOut->spritesheetblocks), 1,1, true,8, 128); //0 80
-	//SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/breakout/paddle.bmp", Game->Image->GetImage(GameBreakOut->spritesheetbat), 1,1, true,0, 128); //173
-	//SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/breakout/ball.bmp", Game->Image->GetImage(GameBreakOut->spritesheetball), 1,1, true,0, 128); //173
+	//SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/breakout/blocks.bmp", Game->CImage_GetImage(GameBreakOut->spritesheetblocks), 1,1, true,8, 128); //0 80
+	//SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/breakout/paddle.bmp", Game->CImage_GetImage(GameBreakOut->spritesheetbat), 1,1, true,0, 128); //173
+	//SDL_SaveBMPTextureScaled(Game->Renderer, "./retrotimefs/graphics/breakout/ball.bmp", Game->CImage_GetImage(GameBreakOut->spritesheetball), 1,1, true,0, 128); //173
 
 	if(!useDefaultColorAssets)
 	{
 		GameBreakOut->UnloadGraphics(GameBreakOut);
-		GameBreakOut->background = Image->LoadImage(Renderer, "breakout/background.png");
-		GameBreakOut->backgroundtz = Image->ImageSize(GameBreakOut->background);
-		GameBreakOut->spritesheetblocks = Image->LoadImage(Renderer, "breakout/blocks.bmp");
-		GameBreakOut->spritesheetbat = Image->LoadImage(Renderer, "breakout/paddle.bmp");
-		GameBreakOut->spritesheetball = Image->LoadImage(Renderer, "breakout/ball.bmp");
+		GameBreakOut->background = CImage_LoadImage(Renderer, "breakout/background.png");
+		GameBreakOut->backgroundtz = CImage_ImageSize(GameBreakOut->background);
+		GameBreakOut->spritesheetblocks = CImage_LoadImage(Renderer, "breakout/blocks.bmp");
+		GameBreakOut->spritesheetbat = CImage_LoadImage(Renderer, "breakout/paddle.bmp");
+		GameBreakOut->spritesheetball = CImage_LoadImage(Renderer, "breakout/ball.bmp");
 	}
 
 
@@ -591,10 +591,10 @@ void CGameBreakOut_LoadGraphics(CGameBreakOut* GameBreakOut)
 
 void CGameBreakOut_UnloadGraphics(CGameBreakOut* GameBreakOut)
 {
-	Image->UnLoadImage(GameBreakOut->background);
-	Image->UnLoadImage(GameBreakOut->spritesheetblocks);
-	Image->UnLoadImage(GameBreakOut->spritesheetbat);
-	Image->UnLoadImage(GameBreakOut->spritesheetball);
+	CImage_UnLoadImage(GameBreakOut->background);
+	CImage_UnLoadImage(GameBreakOut->spritesheetblocks);
+	CImage_UnLoadImage(GameBreakOut->spritesheetbat);
+	CImage_UnLoadImage(GameBreakOut->spritesheetball);
 }
 
 //Update ----------------------------------------------------------------------------------------------------------------

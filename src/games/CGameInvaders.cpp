@@ -679,7 +679,7 @@ void CGameInvaders_updateplayer(CGameInvaders* GameInvaders)
 
 void CGameInvaders_DrawBackground(CGameInvaders* GameInvaders)
 {
-	Image->DrawImage(Renderer, GameInvaders->background, NULL, NULL);
+	CImage_DrawImage(Renderer, GameInvaders->background, NULL, NULL);
 }
 
 //init - deinit ----------------------------------------------------------------------------------------------------------------
@@ -743,49 +743,49 @@ void CGameInvaders_UnLoadSound(CGameInvaders* GameInvaders)
 
 void CGameInvaders_LoadGraphics(CGameInvaders* GameInvaders)
 {
-	GameInvaders->background = Image->LoadImage(Renderer, "invaders/background.png");
+	GameInvaders->background = CImage_LoadImage(Renderer, "invaders/background.png");
 
-	GameInvaders->spritesheetBullet = Image->LoadImage(Renderer, "invaders/bullet.png", 0, 100, dumpScaledBitmaps);
-	GameInvaders->spritesheetExplosion = Image->LoadImage(Renderer, "invaders/explosion.png", 0, 100, dumpScaledBitmaps);
-	GameInvaders->spritesheetAsteroid = Image->LoadImage(Renderer, "invaders/asteroid-01.png", 0, 75, dumpScaledBitmaps);
-	GameInvaders->spritesheetEnemy1 = Image->LoadImage(Renderer, "invaders/enemy1.png",0, 80, dumpScaledBitmaps); //bottom
-	GameInvaders->spritesheetEnemy2 = Image->LoadImage(Renderer, "invaders/enemy2.png",0, 80, dumpScaledBitmaps); //middle
-	GameInvaders->spritesheetEnemy3 = Image->LoadImage(Renderer, "invaders/enemy3.png",0, 80, dumpScaledBitmaps); //top
-	GameInvaders->spritesheetPlayer = Image->LoadImage(Renderer, "invaders/player.png",0, 80, dumpScaledBitmaps); //top
+	GameInvaders->spritesheetBullet = CImage_LoadImage(Renderer, "invaders/bullet.png", 0, 100, dumpScaledBitmaps);
+	GameInvaders->spritesheetExplosion = CImage_LoadImage(Renderer, "invaders/explosion.png", 0, 100, dumpScaledBitmaps);
+	GameInvaders->spritesheetAsteroid = CImage_LoadImage(Renderer, "invaders/asteroid-01.png", 0, 75, dumpScaledBitmaps);
+	GameInvaders->spritesheetEnemy1 = CImage_LoadImage(Renderer, "invaders/enemy1.png",0, 80, dumpScaledBitmaps); //bottom
+	GameInvaders->spritesheetEnemy2 = CImage_LoadImage(Renderer, "invaders/enemy2.png",0, 80, dumpScaledBitmaps); //middle
+	GameInvaders->spritesheetEnemy3 = CImage_LoadImage(Renderer, "invaders/enemy3.png",0, 80, dumpScaledBitmaps); //top
+	GameInvaders->spritesheetPlayer = CImage_LoadImage(Renderer, "invaders/player.png",0, 80, dumpScaledBitmaps); //top
 	
-	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/invaders/bullet.bmp", Image->GetImage(GameInvaders->spritesheetBullet), 1,1, true, 0, 100);
-	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/invaders/explosion.bmp", Image->GetImage(GameInvaders->spritesheetExplosion), 1,1,true, 0, 100);
-	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/invaders/asteroid-01.bmp", Image->GetImage(GameInvaders->spritesheetAsteroid), 1,1,true, 0, 75);
-	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/invaders/enemy1.bmp", Image->GetImage(GameInvaders->spritesheetEnemy1), 1,1,true, 0, 80);
-	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/invaders/enemy2.bmp", Image->GetImage(GameInvaders->spritesheetEnemy2), 1,1,true, 0, 80);
-	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/invaders/enemy3.bmp", Image->GetImage(GameInvaders->spritesheetEnemy3), 1,1,true, 0, 80);
-	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/invaders/player.bmp", Image->GetImage(GameInvaders->spritesheetPlayer), 1,1,true, 0, 80);
+	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/invaders/bullet.bmp", CImage_GetImage(GameInvaders->spritesheetBullet), 1,1, true, 0, 100);
+	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/invaders/explosion.bmp", CImage_GetImage(GameInvaders->spritesheetExplosion), 1,1,true, 0, 100);
+	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/invaders/asteroid-01.bmp", CImage_GetImage(GameInvaders->spritesheetAsteroid), 1,1,true, 0, 75);
+	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/invaders/enemy1.bmp", CImage_GetImage(GameInvaders->spritesheetEnemy1), 1,1,true, 0, 80);
+	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/invaders/enemy2.bmp", CImage_GetImage(GameInvaders->spritesheetEnemy2), 1,1,true, 0, 80);
+	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/invaders/enemy3.bmp", CImage_GetImage(GameInvaders->spritesheetEnemy3), 1,1,true, 0, 80);
+	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/invaders/player.bmp", CImage_GetImage(GameInvaders->spritesheetPlayer), 1,1,true, 0, 80);
 	
 	if(!useDefaultColorAssets)
 	{
     	GameInvaders->UnloadGraphics(GameInvaders);
-		GameInvaders->background = Image->LoadImage(Renderer, "invaders/background.png");
-		GameInvaders->spritesheetBullet = Image->LoadImage(Renderer, "invaders/bullet.bmp");
-		GameInvaders->spritesheetExplosion = Image->LoadImage(Renderer, "invaders/explosion.bmp");
-		GameInvaders->spritesheetAsteroid = Image->LoadImage(Renderer, "invaders/asteroid-01.bmp");
-		GameInvaders->spritesheetEnemy1 = Image->LoadImage(Renderer, "invaders/enemy1.bmp"); //bottom
-		GameInvaders->spritesheetEnemy2 = Image->LoadImage(Renderer, "invaders/enemy2.bmp"); //middle
-		GameInvaders->spritesheetEnemy3 = Image->LoadImage(Renderer, "invaders/enemy3.bmp"); //top
-		GameInvaders->spritesheetPlayer = Image->LoadImage(Renderer, "invaders/player.bmp"); //top
+		GameInvaders->background = CImage_LoadImage(Renderer, "invaders/background.png");
+		GameInvaders->spritesheetBullet = CImage_LoadImage(Renderer, "invaders/bullet.bmp");
+		GameInvaders->spritesheetExplosion = CImage_LoadImage(Renderer, "invaders/explosion.bmp");
+		GameInvaders->spritesheetAsteroid = CImage_LoadImage(Renderer, "invaders/asteroid-01.bmp");
+		GameInvaders->spritesheetEnemy1 = CImage_LoadImage(Renderer, "invaders/enemy1.bmp"); //bottom
+		GameInvaders->spritesheetEnemy2 = CImage_LoadImage(Renderer, "invaders/enemy2.bmp"); //middle
+		GameInvaders->spritesheetEnemy3 = CImage_LoadImage(Renderer, "invaders/enemy3.bmp"); //top
+		GameInvaders->spritesheetPlayer = CImage_LoadImage(Renderer, "invaders/player.bmp"); //top
 	}
-	GameInvaders->backgroundtz = Image->ImageSize(GameInvaders->background);
+	GameInvaders->backgroundtz = CImage_ImageSize(GameInvaders->background);
 }
 
 void CGameInvaders_UnloadGraphics(CGameInvaders* GameInvaders)
 {
-	Image->UnLoadImage(GameInvaders->spritesheetBullet);
-	Image->UnLoadImage(GameInvaders->spritesheetExplosion);
-	Image->UnLoadImage(GameInvaders->spritesheetAsteroid);
-	Image->UnLoadImage(GameInvaders->spritesheetEnemy1);
-	Image->UnLoadImage(GameInvaders->spritesheetEnemy2);
-	Image->UnLoadImage(GameInvaders->spritesheetEnemy3);
-	Image->UnLoadImage(GameInvaders->spritesheetPlayer);
-	Image->UnLoadImage(GameInvaders->background);
+	CImage_UnLoadImage(GameInvaders->spritesheetBullet);
+	CImage_UnLoadImage(GameInvaders->spritesheetExplosion);
+	CImage_UnLoadImage(GameInvaders->spritesheetAsteroid);
+	CImage_UnLoadImage(GameInvaders->spritesheetEnemy1);
+	CImage_UnLoadImage(GameInvaders->spritesheetEnemy2);
+	CImage_UnLoadImage(GameInvaders->spritesheetEnemy3);
+	CImage_UnLoadImage(GameInvaders->spritesheetPlayer);
+	CImage_UnLoadImage(GameInvaders->background);
 }
 
 //Update ----------------------------------------------------------------------------------------------------------------

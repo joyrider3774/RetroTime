@@ -815,7 +815,7 @@ void CGameFrog_updateplayer(CGameFrog* GameFrog)
 
 void CGameFrog_DrawBackground(CGameFrog* GameFrog)
 {
-	Image->DrawImage(Renderer, GameFrog->background, NULL, NULL);
+	CImage_DrawImage(Renderer, GameFrog->background, NULL, NULL);
 }
 
 //init - deinit ----------------------------------------------------------------------------------------------------------------
@@ -867,67 +867,67 @@ void CGameFrog_UnLoadSound(CGameFrog* GameFrog)
 
 void CGameFrog_LoadGraphics(CGameFrog* GameFrog)
 {
-	GameFrog->background = Image->LoadImage(Renderer, "frog/background.png");
-	GameFrog->backgroundtz = Image->ImageSize(GameFrog->background);
+	GameFrog->background = CImage_LoadImage(Renderer, "frog/background.png");
+	GameFrog->backgroundtz = CImage_ImageSize(GameFrog->background);
 
 
-	GameFrog->spritesheetfrog = Image->LoadImage(Renderer, "frog/player.png", 0, 128, dumpScaledBitmaps);
-	GameFrog->spritesheetbackground = Image->LoadImage(Renderer, "frog/watergrass.png", 0, 128, dumpScaledBitmaps);
-	GameFrog->spritesheetcar1 = Image->LoadImage(Renderer, "frog/carblue.png", 0, 80, dumpScaledBitmaps);
-	GameFrog->spritesheetcar2 = Image->LoadImage(Renderer, "frog/garbagetruck.png", 0, 80, dumpScaledBitmaps);
-	GameFrog->spritesheetcar3 = Image->LoadImage(Renderer, "frog/ambulance.png", 0, 80, dumpScaledBitmaps);
-	GameFrog->spritesheetcar4 = Image->LoadImage(Renderer, "frog/taxi.png", 0, 80, dumpScaledBitmaps);
-	GameFrog->spritesheetcar5 = Image->LoadImage(Renderer, "frog/police.png", 0, 80, dumpScaledBitmaps);
-	GameFrog->spritesheetplant = Image->LoadImage(Renderer, "frog/waterplant.png", 0, 140, dumpScaledBitmaps);
-	GameFrog->spritesheetfruit1 = Image->LoadImage(Renderer, "frog/apple.png",0, 10, dumpScaledBitmaps);
-	GameFrog->spritesheetfruit2 = Image->LoadImage(Renderer, "frog/lemon.png",0, 10, dumpScaledBitmaps);
-	GameFrog->spritesheetfruit3 = Image->LoadImage(Renderer, "frog/cherry.png",0, 10, dumpScaledBitmaps);
+	GameFrog->spritesheetfrog = CImage_LoadImage(Renderer, "frog/player.png", 0, 128, dumpScaledBitmaps);
+	GameFrog->spritesheetbackground = CImage_LoadImage(Renderer, "frog/watergrass.png", 0, 128, dumpScaledBitmaps);
+	GameFrog->spritesheetcar1 = CImage_LoadImage(Renderer, "frog/carblue.png", 0, 80, dumpScaledBitmaps);
+	GameFrog->spritesheetcar2 = CImage_LoadImage(Renderer, "frog/garbagetruck.png", 0, 80, dumpScaledBitmaps);
+	GameFrog->spritesheetcar3 = CImage_LoadImage(Renderer, "frog/ambulance.png", 0, 80, dumpScaledBitmaps);
+	GameFrog->spritesheetcar4 = CImage_LoadImage(Renderer, "frog/taxi.png", 0, 80, dumpScaledBitmaps);
+	GameFrog->spritesheetcar5 = CImage_LoadImage(Renderer, "frog/police.png", 0, 80, dumpScaledBitmaps);
+	GameFrog->spritesheetplant = CImage_LoadImage(Renderer, "frog/waterplant.png", 0, 140, dumpScaledBitmaps);
+	GameFrog->spritesheetfruit1 = CImage_LoadImage(Renderer, "frog/apple.png",0, 10, dumpScaledBitmaps);
+	GameFrog->spritesheetfruit2 = CImage_LoadImage(Renderer, "frog/lemon.png",0, 10, dumpScaledBitmaps);
+	GameFrog->spritesheetfruit3 = CImage_LoadImage(Renderer, "frog/cherry.png",0, 10, dumpScaledBitmaps);
 
-	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/frog/player.bmp", Image->GetImage(GameFrog->spritesheetfrog), 1,1, true, 0, 128);
-	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/frog/watergrass.bmp", Image->GetImage(GameFrog->spritesheetbackground), 1,1, true, 0, 128);
-	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/frog/carblue.bmp", Image->GetImage(GameFrog->spritesheetcar1), 1,1, true, 0, 80);
-	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/frog/garbagetruck.bmp", Image->GetImage(GameFrog->spritesheetcar2), 1,1, true, 0, 80);
-	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/frog/ambulance.bmp", Image->GetImage(GameFrog->spritesheetcar3), 1,1, true,0,  80);
-	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/frog/taxi.bmp", Image->GetImage(GameFrog->spritesheetcar4), 1,1, true, 0, 80);
-	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/frog/police.bmp", Image->GetImage(GameFrog->spritesheetcar5), 1,1, true, 0, 80);
-	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/frog/waterplant.bmp", Image->GetImage(GameFrog->spritesheetplant), 1,1, true,0, 140); //173
-	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/frog/apple.bmp", Image->GetImage(GameFrog->spritesheetfruit1), 1,1, true,0, 10);
-	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/frog/lemon.bmp", Image->GetImage(GameFrog->spritesheetfruit2), 1,1, true,0, 10);
-	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/frog/cherry.bmp", Image->GetImage(GameFrog->spritesheetfruit3), 1,1, true,0, 10);
+	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/frog/player.bmp", CImage_GetImage(GameFrog->spritesheetfrog), 1,1, true, 0, 128);
+	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/frog/watergrass.bmp", CImage_GetImage(GameFrog->spritesheetbackground), 1,1, true, 0, 128);
+	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/frog/carblue.bmp", CImage_GetImage(GameFrog->spritesheetcar1), 1,1, true, 0, 80);
+	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/frog/garbagetruck.bmp", CImage_GetImage(GameFrog->spritesheetcar2), 1,1, true, 0, 80);
+	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/frog/ambulance.bmp", CImage_GetImage(GameFrog->spritesheetcar3), 1,1, true,0,  80);
+	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/frog/taxi.bmp", CImage_GetImage(GameFrog->spritesheetcar4), 1,1, true, 0, 80);
+	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/frog/police.bmp", CImage_GetImage(GameFrog->spritesheetcar5), 1,1, true, 0, 80);
+	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/frog/waterplant.bmp", CImage_GetImage(GameFrog->spritesheetplant), 1,1, true,0, 140); //173
+	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/frog/apple.bmp", CImage_GetImage(GameFrog->spritesheetfruit1), 1,1, true,0, 10);
+	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/frog/lemon.bmp", CImage_GetImage(GameFrog->spritesheetfruit2), 1,1, true,0, 10);
+	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/frog/cherry.bmp", CImage_GetImage(GameFrog->spritesheetfruit3), 1,1, true,0, 10);
 	if(!useDefaultColorAssets)
 	{
 		GameFrog->UnloadGraphics(GameFrog);
-		GameFrog->background = Image->LoadImage(Renderer, "frog/background.png");
-		GameFrog->backgroundtz = Image->ImageSize(GameFrog->background);
-		GameFrog->spritesheetfrog = Image->LoadImage(Renderer, "frog/player.bmp");
-		GameFrog->spritesheetbackground = Image->LoadImage(Renderer, "frog/watergrass.bmp");
-		GameFrog->spritesheetcar1 = Image->LoadImage(Renderer, "frog/carblue.bmp");
-		GameFrog->spritesheetcar2 = Image->LoadImage(Renderer, "frog/garbagetruck.bmp");
-		GameFrog->spritesheetcar3 = Image->LoadImage(Renderer, "frog/ambulance.bmp");
-		GameFrog->spritesheetcar4 = Image->LoadImage(Renderer, "frog/taxi.bmp");
-		GameFrog->spritesheetcar5 = Image->LoadImage(Renderer, "frog/police.bmp");
-		GameFrog->spritesheetplant = Image->LoadImage(Renderer, "frog/waterplant.bmp");
-		GameFrog->spritesheetfruit1 = Image->LoadImage(Renderer, "frog/apple.bmp");
-		GameFrog->spritesheetfruit2 = Image->LoadImage(Renderer, "frog/lemon.bmp");
-		GameFrog->spritesheetfruit3 = Image->LoadImage(Renderer, "frog/cherry.bmp");
+		GameFrog->background = CImage_LoadImage(Renderer, "frog/background.png");
+		GameFrog->backgroundtz = CImage_ImageSize(GameFrog->background);
+		GameFrog->spritesheetfrog = CImage_LoadImage(Renderer, "frog/player.bmp");
+		GameFrog->spritesheetbackground = CImage_LoadImage(Renderer, "frog/watergrass.bmp");
+		GameFrog->spritesheetcar1 = CImage_LoadImage(Renderer, "frog/carblue.bmp");
+		GameFrog->spritesheetcar2 = CImage_LoadImage(Renderer, "frog/garbagetruck.bmp");
+		GameFrog->spritesheetcar3 = CImage_LoadImage(Renderer, "frog/ambulance.bmp");
+		GameFrog->spritesheetcar4 = CImage_LoadImage(Renderer, "frog/taxi.bmp");
+		GameFrog->spritesheetcar5 = CImage_LoadImage(Renderer, "frog/police.bmp");
+		GameFrog->spritesheetplant = CImage_LoadImage(Renderer, "frog/waterplant.bmp");
+		GameFrog->spritesheetfruit1 = CImage_LoadImage(Renderer, "frog/apple.bmp");
+		GameFrog->spritesheetfruit2 = CImage_LoadImage(Renderer, "frog/lemon.bmp");
+		GameFrog->spritesheetfruit3 = CImage_LoadImage(Renderer, "frog/cherry.bmp");
 	}
 
 }
 
 void CGameFrog_UnloadGraphics(CGameFrog* GameFrog)
 {
-	Image->UnLoadImage(GameFrog->background);
-	Image->UnLoadImage(GameFrog->spritesheetfrog);
-	Image->UnLoadImage(GameFrog->spritesheetbackground);
-	Image->UnLoadImage(GameFrog->spritesheetcar1);
-	Image->UnLoadImage(GameFrog->spritesheetcar2);
-	Image->UnLoadImage(GameFrog->spritesheetcar3);
-	Image->UnLoadImage(GameFrog->spritesheetcar4);
-	Image->UnLoadImage(GameFrog->spritesheetcar5);
-	Image->UnLoadImage(GameFrog->spritesheetplant);
-	Image->UnLoadImage(GameFrog->spritesheetfruit1);
-	Image->UnLoadImage(GameFrog->spritesheetfruit2);
-	Image->UnLoadImage(GameFrog->spritesheetfruit3);
+	CImage_UnLoadImage(GameFrog->background);
+	CImage_UnLoadImage(GameFrog->spritesheetfrog);
+	CImage_UnLoadImage(GameFrog->spritesheetbackground);
+	CImage_UnLoadImage(GameFrog->spritesheetcar1);
+	CImage_UnLoadImage(GameFrog->spritesheetcar2);
+	CImage_UnLoadImage(GameFrog->spritesheetcar3);
+	CImage_UnLoadImage(GameFrog->spritesheetcar4);
+	CImage_UnLoadImage(GameFrog->spritesheetcar5);
+	CImage_UnLoadImage(GameFrog->spritesheetplant);
+	CImage_UnLoadImage(GameFrog->spritesheetfruit1);
+	CImage_UnLoadImage(GameFrog->spritesheetfruit2);
+	CImage_UnLoadImage(GameFrog->spritesheetfruit3);
 }
 
 //Update ----------------------------------------------------------------------------------------------------------------

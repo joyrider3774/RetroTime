@@ -56,7 +56,6 @@ CGameFrog *GameFrog;
 CAudio *Audio;
 CFont *Font;
 CInput *Input;
-CImage *Image;
 CSprites *Sprites;
 SDL_Renderer *Renderer;
 SDL_Texture *TexOffScreen, *TexScreen, *TexTmp;
@@ -173,7 +172,7 @@ void CGame_UnLoadMusic()
 
 void CGame_UnLoadGraphics()
 {
-	Image->UnloadImages();
+	CImage_UnloadImages();
 }
 
 void CGame_DrawTitleBackground()
@@ -186,7 +185,7 @@ void CGame_DrawTitleBackground()
 
 	// SDL_Point Pos = {ScreenWidth / 2, ScreenHeight / 2};
 	// Vec2F Scale = {10.6f / 4, 10.6f};
-	// Image->DrawImageFuze(Renderer, GFXFrameID, &Pos, 0, &Scale, 255, 255, 255, 255);
+	// CImage_DrawImageFuze(Renderer, GFXFrameID, &Pos, 0, &Scale, 255, 255, 255, 255);
 }
 
 
@@ -223,16 +222,16 @@ void CGame_UnLoadSound()
 
 void CGame_LoadGraphics()
 {
-	GFXFrameID = Image->LoadImage(Renderer, "main/frame.png");
-	GFXMedal = Image->LoadImage(Renderer, "main/medal.png");
+	GFXFrameID = CImage_LoadImage(Renderer, "main/frame.png");
+	GFXMedal = CImage_LoadImage(Renderer, "main/medal.png");
 
-	//SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/main/frame.bmp", Image->GetImage(GFXFrameID), 1,1, true, 0, 40);
-	//SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/main/medal.bmp", Image->GetImage(GFXMedal), 1,1, true, 0, 160);
-	Image->UnLoadImage(GFXFrameID);
-	Image->UnLoadImage(GFXMedal);
+	//SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/main/frame.bmp", CImage_GetImage(GFXFrameID), 1,1, true, 0, 40);
+	//SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/main/medal.bmp", CImage_GetImage(GFXMedal), 1,1, true, 0, 160);
+	CImage_UnLoadImage(GFXFrameID);
+	CImage_UnLoadImage(GFXMedal);
 
-	GFXFrameID = Image->LoadImage(Renderer, "main/frame.bmp");
-	GFXMedal = Image->LoadImage(Renderer, "main/medal.bmp");
+	GFXFrameID = CImage_LoadImage(Renderer, "main/frame.bmp");
+	GFXMedal = CImage_LoadImage(Renderer, "main/medal.bmp");
 }
 
 void CGame_ToggleFullscreen()
@@ -565,7 +564,7 @@ void CGame_MainLoop()
 		if(Input->Buttons.RenderReset)
 		{
 			SDL_Log("Render Reset, Reloading Game Graphics");
-			Image->UnloadImages();
+			CImage_UnloadImages();
 			CGame_LoadGraphics();
 			switch(ActiveGameGameStateId)
 			{
@@ -817,13 +816,13 @@ void CGame_MainLoop()
 			if(debugInfo)
 			{
 				Text += "FrameTime: " + to_string(AvgFrameTime) + "\n";
-				Text += "GFX Slots: " + to_string(Image->ImageSlotsUsed()) + "/" + to_string(Image->ImageSlotsMax()) + "\n";
+				Text += "GFX Slots: " + to_string(CImage_ImageSlotsUsed()) + "/" + to_string(CImage_ImageSlotsMax()) + "\n";
 				Text += "SND Slots: " + to_string(Audio->SoundSlotsUsed()) + "/" + to_string(Audio->SoundSlotsMax()) + "\n";
 				Text += "MUS Slots: " + to_string(Audio->MusicSlotsUsed()) + "/" + to_string(Audio->MusicSlotsMax()) + "\n";
 				Text += "SPR Slots: " + to_string(Sprites->SpriteSlotsUsed()) + "/" + to_string(Sprites->SpriteSlotsMax()) + "\n";
 				Text += "SPR Resets: " + to_string(Sprites->UpdateImageResetsCount()) + "\n";
 				Text += "SPR Draws: " + to_string(Sprites->SpritesDrawnCount()) + "\n";
-				Text += "SCL Loaded: " + to_string(Image->ScaledImagesLoadedCount()) + "\n";
+				Text += "SCL Loaded: " + to_string(CImage_ScaledImagesLoadedCount()) + "\n";
 				
 			}
 			int tw = Font->TextWidth("RobotoMono-Bold", 14, Text, Text.length());
@@ -934,9 +933,9 @@ Possible options are:\n\
 
 				Audio = new CAudio(DataPath, debugInfo);
 				Font = new CFont(DataPath, debugInfo);
-				Image = new CImage(DataPath, debugInfo);
+				CImage_Init(DataPath, debugInfo);
 				Input = new CInput();
-				Sprites = new CSprites(Image);
+				Sprites = new CSprites();
 				Sprites->SetForceShowCollisionShape(debugShowCollisionShapes);
 
 				// Main game loop that loops untile the gamestate = GSQuit
@@ -982,7 +981,7 @@ Possible options are:\n\
 
 				delete Audio;
 				delete Font;
-				delete Image;
+				CImage_DeInit();
 				delete Input;
 				delete Sprites;
 				SDL_DestroyRenderer(Renderer);

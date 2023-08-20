@@ -52,7 +52,6 @@ extern CGameFrog *GameFrog;
 extern CAudio *Audio;
 extern CFont *Font;
 extern CInput *Input;
-extern CImage *Image;
 extern CSprites *Sprites;
 extern SDL_Renderer *Renderer;
 extern SDL_Texture *TexOffScreen, *TexScreen, *TexTmp;

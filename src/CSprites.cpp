@@ -9,10 +9,9 @@
 #include "Vec2F.h"
 #include "Common.h"
 
-CSprites::CSprites(CImage* ACImage)
+CSprites::CSprites()
 {
 	UpdateImageResets = 0;
-	Images = ACImage;
 	ForceShowCollisionShape = false;
 	needSpriteSorting = false;
 	SpritesDrawn = 0;
@@ -190,7 +189,7 @@ void CSprites::DrawSprite(SDL_Renderer* Renderer, CSprite* Spr)
 
 	SortSprites();
 
-	if (Spr->show && ((*Spr->imageID > -1) && (Spr->Img != nullptr) && (*Spr->imageID < Images->ImageSlotsMax())))
+	if (Spr->show && ((*Spr->imageID > -1) && (Spr->Img != nullptr) && (*Spr->imageID < CImage_ImageSlotsMax())))
 	{
 		SpritesDrawn++;
 		SDL_Point pos = {(int)(Spr->x), (int)(Spr->y)};
@@ -203,7 +202,7 @@ void CSprites::DrawSprite(SDL_Renderer* Renderer, CSprite* Spr)
 		int x = AnimTile - (y * Spr->tilesX);
 		
 		SDL_Rect SrcRect = {(int)(x * Spr->tileSizeX* abs(Spr->xscale)), (int)(y* Spr->tileSizeY* abs(Spr->yscale)), (int)(Spr->tileSizeX* abs(Spr->xscale)),(int)(Spr->tileSizeY* abs(Spr->yscale))};
-		Images->DrawImageFuzeSrcRectTintFloat(Renderer, Spr->Img, &SrcRect, true, &pos, Spr->rotation, &scale, Spr->r, Spr->g, Spr->b, Spr->a);
+		CImage_DrawImageFuzeSrcRectTintFloat(Renderer, Spr->Img, &SrcRect, true, &pos, Spr->rotation, &scale, Spr->r, Spr->g, Spr->b, Spr->a);
 		
 
 		if (Spr->show_collision_shape || ForceShowCollisionShape)
@@ -299,7 +298,7 @@ void CSprites::UpdateImage(SDL_Renderer* renderer, CSprite* Spr)
 
 	if(loadDumpedScaledBitmaps)
 	{
-		Spr->Img = Images->LoadScaledImage(renderer, *Spr->imageID, {Spr->xscale,Spr->yscale});
+		Spr->Img = CImage_LoadScaledImage(renderer, *Spr->imageID, {Spr->xscale,Spr->yscale});
 		//remember current scale
 		Spr->prevyscale = Spr->yscale;
 		Spr->prevxscale = Spr->xscale;
@@ -307,7 +306,7 @@ void CSprites::UpdateImage(SDL_Renderer* renderer, CSprite* Spr)
 	}
 	else
 	{
-		SDL_Texture *tex = Images->GetImage(*Spr->imageID);
+		SDL_Texture *tex = CImage_GetImage(*Spr->imageID);
 
 		if (tex == NULL)
 			return;
@@ -369,7 +368,7 @@ void CSprites::UpdateImage(SDL_Renderer* renderer, CSprite* Spr)
 		if (it == SavedScalings.end()) 
 		{
 			SavedScalings.push_back(search);
-			Images->SaveImage(renderer, *Spr->imageID, Vec2FScale);
+			CImage_SaveImage(renderer, *Spr->imageID, Vec2FScale);
 		}
 	}
 }
@@ -378,7 +377,7 @@ void CSprites::SetSpriteImage(SDL_Renderer* renderer, CSprite* Spr, int *AImageI
 {
 	bool needUpdateImage = Spr->imageID != AImageID;
 	Spr->imageID = AImageID;
-	SDL_Point Tz = Images->ImageSize(*AImageID);
+	SDL_Point Tz = CImage_ImageSize(*AImageID);
 	if(needUpdateImage)
 	{
 		//to force an update

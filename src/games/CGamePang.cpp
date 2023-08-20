@@ -112,7 +112,7 @@ void CGamePang_createball(CGamePang* GamePang, int size, float x, float y, float
 			Scale.y = Scale.y * size;
 			Sprites->SetSpriteScale(Renderer,GamePang->balls[i].spr, Scale);
 			Sprites->SetSpriteDepth(GamePang->balls[i].spr, 6);
-			GamePang->balls[i].tz = Image->ImageSize(GamePang->spritesheetball);
+			GamePang->balls[i].tz = CImage_ImageSize(GamePang->spritesheetball);
 			GamePang->balls[i].tz.x = GamePang->balls[i].tz.x * Scale.x;
 			GamePang->balls[i].tz.x = GamePang->balls[i].tz.y * Scale.y;
 			GamePang->balls[i].pos = { x, y};
@@ -307,7 +307,7 @@ void CGamePang_drawbullet(CGamePang* GamePang)
 		//copy whats on screen to a temporary buffer (i know this already contains the background)
 		SDL_Texture* prev = SDL_GetRenderTarget(Renderer);
 		SDL_SetRenderTarget(Renderer, TexTmp);
-		Image->DrawImage(Renderer, prev, NULL, NULL);
+		CImage_DrawImage(Renderer, prev, NULL, NULL);
 		SDL_SetRenderTarget(Renderer, prev);
 		//draw the sprite
 		Sprites->DrawSprite(Renderer, GamePang->bullet.spr);
@@ -315,7 +315,7 @@ void CGamePang_drawbullet(CGamePang* GamePang)
 		//this makes it seem as if the texture is created on the ground instead of at the bottom of the screen, like it is
 		//in real time.
 		SDL_Rect Rect = {0, GamePang->GameBase->screenbottom - GamePang->backgroundcopyheight, GamePang->GameBase->screenright, GamePang->backgroundcopyheight};
-		Image->DrawImage(Renderer, TexTmp, &Rect, &Rect);
+		CImage_DrawImage(Renderer, TexTmp, &Rect, &Rect);
 	}
 }
 
@@ -487,7 +487,7 @@ void CGamePang_drawplayer(CGamePang* GamePang)
 
 void CGamePang_DrawBackground(CGamePang* GamePang)
 {
-	Image->DrawImage(Renderer, GamePang->background, NULL, NULL);
+	CImage_DrawImage(Renderer, GamePang->background, NULL, NULL);
 }
 
 //init - deinit ----------------------------------------------------------------------------------------------------------------
@@ -537,36 +537,36 @@ void CGamePang_UnLoadSound(CGamePang* GamePang)
 
 void CGamePang_LoadGraphics(CGamePang* GamePang)
 {
-	GamePang->background = Image->LoadImage(Renderer, "pang/background.png");
-	GamePang->spritesheetplayer = Image->LoadImage(Renderer, "pang/character.png",0, 118, dumpScaledBitmaps);
-	GamePang->spritesheetbullet = Image->LoadImage(Renderer, "pang/weapon.png", 0, 128, dumpScaledBitmaps);
-	GamePang->spritesheetball = Image->LoadImage(Renderer, "pang/ball.png",0, 128, dumpScaledBitmaps);
+	GamePang->background = CImage_LoadImage(Renderer, "pang/background.png");
+	GamePang->spritesheetplayer = CImage_LoadImage(Renderer, "pang/character.png",0, 118, dumpScaledBitmaps);
+	GamePang->spritesheetbullet = CImage_LoadImage(Renderer, "pang/weapon.png", 0, 128, dumpScaledBitmaps);
+	GamePang->spritesheetball = CImage_LoadImage(Renderer, "pang/ball.png",0, 128, dumpScaledBitmaps);
 	
-	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/pang/character.bmp", Image->GetImage(GamePang->spritesheetplayer), 1,1, true, 0, 118);
-	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/pang/weapon.bmp", Image->GetImage(GamePang->spritesheetbullet), 1,1, true, 0, 128);
-	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/pang/ball.bmp", Image->GetImage(GamePang->spritesheetball), 1,1, true, 0, 128);
+	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/pang/character.bmp", CImage_GetImage(GamePang->spritesheetplayer), 1,1, true, 0, 118);
+	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/pang/weapon.bmp", CImage_GetImage(GamePang->spritesheetbullet), 1,1, true, 0, 128);
+	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/pang/ball.bmp", CImage_GetImage(GamePang->spritesheetball), 1,1, true, 0, 128);
 
 
 	if (!useDefaultColorAssets)
 	{
 		GamePang->UnloadGraphics(GamePang);
-		GamePang->background = Image->LoadImage(Renderer, "pang/background.png");
-		GamePang->spritesheetplayer = Image->LoadImage(Renderer, "pang/character.bmp");
-		GamePang->spritesheetbullet = Image->LoadImage(Renderer, "pang/weapon.bmp");
-	 	GamePang->spritesheetball = Image->LoadImage(Renderer, "pang/ball.bmp");
+		GamePang->background = CImage_LoadImage(Renderer, "pang/background.png");
+		GamePang->spritesheetplayer = CImage_LoadImage(Renderer, "pang/character.bmp");
+		GamePang->spritesheetbullet = CImage_LoadImage(Renderer, "pang/weapon.bmp");
+	 	GamePang->spritesheetball = CImage_LoadImage(Renderer, "pang/ball.bmp");
 	}
 	
 	
-	GamePang->spritesheetballtz = Image->ImageSize(GamePang->spritesheetball);
+	GamePang->spritesheetballtz = CImage_ImageSize(GamePang->spritesheetball);
 
 }
 
 void CGamePang_UnloadGraphics(CGamePang* GamePang)
 {
-	Image->UnLoadImage(GamePang->spritesheetplayer);
-	Image->UnLoadImage(GamePang->spritesheetbullet);
-	Image->UnLoadImage(GamePang->spritesheetball);
-	Image->UnLoadImage(GamePang->background);
+	CImage_UnLoadImage(GamePang->spritesheetplayer);
+	CImage_UnLoadImage(GamePang->spritesheetbullet);
+	CImage_UnLoadImage(GamePang->spritesheetball);
+	CImage_UnLoadImage(GamePang->background);
 }
 
 //Update ----------------------------------------------------------------------------------------------------------------

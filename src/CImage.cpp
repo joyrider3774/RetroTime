@@ -14,28 +14,34 @@ using namespace std;
 
 vector<pair<string, pair<Vec2F, SDL_Texture*>>> ScaledImages;
 
-CImage::CImage(string AssetsPath, bool ADebugInfo)
+CTexture *CImage_Images[GFX_Max];
+string CImage_DataPath;
+bool CImage_ImgEnabled;
+bool CImage_DebugInfo;
+int CImage_ScaledImagesLoaded;
+
+void CImage_Init(string AssetsPath, bool ADebugInfo)
 {
-	ImgEnabled = true;
-	DebugInfo = ADebugInfo;
+	CImage_ImgEnabled = true;
+	CImage_DebugInfo = ADebugInfo;
 	if (IMG_Init(IMG_INIT_PNG) == 0)
 	{
-		ImgEnabled = false;
+		CImage_ImgEnabled = false;
 		SDL_Log("Failed to initialise images: %s\n", IMG_GetError());
 	}
 	else
 	{
 		SDL_Log("Images Succesfully initialised!\n");
 	}
-	DataPath = AssetsPath;
+	CImage_DataPath = AssetsPath;
 
 	for (int i=0; i < GFX_Max; i++)
-		Images[i] = nullptr;
+		CImage_Images[i] = nullptr;
 }
 
-CImage::~CImage()
+void CImage_DeInit()
 {
-	UnloadImages();
+	CImage_UnloadImages();
 
 	for(auto it  = ScaledImages.begin(); it < ScaledImages.end(); ++it)
 	{
@@ -47,31 +53,31 @@ CImage::~CImage()
 }
 
 
-int CImage::ScaledImagesLoadedCount()
+int CImage_ScaledImagesLoadedCount()
 {
-	return ScaledImagesLoaded;
+	return CImage_ScaledImagesLoaded;
 }
 
-SDL_Texture *CImage::LoadScaledImage(SDL_Renderer* Renderer, int GFXID, Vec2F Scale)
+SDL_Texture *CImage_LoadScaledImage(SDL_Renderer* Renderer, int GFXID, Vec2F Scale)
 {
-	if(!ImgEnabled)
+	if(!CImage_ImgEnabled)
 		return NULL;
 
 	if ((GFXID < 0) || (GFXID >= GFX_Max))
 		return NULL;
 
-	if (Images[GFXID] == nullptr)
+	if (CImage_Images[GFXID] == nullptr)
 		return NULL;
 
 	
 	int w, h;
-	SDL_QueryTexture(Images[GFXID]->Img, NULL, NULL, &w, &h);
+	SDL_QueryTexture(CImage_Images[GFXID]->Img, NULL, NULL, &w, &h);
 	w = (int)ceil(w * abs(Scale.x));
 	h = (int)ceil(h * abs(Scale.y));
 	Vec2F Resolution = {(float)w,(float)h};
 	for(auto it  = ScaledImages.begin(); it < ScaledImages.end(); ++it)
 	{
-		if ((it->first == Images[GFXID]->BaseFilename) && 
+		if ((it->first == CImage_Images[GFXID]->BaseFilename) && 
 		 	(it->second.first.x - Resolution.x < epsilion) &&
 			(it->second.first.y - Resolution.y < epsilion))
 			return it->second.second;
@@ -79,7 +85,7 @@ SDL_Texture *CImage::LoadScaledImage(SDL_Renderer* Renderer, int GFXID, Vec2F Sc
 
 	//not loaded yet
 
-	string FullFileName = Images[GFXID]->BaseFilename + "_" + to_string(w)+ "x" + to_string(h) + ".bmp";
+	string FullFileName = CImage_Images[GFXID]->BaseFilename + "_" + to_string(w)+ "x" + to_string(h) + ".bmp";
 	SDL_Texture *Tmp = NULL;
 	SDL_Surface* Img = IMG_Load(FullFileName.c_str());
 	if(Img)
@@ -87,8 +93,8 @@ SDL_Texture *CImage::LoadScaledImage(SDL_Renderer* Renderer, int GFXID, Vec2F Sc
 		Tmp = SDL_CreateTextureFromSurface(Renderer, Img);
 		if(Tmp)
 		{
-			ScaledImages.push_back(make_pair(Images[GFXID]->BaseFilename, make_pair(Resolution, Tmp)));
-			ScaledImagesLoaded++;
+			ScaledImages.push_back(make_pair(CImage_Images[GFXID]->BaseFilename, make_pair(Resolution, Tmp)));
+			CImage_ScaledImagesLoaded++;
 		}
 		SDL_FreeSurface(Img);
 	}
@@ -96,53 +102,53 @@ SDL_Texture *CImage::LoadScaledImage(SDL_Renderer* Renderer, int GFXID, Vec2F Sc
 	return Tmp;
 }
 
-int CImage::LoadImage(SDL_Renderer* Renderer, string FileName)
+int CImage_LoadImage(SDL_Renderer* Renderer, string FileName)
 {
-	return this->LoadImage(Renderer, FileName, 0, 0, false);
+	return CImage_LoadImage(Renderer, FileName, 0, 0, false);
 }
 
-void CImage::SaveImage(SDL_Renderer* Renderer, int GFXID, Vec2F scale)
+void CImage_SaveImage(SDL_Renderer* Renderer, int GFXID, Vec2F scale)
 {
-	if(!ImgEnabled)
+	if(!CImage_ImgEnabled)
 		return;
 
 	if ((GFXID < 0) || (GFXID >= GFX_Max))
 		return;
 
-	if (Images[GFXID] == nullptr)
+	if (CImage_Images[GFXID] == nullptr)
 		return;
 
-	if (!Images[GFXID]->cansave)
+	if (!CImage_Images[GFXID]->cansave)
 		return;
 
 	int w, h;
-	SDL_QueryTexture(Images[GFXID]->Img, NULL, NULL, &w, &h);
+	SDL_QueryTexture(CImage_Images[GFXID]->Img, NULL, NULL, &w, &h);
 	w = (int)ceil(w * abs(scale.x));
 	h = (int)ceil(h * abs(scale.y));
-	SDL_SaveBMPTextureScaled(Renderer, Images[GFXID]->BaseFilename +"_" + to_string(w)+ "x" + to_string(h) + ".bmp" ,
-		Images[GFXID]->Img, abs(scale.x),abs(scale.y), true, Images[GFXID]->bayerversion, Images[GFXID]->whiteThreshold);
+	SDL_SaveBMPTextureScaled(Renderer, CImage_Images[GFXID]->BaseFilename +"_" + to_string(w)+ "x" + to_string(h) + ".bmp" ,
+		CImage_Images[GFXID]->Img, abs(scale.x),abs(scale.y), true, CImage_Images[GFXID]->bayerversion, CImage_Images[GFXID]->whiteThreshold);
 }
 
-int CImage::LoadImage(SDL_Renderer* Renderer, string FileName, int bayerver, int whitethreshold, bool cansave)
+int CImage_LoadImage(SDL_Renderer* Renderer, string FileName, int bayerver, int whitethreshold, bool cansave)
 {
-	if(!ImgEnabled)
+	if(!CImage_ImgEnabled)
 		return -1;
 
-	string FullFileName = DataPath + "graphics/" + FileName;
+	string FullFileName = CImage_DataPath + "graphics/" + FileName;
 	for (int i=0; i < GFX_Max; i++)
-		if(Images[i] == nullptr)
+		if(CImage_Images[i] == nullptr)
 		{
 			SDL_Surface* Img = IMG_Load(FullFileName.c_str());
 			if(Img)
 			{
-				Images[i] = new CTexture();
-				Images[i]->BaseFilename = FullFileName.substr(0, FullFileName.find_last_of('.'));
-				Images[i]->bayerversion = bayerver;
-				Images[i]->whiteThreshold = whitethreshold;
-				Images[i]->cansave = cansave;
-				Images[i]->Img = SDL_CreateTextureFromSurface(Renderer, Img);
+				CImage_Images[i] = new CTexture();
+				CImage_Images[i]->BaseFilename = FullFileName.substr(0, FullFileName.find_last_of('.'));
+				CImage_Images[i]->bayerversion = bayerver;
+				CImage_Images[i]->whiteThreshold = whitethreshold;
+				CImage_Images[i]->cansave = cansave;
+				CImage_Images[i]->Img = SDL_CreateTextureFromSurface(Renderer, Img);
 				SDL_FreeSurface(Img);
-				if(DebugInfo)
+				if(CImage_DebugInfo)
 					SDL_Log("Loaded Graphic %s\n", FullFileName.c_str());
 				return i;
 			}
@@ -155,42 +161,42 @@ int CImage::LoadImage(SDL_Renderer* Renderer, string FileName, int bayerver, int
 	return -1;
 }
 
-void CImage::UnLoadImage(int GFXID)
+void CImage_UnLoadImage(int GFXID)
 {
-	if(!ImgEnabled)
+	if(!CImage_ImgEnabled)
 		return;
 
 	if ((GFXID < 0) || (GFXID >= GFX_Max))
 		return;
 
-	if (Images[GFXID] != nullptr)
+	if (CImage_Images[GFXID] != nullptr)
 	{
-		SDL_DestroyTexture(Images[GFXID]->Img);
+		SDL_DestroyTexture(CImage_Images[GFXID]->Img);
 		
-		delete Images[GFXID];
-		Images[GFXID] = nullptr;
+		delete CImage_Images[GFXID];
+		CImage_Images[GFXID] = nullptr;
 	}
 
 
 }
 
-void CImage::UnloadImages()
+void CImage_UnloadImages()
 {
 	for (int i=0; i < GFX_Max; i++)
-		UnLoadImage(i);
+		CImage_UnLoadImage(i);
 }
 
-void CImage::DrawImage(SDL_Renderer* Renderer, int GFXID, SDL_Rect* Src, SDL_Rect* Dst)
+void CImage_DrawImage(SDL_Renderer* Renderer, int GFXID, SDL_Rect* Src, SDL_Rect* Dst)
 {
 	if((GFXID < 0) || (GFXID >= GFX_Max))
 		return;
 
-	DrawImage(Renderer, Images[GFXID]->Img, Src, Dst);
+	CImage_DrawImage(Renderer, CImage_Images[GFXID]->Img, Src, Dst);
 }
 
-void CImage::DrawImage(SDL_Renderer* Renderer, SDL_Texture *Texture, SDL_Rect* Src, SDL_Rect* Dst)
+void CImage_DrawImage(SDL_Renderer* Renderer, SDL_Texture *Texture, SDL_Rect* Src, SDL_Rect* Dst)
 {
-	if(!ImgEnabled)
+	if(!CImage_ImgEnabled)
 		return;
 
 	if(Texture == nullptr)
@@ -199,17 +205,17 @@ void CImage::DrawImage(SDL_Renderer* Renderer, SDL_Texture *Texture, SDL_Rect* S
 	SDL_RenderCopy(Renderer, Texture, Src, Dst);
 }
 
-void CImage::DrawImageEx(SDL_Renderer* Renderer, int GFXID, SDL_Rect* Src, SDL_Rect* Dst, float Angle, SDL_Point* Center, SDL_RendererFlip Flip)
+void CImage_DrawImageEx(SDL_Renderer* Renderer, int GFXID, SDL_Rect* Src, SDL_Rect* Dst, float Angle, SDL_Point* Center, SDL_RendererFlip Flip)
 {
 	if((GFXID < 0) || (GFXID >= GFX_Max))
 		return;
 
-	DrawImageEx(Renderer, Images[GFXID]->Img, Src, Dst, Angle, Center, Flip);
+	CImage_DrawImageEx(Renderer, CImage_Images[GFXID]->Img, Src, Dst, Angle, Center, Flip);
 }
 
-void CImage::DrawImageEx(SDL_Renderer* Renderer, SDL_Texture *Texture, SDL_Rect* Src, SDL_Rect* Dst, float Angle, SDL_Point* Center, SDL_RendererFlip Flip)
+void CImage_DrawImageEx(SDL_Renderer* Renderer, SDL_Texture *Texture, SDL_Rect* Src, SDL_Rect* Dst, float Angle, SDL_Point* Center, SDL_RendererFlip Flip)
 {
-	if(!ImgEnabled)
+	if(!CImage_ImgEnabled)
 		return;
 
 	if(Texture == nullptr)
@@ -219,52 +225,52 @@ void CImage::DrawImageEx(SDL_Renderer* Renderer, SDL_Texture *Texture, SDL_Rect*
 }
 
 //fuze used center points for positions and a floating point scale vector
-void CImage::DrawImageFuzeSrcRectTintFloat(SDL_Renderer* Renderer, int GFXID, SDL_Rect *SrcRect, bool CenterImagePos, SDL_Point* Pos, float Angle, Vec2F* Scale, float TintR, float TintG, float TintB, float Alpha)
+void CImage_DrawImageFuzeSrcRectTintFloat(SDL_Renderer* Renderer, int GFXID, SDL_Rect *SrcRect, bool CenterImagePos, SDL_Point* Pos, float Angle, Vec2F* Scale, float TintR, float TintG, float TintB, float Alpha)
 {
 	if((GFXID < 0) || (GFXID >= GFX_Max))
 		return;
 
-	DrawImageFuze(Renderer, Images[GFXID]->Img, SrcRect, CenterImagePos, Pos, Angle, Scale, (Uint8)floor(255.0f * TintR) , (Uint8)floor(255.0f * TintG), (Uint8)floor(255.0f * TintB) , (Uint8)floor(255.0f * Alpha));
+	CImage_DrawImageFuze(Renderer, CImage_Images[GFXID]->Img, SrcRect, CenterImagePos, Pos, Angle, Scale, (Uint8)floor(255.0f * TintR) , (Uint8)floor(255.0f * TintG), (Uint8)floor(255.0f * TintB) , (Uint8)floor(255.0f * Alpha));
 }
 
-void CImage::DrawImageFuzeSrcRectTintFloat(SDL_Renderer* Renderer, SDL_Texture* Texture, SDL_Rect *SrcRect, bool CenterImagePos, SDL_Point* Pos, float Angle, Vec2F* Scale, float TintR, float TintG, float TintB, float Alpha)
+void CImage_DrawImageFuzeSrcRectTintFloat(SDL_Renderer* Renderer, SDL_Texture* Texture, SDL_Rect *SrcRect, bool CenterImagePos, SDL_Point* Pos, float Angle, Vec2F* Scale, float TintR, float TintG, float TintB, float Alpha)
 {
 	if(Texture == nullptr)
 		return;
 
-	DrawImageFuze(Renderer, Texture, SrcRect, CenterImagePos, Pos, Angle, Scale, (Uint8)floor(255.0f * TintR) , (Uint8)floor(255.0f * TintG), (Uint8)floor(255.0f * TintB) , (Uint8)floor(255.0f * Alpha));
+	CImage_DrawImageFuze(Renderer, Texture, SrcRect, CenterImagePos, Pos, Angle, Scale, (Uint8)floor(255.0f * TintR) , (Uint8)floor(255.0f * TintG), (Uint8)floor(255.0f * TintB) , (Uint8)floor(255.0f * Alpha));
 }
 
 //fuze used center points for positions and a floating point scale vector
-void CImage::DrawImageFuzeTintFloat(SDL_Renderer* Renderer, int GFXID, bool CenterImagePos, SDL_Point* Pos, float Angle, Vec2F* Scale, float TintR, float TintG, float TintB, float Alpha)
+void CImage_DrawImageFuzeTintFloat(SDL_Renderer* Renderer, int GFXID, bool CenterImagePos, SDL_Point* Pos, float Angle, Vec2F* Scale, float TintR, float TintG, float TintB, float Alpha)
 {
 	if((GFXID < 0) || (GFXID >= GFX_Max))
 		return;
 
-	DrawImageFuze(Renderer, Images[GFXID]->Img, NULL, CenterImagePos, Pos, Angle, Scale, (Uint8)floor(255.0f * TintR) , (Uint8)floor(255.0f * TintG), (Uint8)floor(255.0f * TintB) , (Uint8)floor(255.0f * Alpha));
+	CImage_DrawImageFuze(Renderer, CImage_Images[GFXID]->Img, NULL, CenterImagePos, Pos, Angle, Scale, (Uint8)floor(255.0f * TintR) , (Uint8)floor(255.0f * TintG), (Uint8)floor(255.0f * TintB) , (Uint8)floor(255.0f * Alpha));
 }
 
-void CImage::DrawImageFuzeTintFloat(SDL_Renderer* Renderer, SDL_Texture *Texture, bool CenterImagePos, SDL_Point* Pos, float Angle, Vec2F* Scale, float TintR, float TintG, float TintB, float Alpha)
+void CImage_DrawImageFuzeTintFloat(SDL_Renderer* Renderer, SDL_Texture *Texture, bool CenterImagePos, SDL_Point* Pos, float Angle, Vec2F* Scale, float TintR, float TintG, float TintB, float Alpha)
 {
 	if(Texture == nullptr)
 		return;
 
-	DrawImageFuze(Renderer, Texture, NULL, CenterImagePos, Pos, Angle, Scale, (Uint8)floor(255.0f * TintR) , (Uint8)floor(255.0f * TintG), (Uint8)floor(255.0f * TintB) , (Uint8)floor(255.0f * Alpha));
+	CImage_DrawImageFuze(Renderer, Texture, NULL, CenterImagePos, Pos, Angle, Scale, (Uint8)floor(255.0f * TintR) , (Uint8)floor(255.0f * TintG), (Uint8)floor(255.0f * TintB) , (Uint8)floor(255.0f * Alpha));
 }
 
-void CImage::DrawImageFuze(SDL_Renderer* Renderer, int GFXID, bool CenterImagePos, SDL_Point* Pos, float Angle, Vec2F* Scale, Uint8 TintR, Uint8 TintG, Uint8 TintB, Uint8 Alpha)
+void CImage_DrawImageFuze(SDL_Renderer* Renderer, int GFXID, bool CenterImagePos, SDL_Point* Pos, float Angle, Vec2F* Scale, Uint8 TintR, Uint8 TintG, Uint8 TintB, Uint8 Alpha)
 {
 	if((GFXID < 0) || (GFXID >= GFX_Max))
 		return;
 
-	DrawImageFuze(Renderer, Images[GFXID]->Img, NULL, CenterImagePos, Pos, Angle, Scale, TintR, TintG, TintB, Alpha);
+	CImage_DrawImageFuze(Renderer, CImage_Images[GFXID]->Img, NULL, CenterImagePos, Pos, Angle, Scale, TintR, TintG, TintB, Alpha);
 }
 
 
 //fuze used center points for positions and a floating point scale vector
-void CImage::DrawImageFuze(SDL_Renderer* Renderer, SDL_Texture *Texture, SDL_Rect *SrcRect, bool CenterImagePos, SDL_Point* Pos, float Angle, Vec2F* Scale, Uint8 TintR, Uint8 TintG, Uint8 TintB, Uint8 Alpha)
+void CImage_DrawImageFuze(SDL_Renderer* Renderer, SDL_Texture *Texture, SDL_Rect *SrcRect, bool CenterImagePos, SDL_Point* Pos, float Angle, Vec2F* Scale, Uint8 TintR, Uint8 TintG, Uint8 TintB, Uint8 Alpha)
 {
-	if(!ImgEnabled)
+	if(!CImage_ImgEnabled)
 		return;
 
 	if(Texture == nullptr)
@@ -280,7 +286,7 @@ void CImage::DrawImageFuze(SDL_Renderer* Renderer, SDL_Texture *Texture, SDL_Rec
 	else
 	{
 
-		SDL_Point ImageTz = ImageSize(Texture);
+		SDL_Point ImageTz = CImage_ImageSize(Texture);
 		dstW = (ImageTz.x * abs(Scale->x));
 		dstH = (ImageTz.y * abs(Scale->y));
 	}
@@ -327,20 +333,20 @@ void CImage::DrawImageFuze(SDL_Renderer* Renderer, SDL_Texture *Texture, SDL_Rec
 	SDL_SetTextureAlphaMod(Texture, A);
 }
 
-SDL_Point CImage::ImageSize(int GFXID)
+SDL_Point CImage_ImageSize(int GFXID)
 {
 
 	if((GFXID < 0) || (GFXID >= GFX_Max))
 		return {-1, -1};
 
-	return ImageSize(Images[GFXID]->Img);
+	return CImage_ImageSize(CImage_Images[GFXID]->Img);
 }
 
 
-SDL_Point CImage::ImageSize(SDL_Texture *Texture)
+SDL_Point CImage_ImageSize(SDL_Texture *Texture)
 {
 
-	if(!ImgEnabled)
+	if(!CImage_ImgEnabled)
 		return {-1, -1};
 
 	if(Texture == nullptr)
@@ -351,29 +357,29 @@ SDL_Point CImage::ImageSize(SDL_Texture *Texture)
 	return size;
 }
 
-int CImage::ImageSlotsUsed()
+int CImage_ImageSlotsUsed()
 {
 	int c = 0;
 	for (int i=0; i < GFX_Max; i++)
 	{
-		if(Images[i] != nullptr)
+		if(CImage_Images[i] != nullptr)
 			c++;
 	}
 	return c;
 }
 
-int CImage::ImageSlotsMax()
+int CImage_ImageSlotsMax()
 {
 	return GFX_Max;
 }
 
-SDL_Texture* CImage::GetImage(int GFXID)
+SDL_Texture* CImage_GetImage(int GFXID)
 {
 	if((GFXID < 0) || (GFXID >= GFX_Max))
 		return NULL;
 	
-	if (Images[GFXID] == NULL)
+	if (CImage_Images[GFXID] == NULL)
 		return nullptr;
 
-	return Images[GFXID]->Img;
+	return CImage_Images[GFXID]->Img;
 }

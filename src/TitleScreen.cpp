@@ -34,7 +34,7 @@ void TitleScreen()
 	//so we can can copy the transparant part with the blue and text from this image
 	SDL_Point FramePos = {ScreenWidth / 2, ScreenHeight / 2};
 	Vec2F FrameScale = {16.0f / 4 * xscale, 12.8f *yscale};
-	Image->DrawImageFuze(Renderer, GFXFrameID, true, &FramePos, 0, &FrameScale, 255, 255, 255, 255);
+	CImage_DrawImageFuze(Renderer, GFXFrameID, true, &FramePos, 0, &FrameScale, 255, 255, 255, 255);
 
 	string Text = "";
 	switch (CurrentMainMenu)
@@ -488,14 +488,14 @@ void TitleScreen()
 	// SDL_Texture *Tmp = SDL_CreateTexture(Renderer, PixelFormat, SDL_TEXTUREACCESS_TARGET, SrcRect.w, SrcRect.h);
 	// SDL_Texture *TmpRender = SDL_GetRenderTarget(Renderer);
 	// SDL_SetRenderTarget(Renderer, Tmp);
-	// Image->DrawImage(Renderer, TexOffScreen, &SrcRect, NULL);
+	// CImage_DrawImage(Renderer, TexOffScreen, &SrcRect, NULL);
 
 	//draw the frame again without transparancy
 	//SDL_SetRenderTarget(Renderer, TmpRender);
-	//Image->DrawImageFuze(Renderer, GFXFrameID, true, &FramePos, 0, &FrameScale, 255, 255, 255, 255);
+	//CImage_DrawImageFuze(Renderer, GFXFrameID, true, &FramePos, 0, &FrameScale, 255, 255, 255, 255);
 
 	// //and then draw the transparant part over it now
-	// Image->DrawImage(Renderer, Tmp, NULL, &SrcRect);
+	// CImage_DrawImage(Renderer, Tmp, NULL, &SrcRect);
 	// SDL_DestroyTexture(Tmp);
 
 //	freeImage(surface)
