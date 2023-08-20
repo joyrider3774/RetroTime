@@ -75,7 +75,7 @@ void CGameBase_PauseMenu(CGameBase* GameBase)
 		if (SubGameState == SGPauseMenu)
 		{
 			string Text = "Paused";
-			Font->WriteText(Renderer, "Roboto-Regular", 80*yscale, Text, Text.length(), 510*xscale, 50*yscale, 0, {255,255,255,255});
+			CFont_WriteText(Renderer, "Roboto-Regular", 80*yscale, Text, Text.length(), 510*xscale, 50*yscale, 0, {255,255,255,255});
 			int menu;
 			SDL_Color color;
 			for(int i = 0; i < maxmenus; i++)
@@ -90,38 +90,38 @@ void CGameBase_PauseMenu(CGameBase* GameBase)
 				{
 					case PMSoundVol:
 						Text = PMPauseMenus[menu].name + to_string((int)(Audio->GetVolumeSound()*100/128)) + "%";
-						Font->WriteText(Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 300*xscale, 185*yscale + i * menuspacing, 0, color);
+						CFont_WriteText(Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 300*xscale, 185*yscale + i * menuspacing, 0, color);
 						break;
 					case PMMusicVol:
 						Text = PMPauseMenus[menu].name + to_string((int)(Audio->GetVolumeMusic()*100/128)) + "%";
-						Font->WriteText(Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 300*xscale, 185*yscale + i * menuspacing, 0, color);
+						CFont_WriteText(Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 300*xscale, 185*yscale + i * menuspacing, 0, color);
 						break;
 					default:
-						Font->WriteText(Renderer, "Roboto-Regular", menutextsize, PMPauseMenus[menu].name, PMPauseMenus[menu].name.length(), 300*xscale,
+						CFont_WriteText(Renderer, "Roboto-Regular", menutextsize, PMPauseMenus[menu].name, PMPauseMenus[menu].name.length(), 300*xscale,
 							185*yscale + i * menuspacing, 0, color);
 						break;
 				}
 			}
 			Text = "Use dpad to switch between options. (A) to select and (B) for back";
-			Font->WriteText(Renderer, "Roboto-Regular", 34*yscale, Text, Text.length(), 90*xscale, 630*yscale, 0, {255, 255, 255, 255});
+			CFont_WriteText(Renderer, "Roboto-Regular", 34*yscale, Text, Text.length(), 90*xscale, 630*yscale, 0, {255, 255, 255, 255});
 		}
 
 		if (SubGameState == SGGameHelp)
 		{
 			string Text = "Game Help";
-			Font->WriteText(Renderer, "Roboto-Regular", 80*yscale, Text, Text.length(), 485*xscale, 50*yscale, 0, {255,255,255,255});
+			CFont_WriteText(Renderer, "Roboto-Regular", 80*yscale, Text, Text.length(), 485*xscale, 50*yscale, 0, {255,255,255,255});
 
 			Text = GSGames[Game].name;
-			Font->WriteText(Renderer, "Roboto-Regular", 50*yscale, Text, Text.length(), 75*xscale, 150*yscale, 0, {255,255,255,255});
+			CFont_WriteText(Renderer, "Roboto-Regular", 50*yscale, Text, Text.length(), 75*xscale, 150*yscale, 0, {255,255,255,255});
 
 			Text = GMModes[GameMode].name + " High Score: " + to_string(HighScores[Game][GameMode]);
-			Font->WriteText(Renderer, "Roboto-Regular", 38*yscale, Text, Text.length(), 75*xscale, 210*yscale, 0, {255,255,255,255});
+			CFont_WriteText(Renderer, "Roboto-Regular", 38*yscale, Text, Text.length(), 75*xscale, 210*yscale, 0, {255,255,255,255});
 
 			Text = GSGames[Game].description;
-			Font->WriteText(Renderer, "Roboto-Regular", 38*yscale, Text, Text.length(), 75*xscale, 255*yscale, 0, {255,255,255,255});
+			CFont_WriteText(Renderer, "Roboto-Regular", 38*yscale, Text, Text.length(), 75*xscale, 255*yscale, 0, {255,255,255,255});
 
 			Text = "Press (A) or (B) for back";
-			Font->WriteText(Renderer, "Roboto-Regular", 34*yscale, Text, Text.length(), 485*xscale, 630*yscale, 0, {255, 255, 255, 255});
+			CFont_WriteText(Renderer, "Roboto-Regular", 34*yscale, Text, Text.length(), 485*xscale, 630*yscale, 0, {255, 255, 255, 255});
 		}
 
 		Input->Update();
@@ -313,8 +313,8 @@ void CGameBase_PauseMenu(CGameBase* GameBase)
 				Text += "MUS Slots: " + to_string(Audio->MusicSlotsUsed()) + "/" + to_string(Audio->MusicSlotsMax()) + "\n";
 				Text += "SPR Slots: " + to_string(Sprites->SpriteSlotsUsed()) + "/" + to_string(Sprites->SpriteSlotsMax()) + "\n";
 			}
-			int tw = Font->TextWidth("RobotoMono-Bold", 16, Text, Text.length());
-			Font->WriteText(Renderer, "RobotoMono-Bold", 16, Text, Text.length(), w - tw, 0, 0, {255, 0, 255, 255});
+			int tw = CFont_TextWidth("RobotoMono-Bold", 16, Text, Text.length());
+			CFont_WriteText(Renderer, "RobotoMono-Bold", 16, Text, Text.length(), w - tw, 0, 0, {255, 0, 255, 255});
 		}
 		SDL_RenderPresent(Renderer);
 
@@ -366,15 +366,15 @@ void CGameBase_DrawScoreBar(CGameBase* GameBase)
 			Text += "Timer: " + to_string_with_precision(Timer, 2) + " Score:" + to_string(Scores[Game][GameMode]) +
 				" Previous High Score: " + to_string(HighScores[Game][GameMode]);
 	}
-	Font->WriteText(Renderer, "Roboto-Regular", 20*yscale, Text, Text.length(), 0, 0, 0, {255,255,255,255});
+	CFont_WriteText(Renderer, "Roboto-Regular", 20*yscale, Text, Text.length(), 0, 0, 0, {255,255,255,255});
 }
 
 void CGameBase_DrawSubstateText(CGameBase* GameBase)
 {
 	//textSize(scpregamefontsize)
 	//tz = textWidth(text)
-	int w = Font->TextWidth("Roboto-Regular", 60*yscale, GameBase->SubStateText, strlen(GameBase->SubStateText));
-	Font->WriteText(Renderer, "Roboto-Regular", 60*yscale, GameBase->SubStateText, strlen(GameBase->SubStateText), GameBase->screenleft + ((GameBase->screenright - GameBase->screenleft) / 2) - w/2,
+	int w = CFont_TextWidth("Roboto-Regular", 60*yscale, GameBase->SubStateText, strlen(GameBase->SubStateText));
+	CFont_WriteText(Renderer, "Roboto-Regular", 60*yscale, GameBase->SubStateText, strlen(GameBase->SubStateText), GameBase->screenleft + ((GameBase->screenright - GameBase->screenleft) / 2) - w/2,
 		GameBase->screentop + ((GameBase->screenbottom - GameBase->screentop) / 2) - 90*xscale, 0, {255, 255, 255, 240});
 }
 

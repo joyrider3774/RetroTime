@@ -54,7 +54,7 @@ CGameRamIt *GameRamIt;
 CGamePang * GamePang;
 CGameFrog *GameFrog;
 CAudio *Audio;
-CFont *Font;
+
 CInput *Input;
 CSprites *Sprites;
 SDL_Renderer *Renderer;
@@ -808,7 +808,7 @@ void CGame_MainLoop()
 		//ditherTarget(Renderer, SDL_GetRenderTarget(Renderer), &DithRect, ver, wtrs);
 
 		//string Text = "wtrs: " + std::to_string(wtrs) + "ver: " + std::to_string(ver) + "\n";
-		//Font->WriteText(Renderer, "RobotoMono-Bold", 16, Text, Text.length(), 0, 0, 0, {255, 0, 255, 255});
+		//CFont_WriteText(Renderer, "RobotoMono-Bold", 16, Text, Text.length(), 0, 0, 0, {255, 0, 255, 255});
 
 		if (debugInfo || ShowFPS)
 		{
@@ -825,8 +825,8 @@ void CGame_MainLoop()
 				Text += "SCL Loaded: " + to_string(CImage_ScaledImagesLoadedCount()) + "\n";
 				
 			}
-			int tw = Font->TextWidth("RobotoMono-Bold", 14, Text, Text.length());
-			Font->WriteText(Renderer, "RobotoMono-Bold", 14, Text, Text.length(), w - tw, 0, 0, {255, 0, 255, 255});
+			int tw = CFont_TextWidth("RobotoMono-Bold", 14, Text, Text.length());
+			CFont_WriteText(Renderer, "RobotoMono-Bold", 14, Text, Text.length(), w - tw, 0, 0, {255, 0, 255, 255});
 		}
 		SDL_RenderPresent(Renderer);
 
@@ -932,7 +932,7 @@ Possible options are:\n\
 				srand(time(NULL));
 
 				Audio = new CAudio(DataPath, debugInfo);
-				Font = new CFont(DataPath, debugInfo);
+				CFont_Init(DataPath, debugInfo);
 				CImage_Init(DataPath, debugInfo);
 				Input = new CInput();
 				Sprites = new CSprites();
@@ -980,7 +980,7 @@ Possible options are:\n\
 				CGame_SaveHighScores();
 
 				delete Audio;
-				delete Font;
+				CFont_DeInit();
 				CImage_DeInit();
 				delete Input;
 				delete Sprites;

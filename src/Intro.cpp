@@ -32,33 +32,33 @@ void Intro()
 	if (scene == 0)
 	{
 		s = "Willems Davy aka Joyrider3774";
-		w = Font->TextWidth("Roboto-Regular", tsize, s, s.length());
+		w = CFont_TextWidth("Roboto-Regular", tsize, s, s.length());
 		h = tsize*2;
-		Font->WriteText(Renderer, "Roboto-Regular", tsize, s, s.length(), (ScreenWidth - w) / 2, (ScreenHeight - h) /2, tsize, ClWhite);
+		CFont_WriteText(Renderer, "Roboto-Regular", tsize, s, s.length(), (ScreenWidth - w) / 2, (ScreenHeight - h) /2, tsize, ClWhite);
 
 		s = "presents";
-		w = Font->TextWidth("Roboto-Regular", tsize, s, s.length());
+		w = CFont_TextWidth("Roboto-Regular", tsize, s, s.length());
 		h = tsize;
-		Font->WriteText(Renderer, "Roboto-Regular", tsize, s, s.length(), (ScreenWidth - w) / 2, (ScreenHeight) /2, tsize, ClWhite);
+		CFont_WriteText(Renderer, "Roboto-Regular", tsize, s, s.length(), (ScreenWidth - w) / 2, (ScreenHeight) /2, tsize, ClWhite);
 	}
 
 	if (scene == 1)
 	{
 		s = "Retro Time";
-		w = Font->TextWidth("Roboto-Regular", tsize, s, s.length());
-		Font->WriteText(Renderer, "Roboto-Regular", tsize, s, s.length(), (ScreenWidth - w) / 2, 40, tsize*2, ClWhite);
+		w = CFont_TextWidth("Roboto-Regular", tsize, s, s.length());
+		CFont_WriteText(Renderer, "Roboto-Regular", tsize, s, s.length(), (ScreenWidth - w) / 2, 40, tsize*2, ClWhite);
 
 		s = "A game containing";
-		w = Font->TextWidth("Roboto-Regular", tsize, s, s.length());
-		Font->WriteText(Renderer, "Roboto-Regular", tsize, s, s.length(),(ScreenWidth - w) / 2, (ScreenHeight - 3 * (tsize + 10)) /2, tsize, ClWhite);
+		w = CFont_TextWidth("Roboto-Regular", tsize, s, s.length());
+		CFont_WriteText(Renderer, "Roboto-Regular", tsize, s, s.length(),(ScreenWidth - w) / 2, (ScreenHeight - 3 * (tsize + 10)) /2, tsize, ClWhite);
 
 		s = to_string(Games) + " retro based games";
-		w = Font->TextWidth("Roboto-Regular", tsize, s, s.length());
-		Font->WriteText(Renderer, "Roboto-Regular", tsize, s, s.length(), (ScreenWidth - w) / 2, (ScreenHeight - 1 * (tsize + 10)) / 2, tsize, ClWhite);
+		w = CFont_TextWidth("Roboto-Regular", tsize, s, s.length());
+		CFont_WriteText(Renderer, "Roboto-Regular", tsize, s, s.length(), (ScreenWidth - w) / 2, (ScreenHeight - 1 * (tsize + 10)) / 2, tsize, ClWhite);
 
 		s = "playable in " + to_string(Modes) + " game modes";
-		w = Font->TextWidth("Roboto-Regular", tsize, s, s.length());
-		Font->WriteText(Renderer, "Roboto-Regular", tsize, s, s.length(), (ScreenWidth - w) / 2, (ScreenHeight + 1 * (tsize + 10)) /2, tsize, ClWhite);
+		w = CFont_TextWidth("Roboto-Regular", tsize, s, s.length());
+		CFont_WriteText(Renderer, "Roboto-Regular", tsize, s, s.length(), (ScreenWidth - w) / 2, (ScreenHeight + 1 * (tsize + 10)) /2, tsize, ClWhite);
 	}
 
 	if (scene >= 2)

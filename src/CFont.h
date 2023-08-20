@@ -10,17 +10,13 @@
 
 using namespace std;
 
-class CFont {
+extern string CFont_DataPath;
+extern bool CFont_DebugInfo;
+extern bool CFont_GlobalFontEnabled;
+extern map<string, TTF_Font*> CFont_FontCache;
 
-private:
-	string DataPath;
-	bool DebugInfo;
-	bool GlobalFontEnabled = true;
-	map<string, TTF_Font*> FontCache;
-public:
-	CFont(string AssetsPath, bool DebugInfo);
-	~CFont();
-	int TextWidth(string Font, int FontSize, string Tekst, size_t NrOfChars);
-	SDL_Point TextSize(string Font, int FontSize, string Tekst, size_t NrOfChars, int YSpacing);
-	void WriteText(SDL_Renderer *Renderer, string Font, int FontSize, string Tekst, size_t NrOfChars, int X, int Y, int YSpacing, SDL_Color ColorIn);
-};
+void CFont_Init(string AssetsPath, bool DebugInfo);
+void CFont_DeInit();
+int CFont_TextWidth(string Font, int FontSize, string Tekst, size_t NrOfChars);
+SDL_Point CFont_TextSize(string Font, int FontSize, string Tekst, size_t NrOfChars, int YSpacing);
+void CFont_WriteText(SDL_Renderer *Renderer, string Font, int FontSize, string Tekst, size_t NrOfChars, int X, int Y, int YSpacing, SDL_Color ColorIn);

@@ -103,93 +103,93 @@ void SubScoreScreen()
 		if ((Game == Games -1) && (GameMode == GMRetroCarousel))
 		{
 			Text = "Final Results";
-			int Texw = Font->TextWidth("Roboto-Regular", 80*yscale, Text, Text.length());
-			Font->WriteText(Renderer, "Roboto-Regular", 80*yscale, Text, Text.length(), (ScreenWidth-Texw)/2, 50*yscale, 0, {255,255,255,255});
+			int Texw = CFont_TextWidth("Roboto-Regular", 80*yscale, Text, Text.length());
+			CFont_WriteText(Renderer, "Roboto-Regular", 80*yscale, Text, Text.length(), (ScreenWidth-Texw)/2, 50*yscale, 0, {255,255,255,255});
 			Text = "-------------------------";
-			Texw = Font->TextWidth("Roboto-Regular", 80*yscale, Text, Text.length());
-			Font->WriteText(Renderer, "Roboto-Regular", 80*yscale, Text, Text.length(), (ScreenWidth-Texw)/2, 85*yscale, 0, {255,255,255,255});
+			Texw = CFont_TextWidth("Roboto-Regular", 80*yscale, Text, Text.length());
+			CFont_WriteText(Renderer, "Roboto-Regular", 80*yscale, Text, Text.length(), (ScreenWidth-Texw)/2, 85*yscale, 0, {255,255,255,255});
 		}
 		else
 		{
 			Text = "Results";
-			int Texw = Font->TextWidth("Roboto-Regular", 80*yscale, Text, Text.length());
-			Font->WriteText(Renderer, "Roboto-Regular", 80*yscale, Text, Text.length(), (ScreenWidth-Texw)/2, 50*yscale, 0, {255,255,255,255});
+			int Texw = CFont_TextWidth("Roboto-Regular", 80*yscale, Text, Text.length());
+			CFont_WriteText(Renderer, "Roboto-Regular", 80*yscale, Text, Text.length(), (ScreenWidth-Texw)/2, 50*yscale, 0, {255,255,255,255});
 			Text = "----------------";
-			Texw = Font->TextWidth("Roboto-Regular", 80*yscale, Text, Text.length());
-			Font->WriteText(Renderer, "Roboto-Regular", 80*yscale, Text, Text.length(), (ScreenWidth-Texw)/2, 85*yscale, 0, {255,255,255,255});
+			Texw = CFont_TextWidth("Roboto-Regular", 80*yscale, Text, Text.length());
+			CFont_WriteText(Renderer, "Roboto-Regular", 80*yscale, Text, Text.length(), (ScreenWidth-Texw)/2, 85*yscale, 0, {255,255,255,255});
 		}
 		Text = "Game: " + GSGames[Game].name;
-		Font->WriteText(Renderer, "Roboto-Regular", 50*yscale, Text, Text.length(), 150*xscale, 180*yscale, 0, {255,255,255,255});
+		CFont_WriteText(Renderer, "Roboto-Regular", 50*yscale, Text, Text.length(), 150*xscale, 180*yscale, 0, {255,255,255,255});
 		Text = "Game Mode: " + GMModes[GameMode].name;
-		Font->WriteText(Renderer, "Roboto-Regular", 50*yscale, Text, Text.length(), 150*xscale, 225*yscale, 0, {255,255,255,255});
+		CFont_WriteText(Renderer, "Roboto-Regular", 50*yscale, Text, Text.length(), 150*xscale, 225*yscale, 0, {255,255,255,255});
 
 		if (GameMode == GMRetroCarousel)
 		{
 			Text = "Previous Rounds Score: " + to_string(prevretrocarouselscore);
-			Font->WriteText(Renderer, "Roboto-Regular", 50*yscale, Text, Text.length(), 150*xscale, 285*yscale, 0, {255,255,255,255});
+			CFont_WriteText(Renderer, "Roboto-Regular", 50*yscale, Text, Text.length(), 150*xscale, 285*yscale, 0, {255,255,255,255});
 
 			Text = "Game Score: " + to_string(Scores[Game][GameMode]);
-			Font->WriteText(Renderer, "Roboto-Regular", 50*yscale, Text, Text.length(), 150*xscale, 330*yscale, 0, {255,255,255,255});
+			CFont_WriteText(Renderer, "Roboto-Regular", 50*yscale, Text, Text.length(), 150*xscale, 330*yscale, 0, {255,255,255,255});
 
 			if (Game < Games -1)
 				Text = "New Total Rounds Score: " + to_string(RetroCarouselScore);
 			else
 				Text = "Final Total Rounds Score: " + to_string(RetroCarouselScore);
-			Font->WriteText(Renderer, "Roboto-Regular", 50*yscale, Text, Text.length(), 150*xscale, 375*yscale, 0, {255,255,255,255});
+			CFont_WriteText(Renderer, "Roboto-Regular", 50*yscale, Text, Text.length(), 150*xscale, 375*yscale, 0, {255,255,255,255});
 
 			if (wasnewhighscoregame)
 			{
 				Text = "New Game High Score: " + to_string(HighScores[Game][GameMode]);
-				Font->WriteText(Renderer, "Roboto-Regular", 50*yscale, Text, Text.length(), 150*xscale, 425*yscale, 0, {255,255,255,255});
+				CFont_WriteText(Renderer, "Roboto-Regular", 50*yscale, Text, Text.length(), 150*xscale, 425*yscale, 0, {255,255,255,255});
 				SDL_Point pos = {(int)(120*xscale),(int) (425*yscale)};
 				CImage_DrawImageFuze(Renderer, GFXMedal, false, &pos, 0, &MedalScale, 255, 255, 255, 255);
 			}
 			else
 			{
 				Text = "Game High Score: " + to_string(HighScores[Game][GameMode]);
-				Font->WriteText(Renderer, "Roboto-Regular", 50*yscale, Text, Text.length(), 150*xscale, 425*yscale, 0, {255,255,255,255});
+				CFont_WriteText(Renderer, "Roboto-Regular", 50*yscale, Text, Text.length(), 150*xscale, 425*yscale, 0, {255,255,255,255});
 			}
 
 			if (wasnewhighscorecarousel)
 			{
 				Text = "New All Rounds High Score: " + to_string(RetroCarouselHighScore);
-				Font->WriteText(Renderer, "Roboto-Regular", 50*yscale, Text, Text.length(), 150*xscale, 470*yscale, 0, {255,255,255,255});
+				CFont_WriteText(Renderer, "Roboto-Regular", 50*yscale, Text, Text.length(), 150*xscale, 470*yscale, 0, {255,255,255,255});
 				SDL_Point pos = {(int)(120*xscale),(int)( 470*yscale)};
 				CImage_DrawImageFuze(Renderer, GFXMedal, false, &pos, 0, &MedalScale, 255, 255, 255, 255);
 			}
 			else
 			{
 				Text = "All Rounds High Score: " + to_string(RetroCarouselHighScore);
-				Font->WriteText(Renderer, "Roboto-Regular", 50*yscale, Text, Text.length(), 150*xscale, 470*yscale, 0, {255,255,255,255});
+				CFont_WriteText(Renderer, "Roboto-Regular", 50*yscale, Text, Text.length(), 150*xscale, 470*yscale, 0, {255,255,255,255});
 			}
 
 			if (Game < Games -1)
 				Text = "Press (A) for next game: " + GSGames[Game+1].name;
 			else
 				Text = "Press (A) for titlescreen";
-			int Texw = Font->TextWidth("Roboto-Regular", 34*yscale, Text, Text.length());
-			Font->WriteText(Renderer, "Roboto-Regular", 34*yscale, Text, Text.length(), (ScreenWidth-Texw)/2, 630*yscale, 0, {255,255,255,255});
+			int Texw = CFont_TextWidth("Roboto-Regular", 34*yscale, Text, Text.length());
+			CFont_WriteText(Renderer, "Roboto-Regular", 34*yscale, Text, Text.length(), (ScreenWidth-Texw)/2, 630*yscale, 0, {255,255,255,255});
 		}
 		else
 		{
 			Text = "Game Score: " + to_string(Scores[Game][GameMode]);
-			Font->WriteText(Renderer, "Roboto-Regular", 50*yscale, Text, Text.length(), 150*xscale, 285*yscale, 0, {255,255,255,255});
+			CFont_WriteText(Renderer, "Roboto-Regular", 50*yscale, Text, Text.length(), 150*xscale, 285*yscale, 0, {255,255,255,255});
 
 			if (wasnewhighscoregame)
 			{
 				Text = "New Game High Score: " + to_string(HighScores[Game][GameMode]);
-				Font->WriteText(Renderer, "Roboto-Regular", 50*yscale, Text, Text.length(), 150*xscale, 330*yscale, 0, {255,255,255,255});
+				CFont_WriteText(Renderer, "Roboto-Regular", 50*yscale, Text, Text.length(), 150*xscale, 330*yscale, 0, {255,255,255,255});
 				SDL_Point pos = {(int)(120*xscale),(int)(330*yscale)};
 				CImage_DrawImageFuze(Renderer, GFXMedal, false, &pos, 0, &MedalScale, 255, 255, 255, 255);
 			}
 			else
 			{
 				Text = "Game High Score: " + to_string(HighScores[Game][GameMode]);
-				Font->WriteText(Renderer, "Roboto-Regular", 50*yscale, Text, Text.length(), 150*xscale, 330*yscale, 0, {255,255,255,255});
+				CFont_WriteText(Renderer, "Roboto-Regular", 50*yscale, Text, Text.length(), 150*xscale, 330*yscale, 0, {255,255,255,255});
 			}
 			Text = "Press (A) for titlescreen";
-			int Texw = Font->TextWidth("Roboto-Regular", 34*yscale, Text, Text.length());
-			Font->WriteText(Renderer, "Roboto-Regular", 34*yscale, Text, Text.length(), (ScreenWidth-Texw)/2, 630*yscale, 0, {255,255,255,255});
+			int Texw = CFont_TextWidth("Roboto-Regular", 34*yscale, Text, Text.length());
+			CFont_WriteText(Renderer, "Roboto-Regular", 34*yscale, Text, Text.length(), (ScreenWidth-Texw)/2, 630*yscale, 0, {255,255,255,255});
 		}
 	}
 

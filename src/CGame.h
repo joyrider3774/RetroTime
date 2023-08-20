@@ -50,7 +50,6 @@ extern CGameRamIt *GameRamIt;
 extern CGamePang * GamePang;
 extern CGameFrog *GameFrog;
 extern CAudio *Audio;
-extern CFont *Font;
 extern CInput *Input;
 extern CSprites *Sprites;
 extern SDL_Renderer *Renderer;
