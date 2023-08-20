@@ -814,7 +814,7 @@ bool CGameInvaders_DrawObjects(CGameInvaders* GameInvaders)
 {
 	//need todo this here so last frame is also drawn
 	GameInvaders->checkexplosions(GameInvaders);
-	//call drawsprites in base class
+	//call drawsprites
 	return true;
 }
 

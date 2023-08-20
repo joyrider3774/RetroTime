@@ -594,7 +594,7 @@ bool CGamePang_DrawObjects(CGamePang* GamePang)
 	GamePang->drawballs(GamePang);
 	GamePang->drawbullet(GamePang);
 	GamePang->drawplayer(GamePang);
-	//don't call drawsprites in base class
+	//don't call drawsprites
 	return false;
 }
 

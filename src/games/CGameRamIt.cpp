@@ -474,7 +474,7 @@ bool CGameRamIt_DrawObjects(CGameRamIt* GameRamIt)
 	GameRamIt->drawbullet(GameRamIt);
 	GameRamIt->drawplayer(GameRamIt);
 	GameRamIt->drawplayfield(GameRamIt);
-	//don't call drawsprites in base class
+	//don't call drawsprites
 	return false;
 }
 
