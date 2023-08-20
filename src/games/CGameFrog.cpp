@@ -566,7 +566,7 @@ void CGameFrog_updateobjects(CGameFrog* GameFrog)
 							{
 								CGame_AddToScore(GameFrog->lemonscore);
 								GameFrog->destroyobject(GameFrog,i);
-								Audio->PlaySound(GameFrog->SfxCollect, 0);
+								CAudio_PlaySound(GameFrog->SfxCollect, 0);
 							}
 							else
 							{
@@ -574,7 +574,7 @@ void CGameFrog_updateobjects(CGameFrog* GameFrog)
 								{
 									CGame_AddToScore(GameFrog->applescore);
 									GameFrog->destroyobject(GameFrog,i);
-									Audio->PlaySound(GameFrog->SfxCollect, 0);
+									CAudio_PlaySound(GameFrog->SfxCollect, 0);
 								}
 								else
 								{
@@ -582,7 +582,7 @@ void CGameFrog_updateobjects(CGameFrog* GameFrog)
 									{
 										CGame_AddToScore(GameFrog->cherryscore);
 										GameFrog->destroyobject(GameFrog,i);
-										Audio->PlaySound(GameFrog->SfxCollect, 0);
+										CAudio_PlaySound(GameFrog->SfxCollect, 0);
 									}
 								}
 							}
@@ -732,7 +732,7 @@ void CGameFrog_updateplayer(CGameFrog* GameFrog)
 				if ((GameFrog->player.pos.x - GameFrog->player.tz.x / 2) - GameFrog->playerspeed >= 0)
 				{
 					GameFrog->player.pos.x -= GameFrog->playerspeed;
-					Audio->PlaySound(GameFrog->SfxPlayerMove, 0);
+					CAudio_PlaySound(GameFrog->SfxPlayerMove, 0);
 				}
 			}
 		}
@@ -748,7 +748,7 @@ void CGameFrog_updateplayer(CGameFrog* GameFrog)
 				if ((GameFrog->player.pos.x + GameFrog->player.tz.x / 2) + GameFrog->playerspeed <= ScreenWidth)
 				{
 					GameFrog->player.pos.x += GameFrog->playerspeed;
-					Audio->PlaySound(GameFrog->SfxPlayerMove, 0);
+					CAudio_PlaySound(GameFrog->SfxPlayerMove, 0);
 				}
 			}
 		}
@@ -770,7 +770,7 @@ void CGameFrog_updateplayer(CGameFrog* GameFrog)
 						CGame_AddToScore(20);
 						GameFrog->playermaxrow = GameFrog->playerrow;
 					}
-					Audio->PlaySound(GameFrog->SfxPlayerMove, 0);
+					CAudio_PlaySound(GameFrog->SfxPlayerMove, 0);
 				}
 			}
 		}
@@ -788,7 +788,7 @@ void CGameFrog_updateplayer(CGameFrog* GameFrog)
 					GameFrog->player.pos.y += GameFrog->playerspeed;
 					GameFrog->playerrow -= 1;
 				}
-				Audio->PlaySound(GameFrog->SfxPlayerMove, 0);
+				CAudio_PlaySound(GameFrog->SfxPlayerMove, 0);
 			}
 		}
 
@@ -833,7 +833,7 @@ void CGameFrog_init(CGameFrog* GameFrog)
 	GameFrog->createobjects(GameFrog,true);
 	GameFrog->LoadSound(GameFrog);
 	CurrentGameMusicID = GameFrog->MusMusic;
-	Audio->PlayMusic(GameFrog->MusMusic, -1);
+	CAudio_PlayMusic(GameFrog->MusMusic, -1);
 }
 
 void CGameFrog_deinit(CGameFrog* GameFrog)
@@ -849,20 +849,20 @@ void CGameFrog_deinit(CGameFrog* GameFrog)
 
 void CGameFrog_LoadSound(CGameFrog* GameFrog)
 {
-	GameFrog->SfxDie = Audio->LoadSound("common/die.wav");
-	GameFrog->SfxCollect = Audio->LoadSound("common/coin.wav");
-	GameFrog->SfxPlayerMove = Audio->LoadSound("frog/move.wav");
-	GameFrog->MusMusic = Audio->LoadMusic("frog/music.ogg");
+	GameFrog->SfxDie = CAudio_LoadSound("common/die.wav");
+	GameFrog->SfxCollect = CAudio_LoadSound("common/coin.wav");
+	GameFrog->SfxPlayerMove = CAudio_LoadSound("frog/move.wav");
+	GameFrog->MusMusic = CAudio_LoadMusic("frog/music.ogg");
 }
 
 void CGameFrog_UnLoadSound(CGameFrog* GameFrog)
 {
-	Audio->StopMusic();
-	Audio->StopSound();
-	Audio->UnLoadMusic(GameFrog->MusMusic);
-	Audio->UnLoadSound(GameFrog->SfxDie);
-	Audio->UnLoadSound(GameFrog->SfxCollect);
-	Audio->UnLoadSound(GameFrog->SfxPlayerMove);
+	CAudio_StopMusic();
+	CAudio_StopSound();
+	CAudio_UnLoadMusic(GameFrog->MusMusic);
+	CAudio_UnLoadSound(GameFrog->SfxDie);
+	CAudio_UnLoadSound(GameFrog->SfxCollect);
+	CAudio_UnLoadSound(GameFrog->SfxPlayerMove);
 }
 
 void CGameFrog_LoadGraphics(CGameFrog* GameFrog)
@@ -963,7 +963,7 @@ void CGameFrog_UpdateLogic(CGameFrog* GameFrog)
 
 		if (GameFrog->playerdeath)
 		{
-			Audio->PlaySound(GameFrog->SfxDie, 0);
+			CAudio_PlaySound(GameFrog->SfxDie, 0);
 			CGame_AddToScore(-150);
 			if(GameFrog->GameBase->HealthPoints > 1)
 			{

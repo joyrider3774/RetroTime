@@ -137,7 +137,7 @@ void CGameInvaders_createexplosion(CGameInvaders* GameInvaders, Vec2F pos)
 			Sprites->SetSpriteAnimation(GameInvaders->explosions[i].spr,2, 6, 15);
 			Sprites->SetSpriteLocation(GameInvaders->explosions[i].spr, pos);
 			GameInvaders->explosions[i].alive = true;
-			Audio->PlaySound(GameInvaders->SfxPlayerDeath, 0);
+			CAudio_PlaySound(GameInvaders->SfxPlayerDeath, 0);
 			break;
 		}
 	}
@@ -178,7 +178,7 @@ void CGameInvaders_createnemybullet(CGameInvaders* GameInvaders, Vec2F pos)
 			GameInvaders->enemybullets[i].pos = pos;
 			GameInvaders->enemybullets[i].vel = {0, GameInvaders->bulletspeed};
 			GameInvaders->enemybullets[i].alive = true;
-			Audio->PlaySound(GameInvaders->SfxEnemyShoot, 0);
+			CAudio_PlaySound(GameInvaders->SfxEnemyShoot, 0);
 			break;
 		}
 	}
@@ -234,7 +234,7 @@ void CGameInvaders_updateenemybullet(CGameInvaders* GameInvaders)
 					CGame_AddToScore(-150);
 					GameInvaders->deaths += 1;
 					GameInvaders->GameBase->HealthPoints -= 1;
-					Audio->PlaySound(GameInvaders->SfxDie, 0);
+					CAudio_PlaySound(GameInvaders->SfxDie, 0);
 				}
 			}
 
@@ -322,7 +322,7 @@ void CGameInvaders_createbullet(CGameInvaders* GameInvaders)
 		GameInvaders->bullet.pos = GameInvaders->player.pos ;
 		GameInvaders->bullet.vel = {0, -GameInvaders->bulletspeed};
 		GameInvaders->bullet.alive = true;
-		Audio->PlaySound(GameInvaders->SfxPlayerShoot, 0);
+		CAudio_PlaySound(GameInvaders->SfxPlayerShoot, 0);
 	}
 }
 
@@ -516,7 +516,7 @@ void CGameInvaders_updateinvaders(CGameInvaders* GameInvaders)
 		GameInvaders->createinvaders(GameInvaders,false);
 		GameInvaders->destroybullet(GameInvaders);
 		GameInvaders->destroyallenemybullet(GameInvaders);
-		Audio->PlaySound(GameInvaders->SfxSucces, 0);
+		CAudio_PlaySound(GameInvaders->SfxSucces, 0);
 	}
 
 	bool btweenactive = GameInvaders->tweenactive(GameInvaders,GameInvaders->tweenenemypositions);
@@ -604,7 +604,7 @@ void CGameInvaders_updateinvaders(CGameInvaders* GameInvaders)
 		GameInvaders->destroybullet(GameInvaders);
 		GameInvaders->destroyallenemybullet(GameInvaders);
 		GameInvaders->GameBase->HealthPoints -= 1;
-		Audio->PlaySound(GameInvaders->SfxDie, 0);
+		CAudio_PlaySound(GameInvaders->SfxDie, 0);
 	}
 }
 
@@ -699,7 +699,7 @@ void CGameInvaders_init(CGameInvaders* GameInvaders)
 
 	GameInvaders->LoadSound(GameInvaders);
 	CurrentGameMusicID = GameInvaders->MusMusic;
-	Audio->PlayMusic(GameInvaders->MusMusic, -1);
+	CAudio_PlayMusic(GameInvaders->MusMusic, -1);
 }
 
 void CGameInvaders_deinit(CGameInvaders* GameInvaders)
@@ -719,26 +719,26 @@ void CGameInvaders_deinit(CGameInvaders* GameInvaders)
 
 void CGameInvaders_LoadSound(CGameInvaders* GameInvaders)
 {
-	GameInvaders->SfxDie = Audio->LoadSound("common/die.wav");
-	GameInvaders->SfxPlayerShoot = Audio->LoadSound("invaders/playershoot.wav");
-	GameInvaders->SfxPlayerDeath = Audio->LoadSound("invaders/playerdeath.wav");
-	GameInvaders->SfxEnemyShoot = Audio->LoadSound("invaders/enemyshoot.wav");
-	GameInvaders->SfxEnemyDeath = Audio->LoadSound("invaders/enemydeath.wav");
-	GameInvaders->SfxSucces = Audio->LoadSound("common/succes.wav");
-	GameInvaders->MusMusic = Audio->LoadMusic("invaders/music.ogg");
+	GameInvaders->SfxDie = CAudio_LoadSound("common/die.wav");
+	GameInvaders->SfxPlayerShoot = CAudio_LoadSound("invaders/playershoot.wav");
+	GameInvaders->SfxPlayerDeath = CAudio_LoadSound("invaders/playerdeath.wav");
+	GameInvaders->SfxEnemyShoot = CAudio_LoadSound("invaders/enemyshoot.wav");
+	GameInvaders->SfxEnemyDeath = CAudio_LoadSound("invaders/enemydeath.wav");
+	GameInvaders->SfxSucces = CAudio_LoadSound("common/succes.wav");
+	GameInvaders->MusMusic = CAudio_LoadMusic("invaders/music.ogg");
 }
 
 void CGameInvaders_UnLoadSound(CGameInvaders* GameInvaders)
 {
-	Audio->StopMusic();
-	Audio->StopSound();
-	Audio->UnLoadMusic(GameInvaders->MusMusic);
-	Audio->UnLoadSound(GameInvaders->SfxDie);
-	Audio->UnLoadSound(GameInvaders->SfxPlayerShoot);
-	Audio->UnLoadSound(GameInvaders->SfxPlayerDeath);
-	Audio->UnLoadSound(GameInvaders->SfxEnemyShoot);
-	Audio->UnLoadSound(GameInvaders->SfxEnemyDeath);
-	Audio->UnLoadSound(GameInvaders->SfxSucces);
+	CAudio_StopMusic();
+	CAudio_StopSound();
+	CAudio_UnLoadMusic(GameInvaders->MusMusic);
+	CAudio_UnLoadSound(GameInvaders->SfxDie);
+	CAudio_UnLoadSound(GameInvaders->SfxPlayerShoot);
+	CAudio_UnLoadSound(GameInvaders->SfxPlayerDeath);
+	CAudio_UnLoadSound(GameInvaders->SfxEnemyShoot);
+	CAudio_UnLoadSound(GameInvaders->SfxEnemyDeath);
+	CAudio_UnLoadSound(GameInvaders->SfxSucces);
 }
 
 void CGameInvaders_LoadGraphics(CGameInvaders* GameInvaders)

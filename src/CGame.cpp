@@ -53,7 +53,6 @@ CGameInvaders *GameInvaders;
 CGameRamIt *GameRamIt;
 CGamePang * GamePang;
 CGameFrog *GameFrog;
-CAudio *Audio;
 
 CInput *Input;
 CSprites *Sprites;
@@ -162,12 +161,12 @@ void CGame_ResetScores()
 }
 void CGame_LoadMusic()
 {
-	MusMenu = Audio->LoadMusic("main/music.ogg");
+	MusMenu = CAudio_LoadMusic("main/music.ogg");
 }
 
 void CGame_UnLoadMusic()
 {
-	Audio->UnloadMusics();
+	CAudio_UnloadMusics();
 }
 
 void CGame_UnLoadGraphics()
@@ -203,21 +202,21 @@ void CGame_AddToScore(long long int Value)
 
 void CGame_LoadSound()
 {
-	SfxTimeOver = Audio->LoadSound("common/timeover.wav");
-	SfxReadyGo = Audio->LoadSound("common/readygo.wav");
-	SfxOne = Audio->LoadSound("common/one.wav");
-	SfxTwo = Audio->LoadSound("common/two.wav");
-	SfxThree = Audio->LoadSound("common/three.wav");
-	SfxOneMinute = Audio->LoadSound("common/oneminute.wav");
-	SfxConfirm = Audio->LoadSound("main/confirm.wav");
-	SfxBack = Audio->LoadSound("main/back.wav");
-	SfxSelect = Audio->LoadSound("main/select.wav");
-	SfxScore = Audio->LoadSound("main/score.ogg");
+	SfxTimeOver = CAudio_LoadSound("common/timeover.wav");
+	SfxReadyGo = CAudio_LoadSound("common/readygo.wav");
+	SfxOne = CAudio_LoadSound("common/one.wav");
+	SfxTwo = CAudio_LoadSound("common/two.wav");
+	SfxThree = CAudio_LoadSound("common/three.wav");
+	SfxOneMinute = CAudio_LoadSound("common/oneminute.wav");
+	SfxConfirm = CAudio_LoadSound("main/confirm.wav");
+	SfxBack = CAudio_LoadSound("main/back.wav");
+	SfxSelect = CAudio_LoadSound("main/select.wav");
+	SfxScore = CAudio_LoadSound("main/score.ogg");
 }
 
 void CGame_UnLoadSound()
 {
-	Audio->UnloadSounds();
+	CAudio_UnloadSounds();
 }
 
 void CGame_LoadGraphics()
@@ -334,15 +333,15 @@ void CGame_LoadSettings()
 			&VolumeMusic, &VolumeSound);
 
 		if(ret > 0)
-			Audio->SetVolumeMusic(VolumeMusic);
+			CAudio_SetVolumeMusic(VolumeMusic);
 		if(ret > 1)
-			Audio->SetVolumeSound(VolumeSound);
+			CAudio_SetVolumeSound(VolumeSound);
 		fclose(SettingsFile);
 	}
 	else
 	{
-		Audio->SetVolumeMusic(128);
-		Audio->SetVolumeSound(128);
+		CAudio_SetVolumeMusic(128);
+		CAudio_SetVolumeSound(128);
 	}
 }
 
@@ -364,8 +363,8 @@ void CGame_SaveSettings()
 	SettingsFile = fopen(FileName.c_str(), "w");
 	if (SettingsFile)
 	{
-		int VolumeMusic = Audio->GetVolumeMusic();
-		int VolumeSound = Audio->GetVolumeSound();
+		int VolumeMusic = CAudio_GetVolumeMusic();
+		int VolumeSound = CAudio_GetVolumeSound();
 		fprintf(SettingsFile, "VolumeMusic=%d\nVolumeSound=%d\n",
 			VolumeMusic, VolumeSound);
 		fclose(SettingsFile);
@@ -425,21 +424,21 @@ void CGame_UpdateTimer()
 				Timer -= 0.25f;
 
 				if (Timer == 60)
-					Audio->PlaySound(SfxOneMinute, 0);
+					CAudio_PlaySound(SfxOneMinute, 0);
 
 				if (Timer == 3)
-					Audio->PlaySound(SfxThree, 0);
+					CAudio_PlaySound(SfxThree, 0);
 
 				if (Timer == 2)
-					Audio->PlaySound(SfxTwo, 0);
+					CAudio_PlaySound(SfxTwo, 0);
 
 				if (Timer == 1)
-					Audio->PlaySound(SfxOne, 0);
+					CAudio_PlaySound(SfxOne, 0);
 
 
 				if (Timer <= 0)
 				{
-					Audio->PlaySound(SfxTimeOver, 0);
+					CAudio_PlaySound(SfxTimeOver, 0);
 					SubGameState = SGTimeUp;
 					SubStateTime = SDL_GetTicks() + 750;
 					SubStateCounter = 0;
@@ -817,8 +816,8 @@ void CGame_MainLoop()
 			{
 				Text += "FrameTime: " + to_string(AvgFrameTime) + "\n";
 				Text += "GFX Slots: " + to_string(CImage_ImageSlotsUsed()) + "/" + to_string(CImage_ImageSlotsMax()) + "\n";
-				Text += "SND Slots: " + to_string(Audio->SoundSlotsUsed()) + "/" + to_string(Audio->SoundSlotsMax()) + "\n";
-				Text += "MUS Slots: " + to_string(Audio->MusicSlotsUsed()) + "/" + to_string(Audio->MusicSlotsMax()) + "\n";
+				Text += "SND Slots: " + to_string(CAudio_SoundSlotsUsed()) + "/" + to_string(CAudio_SoundSlotsMax()) + "\n";
+				Text += "MUS Slots: " + to_string(CAudio_MusicSlotsUsed()) + "/" + to_string(CAudio_MusicSlotsMax()) + "\n";
 				Text += "SPR Slots: " + to_string(Sprites->SpriteSlotsUsed()) + "/" + to_string(Sprites->SpriteSlotsMax()) + "\n";
 				Text += "SPR Resets: " + to_string(Sprites->UpdateImageResetsCount()) + "\n";
 				Text += "SPR Draws: " + to_string(Sprites->SpritesDrawnCount()) + "\n";
@@ -931,7 +930,7 @@ Possible options are:\n\
 				SDL_Log("Succesfully Created Buffer\n");
 				srand(time(NULL));
 
-				Audio = new CAudio(DataPath, debugInfo);
+				CAudio_Init(DataPath, debugInfo);
 				CFont_Init(DataPath, debugInfo);
 				CImage_Init(DataPath, debugInfo);
 				Input = new CInput();
@@ -979,7 +978,7 @@ Possible options are:\n\
 				CGame_SaveSettings();
 				CGame_SaveHighScores();
 
-				delete Audio;
+				CAudio_DeInit();
 				CFont_DeInit();
 				CImage_DeInit();
 				delete Input;

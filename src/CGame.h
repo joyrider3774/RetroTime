@@ -49,7 +49,6 @@ extern CGameInvaders *GameInvaders;
 extern CGameRamIt *GameRamIt;
 extern CGamePang * GamePang;
 extern CGameFrog *GameFrog;
-extern CAudio *Audio;
 extern CInput *Input;
 extern CSprites *Sprites;
 extern SDL_Renderer *Renderer;

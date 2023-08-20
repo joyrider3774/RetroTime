@@ -137,7 +137,7 @@ void CGameRamIt_updatebullet(CGameRamIt* GameRamIt)
 			if(destroybullet)
 			{
 				if (playaudiobullet)
-					Audio->PlaySound(GameRamIt->SfxHit, 0);
+					CAudio_PlaySound(GameRamIt->SfxHit, 0);
 				GameRamIt->bulletalive = false;
 				break;
 			}
@@ -219,7 +219,7 @@ void CGameRamIt_updateplayer(CGameRamIt* GameRamIt)
 	if (Input->Buttons.ButA && !Input->PrevButtons.ButA)
 		if (GameRamIt->createbullet(GameRamIt))
 		{
-			Audio->PlaySound(GameRamIt->SfxShoot, 0);
+			CAudio_PlaySound(GameRamIt->SfxShoot, 0);
 		}
 }
 
@@ -318,7 +318,7 @@ void CGameRamIt_updateplayfield(CGameRamIt* GameRamIt, bool force)
 
 		if (stageclear)
 		{
-			Audio->PlaySound(GameRamIt->SfxSucces, 0);
+			CAudio_PlaySound(GameRamIt->SfxSucces, 0);
 			GameRamIt->createplayfield(GameRamIt);
 			GameRamIt->GameBase->level += 1;
 			CGame_AddToScore((GameRamIt->GameBase->level-1) * 100);
@@ -404,7 +404,7 @@ void CGameRamIt_init(CGameRamIt* GameRamIt)
 	GameRamIt->GameBase->HealthPoints = 3;
 	GameRamIt->LoadSound(GameRamIt);
 	CurrentGameMusicID = GameRamIt->MusMusic;
-	Audio->PlayMusic(GameRamIt->MusMusic, -1);
+	CAudio_PlayMusic(GameRamIt->MusMusic, -1);
 }
 
 void CGameRamIt_deinit(CGameRamIt* GameRamIt)
@@ -417,22 +417,22 @@ void CGameRamIt_deinit(CGameRamIt* GameRamIt)
 
 void CGameRamIt_LoadSound(CGameRamIt* GameRamIt)
 {
-	GameRamIt->SfxShoot = Audio->LoadSound("ramit/shoot.wav");
-	GameRamIt->SfxHit = Audio->LoadSound("ramit/hit.wav");
-	GameRamIt->SfxDie = Audio->LoadSound("common/die.wav");
-	GameRamIt->SfxSucces = Audio->LoadSound("common/succes.wav");
-	GameRamIt->MusMusic = Audio->LoadMusic("ramit/music.ogg");
+	GameRamIt->SfxShoot = CAudio_LoadSound("ramit/shoot.wav");
+	GameRamIt->SfxHit = CAudio_LoadSound("ramit/hit.wav");
+	GameRamIt->SfxDie = CAudio_LoadSound("common/die.wav");
+	GameRamIt->SfxSucces = CAudio_LoadSound("common/succes.wav");
+	GameRamIt->MusMusic = CAudio_LoadMusic("ramit/music.ogg");
 }
 
 void CGameRamIt_UnLoadSound(CGameRamIt* GameRamIt)
 {
-	Audio->StopMusic();
-	Audio->StopSound();
-	Audio->UnLoadMusic(GameRamIt->MusMusic);
-	Audio->UnLoadSound(GameRamIt->SfxShoot);
-	Audio->UnLoadSound(GameRamIt->SfxHit);
-	Audio->UnLoadSound(GameRamIt->SfxDie);
-	Audio->UnLoadSound(GameRamIt->SfxSucces);
+	CAudio_StopMusic();
+	CAudio_StopSound();
+	CAudio_UnLoadMusic(GameRamIt->MusMusic);
+	CAudio_UnLoadSound(GameRamIt->SfxShoot);
+	CAudio_UnLoadSound(GameRamIt->SfxHit);
+	CAudio_UnLoadSound(GameRamIt->SfxDie);
+	CAudio_UnLoadSound(GameRamIt->SfxSucces);
 }
 
 //Update ----------------------------------------------------------------------------------------------------------------
@@ -447,7 +447,7 @@ void CGameRamIt_UpdateObjects(CGameRamIt* GameRamIt, bool IsGameState)
 
 		if (GameRamIt->playerdeath)
 		{
-			Audio->PlaySound(GameRamIt->SfxDie, 0);
+			CAudio_PlaySound(GameRamIt->SfxDie, 0);
 			if (GameMode == GMGame)
 				GameRamIt->GameBase->HealthPoints -= 1;
 

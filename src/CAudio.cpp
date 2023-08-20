@@ -6,16 +6,22 @@
 #include "Platform.h"
 
 using namespace std;
+bool CAudio_DebugInfo;
+int CAudio_VolumeMusic, CAudio_VolumeSound;
+Mix_Chunk *CAudio_Sounds[SND_Max];
+Mix_Music *CAudio_Music[MUS_Max];
+string CAudio_DataPath;
+bool CAudio_GlobalSoundEnabled = true;
 
-CAudio::CAudio(string AssetsPath, bool ADebugInfo)
+void CAudio_Init(string AssetsPath, bool ADebugInfo)
 {
-	DataPath = AssetsPath;
-	DebugInfo = ADebugInfo;
+	CAudio_DataPath = AssetsPath;
+	CAudio_DebugInfo = ADebugInfo;
 	if (SDL_Init(SDL_INIT_AUDIO) == 0)
 	{
 		if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 1024) < 0)
 		{
-			GlobalSoundEnabled = false;
+			CAudio_GlobalSoundEnabled = false;
 			SDL_Log("Failed to initialise sound: %s\n", Mix_GetError());
 		}
 		else
@@ -25,149 +31,149 @@ CAudio::CAudio(string AssetsPath, bool ADebugInfo)
 	}
 	else
 	{
-		GlobalSoundEnabled = false;
+		CAudio_GlobalSoundEnabled = false;
 		SDL_Log("Failed to initialise sound: %s\n", SDL_GetError());
 	}
 
 	for (int i=0; i < SND_Max; i++)
-		Sounds[i] = nullptr;
+		CAudio_Sounds[i] = nullptr;
 
 	for (int i=0; i < MUS_Max; i++)
-		Music[i] = nullptr;
+		CAudio_Music[i] = nullptr;
 }
 
-CAudio::~CAudio()
+void CAudio_DeInit()
 {
-	UnloadSounds();
-	UnloadMusics();
-	if (GlobalSoundEnabled)
+	CAudio_UnloadSounds();
+	CAudio_UnloadMusics();
+	if (CAudio_GlobalSoundEnabled)
 		Mix_CloseAudio();
 }
 
 // set the volume of the music
-void CAudio::SetVolumeMusic(const int VolumeIn)
+void CAudio_SetVolumeMusic(const int VolumeIn)
 {
-	if (GlobalSoundEnabled)
+	if (CAudio_GlobalSoundEnabled)
 	{
-		VolumeMusic = VolumeIn;
+		CAudio_VolumeMusic = VolumeIn;
 		Mix_VolumeMusic(VolumeIn);
 	}
 }
 
 // set the volume of sound
-void CAudio::SetVolumeSound(const int VolumeIn)
+void CAudio_SetVolumeSound(const int VolumeIn)
 {
-	if (GlobalSoundEnabled)
+	if (CAudio_GlobalSoundEnabled)
 	{
-		VolumeSound = VolumeIn;
+		CAudio_VolumeSound = VolumeIn;
 		Mix_Volume(-1, VolumeIn);
 	}
 }
 
 // increase the music volume with 4
-void CAudio::IncVolumeMusic()
+void CAudio_IncVolumeMusic()
 {
-	if (GlobalSoundEnabled)
+	if (CAudio_GlobalSoundEnabled)
 	{
-		if (VolumeMusic < 128)
+		if (CAudio_VolumeMusic < 128)
 		{
-			VolumeMusic += 4;
-			SetVolumeMusic(VolumeMusic);
+			CAudio_VolumeMusic += 4;
+			CAudio_SetVolumeMusic(CAudio_VolumeMusic);
 		}
 	}
 }
 
 // increase the sound volume with 4
-void CAudio::IncVolumeSound()
+void CAudio_IncVolumeSound()
 {
-	if (GlobalSoundEnabled)
+	if (CAudio_GlobalSoundEnabled)
 	{
-		if (VolumeSound < 128)
+		if (CAudio_VolumeSound < 128)
 		{
-			VolumeSound += 4;
-			SetVolumeSound(VolumeSound);
+			CAudio_VolumeSound += 4;
+			CAudio_SetVolumeSound(CAudio_VolumeSound);
 		}
 	}
 }
 
 // decrease the volume with 4
-void CAudio::DecVolumeMusic()
+void CAudio_DecVolumeMusic()
 {
-	if (GlobalSoundEnabled)
+	if (CAudio_GlobalSoundEnabled)
 	{
-		if (VolumeMusic > 0)
+		if (CAudio_VolumeMusic > 0)
 		{
-			VolumeMusic -= 4;
-			SetVolumeMusic(VolumeMusic);
+			CAudio_VolumeMusic -= 4;
+			CAudio_SetVolumeMusic(CAudio_VolumeMusic);
 		}
 	}
 }
 
 // decrease the volume with 4
-void CAudio::DecVolumeSound()
+void CAudio_DecVolumeSound()
 {
-	if (GlobalSoundEnabled)
+	if (CAudio_GlobalSoundEnabled)
 	{
-		if (VolumeSound > 0)
+		if (CAudio_VolumeSound > 0)
 		{
-			VolumeSound -= 4;
-			SetVolumeSound(VolumeSound);
+			CAudio_VolumeSound -= 4;
+			CAudio_SetVolumeSound(CAudio_VolumeSound);
 		}
 	}
 }
 
-void CAudio::StopMusic()
+void CAudio_StopMusic()
 {
-	if(GlobalSoundEnabled)
+	if(CAudio_GlobalSoundEnabled)
 		Mix_HaltMusic();
 }
 
-bool CAudio::IsMusicPlaying()
+bool CAudio_IsMusicPlaying()
 {
-	if(!GlobalSoundEnabled)
+	if(!CAudio_GlobalSoundEnabled)
 		return false;
 
 	return (Mix_PlayingMusic() > 0);
 }
 
-void CAudio::UnLoadMusic(int MusicdID)
+void CAudio_UnLoadMusic(int MusicdID)
 {
-	if ((MusicdID < 0) || (MusicdID > MUS_Max) || !GlobalSoundEnabled)
+	if ((MusicdID < 0) || (MusicdID > MUS_Max) || !CAudio_GlobalSoundEnabled)
 		return;
 
-	if (Music[MusicdID] == nullptr)
+	if (CAudio_Music[MusicdID] == nullptr)
 		return;
 
 	else
 	{
-		Mix_FreeMusic(Music[MusicdID]);
-		Music[MusicdID] = nullptr;
+		Mix_FreeMusic(CAudio_Music[MusicdID]);
+		CAudio_Music[MusicdID] = nullptr;
 	}
 }
 
-void CAudio::UnloadMusics()
+void CAudio_UnloadMusics()
 {
-	StopMusic();
+	CAudio_StopMusic();
 	for (int i=0; i < MUS_Max; i++)
-		UnLoadMusic(i);
+		CAudio_UnLoadMusic(i);
 }
 
-int CAudio::LoadMusic(string FileName)
+int CAudio_LoadMusic(string FileName)
 {
-	if(!GlobalSoundEnabled)
+	if(!CAudio_GlobalSoundEnabled)
 		return -1;
 
-	string FullFileName= DataPath + "music/" + FileName;
+	string FullFileName= CAudio_DataPath + "music/" + FileName;
 	for (int i=0; i < MUS_Max; i++)
-		if(Music[i] == nullptr)
+		if(CAudio_Music[i] == nullptr)
 		{
 			Mix_Music* Tmp = Mix_LoadMUS(FullFileName.c_str());
 			if(!Tmp)
 				SDL_Log("Failed Loading Music %s\n", FullFileName.c_str());
 			else
 			{
-				Music[i] = Tmp;
-				if(DebugInfo)
+				CAudio_Music[i] = Tmp;
+				if(CAudio_DebugInfo)
 					SDL_Log("Loaded Music %s\n", FullFileName.c_str());
 				return i;
 			}
@@ -176,77 +182,77 @@ int CAudio::LoadMusic(string FileName)
 	return -1;
 }
 
-int CAudio::MusicSlotsUsed()
+int CAudio_MusicSlotsUsed()
 {
 	int c = 0;
 	for (int i=0; i < MUS_Max; i++)
 	{
-		if(Music[i] != nullptr)
+		if(CAudio_Music[i] != nullptr)
 			c++;
 	}
 	return c;
 }
 
-int CAudio::MusicSlotsMax()
+int CAudio_MusicSlotsMax()
 {
 	return MUS_Max;
 }
 
-void CAudio::PlayMusic(int MusicID, int loops)
+void CAudio_PlayMusic(int MusicID, int loops)
 {
-	if ((MusicID < 0) || (MusicID > MUS_Max) || !GlobalSoundEnabled)
+	if ((MusicID < 0) || (MusicID > MUS_Max) || !CAudio_GlobalSoundEnabled)
 		return;
 
 	// Mix_VolumeMusic(VolumeMusic);
-	Mix_PlayMusic(Music[MusicID], loops);
+	Mix_PlayMusic(CAudio_Music[MusicID], loops);
 }
 
-int CAudio::GetVolumeMusic()
+int CAudio_GetVolumeMusic()
 {
-	return VolumeMusic;
+	return CAudio_VolumeMusic;
 }
 
-int CAudio::SoundSlotsUsed()
+int CAudio_SoundSlotsUsed()
 {
 	int c = 0;
 	for (int i=0; i < SND_Max; i++)
 	{
-		if(Sounds[i] != nullptr)
+		if(CAudio_Sounds[i] != nullptr)
 			c++;
 	}
 	return c;
 }
 
-int CAudio::SoundSlotsMax()
+int CAudio_SoundSlotsMax()
 {
 	return SND_Max;
 }
 
 
-void CAudio::PlaySound(int SoundID, int loops)
+void CAudio_PlaySound(int SoundID, int loops)
 {
-	if ((SoundID < 0) || (SoundID > SND_Max) || !GlobalSoundEnabled)
+	if ((SoundID < 0) || (SoundID > SND_Max) || !CAudio_GlobalSoundEnabled)
 		return;
 	//Mix_Volume(-1, VolumeSound);
-	Mix_PlayChannel(-1, Sounds[SoundID], loops);
+	Mix_PlayChannel(-1, CAudio_Sounds[SoundID], loops);
 }
 
-int CAudio::LoadSound(string FileName)
+int CAudio_LoadSound(string FileName)
 {
-	if(!GlobalSoundEnabled)
+	if(!CAudio_GlobalSoundEnabled)
 		return -1;
 
-	string FullFileName = DataPath + "sound/" + FileName;
+	string FullFileName = CAudio_DataPath + "sound/" + FileName;
 	for (int i=0; i < SND_Max; i++)
-		if(Sounds[i] == nullptr)
+		if(CAudio_Sounds[i] == nullptr)
 		{
 			Mix_Chunk *Tmp = Mix_LoadWAV(FullFileName.c_str());
 			if(!Tmp)
 				SDL_Log("Failed Loading Sound %s\n", FullFileName.c_str());
 			else
 			{
-				Sounds[i] = Tmp;
-				if(DebugInfo)
+				CAudio_Sounds[i] = Tmp;
+				if(CAudio_DebugInfo)
 					SDL_Log("Loaded Sound %s\n", FullFileName.c_str());
 				return i;
 			}
@@ -254,35 +260,35 @@ int CAudio::LoadSound(string FileName)
 	return -1;
 }
 
-void CAudio::UnLoadSound(int SoundID)
+void CAudio_UnLoadSound(int SoundID)
 {
-	if ((SoundID < 0) || (SoundID > SND_Max) || !GlobalSoundEnabled)
+	if ((SoundID < 0) || (SoundID > SND_Max) || !CAudio_GlobalSoundEnabled)
 		return;
 
-	if (Sounds[SoundID] == nullptr)
+	if (CAudio_Sounds[SoundID] == nullptr)
 		return;
 	else
 	{
-		Mix_FreeChunk(Sounds[SoundID]);
-		Sounds[SoundID] = nullptr;
+		Mix_FreeChunk(CAudio_Sounds[SoundID]);
+		CAudio_Sounds[SoundID] = nullptr;
 	}
 }
 
-void CAudio::UnloadSounds()
+void CAudio_UnloadSounds()
 {
-	StopSound();
+	CAudio_StopSound();
 
 	for (int i=0; i < SND_Max; i++)
-		UnLoadSound(i);
+		CAudio_UnLoadSound(i);
 }
 
-int CAudio::GetVolumeSound()
+int CAudio_GetVolumeSound()
 {
-	return VolumeSound;
+	return CAudio_VolumeSound;
 }
 
-void CAudio::StopSound()
+void CAudio_StopSound()
 {
-	if(GlobalSoundEnabled)
+	if(CAudio_GlobalSoundEnabled)
 		Mix_HaltChannel(-1);
 }

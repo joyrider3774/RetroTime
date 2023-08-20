@@ -34,7 +34,7 @@ void CGameBase_PauseMenu(CGameBase* GameBase)
 	int prevsubgamestate = SubGameState;
 	int prevsubstatecounter = SubStateCounter;
 	SubGameState = SGPauseMenu;
-	Audio->PlaySound(SfxConfirm, 0);
+	CAudio_PlaySound(SfxConfirm, 0);
 	//subgamestate = sgframe;
 	//global.substatecounter = 10.6
 	int selected = 0;
@@ -89,11 +89,11 @@ void CGameBase_PauseMenu(CGameBase* GameBase)
 				switch(menu)
 				{
 					case PMSoundVol:
-						Text = PMPauseMenus[menu].name + to_string((int)(Audio->GetVolumeSound()*100/128)) + "%";
+						Text = PMPauseMenus[menu].name + to_string((int)(CAudio_GetVolumeSound()*100/128)) + "%";
 						CFont_WriteText(Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 300*xscale, 185*yscale + i * menuspacing, 0, color);
 						break;
 					case PMMusicVol:
-						Text = PMPauseMenus[menu].name + to_string((int)(Audio->GetVolumeMusic()*100/128)) + "%";
+						Text = PMPauseMenus[menu].name + to_string((int)(CAudio_GetVolumeMusic()*100/128)) + "%";
 						CFont_WriteText(Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 300*xscale, 185*yscale + i * menuspacing, 0, color);
 						break;
 					default:
@@ -139,7 +139,7 @@ void CGameBase_PauseMenu(CGameBase* GameBase)
 				(!Input->PrevButtons.ButBack && Input->Buttons.ButBack) ||
 				(!Input->PrevButtons.ButStart && Input->Buttons.ButStart))
 			{
-				Audio->PlaySound(SfxBack, 0);
+				CAudio_PlaySound(SfxBack, 0);
 				SubGameState = SGPauseMenu;
 				Input->ResetButtons();
 			}
@@ -151,22 +151,22 @@ void CGameBase_PauseMenu(CGameBase* GameBase)
 				(!Input->PrevButtons.ButLeft2 && Input->Buttons.ButLeft2) ||
 				(!Input->PrevButtons.ButDpadLeft && Input->Buttons.ButDpadLeft))
 			{
-				Audio->PlaySound(SfxSelect, 0);
+				CAudio_PlaySound(SfxSelect, 0);
 
 				switch(selectedmenu)
 				{
 					case PMSoundVol:
 					{
-						Audio->DecVolumeSound();
+						CAudio_DecVolumeSound();
 						break;
 					}
 
 					case PMMusicVol:
 					{
-						bool wasplaying = Audio->IsMusicPlaying();
-						Audio->DecVolumeMusic();
+						bool wasplaying = CAudio_IsMusicPlaying();
+						CAudio_DecVolumeMusic();
 						if (!wasplaying)
-							Audio->PlayMusic(CurrentGameMusicID, -1);
+							CAudio_PlayMusic(CurrentGameMusicID, -1);
 						break;
 					}
 
@@ -177,21 +177,21 @@ void CGameBase_PauseMenu(CGameBase* GameBase)
 				(!Input->PrevButtons.ButRight2 && Input->Buttons.ButRight2) ||
 				(!Input->PrevButtons.ButDpadRight && Input->Buttons.ButDpadRight))
 			{
-				Audio->PlaySound(SfxSelect, 0);
+				CAudio_PlaySound(SfxSelect, 0);
 				switch(selectedmenu)
 				{
 					case PMSoundVol:
 					{
-						Audio->IncVolumeSound();
+						CAudio_IncVolumeSound();
 						break;
 					}
 
 					case PMMusicVol:
 					{
-						bool wasplaying = Audio->IsMusicPlaying();
-						Audio->IncVolumeMusic();
+						bool wasplaying = CAudio_IsMusicPlaying();
+						CAudio_IncVolumeMusic();
 						if (!wasplaying)
-							Audio->PlayMusic(CurrentGameMusicID, -1);
+							CAudio_PlayMusic(CurrentGameMusicID, -1);
 						break;
 					}
 				}
@@ -201,7 +201,7 @@ void CGameBase_PauseMenu(CGameBase* GameBase)
 				(!Input->PrevButtons.ButDown2 && Input->Buttons.ButDown2) ||
 				(!Input->PrevButtons.ButDpadDown && Input->Buttons.ButDpadDown))
 			{
-				Audio->PlaySound(SfxSelect, 0);
+				CAudio_PlaySound(SfxSelect, 0);
 
 				selected += 1;
 				if (selected == maxmenus)
@@ -212,7 +212,7 @@ void CGameBase_PauseMenu(CGameBase* GameBase)
 				(!Input->PrevButtons.ButUp2 && Input->Buttons.ButUp2) ||
 				(!Input->PrevButtons.ButDpadUp && Input->Buttons.ButDpadUp))
 			{
-				Audio->PlaySound(SfxSelect, 0);
+				CAudio_PlaySound(SfxSelect, 0);
 
 				selected -= 1;
 				if (selected == -1)
@@ -221,7 +221,7 @@ void CGameBase_PauseMenu(CGameBase* GameBase)
 
 			if (!Input->PrevButtons.ButBack && Input->Buttons.ButBack)
 			{
-				Audio->PlaySound(SfxConfirm, 0);
+				CAudio_PlaySound(SfxConfirm, 0);
 
 				SubGameState = prevsubgamestate;
 				SubStateCounter = prevsubstatecounter;
@@ -230,7 +230,7 @@ void CGameBase_PauseMenu(CGameBase* GameBase)
 			if ((!Input->PrevButtons.ButA && Input->Buttons.ButA) ||
 				(!Input->PrevButtons.ButStart && Input->Buttons.ButStart))
 			{
-				Audio->PlaySound(SfxConfirm, 0);
+				CAudio_PlaySound(SfxConfirm, 0);
 
 				switch(selectedmenu)
 				{
@@ -254,16 +254,16 @@ void CGameBase_PauseMenu(CGameBase* GameBase)
 
 					case PMSoundVol:
 					{
-						Audio->IncVolumeSound();
+						CAudio_IncVolumeSound();
 						break;
 					}
 
 					case PMMusicVol:
 					{
-						bool wasplaying = Audio->IsMusicPlaying();
-						Audio->IncVolumeMusic();
+						bool wasplaying = CAudio_IsMusicPlaying();
+						CAudio_IncVolumeMusic();
 						if(!wasplaying)
-							Audio->PlayMusic(CurrentGameMusicID, -1);
+							CAudio_PlayMusic(CurrentGameMusicID, -1);
 						break;
 					}
 
@@ -309,8 +309,8 @@ void CGameBase_PauseMenu(CGameBase* GameBase)
 			{
 				Text += "FrameTime: " + to_string(AvgFrameTime) + "\n";
 				Text += "GFX Slots: " + to_string(CImage_ImageSlotsUsed()) + "/" + to_string(CImage_ImageSlotsMax()) + "\n";
-				Text += "SND Slots: " + to_string(Audio->SoundSlotsUsed()) + "/" + to_string(Audio->SoundSlotsMax()) + "\n";
-				Text += "MUS Slots: " + to_string(Audio->MusicSlotsUsed()) + "/" + to_string(Audio->MusicSlotsMax()) + "\n";
+				Text += "SND Slots: " + to_string(CAudio_SoundSlotsUsed()) + "/" + to_string(CAudio_SoundSlotsMax()) + "\n";
+				Text += "MUS Slots: " + to_string(CAudio_MusicSlotsUsed()) + "/" + to_string(CAudio_MusicSlotsMax()) + "\n";
 				Text += "SPR Slots: " + to_string(Sprites->SpriteSlotsUsed()) + "/" + to_string(Sprites->SpriteSlotsMax()) + "\n";
 			}
 			int tw = CFont_TextWidth("RobotoMono-Bold", 16, Text, Text.length());
@@ -413,7 +413,7 @@ bool CGameBase_UpdateLogic(CGameBase* GameBase)
 					strcpy(GameBase->SubStateText, Tmp);
 					if(SubStateCounter == 2)
 					{
-						Audio->PlaySound(SfxReadyGo, 0);
+						CAudio_PlaySound(SfxReadyGo, 0);
 					}
 
 					if (SubStateCounter == 0)

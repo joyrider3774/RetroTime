@@ -105,7 +105,7 @@ void CGameBlockStacker_updateplayer(CGameBlockStacker* BlockStacker)
 	{
 		if (BlockStacker->rotateblock && BlockStacker->piecefits(BlockStacker, BlockStacker->currpiece, BlockStacker->rotation +1, BlockStacker->plrx, BlockStacker->plry))
 		{
-			Audio->PlaySound(BlockStacker->SfxRotate, 0);
+			CAudio_PlaySound(BlockStacker->SfxRotate, 0);
 			BlockStacker->rotation += 1;
 			BlockStacker->rotateblock = false;
 		}
@@ -195,7 +195,7 @@ void CGameBlockStacker_updateplayfield(CGameBlockStacker* BlockStacker, bool for
 			else
 			{
 				if(!force)
-					Audio->PlaySound(BlockStacker->SfxDrop, 0);
+					CAudio_PlaySound(BlockStacker->SfxDrop, 0);
 
 
 				//lock it in place
@@ -232,7 +232,7 @@ void CGameBlockStacker_updateplayfield(CGameBlockStacker* BlockStacker, bool for
 				{
 					CGame_AddToScore((1 << numlines) * 20);
 					BlockStacker->lineclear = 30;
-					Audio->PlaySound(BlockStacker->SfxLineClear, 0);
+					CAudio_PlaySound(BlockStacker->SfxLineClear, 0);
 				}
 
 				BlockStacker->plrx = BlockStacker->numcols / 2 -2;
@@ -242,7 +242,7 @@ void CGameBlockStacker_updateplayfield(CGameBlockStacker* BlockStacker, bool for
 
 				if (!BlockStacker->piecefits(BlockStacker, BlockStacker->currpiece, BlockStacker->rotation, BlockStacker->plrx, BlockStacker->plry))
 				{
-					Audio->PlaySound(BlockStacker->SfxDie, 0);
+					CAudio_PlaySound(BlockStacker->SfxDie, 0);
 					if(GameMode == GMGame)
 					{
 						BlockStacker->GameBase->HealthPoints -= 1;
@@ -343,7 +343,7 @@ void CGameBlockStacker_init(CGameBlockStacker* BlockStacker)
 	BlockStacker->LoadGraphics(BlockStacker);
 	BlockStacker->LoadSound(BlockStacker);
 	CurrentGameMusicID = BlockStacker->MusMusic;
-	Audio->PlayMusic(BlockStacker->MusMusic, -1);
+	CAudio_PlayMusic(BlockStacker->MusMusic, -1);
 	BlockStacker->GameBase->HealthPoints = 1;
 	BlockStacker->currpiece = rand() % 7;
 	BlockStacker->rotation = 0;
@@ -372,22 +372,22 @@ void CGameBlockStacker_UnloadGraphics(CGameBlockStacker* BlockStacker)
 
 void CGameBlockStacker_LoadSound(CGameBlockStacker* BlockStacker)
 {
-	BlockStacker->SfxLineClear = Audio->LoadSound("blockstacker/lineclear.ogg");
-	BlockStacker->SfxDrop = Audio->LoadSound("blockstacker/drop.wav");
-	BlockStacker->SfxRotate = Audio->LoadSound("blockstacker/rotate.wav");
-	BlockStacker->MusMusic = Audio->LoadMusic("blockstacker/music.ogg");
-	BlockStacker->SfxDie = Audio->LoadSound("common/die.wav");
+	BlockStacker->SfxLineClear = CAudio_LoadSound("blockstacker/lineclear.ogg");
+	BlockStacker->SfxDrop = CAudio_LoadSound("blockstacker/drop.wav");
+	BlockStacker->SfxRotate = CAudio_LoadSound("blockstacker/rotate.wav");
+	BlockStacker->MusMusic = CAudio_LoadMusic("blockstacker/music.ogg");
+	BlockStacker->SfxDie = CAudio_LoadSound("common/die.wav");
 }
 
 void CGameBlockStacker_UnLoadSound(CGameBlockStacker* BlockStacker)
 {
-	Audio->StopMusic();
-	Audio->StopSound();
-	Audio->UnLoadMusic(BlockStacker->MusMusic);
-	Audio->UnLoadSound(BlockStacker->SfxLineClear);
-	Audio->UnLoadSound(BlockStacker->SfxDrop);
-	Audio->UnLoadSound(BlockStacker->SfxRotate);
-	Audio->UnLoadSound(BlockStacker->SfxDie);
+	CAudio_StopMusic();
+	CAudio_StopSound();
+	CAudio_UnLoadMusic(BlockStacker->MusMusic);
+	CAudio_UnLoadSound(BlockStacker->SfxLineClear);
+	CAudio_UnLoadSound(BlockStacker->SfxDrop);
+	CAudio_UnLoadSound(BlockStacker->SfxRotate);
+	CAudio_UnLoadSound(BlockStacker->SfxDie);
 }
 
 void CGameBlockStacker_deinit(CGameBlockStacker* BlockStacker)

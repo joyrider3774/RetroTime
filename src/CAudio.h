@@ -11,42 +11,37 @@ using namespace std;
 constexpr int SND_Max = 100;
 constexpr int MUS_Max = 20;
 
-class CAudio {
+extern bool CAudio_DebugInfo;
+extern int CAudio_VolumeMusic, CAudio_VolumeSound;
+extern Mix_Chunk *CAudio_Sounds[SND_Max];
+extern Mix_Music *CAudio_Music[MUS_Max];
+extern string CAudio_DataPath;
+extern bool CAudio_GlobalSoundEnabled;
 
-private:
-	bool DebugInfo;
-	int VolumeMusic, VolumeSound;
-	Mix_Chunk *Sounds[SND_Max];
-	Mix_Music *Music[MUS_Max];
-	string DataPath;
+void CAudio_Init(string AssetsPath, bool ADebugInfo);
+void CAudio_DeInit();
+void CAudio_IncVolumeMusic();
+void CAudio_DecVolumeMusic();
+void CAudio_SetVolumeMusic(const int VolumeIn);
+int CAudio_GetVolumeMusic();
 
-public:
-	bool GlobalSoundEnabled = true;
-	CAudio(string AssetsPath, bool ADebugInfo);
-	~CAudio();
-	void IncVolumeMusic();
-	void DecVolumeMusic();
-	void SetVolumeMusic(const int VolumeIn);
-	int GetVolumeMusic();
+void CAudio_IncVolumeSound();
+void CAudio_DecVolumeSound();
+void CAudio_SetVolumeSound(const int VolumeIn);
+int CAudio_GetVolumeSound();
 
-	void IncVolumeSound();
-	void DecVolumeSound();
-	void SetVolumeSound(const int VolumeIn);
-	int GetVolumeSound();
-
-	int LoadMusic(string FileName);
-	int LoadSound(string FileName);
-	int MusicSlotsUsed();
-	int MusicSlotsMax();
-	int SoundSlotsUsed();
-	int SoundSlotsMax();
-	void UnLoadMusic(int MusicdID);
-	void UnLoadSound(int SoundID);
-	void UnloadSounds();
-	void UnloadMusics();
-	void PlayMusic(int MusicID, int loops);
-	void PlaySound(int SoundID, int loops);
-	bool IsMusicPlaying();
-	void StopMusic();
-	void StopSound();
-};
+int CAudio_LoadMusic(string FileName);
+int CAudio_LoadSound(string FileName);
+int CAudio_MusicSlotsUsed();
+int CAudio_MusicSlotsMax();
+int CAudio_SoundSlotsUsed();
+int CAudio_SoundSlotsMax();
+void CAudio_UnLoadMusic(int MusicdID);
+void CAudio_UnLoadSound(int SoundID);
+void CAudio_UnloadSounds();
+void CAudio_UnloadMusics();
+void CAudio_PlayMusic(int MusicID, int loops);
+void CAudio_PlaySound(int SoundID, int loops);
+bool CAudio_IsMusicPlaying();
+void CAudio_StopMusic();
+void CAudio_StopSound();

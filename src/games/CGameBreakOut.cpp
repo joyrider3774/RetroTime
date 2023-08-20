@@ -244,7 +244,7 @@ void CGameBreakOut_updateblocks(CGameBreakOut* GameBreakOut)
 	{
 		CGame_AddToScore(500);
 		GameBreakOut->createblocks(GameBreakOut, false);
-		Audio->PlaySound(GameBreakOut->SfxSucces, 0);
+		CAudio_PlaySound(GameBreakOut->SfxSucces, 0);
 	}
 }
 
@@ -387,7 +387,7 @@ void CGameBreakOut_updateball(CGameBreakOut* GameBreakOut)
 					GameBreakOut->ball.freeze = 45;
 					GameBreakOut->GameBase->HealthPoints -= 1;
 					CGame_AddToScore(-100);
-					Audio->PlaySound(GameBreakOut->SfxDie, 0);
+					CAudio_PlaySound(GameBreakOut->SfxDie, 0);
 				}
 
 				for (int k = 0; k < GameBreakOut->numblocks; k++)
@@ -408,7 +408,7 @@ void CGameBreakOut_updateball(CGameBreakOut* GameBreakOut)
 							CGame_AddToScore(20);
 							//inc GameBreakOut->ballspeed
 							GameBreakOut->curballspeed += GameBreakOut->ballspeedinc;
-							Audio->PlaySound(GameBreakOut->SfxBrick, 0);
+							CAudio_PlaySound(GameBreakOut->SfxBrick, 0);
 							GameBreakOut->blocks[k].state = GameBreakOut->blockstatedeath;
 							Sprites->SetSpriteDepth(GameBreakOut->blocks[k].spr, 5);
 							GameBreakOut->tweens[k][GameBreakOut->tweenblockdeath] = createtween(GameBreakOut->tweenblockdeath, 1, funcsmoothstep, 1, true, DesiredFps);
@@ -496,7 +496,7 @@ void CGameBreakOut_updateball(CGameBreakOut* GameBreakOut)
 							Sprites->SetSpriteLocation(GameBreakOut->ball.spr, GameBreakOut->ball.pos);
 						}
 
-						Audio->PlaySound(GameBreakOut->SfxBat, 0);
+						CAudio_PlaySound(GameBreakOut->SfxBat, 0);
 					}
 				}
 			}
@@ -529,27 +529,27 @@ void CGameBreakOut_init(CGameBreakOut* GameBreakOut)
 
 	GameBreakOut->LoadSound(GameBreakOut);
 	CurrentGameMusicID = GameBreakOut->MusMusic;
-	Audio->PlayMusic(GameBreakOut->MusMusic, -1);
+	CAudio_PlayMusic(GameBreakOut->MusMusic, -1);
 }
 
 void CGameBreakOut_LoadSound(CGameBreakOut* GameBreakOut)
 {
-	GameBreakOut->SfxDie = Audio->LoadSound("common/die.wav");
-	GameBreakOut->SfxSucces = Audio->LoadSound("common/succes.wav");
-	GameBreakOut->SfxBat = Audio->LoadSound("breakout/bat.wav");
-	GameBreakOut->SfxBrick = Audio->LoadSound("breakout/brick.wav");
-	GameBreakOut->MusMusic = Audio->LoadMusic("breakout/music.ogg");
+	GameBreakOut->SfxDie = CAudio_LoadSound("common/die.wav");
+	GameBreakOut->SfxSucces = CAudio_LoadSound("common/succes.wav");
+	GameBreakOut->SfxBat = CAudio_LoadSound("breakout/bat.wav");
+	GameBreakOut->SfxBrick = CAudio_LoadSound("breakout/brick.wav");
+	GameBreakOut->MusMusic = CAudio_LoadMusic("breakout/music.ogg");
 }
 
 void CGameBreakOut_UnLoadSound(CGameBreakOut* GameBreakOut)
 {
-	Audio->StopMusic();
-	Audio->StopSound();
-	Audio->UnLoadMusic(GameBreakOut->MusMusic);
-	Audio->UnLoadSound(GameBreakOut->SfxSucces);
-	Audio->UnLoadSound(GameBreakOut->SfxDie);
-	Audio->UnLoadSound(GameBreakOut->SfxBrick);
-	Audio->UnLoadSound(GameBreakOut->SfxBat);
+	CAudio_StopMusic();
+	CAudio_StopSound();
+	CAudio_UnLoadMusic(GameBreakOut->MusMusic);
+	CAudio_UnLoadSound(GameBreakOut->SfxSucces);
+	CAudio_UnLoadSound(GameBreakOut->SfxDie);
+	CAudio_UnLoadSound(GameBreakOut->SfxBrick);
+	CAudio_UnLoadSound(GameBreakOut->SfxBat);
 }
 
 void CGameBreakOut_deinit(CGameBreakOut* GameBreakOut)

@@ -41,7 +41,7 @@ void InitSubScoreScreen()
 	}
 
 	//savehighscoresoptions()
-	Audio->PlaySound(SfxScore, 0);
+	CAudio_PlaySound(SfxScore, 0);
 }
 
 void SubScoreScreen()
@@ -200,7 +200,7 @@ void SubScoreScreen()
 		(!Input->PrevButtons.ButBack && Input->Buttons.ButBack) ||
 		(!Input->PrevButtons.ButStart && Input->Buttons.ButStart))
 	{
-		Audio->PlaySound(SfxSelect, 0);
+		CAudio_PlaySound(SfxSelect, 0);
 
 		GameState = GSTitleScreenInit;
 		if(GameMode == GMRetroCarousel)

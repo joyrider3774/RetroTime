@@ -129,7 +129,7 @@ void CGameFastEddy_updatekey(CGameFastEddy* GameFastEddy)
 
 		if (Sprites->DetectSpriteCollision(GameFastEddy->key.spr, GameFastEddy->player.spr))
 		{
-			Audio->PlaySound(GameFastEddy->SfxSucces, 0);
+			CAudio_PlaySound(GameFastEddy->SfxSucces, 0);
 			CGame_AddToScore(200);
 			SDL_Delay(500);
 			GameFastEddy->GameBase->level += 1;
@@ -243,7 +243,7 @@ void CGameFastEddy_updatecollectables(CGameFastEddy* GameFastEddy)
 
 			if (Sprites->DetectSpriteCollision(GameFastEddy->collectables[i].spr, GameFastEddy->player.spr))
 			{
-				Audio->PlaySound(GameFastEddy->SfxCollect, 0);
+				CAudio_PlaySound(GameFastEddy->SfxCollect, 0);
 				int ignorerow = GameFastEddy->collectables[i].row;
 				GameFastEddy->destroycollectable(GameFastEddy, i);
 				GameFastEddy->collecteditems += 1;
@@ -447,7 +447,7 @@ void CGameFastEddy_updateenemies(CGameFastEddy* GameFastEddy)
 					(GameFastEddy->player.state != GameFastEddy->playerstateunknown)) ||
 					(GameFastEddy->enemies[i].row == 0))
 				{
-					Audio->PlaySound(GameFastEddy->SfxDie, 0);
+					CAudio_PlaySound(GameFastEddy->SfxDie, 0);
 					if (GameMode == GMGame)
 						GameFastEddy->GameBase->HealthPoints -= 1;
 
@@ -968,7 +968,7 @@ void CGameFastEddy_init(CGameFastEddy* GameFastEddy)
 	GameFastEddy->createplayer(GameFastEddy);
 	GameFastEddy->LoadSound(GameFastEddy);
 	CurrentGameMusicID = GameFastEddy->MusMusic;
-	Audio->PlayMusic(GameFastEddy->MusMusic, -1);
+	CAudio_PlayMusic(GameFastEddy->MusMusic, -1);
 }
 
 void CGameFastEddy_deinit(CGameFastEddy* GameFastEddy)
@@ -988,20 +988,20 @@ void CGameFastEddy_deinit(CGameFastEddy* GameFastEddy)
 
 void CGameFastEddy_LoadSound(CGameFastEddy* GameFastEddy)
 {
-	GameFastEddy->SfxDie = Audio->LoadSound("common/die.wav");
-	GameFastEddy->SfxSucces = Audio->LoadSound("common/succes.wav");
-	GameFastEddy->SfxCollect = Audio->LoadSound("common/coin.wav");
-	GameFastEddy->MusMusic = Audio->LoadMusic("fasterdave/music.ogg");
+	GameFastEddy->SfxDie = CAudio_LoadSound("common/die.wav");
+	GameFastEddy->SfxSucces = CAudio_LoadSound("common/succes.wav");
+	GameFastEddy->SfxCollect = CAudio_LoadSound("common/coin.wav");
+	GameFastEddy->MusMusic = CAudio_LoadMusic("fasterdave/music.ogg");
 }
 
 void CGameFastEddy_UnLoadSound(CGameFastEddy* GameFastEddy)
 {
-	Audio->StopMusic();
-	Audio->StopSound();
-	Audio->UnLoadMusic(GameFastEddy->MusMusic);
-	Audio->UnLoadSound(GameFastEddy->SfxDie);
-	Audio->UnLoadSound(GameFastEddy->SfxSucces);
-	Audio->UnLoadSound(GameFastEddy->SfxCollect);
+	CAudio_StopMusic();
+	CAudio_StopSound();
+	CAudio_UnLoadMusic(GameFastEddy->MusMusic);
+	CAudio_UnLoadSound(GameFastEddy->SfxDie);
+	CAudio_UnLoadSound(GameFastEddy->SfxSucces);
+	CAudio_UnLoadSound(GameFastEddy->SfxCollect);
 }
 
 void CGameFastEddy_LoadGraphics(CGameFastEddy* GameFastEddy)

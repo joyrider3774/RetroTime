@@ -68,7 +68,7 @@ void CGameSnake_updatefood(CGameSnake* GameSnake)
 {
 	if ((GameSnake->head.x == GameSnake->food.x) && (GameSnake->head.y == GameSnake->food.y))
 	{
-		Audio->PlaySound(GameSnake->SfxFood, 0);
+		CAudio_PlaySound(GameSnake->SfxFood, 0);
 		GameSnake->snakelength += 1;
 		GameSnake->createfood(GameSnake);
 		CGame_AddToScore(GameSnake->snakelength*2);
@@ -200,7 +200,7 @@ void CGameSnake_init(CGameSnake* GameSnake)
 	GameSnake->GameBase->HealthPoints = 2;
 	GameSnake->LoadSound(GameSnake);
 	CurrentGameMusicID = GameSnake->MusMusic;
-	Audio->PlayMusic(GameSnake->MusMusic, -1);
+	CAudio_PlayMusic(GameSnake->MusMusic, -1);
 }
 
 void CGameSnake_deinit(CGameSnake* GameSnake)
@@ -213,18 +213,18 @@ void CGameSnake_deinit(CGameSnake* GameSnake)
 
 void CGameSnake_LoadSound(CGameSnake* GameSnake)
 {
-	GameSnake->SfxFood = Audio->LoadSound("snakey/food.wav");
-	GameSnake->SfxDie = Audio->LoadSound("common/die.wav");
-	GameSnake->MusMusic = Audio->LoadMusic("snakey/music.ogg");
+	GameSnake->SfxFood = CAudio_LoadSound("snakey/food.wav");
+	GameSnake->SfxDie = CAudio_LoadSound("common/die.wav");
+	GameSnake->MusMusic = CAudio_LoadMusic("snakey/music.ogg");
 }
 
 void CGameSnake_UnLoadSound(CGameSnake* GameSnake)
 {
-	Audio->StopMusic();
-	Audio->StopSound();
-	Audio->UnLoadMusic(GameSnake->MusMusic);
-	Audio->UnLoadSound(GameSnake->SfxFood);
-	Audio->UnLoadSound(GameSnake->SfxDie);
+	CAudio_StopMusic();
+	CAudio_StopSound();
+	CAudio_UnLoadMusic(GameSnake->MusMusic);
+	CAudio_UnLoadSound(GameSnake->SfxFood);
+	CAudio_UnLoadSound(GameSnake->SfxDie);
 }
 
 //Update ----------------------------------------------------------------------------------------------------------------
@@ -239,7 +239,7 @@ void CGameSnake_UpdateObjects(CGameSnake* GameSnake, bool IsGameState)
 
 	if (IsGameState && GameSnake->playerdeath)
 	{
-		Audio->PlaySound(GameSnake->SfxDie, 0);
+		CAudio_PlaySound(GameSnake->SfxDie, 0);
 		CGame_AddToScore(-50);
 
 		if (GameSnake->GameBase->HealthPoints > 1)

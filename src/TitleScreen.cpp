@@ -17,7 +17,7 @@ constexpr int rdcolor = 1;
 
 void InitTitleScreen()
 {
-	Audio->PlayMusic(MusMenu, -1);
+	CAudio_PlayMusic(MusMenu, -1);
 	CGame_StartCrossFade(GameState, SGNone, 0, 0);
 }
 
@@ -62,11 +62,11 @@ void TitleScreen()
 				switch(menu)
 				{
 					case OMSoundVol:
-						Text = OMOptionMenus[menu].name + to_string((int)(Audio->GetVolumeSound()*100/128)) + "%";
+						Text = OMOptionMenus[menu].name + to_string((int)(CAudio_GetVolumeSound()*100/128)) + "%";
 						CFont_WriteText(Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 300*xscale, 185*yscale + i * menuspacing, 0, color);
 						break;
 					case OMMusicVol:
-						Text = OMOptionMenus[menu].name + to_string((int)(Audio->GetVolumeMusic()*100/128)) + "%";
+						Text = OMOptionMenus[menu].name + to_string((int)(CAudio_GetVolumeMusic()*100/128)) + "%";
 						CFont_WriteText(Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 300*xscale, 185*yscale + i * menuspacing, 0, color);
 						break;
 					default:
@@ -82,7 +82,7 @@ void TitleScreen()
 				(!Input->PrevButtons.ButDown2 && Input->Buttons.ButDown2) ||
 				(!Input->PrevButtons.ButDpadDown && Input->Buttons.ButDpadDown))
 			{
-				Audio->PlaySound(SfxSelect, 0);
+				CAudio_PlaySound(SfxSelect, 0);
 				SelOptions += 1;
 				if (SelOptions == OptionMenus)
 					SelOptions = 0;
@@ -92,7 +92,7 @@ void TitleScreen()
 				(!Input->PrevButtons.ButUp2 && Input->Buttons.ButUp2) ||
 				(!Input->PrevButtons.ButDpadUp && Input->Buttons.ButDpadUp))
 			{
-				Audio->PlaySound(SfxSelect, 0);
+				CAudio_PlaySound(SfxSelect, 0);
 
 				SelOptions -= 1;
 				if( SelOptions == -1)
@@ -103,19 +103,19 @@ void TitleScreen()
 				(!Input->PrevButtons.ButLeft2 && Input->Buttons.ButLeft2) ||
 				(!Input->PrevButtons.ButDpadLeft && Input->Buttons.ButDpadLeft))
 			{
-				Audio->PlaySound(SfxSelect, 0);
+				CAudio_PlaySound(SfxSelect, 0);
 				bool wasplaying;
 				switch (selectedmenu)
 				{
 					case OMSoundVol:
-						Audio->DecVolumeSound();
+						CAudio_DecVolumeSound();
 						break;
 
 					case OMMusicVol:
-						wasplaying = Audio->IsMusicPlaying();
-						Audio->DecVolumeMusic();
+						wasplaying = CAudio_IsMusicPlaying();
+						CAudio_DecVolumeMusic();
 						if (!wasplaying)
-							Audio->PlayMusic(MusMenu, -1);
+							CAudio_PlayMusic(MusMenu, -1);
 						break;
 
 				}
@@ -127,19 +127,19 @@ void TitleScreen()
 				(!Input->PrevButtons.ButRight2 && Input->Buttons.ButRight2) ||
 				(!Input->PrevButtons.ButDpadRight && Input->Buttons.ButDpadRight))
 			{
-				Audio->PlaySound(SfxSelect, 0);
+				CAudio_PlaySound(SfxSelect, 0);
 				bool wasplaying;
 				switch (selectedmenu)
 				{
 					case OMSoundVol:
-						Audio->IncVolumeSound();
+						CAudio_IncVolumeSound();
 						break;
 
 					case OMMusicVol:
-						wasplaying = Audio->IsMusicPlaying();
-						Audio->IncVolumeMusic();
+						wasplaying = CAudio_IsMusicPlaying();
+						CAudio_IncVolumeMusic();
 						if (!wasplaying)
-							Audio->PlayMusic(MusMenu, -1);
+							CAudio_PlayMusic(MusMenu, -1);
 						break;
 				}
 
@@ -150,7 +150,7 @@ void TitleScreen()
 			if ((!Input->PrevButtons.ButBack && Input->Buttons.ButBack) ||
 				(!Input->PrevButtons.ButB && Input->Buttons.ButB))
 			{
-				Audio->PlaySound(SfxBack, 0);
+				CAudio_PlaySound(SfxBack, 0);
 
 				CurrentMainMenu = -1;
 			}
@@ -158,7 +158,7 @@ void TitleScreen()
 			if ((!Input->PrevButtons.ButStart && Input->Buttons.ButStart) ||
 				(!Input->PrevButtons.ButA && Input->Buttons.ButA))
 			{
-				Audio->PlaySound(SfxSelect, 0);
+				CAudio_PlaySound(SfxSelect, 0);
 				bool wasplaying;
 				switch(selectedmenu)
 				{
@@ -170,13 +170,13 @@ void TitleScreen()
 						//savehighscoresoptions();
 						break;
 					case OMSoundVol:
-						Audio->IncVolumeSound();
+						CAudio_IncVolumeSound();
 						break;
 					case OMMusicVol:
-						wasplaying = Audio->IsMusicPlaying();
-						Audio->IncVolumeMusic();
+						wasplaying = CAudio_IsMusicPlaying();
+						CAudio_IncVolumeMusic();
 						if(!wasplaying)
-							Audio->PlayMusic(MusMenu, -1);
+							CAudio_PlayMusic(MusMenu, -1);
 						break;
 				}
 			}
@@ -209,7 +209,7 @@ void TitleScreen()
 				(!Input->PrevButtons.ButBack && Input->Buttons.ButBack) ||
 				(!Input->PrevButtons.ButStart && Input->Buttons.ButStart))
 			{
-				Audio->PlaySound(SfxBack, 0);
+				CAudio_PlaySound(SfxBack, 0);
 
 				CurrentMainMenu = -1;
 			}
@@ -247,7 +247,7 @@ void TitleScreen()
 				(!Input->PrevButtons.ButBack && Input->Buttons.ButBack) ||
 				(!Input->PrevButtons.ButStart && Input->Buttons.ButStart))
 			{
-				Audio->PlaySound(SfxBack, 0);
+				CAudio_PlaySound(SfxBack, 0);
 
 				CurrentMainMenu = -1;
 			}
@@ -275,7 +275,7 @@ void TitleScreen()
 			 if ((!Input->PrevButtons.ButBack && Input->Buttons.ButBack) ||
 				(!Input->PrevButtons.ButB && Input->Buttons.ButB))
 			 {
-				Audio->PlaySound(SfxBack, 0);
+				CAudio_PlaySound(SfxBack, 0);
 
 				CurrentMainMenu = -1;
 			 }
@@ -286,7 +286,7 @@ void TitleScreen()
 				(!Input->PrevButtons.ButDpadRight && Input->Buttons.ButDpadRight) ||
 				(!Input->PrevButtons.ButA && Input->Buttons.ButA))
 			{
-				Audio->PlaySound(SfxSelect, 0);
+				CAudio_PlaySound(SfxSelect, 0);
 
 				Game += 1;
 				if (Game == Games)
@@ -297,7 +297,7 @@ void TitleScreen()
 				 (!Input->PrevButtons.ButLeft2 && Input->Buttons.ButLeft2) ||
 				 (!Input->PrevButtons.ButDpadLeft && Input->Buttons.ButDpadLeft))
 			 {
-				Audio->PlaySound(SfxSelect, 0);
+				CAudio_PlaySound(SfxSelect, 0);
 
 				Game -= 1;
 				if (Game == -1)
@@ -324,14 +324,14 @@ void TitleScreen()
 			if ((!Input->PrevButtons.ButBack && Input->Buttons.ButBack) ||
 				(!Input->PrevButtons.ButB && Input->Buttons.ButB))
 			{
-				Audio->PlaySound(SfxBack, 0);
+				CAudio_PlaySound(SfxBack, 0);
 				CurrentMainMenu = MMSelectGameMode;
 			}
 
 			if ((!Input->PrevButtons.ButStart && Input->Buttons.ButStart) ||
 				(!Input->PrevButtons.ButA && Input->Buttons.ButA))
 			{
-				Audio->PlaySound(SfxConfirm, 0);
+				CAudio_PlaySound(SfxConfirm, 0);
 
 				GameState = gamestate;
 				CGame_ResetScores();
@@ -343,7 +343,7 @@ void TitleScreen()
 				(!Input->PrevButtons.ButLeft2 && Input->Buttons.ButLeft2) ||
 				(!Input->PrevButtons.ButDpadLeft && Input->Buttons.ButDpadLeft))
 			{
-				Audio->PlaySound(SfxSelect, 0);
+				CAudio_PlaySound(SfxSelect, 0);
 
 				Game -= 1;
 				if (Game == -1)
@@ -353,7 +353,7 @@ void TitleScreen()
 				(!Input->PrevButtons.ButRight2 && Input->Buttons.ButRight2) ||
 				(!Input->PrevButtons.ButDpadRight && Input->Buttons.ButDpadRight))
 			{
-				Audio->PlaySound(SfxSelect, 0);
+				CAudio_PlaySound(SfxSelect, 0);
 
 				Game += 1;
 				if (Game == Games)
@@ -387,7 +387,7 @@ void TitleScreen()
 				(!Input->PrevButtons.ButDown2 && Input->Buttons.ButDown2) ||
 				(!Input->PrevButtons.ButDpadDown && Input->Buttons.ButDpadDown))
 			{
-				Audio->PlaySound(SfxSelect, 0);
+				CAudio_PlaySound(SfxSelect, 0);
 				GameMode += 1;
 				if (GameMode == Modes)
 					GameMode = 0;
@@ -397,7 +397,7 @@ void TitleScreen()
 				(!Input->PrevButtons.ButUp2 && Input->Buttons.ButUp2) ||
 				(!Input->PrevButtons.ButDpadUp && Input->Buttons.ButDpadUp))
 			{
-				Audio->PlaySound(SfxSelect, 0);
+				CAudio_PlaySound(SfxSelect, 0);
 
 				GameMode -= 1;
 				if (GameMode == -1)
@@ -407,14 +407,14 @@ void TitleScreen()
 			if ((!Input->PrevButtons.ButB && Input->Buttons.ButB) ||
 				(!Input->PrevButtons.ButBack && Input->Buttons.ButBack))
 			{
-				Audio->PlaySound(SfxBack, 0);
+				CAudio_PlaySound(SfxBack, 0);
 				CurrentMainMenu = -1;
 			}
 
 			if ((!Input->PrevButtons.ButStart && Input->Buttons.ButStart) ||
 				(!Input->PrevButtons.ButA && Input->Buttons.ButA))
 			{
-				Audio->PlaySound(SfxConfirm, 0);
+				CAudio_PlaySound(SfxConfirm, 0);
 
 				if (GameMode == GMRetroCarousel)
 				{
@@ -451,7 +451,7 @@ void TitleScreen()
 				(!Input->PrevButtons.ButDown2 && Input->Buttons.ButDown2) ||
 				(!Input->PrevButtons.ButDpadDown && Input->Buttons.ButDpadDown))
 			{
-				Audio->PlaySound(SfxSelect, 0);
+				CAudio_PlaySound(SfxSelect, 0);
 				SelectedMenu += 1;
 				if (SelectedMenu == MainMenus)
 					SelectedMenu = 0;
@@ -462,7 +462,7 @@ void TitleScreen()
 				(!Input->PrevButtons.ButDpadUp && Input->Buttons.ButDpadUp))
 
 			{
-				Audio->PlaySound(SfxSelect, 0);
+				CAudio_PlaySound(SfxSelect, 0);
 
 				SelectedMenu -= 1;
 				if(SelectedMenu == -1)
@@ -473,7 +473,7 @@ void TitleScreen()
 				(!Input->PrevButtons.ButA && Input->Buttons.ButA))
 			{
 				CurrentMainMenu = SelMenu;
-				Audio->PlaySound(SfxConfirm, 0);
+				CAudio_PlaySound(SfxConfirm, 0);
 				if (SelMenu == MMQuit)
 					GameState = GSQuit;
 

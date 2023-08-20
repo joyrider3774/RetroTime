@@ -187,7 +187,7 @@ void CGamePang_updateballs(CGamePang* GamePang)
 				GamePang->addplayerstate(GamePang,GamePang->playerstatereviving);
 				GamePang->remplayerstate(GamePang,GamePang->playerstateshoot);
 				GamePang->player.stateticks = 90;
-				Audio->PlaySound(GamePang->SfxDie, 0);
+				CAudio_PlaySound(GamePang->SfxDie, 0);
 			}
 
 			if (GamePang->bullet.alive && (GamePang->bullet.freeze == 0))
@@ -198,7 +198,7 @@ void CGamePang_updateballs(CGamePang* GamePang)
 					GamePang->destroyball(GamePang,i, false);
 					GamePang->bullet.freeze = 4;
 					Sprites->SetSpriteAnimation(GamePang->bullet.spr, 0, 1, 10);
-					Audio->PlaySound(GamePang->SfxPop, 0);
+					CAudio_PlaySound(GamePang->SfxPop, 0);
 				}
 			}
 		}
@@ -207,7 +207,7 @@ void CGamePang_updateballs(CGamePang* GamePang)
 	{
 		if (GamePang->GameBase->level < GamePang->maxbigballs)
 			GamePang->GameBase->level += 1;
-		Audio->PlaySound(GamePang->SfxSucces, 0);
+		CAudio_PlaySound(GamePang->SfxSucces, 0);
 		CGame_AddToScore(100);
 		GamePang->createballs(GamePang);
 	}
@@ -453,7 +453,7 @@ void CGamePang_updateplayer(CGamePang* GamePang)
 					Sprites->SetSpriteAnimation(GamePang->player.spr, 37, 37, 10);
 					GamePang->player.stateticks = 15;
 					GamePang->createbullet(GamePang);
-					Audio->PlaySound(GamePang->SfxShoot, 0);
+					CAudio_PlaySound(GamePang->SfxShoot, 0);
 				}
 			}
 			Sprites->SetSpriteLocation(GamePang->player.spr, GamePang->player.pos);
@@ -500,7 +500,7 @@ void CGamePang_init(CGamePang* GamePang)
 	GamePang->createplayer(GamePang);
 	GamePang->createballs(GamePang);
 	CurrentGameMusicID = GamePang->MusMusic;
-	Audio->PlayMusic(GamePang->MusMusic, -1);
+	CAudio_PlayMusic(GamePang->MusMusic, -1);
 }
 
 void CGamePang_deinit(CGamePang* GamePang)
@@ -517,22 +517,22 @@ void CGamePang_deinit(CGamePang* GamePang)
 
 void CGamePang_LoadSound(CGamePang* GamePang)
 {
-	GamePang->SfxDie = Audio->LoadSound("common/die.wav");
-	GamePang->SfxSucces = Audio->LoadSound("common/succes.wav");
-	GamePang->SfxShoot = Audio->LoadSound("pang/shoot.wav");
-	GamePang->SfxPop = Audio->LoadSound("pang/pop.wav");
-	GamePang->MusMusic = Audio->LoadMusic("pang/music.ogg");
+	GamePang->SfxDie = CAudio_LoadSound("common/die.wav");
+	GamePang->SfxSucces = CAudio_LoadSound("common/succes.wav");
+	GamePang->SfxShoot = CAudio_LoadSound("pang/shoot.wav");
+	GamePang->SfxPop = CAudio_LoadSound("pang/pop.wav");
+	GamePang->MusMusic = CAudio_LoadMusic("pang/music.ogg");
 }
 
 void CGamePang_UnLoadSound(CGamePang* GamePang)
 {
-	Audio->StopMusic();
-	Audio->StopSound();
-	Audio->UnLoadMusic(GamePang->MusMusic);
-	Audio->UnLoadSound(GamePang->SfxDie);
-	Audio->UnLoadSound(GamePang->SfxSucces);
-	Audio->UnLoadSound(GamePang->SfxShoot);
-	Audio->UnLoadSound(GamePang->SfxPop);
+	CAudio_StopMusic();
+	CAudio_StopSound();
+	CAudio_UnLoadMusic(GamePang->MusMusic);
+	CAudio_UnLoadSound(GamePang->SfxDie);
+	CAudio_UnLoadSound(GamePang->SfxSucces);
+	CAudio_UnLoadSound(GamePang->SfxShoot);
+	CAudio_UnLoadSound(GamePang->SfxPop);
 }
 
 void CGamePang_LoadGraphics(CGamePang* GamePang)
