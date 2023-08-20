@@ -10,9 +10,18 @@
 #include "Common.h"
 
 
+#define SAVEDSCALINGS_MAX 1000
+int SavedScalingsCount = 0;
+struct SavedScalingsStruct {
+	int gfxid;
+	Vec2F scale;
+};
+typedef struct SavedScalingsStruct SavedScalingsStruct;
+
+SavedScalingsStruct CSprites_SavedScalings[SAVEDSCALINGS_MAX];
+
+
 CSprite* CSprites_Sprites[SPR_Max];
-vector<pair<int,pair<float,float>>> CSprites_SavedScalings;
-vector<pair<SDL_Texture*,pair<int, Vec2F>>> CSprites_LoadedScaledTextures;
 int CSprites_UpdateImageResets;
 int CSprites_SpritesDrawn;
 bool CSprites_ForceShowCollisionShape;
@@ -372,12 +381,29 @@ void CSprites_UpdateImage(SDL_Renderer* renderer, CSprite* Spr)
 		CSprites_UpdateImageResets++;
 		
 		Vec2F Vec2FScale = {abs(Spr->xscale), abs(Spr->yscale)};
-		auto search = make_pair(*Spr->imageID, make_pair(Vec2FScale.x,Vec2FScale.y));
-		auto it  = find(CSprites_SavedScalings.begin(), CSprites_SavedScalings.end(), search);
-		if (it == CSprites_SavedScalings.end()) 
+		
+		if (SavedScalingsCount < SAVEDSCALINGS_MAX)
 		{
-			CSprites_SavedScalings.push_back(search);
-			CImage_SaveImage(renderer, *Spr->imageID, Vec2FScale);
+			bool bfound = false;
+			for (int i = 0; i < SavedScalingsCount; i++)
+			{
+				if ((CSprites_SavedScalings[i].gfxid == *Spr->imageID) &&
+					(CSprites_SavedScalings[i].scale.x == Vec2FScale.x) &&
+					(CSprites_SavedScalings[i].scale.y == Vec2FScale.y))
+					{
+						bfound = true;
+						break;
+					}
+			}
+
+			if(!bfound)
+			{
+				SavedScalingsCount++;
+				CSprites_SavedScalings[SavedScalingsCount].gfxid = *Spr->imageID;
+				CSprites_SavedScalings[SavedScalingsCount].scale.x = Vec2FScale.x;
+				CSprites_SavedScalings[SavedScalingsCount].scale.y = Vec2FScale.y;
+				CImage_SaveImage(renderer, *Spr->imageID, Vec2FScale);
+			}
 		}
 	}
 }

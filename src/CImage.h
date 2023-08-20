@@ -61,5 +61,6 @@ SDL_Point CImage_ImageSize(SDL_Texture *Texture);
 int CImage_ImageSlotsUsed();
 int CImage_ImageSlotsMax();
 int CImage_ScaledImagesLoadedCount();
+int CImage_ScaledImagesLoadedMax();
 SDL_Texture* CImage_GetImage(int GFXID);
 

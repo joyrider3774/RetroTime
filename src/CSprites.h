@@ -3,7 +3,6 @@
 #include <SDL.h>
 #include <iostream>
 #include <string>
-#include <vector>
 #include "CImage.h"
 #include "Vec2F.h"
 
@@ -58,14 +57,6 @@ struct CSprite {
 		bool show_collision_shape;		
 };
 typedef struct CSprite CSprite;
-
-extern CSprite* CSprites_Sprites[SPR_Max];
-extern vector<pair<int,pair<float,float>>> CSprites_SavedScalings;
-extern vector<pair<SDL_Texture*,pair<int, Vec2F>>> CSprites_LoadedScaledTextures;
-extern int CSprites_UpdateImageResets;
-extern int CSprites_SpritesDrawn;
-extern bool CSprites_ForceShowCollisionShape;
-extern bool CSprites_needSpriteSorting;
 
 void CSprites_SortSprites();
 bool CSprites_DetectRectRectCollsion(CSprite* Spr, CSprite* SprOther);

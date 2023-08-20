@@ -818,7 +818,7 @@ void CGame_MainLoop()
 				Text += "SPR Slots: " + to_string(CSprites_SpriteSlotsUsed()) + "/" + to_string(CSprites_SpriteSlotsMax()) + "\n";
 				Text += "SPR Resets: " + to_string(CSprites_UpdateImageResetsCount()) + "\n";
 				Text += "SPR Draws: " + to_string(CSprites_SpritesDrawnCount()) + "\n";
-				Text += "SCL Loaded: " + to_string(CImage_ScaledImagesLoadedCount()) + "\n";
+				Text += "SCL Loaded: " + to_string(CImage_ScaledImagesLoadedCount()) + "/" + to_string(CImage_ScaledImagesLoadedMax()) + "\n";
 				
 			}
 			int tw = CFont_TextWidth("RobotoMono-Bold", 14, Text, Text.length());

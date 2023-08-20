@@ -312,6 +312,9 @@ void CGameBase_PauseMenu(CGameBase* GameBase)
 				Text += "SND Slots: " + to_string(CAudio_SoundSlotsUsed()) + "/" + to_string(CAudio_SoundSlotsMax()) + "\n";
 				Text += "MUS Slots: " + to_string(CAudio_MusicSlotsUsed()) + "/" + to_string(CAudio_MusicSlotsMax()) + "\n";
 				Text += "SPR Slots: " + to_string(CSprites_SpriteSlotsUsed()) + "/" + to_string(CSprites_SpriteSlotsMax()) + "\n";
+				Text += "SPR Resets: " + to_string(CSprites_UpdateImageResetsCount()) + "\n";
+				Text += "SPR Draws: " + to_string(CSprites_SpritesDrawnCount()) + "\n";
+				Text += "SCL Loaded: " + to_string(CImage_ScaledImagesLoadedCount()) + "/" + to_string(CImage_ScaledImagesLoadedMax()) + "\n";
 			}
 			int tw = CFont_TextWidth("RobotoMono-Bold", 16, Text, Text.length());
 			CFont_WriteText(Renderer, "RobotoMono-Bold", 16, Text, Text.length(), w - tw, 0, 0, {255, 0, 255, 255});

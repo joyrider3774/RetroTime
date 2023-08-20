@@ -8,11 +8,19 @@
 #include "Platform.h"
 #include "Vec2F.h"
 #include "Common.h"
-#include <vector>
-#include <algorithm>
 using namespace std;
 
-vector<pair<string, pair<Vec2F, SDL_Texture*>>> ScaledImages;
+const int CImage_ScaledImagesLoadedMaxCount = 200;
+
+struct ScaledImagesStruct {
+	string basefilename;
+	Vec2F resolution;
+	SDL_Texture* texture;
+};
+
+typedef struct ScaledImagesStruct ScaledImagesStruct;
+
+ScaledImagesStruct ScaledImages[CImage_ScaledImagesLoadedMaxCount];
 
 CTexture *CImage_Images[GFX_Max];
 string CImage_DataPath;
@@ -37,21 +45,32 @@ void CImage_Init(string AssetsPath, bool ADebugInfo)
 
 	for (int i=0; i < GFX_Max; i++)
 		CImage_Images[i] = nullptr;
+	
+	for (int i=0; i < CImage_ScaledImagesLoadedMaxCount; i++)
+	{
+		ScaledImages[i].basefilename = "";
+		ScaledImages[i].resolution = {0,0};
+		ScaledImages[i].texture = NULL;
+	}
 }
 
 void CImage_DeInit()
 {
 	CImage_UnloadImages();
 
-	for(auto it  = ScaledImages.begin(); it < ScaledImages.end(); ++it)
+	for(int i = 0; i < CImage_ScaledImagesLoaded; i++)
 	{
-		SDL_DestroyTexture(it->second.second);
+		if (ScaledImages[i].texture != NULL)
+			SDL_DestroyTexture(ScaledImages[i].texture);
 	}
-
 
 	IMG_Quit();
 }
 
+int CImage_ScaledImagesLoadedMax()
+{
+	return CImage_ScaledImagesLoadedMaxCount;
+}
 
 int CImage_ScaledImagesLoadedCount()
 {
@@ -75,28 +94,35 @@ SDL_Texture *CImage_LoadScaledImage(SDL_Renderer* Renderer, int GFXID, Vec2F Sca
 	w = (int)ceil(w * abs(Scale.x));
 	h = (int)ceil(h * abs(Scale.y));
 	Vec2F Resolution = {(float)w,(float)h};
-	for(auto it  = ScaledImages.begin(); it < ScaledImages.end(); ++it)
+
+	for(int i = 0; i < CImage_ScaledImagesLoaded; i++)
 	{
-		if ((it->first == CImage_Images[GFXID]->BaseFilename) && 
-		 	(it->second.first.x - Resolution.x < epsilion) &&
-			(it->second.first.y - Resolution.y < epsilion))
-			return it->second.second;
+		if ((ScaledImages[i].basefilename == CImage_Images[GFXID]->BaseFilename) &&
+			(ScaledImages[i].resolution.x - Resolution.x < epsilion) &&
+			(ScaledImages[i].resolution.y - Resolution.y < epsilion))
+			return ScaledImages[i].texture;
 	}
 
-	//not loaded yet
-
-	string FullFileName = CImage_Images[GFXID]->BaseFilename + "_" + to_string(w)+ "x" + to_string(h) + ".bmp";
 	SDL_Texture *Tmp = NULL;
-	SDL_Surface* Img = IMG_Load(FullFileName.c_str());
-	if(Img)
+	//not loaded yet
+	if (CImage_ScaledImagesLoaded < CImage_ScaledImagesLoadedMaxCount)
 	{
-		Tmp = SDL_CreateTextureFromSurface(Renderer, Img);
-		if(Tmp)
+		string FullFileName = CImage_Images[GFXID]->BaseFilename + "_" + to_string(w)+ "x" + to_string(h) + ".bmp";
+		
+		SDL_Surface* Img = IMG_Load(FullFileName.c_str());
+		if(Img)
 		{
-			ScaledImages.push_back(make_pair(CImage_Images[GFXID]->BaseFilename, make_pair(Resolution, Tmp)));
-			CImage_ScaledImagesLoaded++;
+			Tmp = SDL_CreateTextureFromSurface(Renderer, Img);
+			if(Tmp)
+			{
+				CImage_ScaledImagesLoaded++;
+				ScaledImages[CImage_ScaledImagesLoaded].basefilename = CImage_Images[GFXID]->BaseFilename;
+				ScaledImages[CImage_ScaledImagesLoaded].resolution.x = Resolution.x;
+				ScaledImages[CImage_ScaledImagesLoaded].resolution.y = Resolution.y;
+				ScaledImages[CImage_ScaledImagesLoaded].texture = Tmp;
+			}
+			SDL_FreeSurface(Img);
 		}
-		SDL_FreeSurface(Img);
 	}
 
 	return Tmp;
