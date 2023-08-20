@@ -110,7 +110,7 @@ void CSprites_RemoveSprite(CSprite* Spr)
 	if((Spr->index < 0) || (Spr->index >= SPR_Max))
 		return;
 	
-	//dumped scaled bitmaps are handled in image class
+	//dumped scaled bitmaps are handled in images
 	if(!loadDumpedScaledBitmaps)
 		if(CSprites_Sprites[Spr->index]->Img != nullptr)
 		{

@@ -12,7 +12,7 @@ using namespace std;
 
 constexpr int GFX_Max = 100;
 
-class CTexture {
+struct CTexture {
 	public:
 		SDL_Texture* Img;
 		string BaseFilename;
@@ -20,6 +20,8 @@ class CTexture {
 		int bayerversion;
 		bool cansave;
 };
+
+typedef struct CTexture CTexture;
 
 extern CTexture *CImage_Images[GFX_Max];
 extern string CImage_DataPath;
