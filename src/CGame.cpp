@@ -45,8 +45,8 @@ void CGame::DeInit()
 	switch(ActiveGameGameStateId)
 	{
 		case GSSnake:
-			GameSnake->deinit();
-			delete GameSnake;
+			GameSnake->deinit(GameSnake);
+			Destroy_CGameSnake(GameSnake);
 			break;
 		case GSRamIt:
 			GameRamIt->deinit(GameRamIt);
@@ -423,8 +423,8 @@ void CGame::CreateActiveGame()
 	switch(ActiveGameGameStateId)
 	{
 		case GSSnake:
-			GameSnake->deinit();
-			delete GameSnake;
+			GameSnake->deinit(GameSnake);
+			Destroy_CGameSnake(GameSnake);
 			ActiveGameGameStateId = -1;
 			break;
 		case GSRamIt:
@@ -470,7 +470,7 @@ void CGame::CreateActiveGame()
 	switch (GameState)
 	{
 		case GSSnakeInit:
-			GameSnake = new CGameSnake(this);
+			GameSnake = Create_CGameSnake(this);
 			ActiveGameGameStateId = GSSnake;
 			break;
 		case GSTetrisInit:
@@ -653,7 +653,7 @@ void CGame::MainLoop()
 				switch (ActiveGameGameStateId)
 				{
 					case GSSnake:
-						GameSnake->init();
+						GameSnake->init(GameSnake);
 						break;
 					case GSRamIt:
 						GameRamIt->init(GameRamIt);
@@ -692,8 +692,8 @@ void CGame::MainLoop()
 				switch (ActiveGameGameStateId)
 				{
 					case GSSnake:
-						GameSnake->UpdateLogic();
-						GameSnake->Draw();
+						GameSnake->UpdateLogic(GameSnake);
+						GameSnake->Draw(GameSnake);
 						break;
 					case GSRamIt:
 						GameRamIt->UpdateLogic(GameRamIt);

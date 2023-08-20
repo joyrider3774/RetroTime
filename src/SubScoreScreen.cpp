@@ -56,7 +56,7 @@ void SubScoreScreen(CGame *Game)
 	switch (Game->ActiveGameGameStateId)
 	{
 		case GSSnake:
-			Game->GameSnake->Draw();
+			Game->GameSnake->Draw(Game->GameSnake);
 			break;
 		case GSRamIt:
 			Game->GameRamIt->Draw(Game->GameRamIt);

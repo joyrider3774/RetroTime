@@ -17,7 +17,7 @@
 using namespace std;
 
 struct CGameRamIt;
-class CGameSnake;
+struct CGameSnake;
 struct CGameBlockStacker;
 struct CGameFastEddy;
 struct CGameBreakOut;

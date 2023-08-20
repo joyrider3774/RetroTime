@@ -10,18 +10,17 @@
 using namespace std;
 
 
-class CGameSnake {
+struct CGameSnake {
 
-private:
 	CGameBase *GameBase;
-	static const int snakesize = 35 * yscale;
-	static const int rows = int(ScreenHeight / snakesize) -1;
-	static const int cols = int(ScreenWidth / snakesize) -1;
-	static const int updateticks = 8;
+	static constexpr int snakesize = 35 * yscale;
+	static constexpr int rows = int(ScreenHeight / snakesize) -1;
+	static constexpr int cols = int(ScreenWidth / snakesize) -1;
+	static constexpr int updateticks = 8;
 
-	const SDL_Color snakeheadcolor = {0xFF, 0x65, 0x65, 0xFF};
-	const SDL_Color snakebodycolor = {0xFF, 0xFF, 0xFF, 0xFF};
-	const SDL_Color snakefoodcolor = {0x65, 0xFF, 0x65, 0xFF};
+	static constexpr SDL_Color snakeheadcolor = {0xFF, 0x65, 0x65, 0xFF};
+	static constexpr SDL_Color snakebodycolor = {0xFF, 0xFF, 0xFF, 0xFF};
+	static constexpr SDL_Color snakefoodcolor = {0x65, 0xFF, 0x65, 0xFF};
 
 	bool movedone = true;
 	int snakelength;
@@ -33,23 +32,41 @@ private:
 	int playerdeath;
 	int MusMusic, SfxFood, SfxDie;
 
-	void createfood();
-	void drawfood();
-	void updatefood();
+	void (*createfood)(CGameSnake* GameSnake);
+	void (*drawfood)(CGameSnake* GameSnake);
+	void (*updatefood)(CGameSnake* GameSnake);
 
-	void createsnake();
-	void drawsnake();
-	void updatesnake();
-public:
-	CGameSnake(CGame* aGame);
-	~CGameSnake();
-	void init();
-	void deinit();
-	void LoadSound();
-	void UnLoadSound();
-	void UpdateObjects(bool IsGameState);
-	bool DrawObjects();
-	void DrawBackground();
-	void Draw();
-	void UpdateLogic();
+	void (*createsnake)(CGameSnake* GameSnake);
+	void (*drawsnake)(CGameSnake* GameSnake);
+	void (*updatesnake)(CGameSnake* GameSnake);
+
+	void (*init)(CGameSnake* GameSnake);
+	void (*deinit)(CGameSnake* GameSnake);
+	void (*LoadSound)(CGameSnake* GameSnake);
+	void (*UnLoadSound)(CGameSnake* GameSnake);
+	void (*UpdateObjects)(CGameSnake* GameSnake, bool IsGameState);
+	bool (*DrawObjects)(CGameSnake* GameSnake);
+	void (*DrawBackground)(CGameSnake* GameSnake);
+	void (*Draw)(CGameSnake* GameSnake);
+	void (*UpdateLogic)(CGameSnake* GameSnake);
 };
+
+typedef struct CGameSnake CGameSnake;
+
+void CGameSnake_Draw(CGameSnake* GameSnake);
+bool CGameSnake_DrawObjects(CGameSnake* GameSnake);
+void CGameSnake_UpdateLogic(CGameSnake* GameSnake);
+void CGameSnake_UpdateObjects(CGameSnake* GameSnake, bool IsGameState);
+void CGameSnake_UnLoadSound(CGameSnake* GameSnake);
+void CGameSnake_LoadSound(CGameSnake* GameSnake);
+void CGameSnake_deinit(CGameSnake* GameSnake);
+void CGameSnake_init(CGameSnake* GameSnake);
+void CGameSnake_DrawBackground(CGameSnake* GameSnake);
+void CGameSnake_updatesnake(CGameSnake* GameSnake);
+void CGameSnake_drawsnake(CGameSnake* GameSnake);
+void CGameSnake_createsnake(CGameSnake* GameSnake);
+void CGameSnake_updatefood(CGameSnake* GameSnake);
+void CGameSnake_drawfood(CGameSnake* GameSnake);
+void CGameSnake_createfood(CGameSnake* GameSnake);
+void Destroy_CGameSnake(CGameSnake* GameSnake);
+CGameSnake* Create_CGameSnake(CGame* aGame);
