@@ -66,6 +66,7 @@ CGamePang* Create_CGamePang(CGame* aGame)
 void Destroy_CGamePang(CGamePang* GamePang)
 {
 	Destroy_CGameBase(GamePang->GameBase);
+	free(GamePang);
 }
 
 
