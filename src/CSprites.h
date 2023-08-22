@@ -1,8 +1,9 @@
-#pragma once
+#ifndef CSPRITES_H
+#define CSPRITES_H
 
 #include <SDL.h>
-#include <iostream>
-#include <string>
+#include <stdbool.h>
+#include <string.h>
 #include "CImage.h"
 #include "Vec2F.h"
 
@@ -25,8 +26,8 @@ struct CSprite {
 		float y;
 		float prevxscale;
 		float prevyscale;
-		float xscale;
-		float yscale;
+		float sxscale;
+		float syscale;
 		float xspeed;
 		float yspeed;
 		float xscale_speed;
@@ -74,12 +75,12 @@ void CSprites_DrawSprites(SDL_Renderer* Renderer);
 int CSprites_GetSpriteAnimFrame(CSprite* Spr);
 int CSprites_GetSpriteAnimFrameCount(CSprite* Spr);
 void CSprites_SetSpriteImage(SDL_Renderer* renderer, CSprite* Spr, int *AImageID);
-void CSprites_SetSpriteImage(SDL_Renderer* renderer, CSprite* Spr, int *AImageID, int TilesX, int TilesY);
+void CSprites_SetSpriteImageTiles(SDL_Renderer* renderer, CSprite* Spr, int *AImageID, int TilesX, int TilesY);
 void CSprites_SetSpriteRotation(CSprite* Spr, float AAngle);
 void CSprites_SetSpriteScale(SDL_Renderer* renderer, CSprite* Spr, Vec2F AScale);
 void CSprites_SetSpriteAnimation(CSprite* Spr, int StartTile, int EndTile, int animSpeed);
 void CSprites_SetSpriteCollisionShape(CSprite* Spr, ECollisionShape shape, float width, float height, float rotation, float xoffset, float yoffset);
-void CSprites_SetSpriteLocation(CSprite* Spr, Vec2F pos );
+void CSprites_SetSpriteLocation(CSprite* Spr, Vec2F pos);
 void CSprites_SetSpriteDepth(CSprite* Spr, int depth);
 void CSprites_SetSpriteColour(CSprite* Spr, float red, float green, float blue, float alpha);
 void CSprites_SetSpriteVisibility(CSprite* Spr, bool visibility);
@@ -90,3 +91,5 @@ int CSprites_SpriteSlotsUsed();
 int CSprites_SpriteSlotsMax();
 int CSprites_UpdateImageResetsCount();
 int CSprites_SpritesDrawnCount();
+
+#endif

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef BLOCKSTACKERBLOCKS_H
+#define BLOCKSTACKERBLOCKS_H
 
 int tstetrimos[8][4][16] =
 {
@@ -215,3 +216,4 @@ int tstetrimos[8][4][16] =
 		}
 	}
 };
+#endif

@@ -1,6 +1,8 @@
 #include <SDL.h>
 #include <SDL_joystick.h>
+#include <stdbool.h>
 #include "CInput.h"
+
 
 SDL_GameController* CInput_GameController = NULL;
 SButtons CInput_Buttons, CInput_PrevButtons;

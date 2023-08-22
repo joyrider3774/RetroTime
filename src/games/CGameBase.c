@@ -1,11 +1,14 @@
 #include <SDL.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include <stdbool.h>
 #include "CGameBase.h"
 #include "../Vec2F.h"
 
 CGameBase* Create_CGameBase(int aGameStateID, bool aUsesLevels)
 {
 	CGameBase* result = (CGameBase*) malloc(sizeof(CGameBase));
+	
 	result->UsesLevels = aUsesLevels;
 	result->GameStateID = aGameStateID;
 	result->level = 0;
@@ -71,57 +74,61 @@ void CGameBase_PauseMenu(CGameBase* GameBase)
 		SDL_Point FramePos = {ScreenWidth / 2, ScreenHeight / 2};
 		Vec2F FrameScale = {16.0f / 4 * xscale, 12.8f *yscale};
 		CImage_DrawImageFuze(Renderer, GFXFrameID, true, &FramePos, 0, &FrameScale, 255, 255, 255, 255);
-
+		char Text[2000];
+		SDL_Color color = {255,255,255,255};
 		if (SubGameState == SGPauseMenu)
 		{
-			string Text = "Paused";
-			CFont_WriteText(Renderer, "Roboto-Regular", 80*yscale, Text, Text.length(), 510*xscale, 50*yscale, 0, {255,255,255,255});
+			
+			sprintf(Text, "Paused");
+			CFont_WriteText(Renderer, "Roboto-Regular", 80*yscale, Text, strlen(Text), 510*xscale, 50*yscale, 0, color);
 			int menu;
-			SDL_Color color;
+			
 			for(int i = 0; i < maxmenus; i++)
 			{
 				menu = GPGamePauseMenus[Game].menus[i];
 				if (menu == selectedmenu)
-					color = {255, 255, 255, 255};
+					color.a =  255;
 				else
-					color = {255, 255, 255, 64};
+					color.a = 64;
 
 				switch(menu)
 				{
 					case PMSoundVol:
-						Text = PMPauseMenus[menu].name + to_string((int)(CAudio_GetVolumeSound()*100/128)) + "%";
-						CFont_WriteText(Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 300*xscale, 185*yscale + i * menuspacing, 0, color);
+						sprintf(Text, "%s %d %%", PMPauseMenus[menu].name, (int)(CAudio_GetVolumeSound()*100/128));
+						CFont_WriteText(Renderer, "Roboto-Regular", menutextsize, Text, strlen(Text), 300*xscale, 185*yscale + i * menuspacing, 0, color);
 						break;
 					case PMMusicVol:
-						Text = PMPauseMenus[menu].name + to_string((int)(CAudio_GetVolumeMusic()*100/128)) + "%";
-						CFont_WriteText(Renderer, "Roboto-Regular", menutextsize, Text, Text.length(), 300*xscale, 185*yscale + i * menuspacing, 0, color);
+						sprintf(Text, "%s %d %%", PMPauseMenus[menu].name, (int)(CAudio_GetVolumeMusic()*100/128));
+						CFont_WriteText(Renderer, "Roboto-Regular", menutextsize, Text, strlen(Text), 300*xscale, 185*yscale + i * menuspacing, 0, color);
 						break;
 					default:
-						CFont_WriteText(Renderer, "Roboto-Regular", menutextsize, PMPauseMenus[menu].name, PMPauseMenus[menu].name.length(), 300*xscale,
+						CFont_WriteText(Renderer, "Roboto-Regular", menutextsize, PMPauseMenus[menu].name, strlen(PMPauseMenus[menu].name), 300*xscale,
 							185*yscale + i * menuspacing, 0, color);
 						break;
 				}
 			}
-			Text = "Use dpad to switch between options. (A) to select and (B) for back";
-			CFont_WriteText(Renderer, "Roboto-Regular", 34*yscale, Text, Text.length(), 90*xscale, 630*yscale, 0, {255, 255, 255, 255});
+			
+			color.a = 255;
+			sprintf(Text, "Use dpad to switch between options. (A) to select and (B) for back");
+			CFont_WriteText(Renderer, "Roboto-Regular", 34*yscale, Text, strlen(Text), 90*xscale, 630*yscale, 0, color);
 		}
 
 		if (SubGameState == SGGameHelp)
 		{
-			string Text = "Game Help";
-			CFont_WriteText(Renderer, "Roboto-Regular", 80*yscale, Text, Text.length(), 485*xscale, 50*yscale, 0, {255,255,255,255});
+			sprintf(Text, "Game Help");
+			CFont_WriteText(Renderer, "Roboto-Regular", 80*yscale, Text, strlen(Text), 485*xscale, 50*yscale, 0, color);
 
-			Text = GSGames[Game].name;
-			CFont_WriteText(Renderer, "Roboto-Regular", 50*yscale, Text, Text.length(), 75*xscale, 150*yscale, 0, {255,255,255,255});
+			sprintf(Text, "%s", GSGames[Game].name);
+			CFont_WriteText(Renderer, "Roboto-Regular", 50*yscale, Text, strlen(Text), 75*xscale, 150*yscale, 0, color);
 
-			Text = GMModes[GameMode].name + " High Score: " + to_string(HighScores[Game][GameMode]);
-			CFont_WriteText(Renderer, "Roboto-Regular", 38*yscale, Text, Text.length(), 75*xscale, 210*yscale, 0, {255,255,255,255});
+			sprintf(Text, "%s %s High Score: %llu", GSGames[Game].name,  GMModes[GameMode].name, HighScores[Game][GameMode]);
+			CFont_WriteText(Renderer, "Roboto-Regular", 38*yscale, Text, strlen(Text), 75*xscale, 210*yscale, 0, color);
 
-			Text = GSGames[Game].description;
-			CFont_WriteText(Renderer, "Roboto-Regular", 38*yscale, Text, Text.length(), 75*xscale, 255*yscale, 0, {255,255,255,255});
+			sprintf(Text, "%s", GSGames[Game].description);
+			CFont_WriteText(Renderer, "Roboto-Regular", 38*yscale, Text, strlen(Text), 75*xscale, 255*yscale, 0, color);
 
-			Text = "Press (A) or (B) for back";
-			CFont_WriteText(Renderer, "Roboto-Regular", 34*yscale, Text, Text.length(), 485*xscale, 630*yscale, 0, {255, 255, 255, 255});
+			sprintf(Text, "Press (A) or (B) for back");
+			CFont_WriteText(Renderer, "Roboto-Regular", 34*yscale, Text, strlen(Text), 485*xscale, 630*yscale, 0, color);
 		}
 
 		CInput_Update();
@@ -304,20 +311,36 @@ void CGameBase_PauseMenu(CGameBase* GameBase)
 
 		if (debugInfo || ShowFPS)
 		{
-			string Text = "FPS: " + to_string(Fps) + "\n";
+			char Text[500];
+			char TmpText[100];
+			Text[0] = '\0';
+			sprintf(TmpText, "FPS: %d\n", Fps);
+			strcat(Text, TmpText);
 			if(debugInfo)
 			{
-				Text += "FrameTime: " + to_string(AvgFrameTime) + "\n";
-				Text += "GFX Slots: " + to_string(CImage_ImageSlotsUsed()) + "/" + to_string(CImage_ImageSlotsMax()) + "\n";
-				Text += "SND Slots: " + to_string(CAudio_SoundSlotsUsed()) + "/" + to_string(CAudio_SoundSlotsMax()) + "\n";
-				Text += "MUS Slots: " + to_string(CAudio_MusicSlotsUsed()) + "/" + to_string(CAudio_MusicSlotsMax()) + "\n";
-				Text += "SPR Slots: " + to_string(CSprites_SpriteSlotsUsed()) + "/" + to_string(CSprites_SpriteSlotsMax()) + "\n";
-				Text += "SPR Resets: " + to_string(CSprites_UpdateImageResetsCount()) + "\n";
-				Text += "SPR Draws: " + to_string(CSprites_SpritesDrawnCount()) + "\n";
-				Text += "SCL Loaded: " + to_string(CImage_ScaledImagesLoadedCount()) + "/" + to_string(CImage_ScaledImagesLoadedMax()) + "\n";
+				sprintf(TmpText,"FrameTime: %f.5\n",AvgFrameTime);
+				strncat(Text, TmpText, 100);
+				sprintf(TmpText,"GFX Slots: %d/%d\n",CImage_ImageSlotsUsed(), CImage_ImageSlotsMax());
+				strncat(Text, TmpText, 100);
+				sprintf(TmpText,"SND Slots: %d/%d\n",CAudio_SoundSlotsUsed(),CAudio_SoundSlotsMax());
+				strncat(Text, TmpText, 100);
+				sprintf(TmpText,"MUS Slots: %d/%d\n",CAudio_MusicSlotsUsed(), CAudio_MusicSlotsMax());
+				strncat(Text, TmpText, 100);
+				sprintf(TmpText,"SPR Slots: %d/%d\n",CSprites_SpriteSlotsUsed(),CSprites_SpriteSlotsMax());
+				strncat(Text, TmpText, 100);
+				sprintf(TmpText,"SPR Resets: %d\n",CSprites_UpdateImageResetsCount());
+				strncat(Text, TmpText, 100);
+				sprintf(TmpText,"SPR Draws: %d\n", CSprites_SpritesDrawnCount());
+				strncat(Text, TmpText, 100);
+				sprintf(TmpText,"SCL Loaded: %d/%d\n", CImage_ScaledImagesLoadedCount(),CImage_ScaledImagesLoadedMax());
+				strncat(Text, TmpText, 100);				
 			}
-			int tw = CFont_TextWidth("RobotoMono-Bold", 16, Text, Text.length());
-			CFont_WriteText(Renderer, "RobotoMono-Bold", 16, Text, Text.length(), w - tw, 0, 0, {255, 0, 255, 255});
+			int tw = CFont_TextWidth("RobotoMono-Bold", 16, Text, strlen(Text));
+			color.a = 255;
+			color.r = 255;
+			color.g = 0;
+			color.b = 255;
+			CFont_WriteText(Renderer, "RobotoMono-Bold", 16, Text, strlen(Text), w - tw, 0, 0, color);
 		}
 		SDL_RenderPresent(Renderer);
 
@@ -346,39 +369,54 @@ void CGameBase_PauseMenu(CGameBase* GameBase)
 
 void CGameBase_DrawScoreBar(CGameBase* GameBase)
 {
+	char Text[2000];
+	char TmpText[1000];
+	Text[0] = '\0';
 	SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
 	SDL_Rect r = {0, 0, ScreenWidth, ScoreBarHeight};
 	SDL_RenderFillRect(Renderer, &r);
-	string Text = "";
+	
 	if(GameBase->UsesLevels)
-		Text = "Level: " + to_string(GameBase->level) + " ";
+	{
+		sprintf(TmpText,"Level: %d ",GameBase->level);
+		strncat(Text, TmpText, 1000);
+	}
 
 	if (GameMode == GMGame)
-		Text += "Lives: " + to_string(GameBase->HealthPoints) + " Score:" + to_string(Scores[Game][GameMode]) +
-			" High Score: " + to_string(HighScores[Game][GameMode]);
+	{
+		sprintf(TmpText,"Lives:%d Score:%llu High Score:%llu ",  GameBase->HealthPoints,
+			Scores[Game][GameMode], HighScores[Game][GameMode]);
+		strncat(Text, TmpText, 1000);
+	}
 	else
 	{
 		if(GameMode == GMRetroCarousel)
 		{
-			Text += "Timer: " + to_string_with_precision(Timer, 2) + " Total Score:" + to_string(RetroCarouselScore +
-				Scores[Game][GameMode]) + " Score: " + to_string(Scores[Game][GameMode]) +
-				" Previous Total high score: " + to_string(RetroCarouselHighScore) +
-				" Previous High Score: " + to_string(HighScores[Game][GameMode]);
+			sprintf(TmpText,"Timer: %.2f Total Score:%llu  Score:%llu Previous Total high score:%llu Previous High Score:%llu", 
+				Timer, RetroCarouselScore, Scores[Game][GameMode], RetroCarouselHighScore,
+				HighScores[Game][GameMode]);
+			strncat(Text, TmpText, 1000);
 		}
 		else
-			Text += "Timer: " + to_string_with_precision(Timer, 2) + " Score:" + to_string(Scores[Game][GameMode]) +
-				" Previous High Score: " + to_string(HighScores[Game][GameMode]);
+		{
+			sprintf(TmpText, "Timer: %.2f Score:%llu Previous High Score:%llu ",
+				Timer,Scores[Game][GameMode], HighScores[Game][GameMode]);
+			strncat(Text, TmpText, 1000);
+		}
+			
 	}
-	CFont_WriteText(Renderer, "Roboto-Regular", 20*yscale, Text, Text.length(), 0, 0, 0, {255,255,255,255});
+	SDL_Color color = {255,255,255,255};
+	CFont_WriteText(Renderer, "Roboto-Regular", 20*yscale, Text, strlen(Text), 0, 0, 0, color);
 }
 
 void CGameBase_DrawSubstateText(CGameBase* GameBase)
 {
 	//textSize(scpregamefontsize)
 	//tz = textWidth(text)
+	SDL_Color color = {255,255,255,240};
 	int w = CFont_TextWidth("Roboto-Regular", 60*yscale, GameBase->SubStateText, strlen(GameBase->SubStateText));
 	CFont_WriteText(Renderer, "Roboto-Regular", 60*yscale, GameBase->SubStateText, strlen(GameBase->SubStateText), GameBase->screenleft + ((GameBase->screenright - GameBase->screenleft) / 2) - w/2,
-		GameBase->screentop + ((GameBase->screenbottom - GameBase->screentop) / 2) - 90*xscale, 0, {255, 255, 255, 240});
+		GameBase->screentop + ((GameBase->screenbottom - GameBase->screentop) / 2) - 90*xscale, 0, color);
 }
 
 bool CGameBase_UpdateLogic(CGameBase* GameBase)
@@ -412,7 +450,7 @@ bool CGameBase_UpdateLogic(CGameBase* GameBase)
 				if (SubStateCounter >= 0)
 				{
 					char Tmp[50];
-					itoa(SubStateCounter, Tmp, 10);
+					sprintf(Tmp,"%d",(int)SubStateCounter);
 					strcpy(GameBase->SubStateText, Tmp);
 					if(SubStateCounter == 2)
 					{
@@ -423,16 +461,16 @@ bool CGameBase_UpdateLogic(CGameBase* GameBase)
 					{
 						if (SubGameState == SGReadyGo)
 						{
-							strcpy(GameBase->SubStateText, string("GO").c_str());
+							strcpy(GameBase->SubStateText, "GO");
 						}
 						else
 						{
 							if (GameMode != GMGame)
 							{
-								strcpy(GameBase->SubStateText, string("Time Up").c_str());
+								strcpy(GameBase->SubStateText, "Time Up");
 							}
 							else
-								strcpy(GameBase->SubStateText, string("Game Over").c_str());
+								strcpy(GameBase->SubStateText, "Game Over");
 
 						}
 					}

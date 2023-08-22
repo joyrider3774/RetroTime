@@ -1,20 +1,34 @@
 #include <SDL.h>
+#include <stdbool.h>
 #include "CGameSnake.h"
 
 CGameSnake* Create_CGameSnake()
 {
 	CGameSnake* GameSnake = (CGameSnake*) malloc(sizeof(CGameSnake));
-	GameSnake->GameBase = Create_CGameBase(GSRamIt, true);
+	GameSnake->GameBase = Create_CGameBase(GSSnake, true);
 	GameSnake->MusMusic = -1;
 	GameSnake->SfxFood = -1;
 	GameSnake->SfxDie = -1;
-	GameSnake->GameBase->playfieldwidth = (GameSnake->cols) * GameSnake->snakesize;
-	GameSnake->GameBase->playfieldheight = (GameSnake->rows) * GameSnake->snakesize;
+	GameSnake->GameBase->playfieldwidth = (CGameSnake_cols) * CGameSnake_snakesize;
+	GameSnake->GameBase->playfieldheight = (CGameSnake_rows) * CGameSnake_snakesize;
 	GameSnake->GameBase->screenleft = (ScreenWidth - GameSnake->GameBase->playfieldwidth) / 2;
 	GameSnake->GameBase->screenright = GameSnake->GameBase->screenleft + GameSnake->GameBase->playfieldwidth;
 	GameSnake->GameBase->screentop = (ScreenHeight - GameSnake->GameBase->playfieldheight) / 2;
 	GameSnake->GameBase->screenbottom = GameSnake->GameBase->screentop + GameSnake->GameBase->playfieldheight;
+	GameSnake->snakeheadcolor.r = 0xFF;
+	GameSnake->snakeheadcolor.g = 0x65;
+	GameSnake->snakeheadcolor.b = 0x65;
+	GameSnake->snakeheadcolor.a = 0xFF;
 
+	GameSnake->snakebodycolor.r = 0xFF;
+	GameSnake->snakebodycolor.g = 0xFF;
+	GameSnake->snakebodycolor.b = 0xFF;
+	GameSnake->snakebodycolor.a = 0xFF;
+
+	GameSnake->snakefoodcolor.r = 0x65;
+	GameSnake->snakefoodcolor.g = 0xFF;
+	GameSnake->snakefoodcolor.b = 0x65;
+	GameSnake->snakefoodcolor.a = 0xFF;
 	
 	GameSnake->createfood = CGameSnake_createfood;
 	GameSnake->drawfood = CGameSnake_drawfood;
@@ -50,7 +64,8 @@ void CGameSnake_createfood(CGameSnake* GameSnake)
 	bool bok = false;
 	while (!bok)
 	{
-		GameSnake->food = {GameSnake->GameBase->screenleft + int((rand() % GameSnake->cols) *GameSnake->snakesize),GameSnake->GameBase->screentop + int((rand() % GameSnake->rows) * GameSnake->snakesize)};
+		GameSnake->food.x = GameSnake->GameBase->screenleft + (int)((rand() % CGameSnake_cols) *CGameSnake_snakesize);
+		GameSnake->food.y = GameSnake->GameBase->screentop + (int)((rand() % CGameSnake_rows) * CGameSnake_snakesize);
 		bok = ((GameSnake->food.x != GameSnake->head.x) && (GameSnake->food.y != GameSnake->head.y));
 		for (int i = 0; i < GameSnake->snakelength; i++)
 			bok = bok && ((GameSnake->food.x != GameSnake->body[i].x) && (GameSnake->food.y != GameSnake->body[i].y));
@@ -60,7 +75,7 @@ void CGameSnake_createfood(CGameSnake* GameSnake)
 void CGameSnake_drawfood(CGameSnake* GameSnake)
 {
 	SDL_SetRenderDrawColor(Renderer, GameSnake->snakefoodcolor.r, GameSnake->snakefoodcolor.g, GameSnake->snakefoodcolor.b, GameSnake->snakefoodcolor.a);
-	SDL_Rect r = {GameSnake->food.x, GameSnake->food.y, GameSnake->snakesize, GameSnake->snakesize};
+	SDL_Rect r = {GameSnake->food.x, GameSnake->food.y, CGameSnake_snakesize, CGameSnake_snakesize};
 	SDL_RenderFillRect(Renderer, &r);
 }
 
@@ -81,8 +96,10 @@ void CGameSnake_createsnake(CGameSnake* GameSnake)
 {
 	GameSnake->playerdeath = false;
 	GameSnake->snakelength = 0;
-	GameSnake->head = {GameSnake->GameBase->screenleft + int(GameSnake->cols / 2) * GameSnake->snakesize,GameSnake->GameBase->screentop + int(GameSnake->rows / 2) * GameSnake->snakesize};
-	GameSnake->dir = {1,0};
+	GameSnake->head.x = GameSnake->GameBase->screenleft + ((int)(floor(CGameSnake_cols / 2))) * CGameSnake_snakesize;
+	GameSnake->head.y = GameSnake->GameBase->screentop + ((int)(floor(CGameSnake_rows / 2))) * CGameSnake_snakesize;
+	GameSnake->dir.x = 1;
+	GameSnake->dir.y = 0;
 	GameSnake->ticks = 0;
 }
 
@@ -92,11 +109,17 @@ void CGameSnake_drawsnake(CGameSnake* GameSnake)
 	SDL_SetRenderDrawColor(Renderer, GameSnake->snakebodycolor.r, GameSnake->snakebodycolor.g, GameSnake->snakebodycolor.b, GameSnake->snakebodycolor.a);
 	for (int i = 0; i < GameSnake->snakelength; i++)
 	{
-		r = {GameSnake->body[i].x, GameSnake->body[i].y, GameSnake->snakesize, GameSnake->snakesize};
+		r.x = GameSnake->body[i].x;
+		r.y = GameSnake->body[i].y;
+		r.w = CGameSnake_snakesize;
+		r.h = CGameSnake_snakesize;
 		SDL_RenderFillRect(Renderer, &r);
 	}
 	SDL_SetRenderDrawColor(Renderer, GameSnake->snakeheadcolor.r, GameSnake->snakeheadcolor.g, GameSnake->snakeheadcolor.b, GameSnake->snakeheadcolor.a);
-	r = {GameSnake->head.x, GameSnake->head.y, GameSnake->snakesize, GameSnake->snakesize};
+	r.x = GameSnake->head.x;
+	r.y = GameSnake->head.y;
+	r.w = CGameSnake_snakesize;
+	r.h = CGameSnake_snakesize;
 	SDL_RenderFillRect(Renderer, &r);
 }
 
@@ -109,7 +132,8 @@ void CGameSnake_updatesnake(CGameSnake* GameSnake)
 		if(GameSnake->movedone && GameSnake->dir.x == 0)
 		{
 			GameSnake->movedone = false;
-			GameSnake->dir = {-1,0};
+			GameSnake->dir.x = -1;
+			GameSnake->dir.y = 0;
 		}
 	}
 	else
@@ -121,7 +145,8 @@ void CGameSnake_updatesnake(CGameSnake* GameSnake)
 			if(GameSnake->movedone && GameSnake->dir.x == 0)
 			{
 				GameSnake->movedone = false;
-				GameSnake->dir = {1,0};
+				GameSnake->dir.x = 1;
+				GameSnake->dir.y = 0;
 			}
 		}
 		else
@@ -133,7 +158,8 @@ void CGameSnake_updatesnake(CGameSnake* GameSnake)
 				if(GameSnake->movedone && GameSnake->dir.y == 0)
 				{
 					GameSnake->movedone = false;
-					GameSnake->dir = {0,-1};
+					GameSnake->dir.x = 0;
+					GameSnake->dir.y = -1;
 				}
 			}
 			else
@@ -145,7 +171,8 @@ void CGameSnake_updatesnake(CGameSnake* GameSnake)
 					if(GameSnake->movedone && GameSnake->dir.y == 0)
 					{
 						GameSnake->movedone = false;
-						GameSnake->dir = {0,1};
+						GameSnake->dir.x = 0;
+						GameSnake->dir.y = 1;
 					}
 				}
 			}
@@ -154,7 +181,7 @@ void CGameSnake_updatesnake(CGameSnake* GameSnake)
 
 	GameSnake->ticks += 1;
 
-	if(GameSnake->ticks >= GameSnake->updateticks)
+	if(GameSnake->ticks >= CGameSnake_updateticks)
 	{
 		GameSnake->movedone = true;
 		GameSnake->ticks = 0;
@@ -165,8 +192,8 @@ void CGameSnake_updatesnake(CGameSnake* GameSnake)
 			i -= 1;
 		}
 		GameSnake->body[0] = GameSnake->head;
-		GameSnake->head.x += GameSnake->dir.x * GameSnake->snakesize;
-		GameSnake->head.y += GameSnake->dir.y * GameSnake->snakesize;
+		GameSnake->head.x += GameSnake->dir.x * CGameSnake_snakesize;
+		GameSnake->head.y += GameSnake->dir.y * CGameSnake_snakesize;
 		if((GameSnake->head.x < GameSnake->GameBase->screenleft) || (GameSnake->head.x >= GameSnake->GameBase->screenright) ||
 			(GameSnake->head.y < GameSnake->GameBase->screentop) || (GameSnake->head.y >= GameSnake->GameBase->screenbottom))
 			GameSnake->playerdeath = true;

@@ -1,29 +1,28 @@
-#pragma once
+#ifndef CGAMEBLOCKSTACKER_H
+#define CGAMEBLOCKSTACKER_H
 
 #include <SDL.h>
-#include <map>
-#include <iostream>
-#include <string>
+#include <stdbool.h>
 #include "CGameBase.h"
 #include "../CGame.h"
 #include "../Platform.h"
 #include "../Common.h"
 
-using namespace std;
 
+
+#define CGameBlockStacker_numcols 12
+#define CGameBlockStacker_numrows 18
+#define CGameBlockStacker_blocksize (ScreenHeight / CGameBlockStacker_numrows)
+#define CGameBlockStacker_ticksidle 3
+#define CGameBlockStacker_ticksinputidle 4
+#define CGameBlockStacker_totalelements 216//numcols * numrows
 
 struct CGameBlockStacker {
 
 	CGameBase *GameBase;
-	static const int numcols = 12;
-	static const int numrows = 18;
-	static const int blocksize = ScreenHeight / numrows;
-	static const int ticksidle = 3;
-	static const int ticksinputidle = 4;
-
 	int background;
 	SDL_Point backgroundtz;
-	int playfield[numcols * numrows];
+	int playfield[CGameBlockStacker_totalelements];
 	int currpiece, rotation,speed, speedcount, piececount, lineclear, plrx, plry;
 	bool rotateblock, dropblock;
 	int MusMusic, SfxDie, SfxLineClear, SfxDrop, SfxRotate;
@@ -67,3 +66,5 @@ void CGameBlockStacker_updateplayer(CGameBlockStacker* BlockStacker);
 bool CGameBlockStacker_piecefits(CGameBlockStacker* BlockStacker, int tetrimo, int rotation, int posx, int posy);
 void Destroy_CGameBlockStacker(CGameBlockStacker* BlockStacker);
 CGameBlockStacker* Create_CGameBlockStacker();
+
+#endif

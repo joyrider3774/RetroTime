@@ -1,9 +1,8 @@
-#pragma once
+#ifndef CGAMEBREAKOUT_H
+#define CGAMEBREAKOUT_H
 
 #include <SDL.h>
-#include <map>
-#include <iostream>
-#include <string>
+#include <stdbool.h>
 #include "CGameBase.h"
 #include "CSpriteObject.h"
 #include "../CGame.h"
@@ -11,7 +10,18 @@
 #include "../Platform.h"
 #include "../Common.h"
 
-using namespace std;
+#define CGameBreakOut_tweenblockpositions 0
+#define CGameBreakOut_tweenblockdeath 1
+#define CGameBreakOut_blockstatedeath 1
+#define CGameBreakOut_ballspeed (6.0f*yscale)
+#define CGameBreakOut_ballspeedinc (0.1f*yscale)
+#define CGameBreakOut_ballvelsegments 5
+#define CGameBreakOut_playerspeed (8.0f*xscale)
+#define CGameBreakOut_blockxoffset (120.0f*xscale)
+#define CGameBreakOut_blockyoffset (80.0f*yscale)
+#define CGameBreakOut_blockrows 10
+#define CGameBreakOut_blockcols 17
+#define CGameBreakOut_numblocks 170 //blockrows * blockcols;
 
 struct sblockinfo
 {
@@ -23,20 +33,9 @@ typedef struct sblockinfo sblockinfo;
 
 struct CGameBreakOut {
 	CGameBase *GameBase;
-	static const int tweenblockpositions = 0;
-	static const int tweenblockdeath = 1;
-	static const int blockstatedeath = 1;
-	static constexpr float ballspeed = 6.0f*yscale;
-	static constexpr float ballspeedinc = 0.1f*yscale;
-	static const int ballvelsegments = 5;
-	static constexpr float playerspeed = 8.0f*xscale;
-	static constexpr float blockxoffset = 120.0f*xscale;
-	static constexpr float blockyoffset = 80.0f*yscale;
-	static const int blockrows = 10;
-	static const int blockcols = 17;
-	static const int numblocks = blockrows * blockcols;
-	static constexpr Vec2F spritescale = {2.5f*xscale,2.5f*yscale};
-	static constexpr Vec2F blockspritecale = {1.0f*xscale,2.0f*yscale};
+
+	Vec2F spritescale; 
+	Vec2F blockspritecale;
 
 	int MusMusic, SfxDie, SfxSucces, SfxBat, SfxBrick;
 	int background, spritesheetblocks, spritesheetbat, spritesheetball;
@@ -45,8 +44,8 @@ struct CGameBreakOut {
 	float curballspeed;
 	int pattern;
 	sblockinfo blockinfo;
-	CSpriteObject blocks[numblocks];
-	CTweenInfo tweens[numblocks][2];
+	CSpriteObject blocks[CGameBreakOut_numblocks];
+	CTweenInfo tweens[CGameBreakOut_numblocks][2];
 	CSpriteObject player;
 	CSpriteObject ball;
 
@@ -97,3 +96,5 @@ void CGameBreakOut_destroyallblocks(CGameBreakOut* GameBreakOut);
 void CGameBreakOut_updateblockinfo(CGameBreakOut* GameBreakOut);
 void Destroy_CGameBreakOut(CGameBreakOut* GameBreakOut);
 CGameBreakOut* Create_CGameBreakOut();
+
+#endif

@@ -1,13 +1,10 @@
-#pragma once
+#ifndef CGAMEBASE_H
+#define CGAMEBASE_H
 
 #include <SDL.h>
-#include <iostream>
-#include <string>
+#include <stdbool.h>
 #include "../CGame.h"
 #include "../Common.h"
-
-using namespace std;
-
 
 struct CGameBase {
 	char SubStateText[500];
@@ -29,3 +26,5 @@ void CGameBase_PauseMenu(CGameBase* GameBase);
 void CGameBase_DrawScoreBar(CGameBase* GameBase);
 void CGameBase_DrawSubstateText(CGameBase* GameBase);
 bool CGameBase_UpdateLogic(CGameBase* GameBase);
+
+#endif

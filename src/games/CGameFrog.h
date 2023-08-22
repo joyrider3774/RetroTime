@@ -1,19 +1,18 @@
-#pragma once
+#ifndef CGAMEFROG_H
+#define CGAMEFROG_H
 
 #include <SDL.h>
-#include <map>
-#include <iostream>
-#include <string>
+#include <stdbool.h>
 #include "CGameBase.h"
 #include "CSpriteObject.h"
 #include "../CGame.h"
 #include "../Platform.h"
 #include "../Common.h"
 
-using namespace std;
 
-#define CEILING(x,y) (((x) + (y) + 1) / (y));
-#define FLOORING(x,y) (((x) + (y) - 1) / (y));
+
+#define CEILING(x,y) (((x) + (y) + 1) / (y))
+#define FLOORING(x,y) (((x) + (y) - 1) / (y))
 
 struct SRowType {
 	int type;
@@ -28,72 +27,73 @@ struct SRowType {
 typedef struct SRowType SRowType;
 
 struct SObjectInfo {
-	int mostleft = -1;
-	int mostright = -1;
-	int mostbottom = -1;
-	int mosttop = -1;
+	int mostleft;
+	int mostright;
+	int mostbottom;
+	int mosttop;
 };
 
 typedef struct SObjectInfo SObjectInfo;
 
 
+#define CGameFrog_debugmode false
+#define CGameFrog_playerspeed 16.0f*3.0f*yscale
+#define CGameFrog_globalworldspeed 0.5f*yscale
+
+#define CGameFrog_rowtypewater 0
+#define CGameFrog_rowtyperoad 1
+#define CGameFrog_rowtypesafety 2
+
+#define CGameFrog_idenemycar1 0
+#define CGameFrog_idenemycar2 1
+#define CGameFrog_idenemycar3 2
+#define CGameFrog_idenemycar4 3
+#define CGameFrog_idenemycar5 4
+#define CGameFrog_idenemyplant 5
+#define CGameFrog_idenemylog 6
+#define CGameFrog_idnone 7
+#define CGameFrog_idwater 8
+#define CGameFrog_idroad 9
+#define CGameFrog_idgrass 10
+#define CGameFrog_idcherry 11
+#define CGameFrog_idapple 12
+#define CGameFrog_idlemon 13
+
+
+#define CGameFrog_cherryspawntrigger 103
+#define CGameFrog_applespawntrigger 57
+#define CGameFrog_lemonspawntrigger 23
+
+#define CGameFrog_lemonscore 10
+#define CGameFrog_applescore 25
+#define CGameFrog_cherryscore 50
+
+#define CGameFrog_lenlevelincspeeds 5
+
+#define CGameFrog_numcols 14
+#define CGameFrog_generatorrows 1
+#define CGameFrog_maxrowsbeforesafetyrow 4
+#define CGameFrog_visiblerows 15 //(int)CEILING(ScreenHeight, (int)CGameFrog_playerspeed) or screensheight / playerspeed ceiled
+#define CGameFrog_numrows 16 //CGameFrog_visiblerows + CGameFrog_generatorrows
+#define CGameFrog_playerstartrow 7 //(int)FLOORING(CGameFrog_visiblerows, 2) or visible rows / 2 floored
+
+#define CGameFrog_speeddeviation 0.25f*yscale
+
+#define CGameFrog_rowtypewaterstart 0
+#define CGameFrog_rowtypewaterend 2
+#define CGameFrog_rowtyperoadstart 3
+#define CGameFrog_rowtyperoadend 7
+#define CGameFrog_maxobjects 1000
+
+#define CGameFrog_lenrowtypes 9
+
 struct CGameFrog {
 
 	CGameBase *GameBase;
-	static const int debugmode = false;
-	static constexpr float playerspeed = 16.0f*3.0f*yscale;
-	static constexpr float globalworldspeed = 0.5f*yscale;
 
-	static const int rowtypewater = 0;
-	static const int rowtyperoad = 1;
-	static const int rowtypesafety = 2;
-
-	static const int idenemycar1 = 0;
-	static const int idenemycar2 = 1;
-	static const int idenemycar3 = 2;
-	static const int idenemycar4 = 3;
-	static const int idenemycar5 = 4;
-	static const int idenemyplant = 5;
-	static const int idenemylog = 6;
-	static const int idnone = 7;
-	static const int idwater = 8;
-	static const int idroad = 9;
-	static const int idgrass = 10;
-	static const int idcherry = 11;
-	static const int idapple = 12;
-	static const int idlemon = 13;
-
-
-	static const int cherryspawntrigger = 103;
-	static const int applespawntrigger = 57;
-	static const int lemonspawntrigger = 23;
-
-	static const int lemonscore = 10;
-	static const int applescore = 25;
-	static const int cherryscore = 50;
-
-	static const int lenlevelincspeeds = 5;
-	
-	static const int numcols = 14;
-	static const int generatorrows = 1;
-	static const int maxrowsbeforesafetyrow = 4;
-	static const int visiblerows = (int)CEILING(ScreenHeight, (int)playerspeed);
-	static const int numrows = visiblerows + generatorrows;
-	static const int playerstartrow = (int)FLOORING(visiblerows, 2)
-
-	static constexpr float speeddeviation = 0.25f*yscale;
-
-	static const int rowtypewaterstart = 0;
-	static const int rowtypewaterend = 2;
-	static const int rowtyperoadstart = 3;
-	static const int rowtyperoadend = 7;
-	static const int maxobjects = (int)((visiblerows + generatorrows) * numcols * 1.57);
-
-	static const int lenrowtypes = 9;
-
-	SRowType rowtypes[lenrowtypes];
-	float levelincspeeds[lenlevelincspeeds];
-	int levelincspawns[lenlevelincspeeds];
+	SRowType rowtypes[CGameFrog_lenrowtypes];
+	float levelincspeeds[CGameFrog_lenlevelincspeeds];
+	int levelincspawns[CGameFrog_lenlevelincspeeds];
 
 	float worldspeed;
 	int nextrowtype;
@@ -109,7 +109,7 @@ struct CGameFrog {
 	int rowsspawned;
 	int dolevelinc;
 	SDL_Point backgroundtz;
-	CSpriteObject objects[maxobjects];
+	CSpriteObject objects[CGameFrog_maxobjects];
 	CSpriteObject player;
 	SObjectInfo objectinfo;
 
@@ -174,3 +174,5 @@ void CGameFrog_destroyallobjects(CGameFrog* GameFrog);
 void CGameFrog_createobjects(CGameFrog* GameFrog, bool initialize);
 void Destroy_CGameFrog(CGameFrog* GameFrog);
 CGameFrog* Create_CGameFrog();
+
+#endif

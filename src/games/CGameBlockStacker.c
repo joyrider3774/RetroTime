@@ -1,15 +1,14 @@
 #include <SDL.h>
 #include <SDL2_gfxPrimitives.h>
-#include <string>
-#include <iostream>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "CGameBlockStacker.h"
 #include "BlockStackerBlocks.h"
 #include "../CGame.h"
 #include "../Common.h"
 #include "../Vec2F.h"
 
-using namespace std;
+
 
 CGameBlockStacker* Create_CGameBlockStacker()
 {
@@ -21,8 +20,8 @@ CGameBlockStacker* Create_CGameBlockStacker()
 	BlockStacker->SfxLineClear = -1;
 	BlockStacker->SfxDrop = -1;
 	BlockStacker->SfxRotate = -1;
-	BlockStacker->GameBase->playfieldwidth = BlockStacker->numcols * BlockStacker->blocksize;
-	BlockStacker->GameBase->playfieldheight = BlockStacker->numrows * BlockStacker->blocksize;
+	BlockStacker->GameBase->playfieldwidth = CGameBlockStacker_numcols * CGameBlockStacker_blocksize;
+	BlockStacker->GameBase->playfieldheight = CGameBlockStacker_numrows * CGameBlockStacker_blocksize;
 	BlockStacker->GameBase->screenleft = (ScreenWidth - BlockStacker->GameBase->playfieldwidth) / 2;
 	BlockStacker->GameBase->screenright = BlockStacker->GameBase->screenleft + BlockStacker->GameBase->playfieldwidth;
 	BlockStacker->GameBase->screentop = (ScreenHeight - BlockStacker->GameBase->playfieldheight) / 2;
@@ -63,10 +62,10 @@ bool CGameBlockStacker_piecefits(CGameBlockStacker* BlockStacker, int tetrimo, i
 		for(int y = 0; y < 4; y++)
 		{
 			int piece = y * 4 + x;
-			int field = (posy + y) * BlockStacker->numcols + posx + x;
+			int field = (posy + y) * CGameBlockStacker_numcols + posx + x;
 
-			if ((posx + x >= 0) && (posx + x < BlockStacker->numcols) &&
-				(posy + y >= 0) && (posy + y < BlockStacker->numrows) &&
+			if ((posx + x >= 0) && (posx + x < CGameBlockStacker_numcols) &&
+				(posy + y >= 0) && (posy + y < CGameBlockStacker_numrows) &&
 				(tstetrimos[tetrimo][rotation % 4][piece] && (BlockStacker->playfield[field] != -1)))
 			{
 				result = false;
@@ -131,12 +130,12 @@ void CGameBlockStacker_updateplayer(CGameBlockStacker* BlockStacker)
 
 void CGameBlockStacker_createplayfield(CGameBlockStacker* BlockStacker)
 {
-	for(int y = 0; y < BlockStacker->numrows; y++)
-		for(int x = 0; x < BlockStacker->numcols; x++)
-			if ((x == 0) || (x == BlockStacker->numcols -1) || (y == BlockStacker->numrows -1))
-				BlockStacker->playfield[y*BlockStacker->numcols +x] = -2;
+	for(int y = 0; y < CGameBlockStacker_numrows; y++)
+		for(int x = 0; x < CGameBlockStacker_numcols; x++)
+			if ((x == 0) || (x == CGameBlockStacker_numcols -1) || (y == CGameBlockStacker_numrows -1))
+				BlockStacker->playfield[y*CGameBlockStacker_numcols +x] = -2;
 			else
-				BlockStacker->playfield[y*BlockStacker->numcols +x] = -1;
+				BlockStacker->playfield[y*CGameBlockStacker_numcols +x] = -1;
 }
 
 void CGameBlockStacker_updateplayfield(CGameBlockStacker* BlockStacker, bool force)
@@ -148,21 +147,21 @@ void CGameBlockStacker_updateplayfield(CGameBlockStacker* BlockStacker, bool for
 
 		if (BlockStacker->lineclear == 0)
 		{
-			int y = BlockStacker->numrows -2;
+			int y = CGameBlockStacker_numrows -2;
 			while(y > 0)
 			{
-				if(BlockStacker->playfield[y * BlockStacker->numcols + 1] == -3)
+				if(BlockStacker->playfield[y * CGameBlockStacker_numcols + 1] == -3)
 				{
 					int y2 = y;
 					//set all rows equal to row above
 					while (y2 > 0)
 					{
-						for(int x = 1; x < BlockStacker->numcols -1; x++)
-							BlockStacker->playfield[y2 * BlockStacker->numcols + x] = BlockStacker->playfield[(y2 -1) * BlockStacker->numcols + x];
+						for(int x = 1; x < CGameBlockStacker_numcols -1; x++)
+							BlockStacker->playfield[y2 * CGameBlockStacker_numcols + x] = BlockStacker->playfield[(y2 -1) * CGameBlockStacker_numcols + x];
 						y2 -= 1;
 					}
 					//clear top row
-					for(int x = 1; x < BlockStacker->numcols -1; x++)
+					for(int x = 1; x < CGameBlockStacker_numcols -1; x++)
 						BlockStacker->playfield[x] = -1;
 					y += 1;
 				}
@@ -174,10 +173,10 @@ void CGameBlockStacker_updateplayfield(CGameBlockStacker* BlockStacker, bool for
 	{
 		BlockStacker->speedcount += 1;
 
-		if (BlockStacker->speedcount % BlockStacker->ticksinputidle == 0)
+		if (BlockStacker->speedcount % CGameBlockStacker_ticksinputidle == 0)
 			BlockStacker->updateplayer(BlockStacker);
 
-		if (force || (BlockStacker->speedcount >= BlockStacker->speed*BlockStacker->ticksidle))
+		if (force || (BlockStacker->speedcount >= BlockStacker->speed*CGameBlockStacker_ticksidle))
 		{
 			BlockStacker->speedcount = 0;
 			BlockStacker->piececount += 1;
@@ -204,7 +203,7 @@ void CGameBlockStacker_updateplayfield(CGameBlockStacker* BlockStacker, bool for
 					{
 						int piece = y * 4 + x;
 						if (tstetrimos[BlockStacker->currpiece][BlockStacker->rotation % 4][piece])
-							BlockStacker->playfield[(BlockStacker->plry + y) * BlockStacker->numcols + BlockStacker->plrx + x] = BlockStacker->currpiece;
+							BlockStacker->playfield[(BlockStacker->plry + y) * CGameBlockStacker_numcols + BlockStacker->plrx + x] = BlockStacker->currpiece;
 					}
 
 				//check for lines
@@ -212,17 +211,17 @@ void CGameBlockStacker_updateplayfield(CGameBlockStacker* BlockStacker, bool for
 				bool linedone = true;
 				for(int y = 0; y < 4; y++)
 				{
-					if (BlockStacker->plry + y < BlockStacker->numrows -1)
+					if (BlockStacker->plry + y < CGameBlockStacker_numrows -1)
 					{
 						linedone = true;
-						for(int x = 1; x < BlockStacker->numcols -1; x++)
-							linedone = linedone && (BlockStacker->playfield[(BlockStacker->plry + y) * BlockStacker->numcols + x] > -1);
+						for(int x = 1; x < CGameBlockStacker_numcols -1; x++)
+							linedone = linedone && (BlockStacker->playfield[(BlockStacker->plry + y) * CGameBlockStacker_numcols + x] > -1);
 
 						if (linedone)
 						{
 							numlines += 1;
-							for(int x = 1; x < BlockStacker->numcols -1; x++)
-								BlockStacker->playfield[(BlockStacker->plry + y) * BlockStacker->numcols + x] = -3;
+							for(int x = 1; x < CGameBlockStacker_numcols -1; x++)
+								BlockStacker->playfield[(BlockStacker->plry + y) * CGameBlockStacker_numcols + x] = -3;
 						}
 					}
 				}
@@ -235,7 +234,7 @@ void CGameBlockStacker_updateplayfield(CGameBlockStacker* BlockStacker, bool for
 					CAudio_PlaySound(BlockStacker->SfxLineClear, 0);
 				}
 
-				BlockStacker->plrx = BlockStacker->numcols / 2 -2;
+				BlockStacker->plrx = CGameBlockStacker_numcols / 2 -2;
 				BlockStacker->plry = 0;
 				BlockStacker->rotation = 0;
 				BlockStacker->currpiece = rand() % 7;
@@ -260,42 +259,45 @@ void CGameBlockStacker_updateplayfield(CGameBlockStacker* BlockStacker, bool for
 
 void CGameBlockStacker_drawplayfieldcell(CGameBlockStacker* BlockStacker, int x, int y, int piece)
 {
-	SDL_Color color;
+	SDL_Color color = {255,255,255,240};
 
 	if (piece != -1)
 	{
-		if(piece == 0)
-			color = {0x65, 0x65, 0xFF, 0xFF};
+		// if(piece == 0)
+		// 	color = {0x65, 0x65, 0xFF, 0xFF};
 
-		if (piece == 1)
-			color = {0xFF, 0xFF, 0x65, 0xFF};
+		// if (piece == 1)
+		// 	color = {0xFF, 0xFF, 0x65, 0xFF};
 
-		if (piece == 2)
-			color = {0x30, 0xFF, 0x65, 0xFF};
+		// if (piece == 2)
+		// 	color = {0x30, 0xFF, 0x65, 0xFF};
 
-		if (piece == 3)
-			color = {0xFF, 0x65, 0x65, 0xFF};
+		// if (piece == 3)
+		// 	color = {0xFF, 0x65, 0x65, 0xFF};
 
-		if (piece == 4)
-			color = {0xA0, 0x40, 0xF0, 0xFF};
+		// if (piece == 4)
+		// 	color = {0xA0, 0x40, 0xF0, 0xFF};
 
-		if (piece == 5)
-			color = {0xA5, 0x3A, 0x3A, 0xFF};
+		// if (piece == 5)
+		// 	color = {0xA5, 0x3A, 0x3A, 0xFF};
 
-		if (piece == 6)
-			color = {0xFF, 0x65, 0xFF, 0xFF};
+		// if (piece == 6)
+		// 	color = {0xFF, 0x65, 0xFF, 0xFF};
 
-		if (piece == -2)
-			color = {0x80, 0x80, 0x80, 0xFF};
+		// if (piece == -2)
+		// 	color = {0x80, 0x80, 0x80, 0xFF};
 
-		if (piece == -3)
-			color = {0xFF, 0xFF, 0xFF, 0xFF};
+		// if (piece == -3)
+		// 	color = {0xFF, 0xFF, 0xFF, 0xFF};
 
-		SDL_Rect r = {BlockStacker->GameBase->screenleft + x * BlockStacker->blocksize, BlockStacker->GameBase->screentop + y * BlockStacker->blocksize, BlockStacker->blocksize, BlockStacker->blocksize};
+		SDL_Rect r = {BlockStacker->GameBase->screenleft + x * CGameBlockStacker_blocksize, BlockStacker->GameBase->screentop + y * CGameBlockStacker_blocksize, CGameBlockStacker_blocksize, CGameBlockStacker_blocksize};
 		SDL_SetRenderDrawColor(Renderer, 0, 0, 0, 255);
 		SDL_RenderFillRect(Renderer, &r);
 
-		r = {BlockStacker->GameBase->screenleft +1 + x * BlockStacker->blocksize, BlockStacker->GameBase->screentop +1 + y * BlockStacker->blocksize, BlockStacker->blocksize-2, BlockStacker->blocksize-2};
+		r.x = BlockStacker->GameBase->screenleft +1 + x * CGameBlockStacker_blocksize;
+		r.y = BlockStacker->GameBase->screentop +1 + y * CGameBlockStacker_blocksize;
+		r.w = CGameBlockStacker_blocksize-2;
+		r.h = CGameBlockStacker_blocksize-2;
 		SDL_SetRenderDrawColor(Renderer, color.r, color.g, color.b, color.a);
 		SDL_RenderFillRect(Renderer, &r);
 	}
@@ -303,10 +305,10 @@ void CGameBlockStacker_drawplayfieldcell(CGameBlockStacker* BlockStacker, int x,
 
 void CGameBlockStacker_drawplayfield(CGameBlockStacker* BlockStacker)
 {
-	for(int x = 0; x < BlockStacker->numcols; x++)
-		for(int y = 0; y < BlockStacker->numrows; y++)
+	for(int x = 0; x < CGameBlockStacker_numcols; x++)
+		for(int y = 0; y < CGameBlockStacker_numrows; y++)
 		{
-			int piece = BlockStacker->playfield[y * BlockStacker->numcols + x];
+			int piece = BlockStacker->playfield[y * CGameBlockStacker_numcols + x];
 			BlockStacker->drawplayfieldcell(BlockStacker,x,y, piece);
 		}
 
@@ -347,7 +349,7 @@ void CGameBlockStacker_init(CGameBlockStacker* BlockStacker)
 	BlockStacker->GameBase->HealthPoints = 1;
 	BlockStacker->currpiece = rand() % 7;
 	BlockStacker->rotation = 0;
-	BlockStacker->plrx = BlockStacker->numcols / 2 -2;
+	BlockStacker->plrx = CGameBlockStacker_numcols / 2 -2;
 	BlockStacker->plry = 0;
 	BlockStacker->speed = 20;
 	BlockStacker->speedcount = 0;

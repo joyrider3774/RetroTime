@@ -1,16 +1,25 @@
-#pragma once
+#ifndef CGAMERAMIT_H
+#define CGAMERAMIT_H
 
 #include <SDL.h>
-#include <map>
-#include <iostream>
-#include <string>
+#include <stdbool.h>
 #include "CGameBase.h"
 #include "../CGame.h"
 #include "../Platform.h"
 #include "../Common.h"
 
 
-using namespace std;
+
+#define CGameRamIt_bulletsteps 8
+#define CGameRamIt_playerrailwidth (10*xscale)
+#define CGameRamIt_playerspeed (10*xscale)
+#define CGameRamIt_bulletspeed (5*xscale)
+#define CGameRamIt_numblocks 16
+#define CGameRamIt_blocksegments 20
+#define CGameRamIt_sides 2
+#define CGameRamIt_blockspacing (5*yscale)
+#define CGameRamIt_ticksidle 50
+#define CGameRamIt_tickslevelmul 5
 
 struct ramitblock
 {
@@ -18,28 +27,19 @@ struct ramitblock
 	int segments;
 	SDL_Color color;
 };
+typedef struct ramitblock ramitblock;
 
 struct CGameRamIt {
 
 	CGameBase *GameBase;
-	static const int bulletsteps = 8;
-	static const int playerrailwidth = 10*xscale;
-	static constexpr float playerspeed = 10*xscale;
-	static constexpr float bulletspeed = 5*xscale;
-	static const int numblocks = 16;
-	static const int blocksegments = 20;
-	static const int sides = 2;
-	static const int blockspacing = 5*yscale;
-	static const int ticksidle = 50;
-	static const int tickslevelmul = 5;
 
 	int SfxShoot, SfxHit, SfxDie, SfxSucces, MusMusic;
 	int speed, speedcount, playerdx, playerdeath, riblocksize, riblocksizespacing, segmentwidth;
 	SDL_Point playerpos;
 	SDL_Point bulletpos;
 	SDL_Point bulletvel;
-	bool bulletalive = false;
-	ramitblock playfield[sides][numblocks];
+	bool bulletalive;
+	ramitblock playfield[CGameRamIt_sides][CGameRamIt_numblocks];
 
 	bool (*createbullet)(CGameRamIt* GameRamIt);
 	void (*updatebullet)(CGameRamIt* GameRamIt);
@@ -86,3 +86,5 @@ void CGameRamIt_updatebullet(CGameRamIt* GameRamIt);
 bool CGameRamIt_createbullet(CGameRamIt* GameRamIt);
 void Destroy_CGameRamIt(CGameRamIt* GameRamIt);
 CGameRamIt* Create_CGameRamIt();
+
+#endif

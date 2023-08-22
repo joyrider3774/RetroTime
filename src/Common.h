@@ -1,150 +1,154 @@
-#pragma once
+#ifndef COMMON_H
+#define COMMON_H
 
+#include <string.h>
 #include <SDL.h>
-#include <string>
-#include <sstream>
+#include <stdbool.h>
 
-constexpr bool debugInfo = true;
-constexpr bool debugShowCollisionShapes = false;
-constexpr bool dumpScaledBitmaps = false;
-constexpr bool useDefaultColorAssets = false;
-constexpr bool loadDumpedScaledBitmaps = true;
+#define debugInfo true
+#define debugShowCollisionShapes false
+#define dumpScaledBitmaps false
+#define useDefaultColorAssets false
+#define loadDumpedScaledBitmaps true
 
-constexpr bool titleAlphaEnabled = true;
+#define titleAlphaEnabled true
 
-constexpr int MaxAlpha = 245;
-constexpr int AlphaIncrease = 5;
-constexpr int MaxAlphaTime = 750;
+#define MaxAlpha 245
+#define AlphaIncrease 5
+#define MaxAlphaTime 750
 
-constexpr int ScreenWidth=400;
-constexpr int ScreenHeight=240;
-constexpr int WindowWidth=400;
-constexpr int WindowHeight=240;
-constexpr float xscale = ScreenWidth / 1280.0f;
-constexpr float yscale = ScreenHeight / 720.0f;
+#define ScreenWidth 400
+#define ScreenHeight 240
+#define WindowWidth 400
+#define WindowHeight 240
+#define xscale (ScreenWidth / 1280.0f)
+#define yscale (ScreenHeight / 720.0f)
 
-constexpr Uint32 PixelFormat = SDL_PIXELFORMAT_ARGB8888;
+#define PixelFormat SDL_PIXELFORMAT_ARGB8888
 
-constexpr double DesiredFps=60.0;
+#define DesiredFps 60.0
 
-constexpr int ScoreBarHeight=24*yscale;
+#define ScoreBarHeight (24*yscale)
 
 //GameStates
-constexpr int initDiff=50;
+#define initDiff 50
 
-constexpr int GSQuit=0;
-constexpr int GSIntro=1;
-constexpr int GSGame=2;
-constexpr int GSTitleScreen=3;
-constexpr int GSRamIt=4;
-constexpr int GSSubScore = 5;
-constexpr int GSSpaceInvaders = 6;
-constexpr int GSBreakout = 7;
-constexpr int GSFrog = 8;
-constexpr int GSSnake = 9;
-constexpr int GSPang = 10;
-constexpr int GSTetris = 11;
-constexpr int GSEddy = 12;
+#define GSQuit 0
+#define GSIntro 1
+#define GSGame 2
+#define GSTitleScreen 3
+#define GSRamIt 4
+#define GSSubScore 5
+#define GSSpaceInvaders 6
+#define GSBreakout 7
+#define GSFrog 8
+#define GSSnake 9
+#define GSPang 10
+#define GSTetris 11
+#define GSEddy 12
 
-constexpr int GSIntroInit = GSIntro + initDiff;
-constexpr int GSGameInit = GSGame + initDiff;
-constexpr int GSTitleScreenInit = GSTitleScreen + initDiff;
-constexpr int GSRamItInit = GSRamIt + initDiff;
-constexpr int GSSubScoreInit = GSSubScore + initDiff;
+#define GSIntroInit GSIntro + initDiff
+#define GSGameInit GSGame + initDiff
+#define GSTitleScreenInit GSTitleScreen + initDiff
+#define GSRamItInit GSRamIt + initDiff
+#define GSSubScoreInit GSSubScore + initDiff
 
-constexpr int GSSpaceInvadersInit = GSSpaceInvaders + initDiff;
-constexpr int GSBreakoutInit =GSBreakout + initDiff;
-constexpr int GSFrogInit = GSFrog + initDiff;
-constexpr int GSSnakeInit = GSSnake + initDiff;
-constexpr int GSPangInit = GSPang + initDiff;
-constexpr int GSTetrisInit = GSTetris + initDiff;
-constexpr int GSEddyInit = GSEddy + initDiff;
+#define GSSpaceInvadersInit GSSpaceInvaders + initDiff
+#define GSBreakoutInit GSBreakout + initDiff
+#define GSFrogInit GSFrog + initDiff
+#define GSSnakeInit GSSnake + initDiff
+#define GSPangInit GSPang + initDiff
+#define GSTetrisInit GSTetris + initDiff
+#define GSEddyInit GSEddy + initDiff
 
 //SubGameStates
-constexpr int SGNone = 0;
-constexpr int SGReadyGo = 1;
-constexpr int SGGame = 2;
-constexpr int SGTimeUp = 3;
-constexpr int SGFrame = 4;
-constexpr int SGCalcScore = 5;
-constexpr int SGFadeIn = 6;
-constexpr int SGPauseMenu = 7;
-constexpr int SGGameHelp = 8;
+#define SGNone 0
+#define SGReadyGo 1
+#define SGGame 2
+#define SGTimeUp 3
+#define SGFrame 4
+#define SGCalcScore 5
+#define SGFadeIn 6
+#define SGPauseMenu 7
+#define SGGameHelp 8
 
 //GameModes
-constexpr int Modes = 3;
-constexpr int GMRetroCarousel = 0;
-constexpr int GMGame = 1;
-constexpr int GMTimeAttack = 2;
+#define Modes 3
+#define GMRetroCarousel 0
+#define GMGame 1
+#define GMTimeAttack 2
 
-constexpr int Games = 8;
+#define Games 8
 
 //PAUSEMENUS
-constexpr int PMNone = -1;
-constexpr int PMContinue = 0;
-constexpr int PMQuit = 1;
-constexpr int PMMusicVol = 2;
-constexpr int PMSoundVol = 3;
-constexpr int PMGameHelp = 4;
+#define PMNone -1
+#define PMContinue 0
+#define PMQuit 1
+#define PMMusicVol 2
+#define PMSoundVol 3
+#define PMGameHelp 4
 
 
-constexpr int PauseMenus = 10;
+#define PauseMenus 10
 
 //main menus
-constexpr int MMStart = 0;
-constexpr int MMHighScores = 1;
-constexpr int MMHelp = 2;
-constexpr int MMQuit = 3;
-constexpr int MMOptions = 4;
-constexpr int MMCredits = 5;
+#define MMStart 0
+#define MMHighScores 1
+#define MMHelp 2
+#define MMQuit 3
+#define MMOptions 4
+#define MMCredits 5
 //Sub Main Menus
-constexpr int MMSelectGameMode = 7;
-constexpr int MMSelectGame = 8;
+#define MMSelectGameMode 7
+#define MMSelectGame 8
 //6 because only fist 6 are real main menu
-constexpr int MainMenus = 6;
+#define MainMenus 6
 
 //options menu
-constexpr int OMMusicVol = 0;
-constexpr int OMSoundVol = 1;
-constexpr int OMResetHighScores = 2;
-constexpr int OMBack = 3;
-constexpr int OptionMenus = 4;
-
-using namespace std;
-
+#define OMMusicVol 0
+#define OMSoundVol 1
+#define OMResetHighScores 2
+#define OMBack 3
+#define OptionMenus 4
 
 struct ModeDesc {
 	int mode;
-	string name;
-	string description;
+	char* name;
+	char* description;
 };
+typedef struct ModeDesc ModeDesc;
 
 struct GameDesc {
 	int state;
-	string name;
-	string description;
-	string shortdescription;
+	char* name;
+	char* description;
+	char* shortdescription;
 };
+typedef struct GameDesc GameDesc;
 
 struct PauseMenuDesc {
 	int menu;
-	string name;
+	char* name;
 };
+typedef struct PauseMenuDesc PauseMenuDesc;
 
 struct GPGamePauseMenusDesc {
 	int game;
 	int menus[5];
 };
+typedef struct GPGamePauseMenusDesc GPGamePauseMenusDesc;
 
 struct MainMenusDesc {
 	int menu;
-	string name;
+	char* name;
 };
+typedef struct MainMenusDesc MainMenusDesc;
 
 struct OptionMenusDesc {
 	int menu;
-	string name;
+	char* name;
 };
+typedef struct OptionMenusDesc OptionMenusDesc;
 
 extern GameDesc GSGames[Games];
 extern ModeDesc GMModes[Modes];
@@ -159,16 +163,8 @@ extern SDL_Colour UintToColor(Uint32 colour);
 
 extern void ditherTarget(SDL_Renderer* aRenderer, SDL_Texture *Tex, SDL_Rect* Rect,uint8_t bayerver, uint8_t whiteThreasHold);
 extern void ditherSurface(SDL_Surface* Surface, SDL_Rect* Rect, uint8_t bayerver, uint8_t whiteThreasHold);
-extern Uint32 GetPixel(SDL_Surface *surface, int x, int y);
-extern void PutPixel(SDL_Surface *surface, int x, int y, Uint32 pixel);
+extern Uint32 SDL_GetPixel(SDL_Surface *surface, int x, int y);
+extern void SDL_PutPixel(SDL_Surface *surface, int x, int y, Uint32 pixel);
 extern void SDL_SaveBMPTextureScaled(SDL_Renderer *Renderer, const char *File, SDL_Texture* Tex, float ScaleX, float ScaleY, bool ApplyDither,int ditherversion, int whiteThresHold);
-extern void SDL_SaveBMPTextureScaled(SDL_Renderer *Renderer, string File, SDL_Texture* Tex, float ScaleX, float ScaleY, bool ApplyDither, int ditherversion, int whiteThresHold);
-//https://stackoverflow.com/questions/16605967/set-precision-of-stdto-string-when-converting-floating-point-values
-template <typename T>
-std::string to_string_with_precision(const T a_value, const int n = 6)
-{
-	std::ostringstream out;
-	out.precision(n);
-	out << std::fixed << a_value;
-	return out.str();
-}
+
+#endif

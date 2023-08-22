@@ -1,52 +1,52 @@
-#pragma once
+#ifndef CGAMEFASTEDDY_H
+#define CGAMEFASTEDDY_H
 
 #include <SDL.h>
-#include <map>
-#include <iostream>
-#include <string>
+#include <stdbool.h>
 #include "CGameBase.h"
 #include "CSpriteObject.h"
 #include "../CGame.h"
 #include "../Platform.h"
 #include "../Common.h"
 
-using namespace std;
+#define GameFastEddy_playerstateunknown -1
+#define GameFastEddy_playerstateidle 0
+#define GameFastEddy_playerstateleft 1
+#define GameFastEddy_playerstateleftjump 2
+#define GameFastEddy_playerstateright 3
+#define GameFastEddy_playerstaterightjump 4
+#define GameFastEddy_playerstatejump 5
+#define GameFastEddy_playerstateclimbup 6
+#define GameFastEddy_playerstateclimbdown 7
+
+#define GameFastEddy_enemystateidle 0
+#define GameFastEddy_enemystatemoveleft 1
+#define GameFastEddy_enemystatewaitmove 2
+#define GameFastEddy_enemystatemoveright 3
+
+#define GameFastEddy_collectablestatemoveleft 0
+#define GameFastEddy_collectablestatemoveright 1
+#define GameFastEddy_collectablestateidle 2
+
+#define GameFastEddy_laddersfitrows 10
+#define GameFastEddy_rowfloorsizex (400.0f * xscale) //tilesize / 2 oroginals are 64x64 was 32x32 but i tried to divide by 3 but actually divided by 3.2
+#define GameFastEddy_rowfloorsizey (32.0f * yscale) //tilesize / 2 oroginals are 64x64 was 32x32 but i tried to divide by 3 but actually divided by 3.2
+#define GameFastEddy_rows 5
+
+#define GameFastEddy_playerspeed (6.4f*xscale)
+#define GameFastEddy_playerjumpspeed 2.0f
+#define GameFastEddy_playerclimbspeed (2.0f * yscale)
+#define GameFastEddy_collectablespeed (2*xscale)
+
+#define GameFastEddy_maxenemies 10
+#define GameFastEddy_maxcollectables 2
+
+#define GameFastEddy_maxladders 8 //(rows - 1) * 2;
+#define GameFastEddy_maxfloors 16 //(int)(ScreenWidth / rowfloorsizex * rows)
 
 struct CGameFastEddy {
 	CGameBase *GameBase;
-	static const int playerstateunknown = -1;
-	static const int playerstateidle = 0;
-	static const int playerstateleft = 1;
-	static const int playerstateleftjump = 2;
-	static const int playerstateright = 3;
-	static const int playerstaterightjump = 4;
-	static const int playerstatejump = 5;
-	static const int playerstateclimbup = 6;
-	static const int playerstateclimbdown = 7;
-
-	static const int enemystateidle = 0;
-	static const int enemystatemoveleft = 1;
-	static const int enemystatewaitmove = 2;
-	static const int enemystatemoveright = 3;
-
-	static const int collectablestatemoveleft = 0;
-	static const int collectablestatemoveright = 1;
-	static const int collectablestateidle = 2;
-
-	static const int laddersfitrows = 10;
-	static constexpr float rowfloorsizex = 400.0f * xscale; //tilesize / 2 oroginals are 64x64 was 32x32 but i tried to divide by 3 but actually divided by 3.2
-	static constexpr float rowfloorsizey = 32.0f * yscale; //tilesize / 2 oroginals are 64x64 was 32x32 but i tried to divide by 3 but actually divided by 3.2
-	static const int rows = 5;
-
-	static constexpr float playerspeed = 6.4f*xscale;
-	static constexpr float playerjumpspeed = 2.0f;
-	static constexpr float playerclimbspeed = 2.0f * yscale;
-	static constexpr float collectablespeed = 2*xscale;
-
-	static const int maxenemies = 10;
-	static const int maxcollectables = 2;
-
-	static const int maxladders = (rows - 1) * 2;
+	 
 	float playerjumpspeeddec;
 
 	int numfloortilesperrow;
@@ -75,14 +75,14 @@ struct CGameFastEddy {
 
 	int MusMusic, SfxSucces, SfxCollect, SfxDie;
 
-	int rowzeroenemyindex = 0;
-	int collecteditems = 0;
-	int collectedcreated = 0;
+	int rowzeroenemyindex;
+	int collecteditems;
+	int collectedcreated;
 	CSpriteObject player;
-	CSpriteObject ladders[maxladders];
-	CSpriteObject floors[(int)(ScreenWidth / rowfloorsizex * rows)]; //1280 is playfield size
-	CSpriteObject enemies[maxenemies];
-	CSpriteObject collectables[maxcollectables];
+	CSpriteObject ladders[GameFastEddy_maxladders];
+	CSpriteObject floors[GameFastEddy_maxfloors]; 
+	CSpriteObject enemies[GameFastEddy_maxenemies];
+	CSpriteObject collectables[GameFastEddy_maxcollectables];
 	CSpriteObject key;
 
 	void (*createkey)(CGameFastEddy* GameFastEddy);
@@ -148,3 +148,5 @@ void CGameFastEddy_destroykey(CGameFastEddy* GameFastEddy);
 void CGameFastEddy_createkey(CGameFastEddy* GameFastEddy);
 void Destroy_CGameFastEddy(CGameFastEddy* GameFastEddy);
 CGameFastEddy* Create_CGameFastEddy();
+
+#endif

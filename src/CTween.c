@@ -1,5 +1,5 @@
 #include "CTween.h"
-
+#include <stdbool.h>
 void initialize_CTweenInfo(CTweenInfo *TweenInfo)
 {
 	TweenInfo->val = 0.0f;
@@ -58,7 +58,7 @@ float tweencalcmaxticks(float seconds, float FPS)
 	return seconds * FPS;
 }
 
-CTweenInfo createtween(int id, float duration, TweenFunc tweenfunc, float multiplier, bool active, float FPS)
+CTweenInfo createtween(int id, float duration, int tweenfunc, float multiplier, bool active, float FPS)
 {
 	CTweenInfo tween;
 	tween.maxticks = tweencalcmaxticks(duration, FPS);

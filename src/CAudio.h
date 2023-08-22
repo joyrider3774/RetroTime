@@ -1,17 +1,16 @@
-#pragma once
+#ifndef CAUDIO_H
+#define CAUDIO_H
 
 #include <SDL.h>
 #include <SDL_mixer.h>
-#include <iostream>
-#include <string>
+#include <string.h>
+#include <stdbool.h>
 #include "Platform.h"
 
-using namespace std;
+#define SND_Max 100
+#define MUS_Max 20
 
-constexpr int SND_Max = 100;
-constexpr int MUS_Max = 20;
-
-void CAudio_Init(string AssetsPath, bool ADebugInfo);
+void CAudio_Init(char* AssetsPath, bool ADebugInfo);
 void CAudio_DeInit();
 void CAudio_IncVolumeMusic();
 void CAudio_DecVolumeMusic();
@@ -23,8 +22,8 @@ void CAudio_DecVolumeSound();
 void CAudio_SetVolumeSound(const int VolumeIn);
 int CAudio_GetVolumeSound();
 
-int CAudio_LoadMusic(string FileName);
-int CAudio_LoadSound(string FileName);
+int CAudio_LoadMusic(char* FileName);
+int CAudio_LoadSound(char* FileName);
 int CAudio_MusicSlotsUsed();
 int CAudio_MusicSlotsMax();
 int CAudio_SoundSlotsUsed();
@@ -38,3 +37,5 @@ void CAudio_PlaySound(int SoundID, int loops);
 bool CAudio_IsMusicPlaying();
 void CAudio_StopMusic();
 void CAudio_StopSound();
+
+#endif

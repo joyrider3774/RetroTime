@@ -1,6 +1,7 @@
-#pragma once
+#ifndef VEC2F_H
+#define VEC2F_H
 
-constexpr float epsilion = 0.000001;
+ #define epsilion 0.000001f
 
 struct Vec2F {
 	float x;
@@ -8,6 +9,8 @@ struct Vec2F {
 };
 typedef struct Vec2F Vec2F;
 
-float clamp(float value, float min, float max);
-Vec2F clamp(Vec2F value, Vec2F min, Vec2F max);
+float clampFloat(float value, float min, float max);
+Vec2F clampVec2F(Vec2F value, Vec2F min, Vec2F max);
 float length(Vec2F value);
+
+#endif

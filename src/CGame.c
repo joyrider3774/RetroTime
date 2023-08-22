@@ -2,7 +2,7 @@
 #include <SDL_joystick.h>
 #include <SDL2_gfxPrimitives.h>
 #include <SDL_image.h>
-#include <fstream>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
@@ -25,14 +25,12 @@
 #include "SubScoreScreen.h"
 #include "Intro.h"
 
-using namespace std;
-
 #undef LoadImage
 #undef PlaySound
 
 bool ShowFPS = false;
 Uint8 GameAlpha = 0;
-string DataPath;
+char DataPath[500];
 
 Uint32 AlphaTimer;
 Uint32 TimerTicks;
@@ -254,25 +252,30 @@ void CGame_ToggleFullscreen()
 void CGame_LoadHighScores()
 {
 	FILE *ScoreFile;
-	string FileName = "./.retrotimesscores";
+	char FileName[1000];
+	strcpy(FileName,  "./.retrotimesscores");
 
 	char *EnvHome = getenv("HOME");
 	char *EnvHomeDrive = getenv("HOMEDRIVE");
 	char *EnvHomePath = getenv("HOMEPATH");
 
 	if (EnvHome) //linux systems normally
-		FileName = string(EnvHome) + "/.retrotimesscores";
+		sprintf(FileName, "%s/.retrotimesscores", EnvHome);
 	else
 		if(EnvHomeDrive && EnvHomePath) //windows systems normally
-			FileName = string(EnvHomeDrive) + string(EnvHomePath) + "/.retrotimesscores";
+			sprintf(FileName, "%s%s/.retrotimesscores", EnvHomeDrive, EnvHomePath);
 
-	ScoreFile = fopen(FileName.c_str(), "r");
+	ScoreFile = fopen(FileName, "r");
 	if (ScoreFile)
 	{
 		fscanf(ScoreFile, "RetroCarousel=%llu\n", &RetroCarouselHighScore);
 		for (int i = 0; i < Games; i++)
 			for (int j = 0; j < Modes; j++)
-				fscanf(ScoreFile, string("Game_" + to_string(i) + "_Mode_" + to_string(j) + "=%llu\n").c_str(), &HighScores[i][j]);
+			{
+				char entry[500];
+				sprintf(entry, "Game_%d_Mode_%d%s", i, j,"=%llu\n"); 
+				fscanf(ScoreFile, entry, &HighScores[i][j]);
+			}
 		fclose(ScoreFile);
 	}
 	else
@@ -284,25 +287,26 @@ void CGame_LoadHighScores()
 void CGame_SaveHighScores()
 {
 	FILE *ScoreFile;
-	string FileName = "./.retrotimesscores";
+	char FileName[1000];
+	strcpy(FileName,  "./.retrotimesscores");
 
 	char *EnvHome = getenv("HOME");
 	char *EnvHomeDrive = getenv("HOMEDRIVE");
 	char *EnvHomePath = getenv("HOMEPATH");
 
 	if (EnvHome) //linux systems normally
-		FileName = string(EnvHome) + "/.retrotimesscores";
+		sprintf(FileName, "%s/.retrotimesscores", EnvHome);
 	else
 		if(EnvHomeDrive && EnvHomePath) //windows systems normally
-			FileName = string(EnvHomeDrive) + string(EnvHomePath) + "/.retrotimesscores";
+			sprintf(FileName, "%s%s/.retrotimesscores", EnvHomeDrive, EnvHomePath);
 
-	ScoreFile = fopen(FileName.c_str(), "w");
+	ScoreFile = fopen(FileName, "w");
 	if (ScoreFile)
 	{
 		fprintf(ScoreFile, "RetroCarousel=%llu\n", RetroCarouselHighScore);
 		for (int i = 0; i < Games; i++)
 			for (int j = 0; j < Modes; j++)
-				fprintf(ScoreFile, string("Game_" + to_string(i) + "_Mode_" + to_string(j) + "=%llu\n").c_str(), HighScores[i][j]);
+				fprintf(ScoreFile, "Game_%d_Mode_%d=%llu\n", i,j, HighScores[i][j]);
 		fclose(ScoreFile);
 	}
 }
@@ -310,19 +314,20 @@ void CGame_SaveHighScores()
 void CGame_LoadSettings()
 {
 	FILE *SettingsFile;
-	string FileName = "./.retrotimesettings";
+	char FileName[1000];
+	strcpy(FileName, "./.retrotimesettings");
 
 	char *EnvHome = getenv("HOME");
 	char *EnvHomeDrive = getenv("HOMEDRIVE");
 	char *EnvHomePath = getenv("HOMEPATH");
 
 	if (EnvHome) //linux systems normally
-		FileName = string(EnvHome) + "/.retrotimesettings";
+		sprintf(FileName, "%s/.retrotimesettings", EnvHome);
 	else
 		if(EnvHomeDrive && EnvHomePath) //windows systems normally
-			FileName = string(EnvHomeDrive) + string(EnvHomePath) + "/.retrotimesettings";
+			sprintf(FileName, "%s%s/.retrotimesettings", EnvHomeDrive, EnvHomePath);
 
-	SettingsFile = fopen(FileName.c_str(), "r");
+	SettingsFile = fopen(FileName, "r");
 	if (SettingsFile)
 	{
 		int VolumeMusic, VolumeSound;
@@ -345,19 +350,20 @@ void CGame_LoadSettings()
 void CGame_SaveSettings()
 {
 	FILE *SettingsFile;
-	string FileName = "./.retrotimesettings";
+	char FileName[1000];
+	strcpy(FileName, "./.retrotimesettings");
 
 	char *EnvHome = getenv("HOME");
 	char *EnvHomeDrive = getenv("HOMEDRIVE");
 	char *EnvHomePath = getenv("HOMEPATH");
 
 	if (EnvHome) //linux systems normally
-		FileName = string(EnvHome) + "/.retrotimesettings";
+		sprintf(FileName, "%s/.retrotimesettings", EnvHome);
 	else
 		if(EnvHomeDrive && EnvHomePath) //windows systems normally
-			FileName = string(EnvHomeDrive) + string(EnvHomePath) + "/.retrotimesettings";
+			sprintf(FileName, "%s%s/.retrotimesettings", EnvHomeDrive, EnvHomePath);
 
-	SettingsFile = fopen(FileName.c_str(), "w");
+	SettingsFile = fopen(FileName, "w");
 	if (SettingsFile)
 	{
 		int VolumeMusic = CAudio_GetVolumeMusic();
@@ -379,18 +385,17 @@ void CGame_StartCrossFade(int SetGameState, int SetNextSubState, int SetNextSubS
 	NextSubStateCounter = SetNextSubStateCounter;
 }
 
-string CGame_GetFilePath(string InputFile)
+void CGame_GetFilePath(char* InputFile, char** Result)
 {
 	int Teller, Pos = 0;
-	string Result = InputFile;
-	for (Teller = InputFile.length() - 1; Teller >= 0; Teller--)
-		if ((InputFile[Teller] == '/') || (InputFile[Teller] == '\\'))
+	strcpy(*Result, InputFile);
+	for (Teller = strlen(*Result) - 1; Teller >= 0; Teller--)
+		if (((*Result)[Teller] == '/') || ((*Result)[Teller] == '\\'))
 		{
 			Pos = Teller + 1;
 			break;
 		}
-	Result.resize(Pos);
-	return Result;
+	(*Result)[Pos] = '\0';
 }
 
 void CGame_ResetTimer()
@@ -466,7 +471,7 @@ void CGame_CreateActiveGame()
 			break;
 		case GSSpaceInvaders:
 			GameInvaders->deinit(GameInvaders);
-			delete GameInvaders;
+			Destroy_CGameInvaders(GameInvaders);
 			ActiveGameGameStateId = -1;
 			break;
 		case GSFrog:
@@ -545,8 +550,9 @@ void CGame_MainLoop()
 	uint8_t wtrs = 128;
 	uint8_t ver = 2;
 	
-	string Text = "wtrs: " + std::to_string(wtrs) + "ver: " + std::to_string(ver) + "\n";
-	printf("%s\n", Text.c_str());
+	char Text[100];
+	sprintf(Text,"wtrs: %d ver: %d\n", wtrs, ver);
+	printf("%s\n", Text);
 		
 	while (GameState != GSQuit)
 	{
@@ -593,15 +599,15 @@ void CGame_MainLoop()
 		{
 
 			wtrs -= 1;
-			Text = "wtrs: " + std::to_string(wtrs) + "ver: " + std::to_string(ver) + "\n";
-			printf("%s\n", Text.c_str());
+			sprintf(Text,"wtrs: %d ver: %d\n", wtrs, ver);
+			printf("%s\n", Text);
 		}
 
 		if(CInput_Buttons.ButRB && !CInput_PrevButtons.ButRB)
 		{
 			wtrs += 1;
-			Text = "wtrs: " + std::to_string(wtrs) + "ver: " + std::to_string(ver) + "\n";
-			printf("%s\n", Text.c_str());
+			sprintf(Text,"wtrs: %d ver: %d\n", wtrs, ver);
+			printf("%s\n", Text);
 
 		}
 
@@ -618,8 +624,8 @@ void CGame_MainLoop()
 				else
 					ver = 2;
 			}
-			Text = "wtrs: " + std::to_string(wtrs) + "ver: " + std::to_string(ver) + "\n";
-			printf("%s\n", Text.c_str());
+			sprintf(Text,"wtrs: %d ver: %d\n", wtrs, ver);
+			printf("%s\n", Text);
 		}
 
 		if(CInput_Buttons.ButRT && !CInput_PrevButtons.ButRT)
@@ -635,8 +641,8 @@ void CGame_MainLoop()
 				else
 					ver = 2;
 			}
-			Text = "wtrs: " + std::to_string(wtrs) + "ver: " + std::to_string(ver) + "\n";
-			printf("%s\n", Text.c_str());
+			sprintf(Text,"wtrs: %d ver: %d\n", wtrs, ver);
+			printf("%s\n", Text);
 		}
 
 
@@ -663,7 +669,7 @@ void CGame_MainLoop()
 
 			case GSTitleScreenInit:
 			case GSTitleScreen:
-				//to clear the game data & set nullptr to ActiveGame
+				//to clear the game data & set NULL to ActiveGame
 				CGame_CreateActiveGame();
 				TitleScreen();
 				break;
@@ -808,21 +814,33 @@ void CGame_MainLoop()
 
 		if (debugInfo || ShowFPS)
 		{
-			Text = "FPS: " + to_string(Fps) + "\n";
+			char Text[500];
+			char TmpText[100];
+			Text[0] = '\0';
+			sprintf(TmpText, "FPS: %d\n", Fps);
+			strcat(Text, TmpText);
 			if(debugInfo)
 			{
-				Text += "FrameTime: " + to_string(AvgFrameTime) + "\n";
-				Text += "GFX Slots: " + to_string(CImage_ImageSlotsUsed()) + "/" + to_string(CImage_ImageSlotsMax()) + "\n";
-				Text += "SND Slots: " + to_string(CAudio_SoundSlotsUsed()) + "/" + to_string(CAudio_SoundSlotsMax()) + "\n";
-				Text += "MUS Slots: " + to_string(CAudio_MusicSlotsUsed()) + "/" + to_string(CAudio_MusicSlotsMax()) + "\n";
-				Text += "SPR Slots: " + to_string(CSprites_SpriteSlotsUsed()) + "/" + to_string(CSprites_SpriteSlotsMax()) + "\n";
-				Text += "SPR Resets: " + to_string(CSprites_UpdateImageResetsCount()) + "\n";
-				Text += "SPR Draws: " + to_string(CSprites_SpritesDrawnCount()) + "\n";
-				Text += "SCL Loaded: " + to_string(CImage_ScaledImagesLoadedCount()) + "/" + to_string(CImage_ScaledImagesLoadedMax()) + "\n";
-				
+				sprintf(TmpText,"FrameTime: %f.5\n",AvgFrameTime);
+				strncat(Text, TmpText, 100);
+				sprintf(TmpText,"GFX Slots: %d/%d\n",CImage_ImageSlotsUsed(), CImage_ImageSlotsMax());
+				strncat(Text, TmpText, 100);
+				sprintf(TmpText,"SND Slots: %d/%d\n",CAudio_SoundSlotsUsed(),CAudio_SoundSlotsMax());
+				strncat(Text, TmpText, 100);
+				sprintf(TmpText,"MUS Slots: %d/%d\n",CAudio_MusicSlotsUsed(), CAudio_MusicSlotsMax());
+				strncat(Text, TmpText, 100);
+				sprintf(TmpText,"SPR Slots: %d/%d\n",CSprites_SpriteSlotsUsed(),CSprites_SpriteSlotsMax());
+				strncat(Text, TmpText, 100);
+				sprintf(TmpText,"SPR Resets: %d\n",CSprites_UpdateImageResetsCount());
+				strncat(Text, TmpText, 100);
+				sprintf(TmpText,"SPR Draws: %d\n",CSprites_SpritesDrawnCount());
+				strncat(Text, TmpText, 100);
+				sprintf(TmpText,"SCL Loaded: %d/%d\n",CImage_ScaledImagesLoadedCount(),CImage_ScaledImagesLoadedMax());
+				strncat(Text, TmpText, 100);				
 			}
-			int tw = CFont_TextWidth("RobotoMono-Bold", 14, Text, Text.length());
-			CFont_WriteText(Renderer, "RobotoMono-Bold", 14, Text, Text.length(), w - tw, 0, 0, {255, 0, 255, 255});
+			int tw = CFont_TextWidth("RobotoMono-Bold", 14, Text, strlen(Text));
+			SDL_Color Color= {255, 0, 255, 255};
+			CFont_WriteText(Renderer, "RobotoMono-Bold", 14, Text, strlen(Text), w - tw, 0, 0, Color);
 		}
 		SDL_RenderPresent(Renderer);
 
@@ -856,8 +874,12 @@ void CGame_Run(int argc, char *argv[])
 	bool useLinear = false; //causes issues in for example frog from scaling textures and then bleeding into each other
 	bool useVsync = false;
 	bool useFullScreenAtStartup = true;
-	string StartPath = CGame_GetFilePath(string(argv[0]));
-	DataPath = StartPath + "retrotimefs/";
+	char* StartPath = (char *) malloc(500);
+	CGame_GetFilePath(argv[0], &StartPath);
+	sprintf(DataPath, "%sretrotimefs/", StartPath);
+	free(StartPath);
+	printf("%s\n", DataPath);
+				SDL_Delay(1000);
 	int c;
 	while ((c = getopt(argc, argv, "?dsfw")) != -1)
 	{
@@ -891,8 +913,9 @@ Possible options are:\n\
 
 	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) == 0)
 	{
-		string controllerdb = DataPath + "data/gamecontrollerdb.txt";
-		if (SDL_GameControllerAddMappingsFromFile(controllerdb.c_str()) == -1)
+		char controllerdb[1000];
+		sprintf(controllerdb, "%sdata/gamecontrollerdb.txt", DataPath);
+		if (SDL_GameControllerAddMappingsFromFile(controllerdb) == -1)
 			SDL_Log("Warning: Failed to load game controller mappings: %s", SDL_GetError());
 
 		Uint32 WindowFlags = SDL_WINDOW_RESIZABLE;

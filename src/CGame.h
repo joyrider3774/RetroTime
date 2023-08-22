@@ -1,10 +1,11 @@
-#pragma once
+#ifndef CGAME_H
+#define CGAME_H
 
 #include <SDL.h>
 #include <SDL_mixer.h>
 #include <SDL_ttf.h>
-#include <iostream>
-#include <string>
+#include <string.h>
+#include <stdbool.h>
 #include "Platform.h"
 #include "CAudio.h"
 #include "CInput.h"
@@ -13,20 +14,15 @@
 #include "CSprites.h"
 #include "Common.h"
 
-
-using namespace std;
-
-struct CGameRamIt;
-struct CGameSnake;
-struct CGameBlockStacker;
-struct CGameFastEddy;
-struct CGameBreakOut;
-struct CGameBase;
-struct CGameFrog;
-struct CGameInvaders;
-struct CGamePang;
-
-extern string DataPath;
+typedef struct CGameRamIt CGameRamIt;
+typedef struct CGameSnake CGameSnake;
+typedef struct CGameBlockStacker CGameBlockStacker;
+typedef struct CGameFastEddy CGameFastEddy;
+typedef struct CGameBreakOut CGameBreakOut;
+typedef struct CGameBase CGameBase;
+typedef struct CGameFrog CGameFrog;
+typedef struct CGameInvaders CGameInvaders;
+typedef struct CGamePang CGamePang;
 
 extern Uint8 GameAlpha;
 extern Uint32 AlphaTimer;
@@ -88,7 +84,9 @@ void CGame_ResetScores();
 void CGame_ResetHighScores();
 void CGame_AddToScore(long long int Value);
 void CGame_DrawTitleBackground();
-string CGame_GetFilePath(string InputFile);
+void CGame_GetFilePath(char* InputFile, char** Result);
 void CGame_Run(int argc, char **argv);
 void CGame_StartCrossFade(int SetGameState, int SetNextSubState, int SetNextSubStateCounter, Uint32 SetNextSubStateTimeAdd);
 void CGame_ToggleFullscreen();
+
+#endif

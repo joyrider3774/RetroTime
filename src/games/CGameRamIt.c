@@ -1,18 +1,17 @@
 #include <SDL.h>
 #include <SDL2_gfxPrimitives.h>
-#include <string>
-#include <iostream>
+#include <stdbool.h>
 #include "CGameRamIt.h"
 #include "../CGame.h"
 #include "../Common.h"
 
-using namespace std;
+
 
 CGameRamIt* Create_CGameRamIt()
 {
 	CGameRamIt* GameRamIt = (CGameRamIt*) malloc(sizeof(CGameRamIt));
 	GameRamIt->GameBase = Create_CGameBase(GSRamIt, true);
-
+	GameRamIt->bulletalive = false;
 	GameRamIt->speed = 0;
 	GameRamIt->speedcount = 0;
 	GameRamIt->SfxShoot = -1;
@@ -20,11 +19,11 @@ CGameRamIt* Create_CGameRamIt()
 	GameRamIt->SfxDie = -1;
 	GameRamIt->SfxSucces = -1;
 	GameRamIt->MusMusic = -1;
-	GameRamIt->riblocksize = int(ScreenHeight / (GameRamIt->numblocks+1)) - 2 * GameRamIt->blockspacing;
-	GameRamIt->riblocksizespacing = GameRamIt->riblocksize + 2 * GameRamIt->blockspacing;
+	GameRamIt->riblocksize = (int)(ScreenHeight / (CGameRamIt_numblocks+1)) - 2 * CGameRamIt_blockspacing;
+	GameRamIt->riblocksizespacing = GameRamIt->riblocksize + 2 * CGameRamIt_blockspacing;
 	GameRamIt->GameBase->playfieldwidth = ScreenWidth - 1 * GameRamIt->riblocksize;
-	GameRamIt->segmentwidth = int(((GameRamIt->GameBase->playfieldwidth / 2) / GameRamIt->blocksegments));
-	GameRamIt->GameBase->playfieldheight = GameRamIt->numblocks * GameRamIt->riblocksizespacing;
+	GameRamIt->segmentwidth = (int)(((GameRamIt->GameBase->playfieldwidth / 2) / CGameRamIt_blocksegments));
+	GameRamIt->GameBase->playfieldheight = CGameRamIt_numblocks * GameRamIt->riblocksizespacing;
 	GameRamIt->GameBase->screenleft = (ScreenWidth - GameRamIt->GameBase->playfieldwidth) / 2;
 	GameRamIt->GameBase->screenright = GameRamIt->GameBase->screenleft + GameRamIt->GameBase->playfieldwidth;
 	GameRamIt->GameBase->screentop = (ScreenHeight - GameRamIt->GameBase->playfieldheight) / 2;
@@ -68,7 +67,7 @@ bool CGameRamIt_createbullet(CGameRamIt* GameRamIt)
 	{
 		GameRamIt->bulletalive = true;
 		GameRamIt->bulletpos = GameRamIt->playerpos;
-		GameRamIt->bulletvel.x = GameRamIt->playerdx * GameRamIt->bulletspeed;
+		GameRamIt->bulletvel.x = GameRamIt->playerdx * CGameRamIt_bulletspeed;
 		GameRamIt->bulletvel.y = 0;
 		result = true;
 	}
@@ -83,7 +82,7 @@ void CGameRamIt_updatebullet(CGameRamIt* GameRamIt)
 	{
 		bool destroybullet = false;
 		bool playaudiobullet = false;
-		for(int steps = 0; steps < GameRamIt->bulletsteps; steps++)
+		for(int steps = 0; steps < CGameRamIt_bulletsteps; steps++)
 		{
 			GameRamIt->bulletpos.x += GameRamIt->bulletvel.x;
 			GameRamIt->bulletpos.y += GameRamIt->bulletvel.y;
@@ -92,16 +91,16 @@ void CGameRamIt_updatebullet(CGameRamIt* GameRamIt)
 			if (GameRamIt->bulletpos.x - GameRamIt->riblocksize / 2 > GameRamIt->GameBase->screenright)
 				destroybullet = true;
 
-			for (int side = 0; side < GameRamIt->sides; side++)
+			for (int side = 0; side < CGameRamIt_sides; side++)
 			{
-				for (int block = 0; block < GameRamIt->numblocks; block++)
+				for (int block = 0; block < CGameRamIt_numblocks; block++)
 				{
 					if (GameRamIt->playfield[side][block].segments > 0)
 					{
 						if ((GameRamIt->bulletpos.y + GameRamIt->riblocksize / 6 >= GameRamIt->GameBase->screentop +
-							block * GameRamIt->riblocksizespacing + GameRamIt->blockspacing) &&
+							block * GameRamIt->riblocksizespacing + CGameRamIt_blockspacing) &&
 							(GameRamIt->bulletpos.y - GameRamIt->riblocksize / 6 <= GameRamIt->GameBase->screentop +
-							block * GameRamIt->riblocksizespacing + GameRamIt->blockspacing + GameRamIt->riblocksize))
+							block * GameRamIt->riblocksizespacing + CGameRamIt_blockspacing + GameRamIt->riblocksize))
 						{
 							if (side == 0)
 							{
@@ -169,18 +168,34 @@ void CGameRamIt_drawplayer(CGameRamIt* GameRamIt)
 	SDL_Rect r;
 
 	SDL_SetRenderDrawColor(Renderer, 0x80, 0x80, 0x80, 0xFF);
-	r = {GameRamIt->GameBase->screenleft + (GameRamIt->GameBase->screenright - GameRamIt->GameBase->screenleft -GameRamIt->playerrailwidth) / 2, GameRamIt->GameBase->screentop, GameRamIt->playerrailwidth, GameRamIt->GameBase->screenbottom - GameRamIt->GameBase->screentop };
+	r.x = GameRamIt->GameBase->screenleft + (GameRamIt->GameBase->screenright - GameRamIt->GameBase->screenleft -CGameRamIt_playerrailwidth) / 2;
+	r.y = GameRamIt->GameBase->screentop;
+	r.w = CGameRamIt_playerrailwidth;
+	r.h = GameRamIt->GameBase->screenbottom - GameRamIt->GameBase->screentop;
 	SDL_RenderFillRect(Renderer, &r);
 
 	SDL_SetRenderDrawColor(Renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-	r = {GameRamIt->playerpos.x - GameRamIt->riblocksize / 2, GameRamIt->playerpos.y - GameRamIt->riblocksize / 2, GameRamIt->riblocksize, GameRamIt->riblocksize};
+	r.x = GameRamIt->playerpos.x - GameRamIt->riblocksize / 2;
+	r.y = GameRamIt->playerpos.y - GameRamIt->riblocksize / 2;
+	r.w = GameRamIt->riblocksize;
+	r.h = GameRamIt->riblocksize;
 	SDL_RenderFillRect(Renderer, &r);
 
 	SDL_SetRenderDrawColor(Renderer, 0xFF, 0x40, 0x40, 0xFF);
 	if (GameRamIt->playerdx == 1)
-		r ={GameRamIt->playerpos.x + GameRamIt->riblocksize / 2, GameRamIt->playerpos.y - GameRamIt->riblocksize / 4, GameRamIt->riblocksize / 2, GameRamIt->riblocksize / 2};
+	{
+		r.x = GameRamIt->playerpos.x + GameRamIt->riblocksize / 2;
+		r.y = GameRamIt->playerpos.y - GameRamIt->riblocksize / 4;
+		r.w = GameRamIt->riblocksize / 2;
+		r.h = GameRamIt->riblocksize / 2;
+	}
 	else
-		r ={GameRamIt->playerpos.x - GameRamIt->riblocksize, GameRamIt->playerpos.y - GameRamIt->riblocksize / 4, GameRamIt->riblocksize / 2, GameRamIt->riblocksize / 2};
+	{
+		r.x = GameRamIt->playerpos.x - GameRamIt->riblocksize;
+		r.y = GameRamIt->playerpos.y - GameRamIt->riblocksize / 4;
+		r.w = GameRamIt->riblocksize / 2;
+		r.h = GameRamIt->riblocksize / 2;
+	}
 	SDL_RenderFillRect(Renderer, &r);
 }
 
@@ -200,8 +215,8 @@ void CGameRamIt_updateplayer(CGameRamIt* GameRamIt)
 		(CInput_Buttons.ButDown2) ||
 		(CInput_Buttons.ButDpadDown))
 	{
-		if (GameRamIt->playerpos.y + GameRamIt->riblocksize / 2 + GameRamIt->playerspeed < GameRamIt->GameBase->screenbottom)
-			GameRamIt->playerpos.y += GameRamIt->playerspeed;
+		if (GameRamIt->playerpos.y + GameRamIt->riblocksize / 2 + CGameRamIt_playerspeed < GameRamIt->GameBase->screenbottom)
+			GameRamIt->playerpos.y += CGameRamIt_playerspeed;
 		else
 			GameRamIt->playerpos.y = GameRamIt->GameBase->screenbottom - GameRamIt->riblocksize / 2;
 	}
@@ -210,8 +225,8 @@ void CGameRamIt_updateplayer(CGameRamIt* GameRamIt)
 		(CInput_Buttons.ButUp2) ||
 		(CInput_Buttons.ButDpadUp))
 	{
-		if (GameRamIt->playerpos.y - GameRamIt->riblocksize / 2 - GameRamIt->playerspeed > GameRamIt->GameBase->screentop)
-			GameRamIt->playerpos.y -= GameRamIt->playerspeed;
+		if (GameRamIt->playerpos.y - GameRamIt->riblocksize / 2 - CGameRamIt_playerspeed > GameRamIt->GameBase->screentop)
+			GameRamIt->playerpos.y -= CGameRamIt_playerspeed;
 		else
 			GameRamIt->playerpos.y = GameRamIt->GameBase->screentop + GameRamIt->riblocksize / 2;
 	}
@@ -229,66 +244,66 @@ void CGameRamIt_createplayfield(CGameRamIt* GameRamIt)
 {
 	int prevpiece = -1;
 	int piece = -1;
-	SDL_Color color;
-	for (int side = 0 ; side < GameRamIt->sides; side++)
+	SDL_Color color = {0xFF, 0xFf, 0xFF, 0xFF};
+	for (int side = 0 ; side < CGameRamIt_sides; side++)
 	{
-		for (int block = 0; block < GameRamIt->numblocks; block++)
+		for (int block = 0; block < CGameRamIt_numblocks; block++)
 		{
 			while(prevpiece == piece)
 				piece = rand() % 17;
 
 			prevpiece = piece;
 
-			if (piece == 0)
-				color = {0x65, 0x65, 0xFF, 0xFF};
+			// if (piece == 0)
+			// 	color = {0x65, 0x65, 0xFF, 0xFF};
 
-			if (piece == 1)
-				color = {0xFF, 0xFF, 0x65, 0xFF};
+			// if (piece == 1)
+			// 	color = {0xFF, 0xFF, 0x65, 0xFF};
 
-			if (piece == 2)
-				color = {0x65, 0xFF, 0x65, 0xFF};
+			// if (piece == 2)
+			// 	color = {0x65, 0xFF, 0x65, 0xFF};
 
-			if (piece == 3)
-				color = {0x65, 0x65, 0xFF, 0xFF};
+			// if (piece == 3)
+			// 	color = {0x65, 0x65, 0xFF, 0xFF};
 
-			if (piece == 4)
-				color = {0xA0, 0x20, 0xF0, 0xFF};
+			// if (piece == 4)
+			// 	color = {0xA0, 0x20, 0xF0, 0xFF};
 
-			if (piece == 5)
-				color = {0xA5, 0x2A, 0x2A, 0xFF};
+			// if (piece == 5)
+			// 	color = {0xA5, 0x2A, 0x2A, 0xFF};
 
-			if (piece == 6)
-				color = {0xFF, 0x65, 0xFF, 0xFF};
+			// if (piece == 6)
+			// 	color = {0xFF, 0x65, 0xFF, 0xFF};
 
-			if (piece == 7)
-				color = {0xFF, 0xFF, 0xFF, 0xFF};
+			// if (piece == 7)
+			// 	color = {0xFF, 0xFF, 0xFF, 0xFF};
 
-			if (piece == 8)
-				color = {0x9B, 0x9B, 0x9B, 0xFF};
+			// if (piece == 8)
+			// 	color = {0x9B, 0x9B, 0x9B, 0xFF};
 
-			if (piece == 9)
-				color = {0xDD, 0xE4, 0xC4, 0xFF};
+			// if (piece == 9)
+			// 	color = {0xDD, 0xE4, 0xC4, 0xFF};
 
-			if (piece == 10)
-				color = {0xED, 0x70, 0x24, 0xFF};
+			// if (piece == 10)
+			// 	color = {0xED, 0x70, 0x24, 0xFF};
 
-			if (piece == 11)
-				color = {0xCC, 0xCC, 0xFF, 0xFF};
+			// if (piece == 11)
+			// 	color = {0xCC, 0xCC, 0xFF, 0xFF};
 
-			if (piece == 12)
-				color = {0xBF, 0xDD, 0x65, 0xFF};
+			// if (piece == 12)
+			// 	color = {0xBF, 0xDD, 0x65, 0xFF};
 
-			if (piece == 13)
-				color = {0x65, 0x80, 0x80, 0xFF};
+			// if (piece == 13)
+			// 	color = {0x65, 0x80, 0x80, 0xFF};
 
-			if (piece == 14)
-				color = {0x65, 0xFF, 0xFF, 0xFF};
+			// if (piece == 14)
+			// 	color = {0x65, 0xFF, 0xFF, 0xFF};
 
-			if (piece == 15)
-				color = {0x8A, 0x9A, 0x5B, 0xFF};
+			// if (piece == 15)
+			// 	color = {0x8A, 0x9A, 0x5B, 0xFF};
 
-			if (piece == 16)
-				color = {0xD9, 0x96, 0x7A, 0xFF};
+			// if (piece == 16)
+			// 	color = {0xD9, 0x96, 0x7A, 0xFF};
 
 			GameRamIt->playfield[side][block].color = color;
 			GameRamIt->playfield[side][block].segments = 2;
@@ -301,15 +316,15 @@ void CGameRamIt_updateplayfield(CGameRamIt* GameRamIt, bool force)
 {
 	GameRamIt->speedcount += 1;
 
-	if (force || (GameRamIt->speedcount >= GameRamIt->speed - ((GameRamIt->GameBase->level-1) * GameRamIt->tickslevelmul)))
+	if (force || (GameRamIt->speedcount >= GameRamIt->speed - ((GameRamIt->GameBase->level-1) * CGameRamIt_tickslevelmul)))
 	{
 		GameRamIt->speedcount = 0;
 		int stageclear = true;
 		int numalive = 0;
 		int side;
 		int block;
-		for (side = 0; side < GameRamIt->sides; side++)
-			for(block = 0; block < GameRamIt->numblocks; block++)
+		for (side = 0; side < CGameRamIt_sides; side++)
+			for(block = 0; block < CGameRamIt_numblocks; block++)
 				if (GameRamIt->playfield[side][block].segments != 0)
 				{
 					stageclear = false;
@@ -332,24 +347,24 @@ void CGameRamIt_updateplayfield(CGameRamIt* GameRamIt, bool force)
 
 			if (r == 1)
 			{
-				side = rand() % GameRamIt->sides;
-				block = rand() % GameRamIt->numblocks;
+				side = rand() % CGameRamIt_sides;
+				block = rand() % CGameRamIt_numblocks;
 				while (GameRamIt->playfield[side][block].segments == 0)
 				{
-					side = rand() % GameRamIt->sides;
-					block = rand() % GameRamIt->numblocks;
+					side = rand() % CGameRamIt_sides;
+					block = rand() % CGameRamIt_numblocks;
 				}
 				GameRamIt->playfield[side][block].segments += 2;
-				if (GameRamIt->playfield[side][block].segments > GameRamIt->blocksegments)
-					GameRamIt->playfield[side][block].segments = GameRamIt->blocksegments;
+				if (GameRamIt->playfield[side][block].segments > CGameRamIt_blocksegments)
+					GameRamIt->playfield[side][block].segments = CGameRamIt_blocksegments;
 
 				if (GameRamIt->playfield[side][block].segments > GameRamIt->playfield[side][block].maxsegments)
 					GameRamIt->playfield[side][block].maxsegments = GameRamIt->playfield[side][block].segments;
 
 				//death
-				for (side = 0; side < GameRamIt->sides; side++)
-					for (block = 0; block < GameRamIt->numblocks; block++)
-						if (GameRamIt->playfield[side][block].segments == GameRamIt->blocksegments)
+				for (side = 0; side < CGameRamIt_sides; side++)
+					for (block = 0; block < CGameRamIt_numblocks; block++)
+						if (GameRamIt->playfield[side][block].segments == CGameRamIt_blocksegments)
 						{
 							GameRamIt->playerdeath = true;
 							break;
@@ -361,19 +376,24 @@ void CGameRamIt_updateplayfield(CGameRamIt* GameRamIt, bool force)
 
 void CGameRamIt_drawplayfield(CGameRamIt* GameRamIt)
 {
-	for (int side = 0; side < GameRamIt->sides; side++)
-		for (int block = 0; block < GameRamIt->numblocks; block++)
+	for (int side = 0; side < CGameRamIt_sides; side++)
+		for (int block = 0; block < CGameRamIt_numblocks; block++)
 		{
 			SDL_Rect r;
 			if (side == 0)
-				r = {GameRamIt->GameBase->screenleft, GameRamIt->GameBase->screentop + block * GameRamIt->riblocksizespacing + GameRamIt->blockspacing,
-					GameRamIt->playfield[side][block].segments * GameRamIt->segmentwidth,
-					GameRamIt->riblocksize};
+			{
+				r.x = GameRamIt->GameBase->screenleft;
+				r.y = GameRamIt->GameBase->screentop + block * GameRamIt->riblocksizespacing + CGameRamIt_blockspacing;
+				r.w = GameRamIt->playfield[side][block].segments * GameRamIt->segmentwidth;
+				r.h =GameRamIt->riblocksize;
+			}
 			else
-				r = { GameRamIt->GameBase->screenright - GameRamIt->playfield[side][block].segments * GameRamIt->segmentwidth ,
-					GameRamIt->GameBase->screentop + block * GameRamIt->riblocksizespacing + GameRamIt->blockspacing,
-					GameRamIt->playfield[side][block].segments * GameRamIt->segmentwidth,
-					GameRamIt->riblocksize};
+			{
+				r.x = GameRamIt->GameBase->screenright - GameRamIt->playfield[side][block].segments * GameRamIt->segmentwidth;
+				r.y = GameRamIt->GameBase->screentop + block * GameRamIt->riblocksizespacing + CGameRamIt_blockspacing;
+				r.w = GameRamIt->playfield[side][block].segments * GameRamIt->segmentwidth;
+				r.h = GameRamIt->riblocksize;
+			}
 			SDL_SetRenderDrawColor(Renderer, GameRamIt->playfield[side][block].color.r, GameRamIt->playfield[side][block].color.g, GameRamIt->playfield[side][block].color.b,
 					GameRamIt->playfield[side][block].color.a);
 			SDL_RenderFillRect(Renderer, &r);
@@ -396,7 +416,7 @@ void CGameRamIt_DrawBackground(CGameRamIt* GameRamIt)
 void CGameRamIt_init(CGameRamIt* GameRamIt)
 {
 	GameRamIt->bulletalive = false;
-	GameRamIt->speed = GameRamIt->ticksidle;
+	GameRamIt->speed = CGameRamIt_ticksidle;
 	GameRamIt->GameBase->level = 1;
 	GameRamIt->playerdeath = false;
 	GameRamIt->createplayer(GameRamIt);

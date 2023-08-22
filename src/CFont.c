@@ -1,31 +1,31 @@
 #include <SDL.h>
 #include <SDL_ttf.h>
-#include <iostream>
-#include <string>
+#include <string.h>
+#include <stdbool.h>
 #include "CFont.h"
 #include "Platform.h"
 
-using namespace std;
 
-const int FontCacheMax = 50;
-string CFont_DataPath;
-bool CFont_DebugInfo;
+
+#define FontCacheMax 50
+char CFont_DataPath[500];
+bool CFont_DebugInfo = false;
 bool CFont_GlobalFontEnabled = true;
 
 int fontCacheItems = 0;
 
 struct FontCacheItem {
 	TTF_Font* Font;
-	string Filename;
+	char Filename[1000];
 };
 
 typedef struct FontCacheItem FontCacheItem;
 
 FontCacheItem CFont_FontCache[FontCacheMax];
 
-void CFont_Init(string AssetsPath, bool DebugInfo)
+void CFont_Init(char* AssetsPath, bool DebugInfo)
 {
-	CFont_DataPath = AssetsPath;
+	strcpy(CFont_DataPath, AssetsPath);
 	CFont_DebugInfo = DebugInfo;
 	CFont_GlobalFontEnabled = (TTF_Init() == 0);
 	if (CFont_GlobalFontEnabled)
@@ -36,7 +36,7 @@ void CFont_Init(string AssetsPath, bool DebugInfo)
 	for (int i = 0; i < FontCacheMax; i++)
 	{
 		CFont_FontCache[i].Font = NULL;
-		CFont_FontCache[i].Filename = "";
+		CFont_FontCache[i].Filename[0] = '\0';
 	}
 
 }
@@ -51,24 +51,25 @@ void CFont_DeInit()
 	}
 }
 
-int CFont_TextWidth(string Font, int FontSize, string Tekst, size_t NrOfChars)
+int CFont_TextWidth(char* Font, int FontSize, char* Tekst, size_t NrOfChars)
 {
 	SDL_Point Tmp = CFont_TextSize(Font, FontSize, Tekst, NrOfChars, 0);
 	return Tmp.x;
 }
 
-SDL_Point CFont_TextSize(string Font, int FontSize, string Tekst, size_t NrOfChars, int YSpacing)
+SDL_Point CFont_TextSize(char* Font, int FontSize, char* Tekst, size_t NrOfChars, int YSpacing)
 {
 	SDL_Point Result = {0,0};
 	if(!CFont_GlobalFontEnabled || (NrOfChars == 0))
 		return Result;
 
 	TTF_Font *FontIn;
-	string FontNameSize = string(Font) + to_string(FontSize);
+	char FontNameSize[1000];
+	sprintf(FontNameSize, "%s_%d", Font, FontSize);
 	
 	bool bfound = false;
 	for (int i = 0; i < fontCacheItems; i++)
-		if(CFont_FontCache[i].Filename == FontNameSize)
+		if(strcmp(CFont_FontCache[i].Filename, FontNameSize) == 0)
 		{
 			FontIn = CFont_FontCache[i].Font; 
 			bfound = true;
@@ -79,20 +80,21 @@ SDL_Point CFont_TextSize(string Font, int FontSize, string Tekst, size_t NrOfCha
 	{
 		if(!bfound)
 		{
-			string Filename = CFont_DataPath + "fonts/" + Font + ".ttf";
-			FontIn = TTF_OpenFont(Filename.c_str(), FontSize);
+			char Filename[1000];
+			sprintf(Filename, "%sfonts/%s.ttf", CFont_DataPath, Font);
+			FontIn = TTF_OpenFont(Filename, FontSize);
 			if (!FontIn)
 			{
 				SDL_Log("Failed Loading Font %s %d\n", SDL_GetError(), FontSize);
 				return Result;
 			}
 			if(CFont_DebugInfo)
-				SDL_Log("Loaded Font %s %d\n", Filename.c_str(), FontSize);
+				SDL_Log("Loaded Font %s %d\n", Filename, FontSize);
 			TTF_SetFontStyle(FontIn, TTF_STYLE_NORMAL);
 
-			fontCacheItems++;
 			CFont_FontCache[fontCacheItems].Font = FontIn;
-			CFont_FontCache[fontCacheItems].Filename = FontNameSize;
+			strcpy(CFont_FontCache[fontCacheItems].Filename, FontNameSize);
+			fontCacheItems++;
 		}
 	}
 
@@ -128,15 +130,16 @@ SDL_Point CFont_TextSize(string Font, int FontSize, string Tekst, size_t NrOfCha
 	return Result;
 }
 
-void CFont_WriteText(SDL_Renderer *Renderer, string Font, int FontSize, string Tekst, size_t NrOfChars, int X, int Y, int YSpacing, SDL_Color ColorIn)
+void CFont_WriteText(SDL_Renderer *Renderer, char* Font, int FontSize, char* Tekst, size_t NrOfChars, int X, int Y, int YSpacing, SDL_Color ColorIn)
 {
 	if(!CFont_GlobalFontEnabled || (NrOfChars == 0))
 		return;
 	TTF_Font *FontIn;
-	string FontNameSize = string(Font) + to_string(FontSize);
+	char FontNameSize[1000];
+	sprintf(FontNameSize,"%s_%d", Font, FontSize);
 	bool bfound = false;
 	for (int i = 0; i < fontCacheItems; i++)
-		if(CFont_FontCache[i].Filename == FontNameSize)
+		if(strcmp(CFont_FontCache[i].Filename, FontNameSize) == 0)
 		{
 			FontIn = CFont_FontCache[i].Font; 
 			bfound = true;
@@ -146,20 +149,21 @@ void CFont_WriteText(SDL_Renderer *Renderer, string Font, int FontSize, string T
 	{
 		if(!bfound)
 		{
-			string Filename = CFont_DataPath + "fonts/" + Font + ".ttf";
-			FontIn = TTF_OpenFont(Filename.c_str(), FontSize);
+			char Filename[1000];
+			sprintf(Filename,"%sfonts/%s.ttf", CFont_DataPath, Font);
+			FontIn = TTF_OpenFont(Filename, FontSize);
 			if (!FontIn)
 			{
-				SDL_Log("Failed Loading Font %s %d\n", Filename.c_str(), FontSize);
+				SDL_Log("Failed Loading Font %s %d\n", Filename, FontSize);
 				return;
 			}
 			if(CFont_DebugInfo)
-				SDL_Log("Loaded Font %s %d\n", Filename.c_str(), FontSize);
+				SDL_Log("Loaded Font %s %d\n", Filename, FontSize);
 			TTF_SetFontStyle(FontIn, TTF_STYLE_NORMAL);
 
-			fontCacheItems++;
 			CFont_FontCache[fontCacheItems].Font = FontIn;
-			CFont_FontCache[fontCacheItems].Filename = FontNameSize;
+			strcpy(CFont_FontCache[fontCacheItems].Filename, FontNameSize);
+			fontCacheItems++;
 		}
 	}
 

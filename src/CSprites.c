@@ -1,17 +1,14 @@
 #include <SDL.h>
 #include <SDL2_gfxPrimitives.h>
 #include <stdio.h>
-#include <iostream>
-#include <string>
-#include <cmath>
-#include <algorithm>
+#include <stdbool.h>
 #include "CSprites.h"
 #include "Vec2F.h"
 #include "Common.h"
 
-const int SPR_Max = 1000;
+#define SPR_Max 1000
 
-const int SavedScalingsMax = 1000;
+#define SavedScalingsMax 1000
 
 int SavedScalingsCount = 0;
 struct SavedScalingsStruct {
@@ -37,7 +34,7 @@ void CSprites_Init()
 	CSprites_SpritesDrawn = 0;
 	for (int i=0; i < SPR_Max; i++)
 	{
-		CSprites_Sprites[i] = nullptr;
+		CSprites_Sprites[i] = NULL;
 	}
 }
 
@@ -68,16 +65,16 @@ CSprite* CSprites_CreateSprite()
 {
 	for (int i= 0; i < SPR_Max; i++)
 	{
-		if(CSprites_Sprites[i] == nullptr)
+		if(CSprites_Sprites[i] == NULL)
 		{
-			CSprite* Spr = new CSprite();
+			CSprite* Spr = (CSprite*) malloc(sizeof(CSprite));
 			Spr->index = i;
 			Spr->animInc = 0;
 			Spr->animTimer = 0;
 			Spr->rotation = 0;
-			Spr->imageID = nullptr;
-			Spr->xscale = 1;
-			Spr->yscale = 1;
+			Spr->imageID = NULL;
+			Spr->sxscale = 1;
+			Spr->syscale = 1;
 			Spr->prevxscale = -1;
 			Spr->prevyscale = -1;
 			Spr->xscale_speed = 0;
@@ -105,17 +102,21 @@ CSprite* CSprites_CreateSprite()
 			Spr->tilesX = 1;
 			Spr->tilesY = 1;
 			Spr->rotation_speed = 0.0;
-			Spr->Img = nullptr;
+			Spr->Img = NULL;
+			Spr->x = 0.0f;
+			Spr->y = 0.0f;
+			Spr->show_collision_shape = false;
 			CSprites_Sprites[i] = Spr;
+
 			return Spr;
 		}
 	}
-	return nullptr;
+	return NULL;
 }
 
 void CSprites_RemoveSprite(CSprite* Spr)
 {
-	if(Spr == nullptr)
+	if(Spr == NULL)
 		return;
 
 	if((Spr->index < 0) || (Spr->index >= SPR_Max))
@@ -123,15 +124,15 @@ void CSprites_RemoveSprite(CSprite* Spr)
 	
 	//dumped scaled bitmaps are handled in images
 	if(!loadDumpedScaledBitmaps)
-		if(CSprites_Sprites[Spr->index]->Img != nullptr)
+		if(CSprites_Sprites[Spr->index]->Img != NULL)
 		{
 			SDL_DestroyTexture(CSprites_Sprites[Spr->index]->Img);
-			CSprites_Sprites[Spr->index]->Img = nullptr;
+			CSprites_Sprites[Spr->index]->Img = NULL;
 		}
 	
-	CSprites_Sprites[Spr->index] = nullptr;
+	CSprites_Sprites[Spr->index] = NULL;
 		
-	delete Spr;
+	free(Spr);
 }
 
 void CSprites_UpdateSprites(SDL_Renderer* renderer)
@@ -139,7 +140,7 @@ void CSprites_UpdateSprites(SDL_Renderer* renderer)
 	CSprites_SortSprites();
 	for (int i = 0; i < SPR_Max; i++)
 	{
-		if (CSprites_Sprites[i] == nullptr)
+		if (CSprites_Sprites[i] == NULL)
 			continue;
 
 		if (CSprites_Sprites[i]->animSpeed != 0)
@@ -166,8 +167,8 @@ void CSprites_UpdateSprites(SDL_Renderer* renderer)
 
 		CSprites_Sprites[i]->x += CSprites_Sprites[i]->xspeed;
 		CSprites_Sprites[i]->y += CSprites_Sprites[i]->yspeed;
-		CSprites_Sprites[i]->xscale += CSprites_Sprites[i]->xscale_speed;
-		CSprites_Sprites[i]->yscale += CSprites_Sprites[i]->yscale_speed;
+		CSprites_Sprites[i]->sxscale += CSprites_Sprites[i]->xscale_speed;
+		CSprites_Sprites[i]->syscale += CSprites_Sprites[i]->yscale_speed;
 		CSprites_Sprites[i]->rotation += CSprites_Sprites[i]->rotation_speed;
 		CSprites_Sprites[i]->collisionAngle += CSprites_Sprites[i]->rotation_speed;
 		CSprites_Sprites[i]->collisionWidth += CSprites_Sprites[i]->xscale_speed;
@@ -185,7 +186,7 @@ void CSprites_SortSprites()
 		{
 			for(int j=i+1; j < SPR_Max; j++)
 			{
-				if ((CSprites_Sprites[i] != nullptr) && (CSprites_Sprites[j] != nullptr))
+				if ((CSprites_Sprites[i] != NULL) && (CSprites_Sprites[j] != NULL))
 				{
 					if(CSprites_Sprites[i]->depth > CSprites_Sprites[j]->depth)
 					{
@@ -204,25 +205,26 @@ void CSprites_SortSprites()
 
 void CSprites_DrawSprite(SDL_Renderer* Renderer, CSprite* Spr)
 {
-	if (Spr == nullptr)
+	if (Spr == NULL)
 		return;
 
 	CSprites_SortSprites();
 
-	if (Spr->show && ((*Spr->imageID > -1) && (Spr->Img != nullptr) && (*Spr->imageID < CImage_ImageSlotsMax())))
+	if (Spr->show && ((*Spr->imageID > -1) && (Spr->Img != NULL) && (*Spr->imageID < CImage_ImageSlotsMax())))
 	{
 		CSprites_SpritesDrawn++;
 		SDL_Point pos = {(int)(Spr->x), (int)(Spr->y)};
 	
-		Vec2F scale = {Spr->xscale, Spr->yscale};
+		Vec2F scale = {Spr->sxscale, Spr->syscale};
 		//multiply is to get the sign
-		scale = {1.0f * (Spr->xscale / abs(Spr->xscale)), 1.0f * (Spr->yscale/abs(Spr->yscale))};
+		scale.x = 1.0f * (Spr->sxscale / (float)fabs(Spr->sxscale));
+		scale.y = 1.0f * (Spr->syscale/(float)fabs(Spr->syscale));
 		int AnimTile = Spr->animTile;
 		int y = (int)floor(AnimTile / Spr->tilesX);
 		int x = AnimTile - (y * Spr->tilesX);
 		
-		SDL_Rect SrcRect = {(int)(x * Spr->tileSizeX* abs(Spr->xscale)), (int)(y* Spr->tileSizeY* abs(Spr->yscale)), (int)(Spr->tileSizeX* abs(Spr->xscale)),(int)(Spr->tileSizeY* abs(Spr->yscale))};
-		CImage_DrawImageFuzeSrcRectTintFloat(Renderer, Spr->Img, &SrcRect, true, &pos, Spr->rotation, &scale, Spr->r, Spr->g, Spr->b, Spr->a);
+		SDL_Rect SrcRect = {(int)(x * Spr->tileSizeX* (float)fabs(Spr->sxscale)), (int)(y* Spr->tileSizeY* (float)fabs(Spr->syscale)), (int)(Spr->tileSizeX* (float)fabs(Spr->sxscale)),(int)(Spr->tileSizeY* (float)fabs(Spr->syscale))};
+		CImage_DrawImageFuzeSrcRectTintFloatTex(Renderer, Spr->Img, &SrcRect, true, &pos, Spr->rotation, &scale, Spr->r, Spr->g, Spr->b, Spr->a);
 		
 
 		if (Spr->show_collision_shape || CSprites_ForceShowCollisionShape)
@@ -232,14 +234,14 @@ void CSprites_DrawSprite(SDL_Renderer* Renderer, CSprite* Spr)
 			{
 				case SHAPE_BOX:
 				{
-					const SDL_Rect rect = {(int)(Spr->x + Spr->collisionxoffset - (Spr->collisionWidth * (Spr->xscale) / 2)), (int)(Spr->y + Spr->collisionyoffset - (Spr->collisionHeight * (Spr->yscale) / 2)), (int)(Spr->collisionWidth * (Spr->xscale)), (int)(Spr->collisionHeight * (Spr->yscale))};
+					const SDL_Rect rect = {(int)(Spr->x + Spr->collisionxoffset - (Spr->collisionWidth * (Spr->sxscale) / 2)), (int)(Spr->y + Spr->collisionyoffset - (Spr->collisionHeight * (Spr->syscale) / 2)), (int)(Spr->collisionWidth * (Spr->sxscale)), (int)(Spr->collisionHeight * (Spr->syscale))};
 					SDL_RenderDrawRect(Renderer, &rect);
 					break;
 				}
 				case SHAPE_CIRCLE:
 				{
-					if ((Spr->collisionWidth == Spr->collisionHeight) && (Spr->xscale == Spr->yscale))
-						circleRGBA(Renderer, Spr->x + Spr->collisionxoffset, Spr->y + Spr->collisionyoffset,(int) ((Spr->collisionWidth * Spr->xscale) / 2), 255, 0, 255, 255);
+					if ((Spr->collisionWidth == Spr->collisionHeight) && (Spr->sxscale == Spr->syscale))
+						circleRGBA(Renderer, Spr->x + Spr->collisionxoffset, Spr->y + Spr->collisionyoffset,(int) ((Spr->collisionWidth * Spr->sxscale) / 2), 255, 0, 255, 255);
 					break;
 				}
 				default:
@@ -253,7 +255,7 @@ void CSprites_ResetDrawTargets()
 {
 	for (int i = 0; i < SPR_Max; i++)
 	{
-		if (CSprites_Sprites[i] == nullptr)
+		if (CSprites_Sprites[i] == NULL)
 			continue;
 
 		//by reseting prevxscale
@@ -268,7 +270,7 @@ void CSprites_DrawSprites(SDL_Renderer* Renderer)
 	CSprites_SpritesDrawn = 0;
 	for (int i = 0; i < SPR_Max; i++)
 	{
-		if (CSprites_Sprites[i] == nullptr)
+		if (CSprites_Sprites[i] == NULL)
 			continue;
 
 		CSprites_DrawSprite(Renderer, CSprites_Sprites[i]);
@@ -301,27 +303,28 @@ Vec2F CSprites_GetSpriteLocation(CSprite* Spr)
 
 void CSprites_SetSpriteImage(SDL_Renderer* renderer, CSprite* Spr, int *AImageID)
 {
-	CSprites_SetSpriteImage(renderer, Spr, AImageID, 1, 1);
+	CSprites_SetSpriteImageTiles(renderer, Spr, AImageID, 1, 1);
 }
 
 void CSprites_UpdateImage(SDL_Renderer* renderer, CSprite* Spr) 
 {
-	if(Spr == nullptr)
+	if(Spr == NULL)
 		return;
 
-	if(Spr->imageID == nullptr)
+	if(Spr->imageID == NULL)
 		return;
 
-	if((abs(Spr->yscale) == abs(Spr->prevyscale)) &&
-		(abs(Spr->xscale) == abs(Spr->prevxscale)))
+	if(((float)fabs(Spr->syscale) == (float)fabs(Spr->prevyscale)) &&
+		((float)fabs(Spr->sxscale) == (float)fabs(Spr->prevxscale)))
 		return;
 
 	if(loadDumpedScaledBitmaps)
 	{
-		Spr->Img = CImage_LoadScaledImage(renderer, *Spr->imageID, {Spr->xscale,Spr->yscale});
+		Vec2F Scale = {Spr->sxscale,Spr->syscale};
+		Spr->Img = CImage_LoadScaledImage(renderer, *Spr->imageID, Scale);
 		//remember current scale
-		Spr->prevyscale = Spr->yscale;
-		Spr->prevxscale = Spr->xscale;
+		Spr->prevyscale = Spr->syscale;
+		Spr->prevxscale = Spr->sxscale;
 		CSprites_UpdateImageResets++;
 	}
 	else
@@ -343,11 +346,11 @@ void CSprites_UpdateImage(SDL_Renderer* renderer, CSprite* Spr)
 		// Save the current rendering target (will be NULL if it is the current window)
 		renderTarget = SDL_GetRenderTarget(renderer);
 
-		if(Spr->Img != nullptr)
+		if(Spr->Img != NULL)
 			SDL_DestroyTexture(Spr->Img);
 
 		// Create a new texture with the same properties as the one we are duplicating
-		Spr->Img = SDL_CreateTexture(renderer, format, SDL_TEXTUREACCESS_TARGET, w* abs(Spr->xscale), h * abs(Spr->yscale));
+		Spr->Img = SDL_CreateTexture(renderer, format, SDL_TEXTUREACCESS_TARGET, w* (float)fabs(Spr->sxscale), h * (float)fabs(Spr->syscale));
 
 		// Set its blending mode and make it the render target
 		SDL_SetTextureBlendMode(Spr->Img, SDL_BLENDMODE_NONE);
@@ -364,8 +367,8 @@ void CSprites_UpdateImage(SDL_Renderer* renderer, CSprite* Spr)
 		SDL_Rect TmpR;
 		TmpR.x = 0;
 		TmpR.y = 0;
-		TmpR.w = w * abs(Spr->xscale);
-		TmpR.h = h * abs(Spr->yscale);
+		TmpR.w = w * (float)fabs(Spr->sxscale);
+		TmpR.h = h * (float)fabs(Spr->syscale);
 
 		
 		// Render the full original texture onto the new one
@@ -378,11 +381,11 @@ void CSprites_UpdateImage(SDL_Renderer* renderer, CSprite* Spr)
 		SDL_SetRenderTarget(renderer, renderTarget);
 
 		//remember current scale
-		Spr->prevyscale = Spr->yscale;
-		Spr->prevxscale = Spr->xscale;
+		Spr->prevyscale = Spr->syscale;
+		Spr->prevxscale = Spr->sxscale;
 		CSprites_UpdateImageResets++;
 		
-		Vec2F Vec2FScale = {abs(Spr->xscale), abs(Spr->yscale)};
+		Vec2F Vec2FScale = {(float)fabs(Spr->sxscale), (float)fabs(Spr->syscale)};
 		
 		if (SavedScalingsCount < SavedScalingsMax)
 		{
@@ -410,7 +413,7 @@ void CSprites_UpdateImage(SDL_Renderer* renderer, CSprite* Spr)
 	}
 }
 
-void CSprites_SetSpriteImage(SDL_Renderer* renderer, CSprite* Spr, int *AImageID, int TilesX, int TilesY)
+void CSprites_SetSpriteImageTiles(SDL_Renderer* renderer, CSprite* Spr, int *AImageID, int TilesX, int TilesY)
 {
 	bool needCSprites_UpdateImage = Spr->imageID != AImageID;
 	Spr->imageID = AImageID;
@@ -435,8 +438,8 @@ void CSprites_SetSpriteImage(SDL_Renderer* renderer, CSprite* Spr, int *AImageID
 
 void CSprites_SetSpriteScale(SDL_Renderer* renderer, CSprite* Spr, Vec2F AScale)
 {
-	Spr->xscale = AScale.x;
-	Spr->yscale = AScale.y;
+	Spr->sxscale = AScale.x;
+	Spr->syscale = AScale.y;
 	CSprites_UpdateImage(renderer, Spr);
 }
 
@@ -493,17 +496,18 @@ void CSprites_SetSpriteDepth(CSprite* Spr, int depth)
 
 int CSprites_GetSpriteAnimFrameCount(CSprite* Spr)
 {
-	return max(Spr->animEndTile, Spr->animStartTile) - min(Spr->animEndTile, Spr->animStartTile) + 1;
+	return (Spr->animEndTile > Spr->animStartTile ? Spr->animEndTile : Spr->animStartTile) - (Spr->animEndTile < Spr->animStartTile ? Spr->animEndTile : Spr->animStartTile) + 1;
 }
 
 int CSprites_GetSpriteAnimFrame(CSprite* Spr)
 {
-	return Spr->animTile - min(Spr->animEndTile, Spr->animStartTile);
+	return Spr->animTile - (Spr->animEndTile < Spr->animStartTile ? Spr->animEndTile : Spr->animStartTile);
 }
 
 SDL_Point CSprites_TileSize(CSprite* Spr)
 {
-	return {Spr->tileSizeX, Spr->tileSizeY};
+	SDL_Point Result = {Spr->tileSizeX, Spr->tileSizeY};
+	return Result;
 }
 
 //https://learnopengl.com/In-Practice/2D-Game/Collisions/Collision-Detection#
@@ -511,7 +515,7 @@ bool CSprites_DetectRectCircleCollsion(CSprite* SprRect, CSprite* SprCircle)
 {
 	Vec2F center = {SprCircle->x + SprCircle->collisionxoffset /2.0f, SprCircle->y + SprCircle->collisionyoffset / 2.0f};
 	// calculate AABB info (center, half-extents)
-	Vec2F aabb_half_extents = {abs(SprRect->collisionWidth) * abs(SprRect->xscale) / 2.0f, abs(SprRect->collisionHeight) * abs(SprRect->yscale) / 2.0f};
+	Vec2F aabb_half_extents = {(float)fabs(SprRect->collisionWidth) * (float)fabs(SprRect->sxscale) / 2.0f, (float)fabs(SprRect->collisionHeight) * (float)fabs(SprRect->syscale) / 2.0f};
 	Vec2F aabb_center = {SprRect->x + SprRect->collisionxoffset / 2.0f, SprRect->y + SprRect->collisionyoffset / 2.0f};
 
 	// get difference vector between both centers
@@ -521,7 +525,7 @@ bool CSprites_DetectRectCircleCollsion(CSprite* SprRect, CSprite* SprCircle)
 	Vec2F neg_half_extends;
 	neg_half_extends.x = -aabb_half_extents.x;
 	neg_half_extends.y = -aabb_half_extents.y;
-	Vec2F clamped = clamp(difference, neg_half_extends, aabb_half_extents);
+	Vec2F clamped = clampVec2F(difference, neg_half_extends, aabb_half_extents);
 	// add clamped value to AABB_center and we get the value of box closest to circle
 	Vec2F closest;
 	closest.x = aabb_center.x + clamped.x;
@@ -530,20 +534,20 @@ bool CSprites_DetectRectCircleCollsion(CSprite* SprRect, CSprite* SprCircle)
 	difference.x = closest.x - center.x;
 	difference.y = closest.y - center.y;
 
-	return length(difference) < (abs(SprCircle->collisionWidth) * abs(SprCircle->xscale) / 2.0f);
+	return length(difference) < ((float)fabs(SprCircle->collisionWidth) * (float)fabs(SprCircle->sxscale) / 2.0f);
 }
 
 bool CSprites_DetectRectRectCollsion(CSprite* Spr, CSprite* SprOther)
 {
-	float widthA = (abs(Spr->collisionWidth) * abs(Spr->xscale));
-	float heightA = (abs(Spr->collisionHeight) * abs(Spr->yscale));
-	float minAx = Spr->x + Spr->collisionxoffset - (abs(Spr->collisionWidth) * abs(Spr->xscale) / 2);
-	float minAy = Spr->y + Spr->collisionyoffset - (abs(Spr->collisionHeight) * abs(Spr->yscale) / 2);
+	float widthA = ((float)fabs(Spr->collisionWidth) * (float)fabs(Spr->sxscale));
+	float heightA = ((float)fabs(Spr->collisionHeight) * (float)fabs(Spr->syscale));
+	float minAx = Spr->x + Spr->collisionxoffset - ((float)fabs(Spr->collisionWidth) * (float)fabs(Spr->sxscale) / 2);
+	float minAy = Spr->y + Spr->collisionyoffset - ((float)fabs(Spr->collisionHeight) * (float)fabs(Spr->syscale) / 2);
 
-	float widthB = (abs(SprOther->collisionWidth) * abs(SprOther->xscale));
-	float heightB = (abs(SprOther->collisionHeight) * abs(SprOther->yscale));
-	float minBx = SprOther->x + SprOther->collisionxoffset - (abs(SprOther->collisionWidth) * abs(SprOther->xscale) / 2);
-	float minBy = SprOther->y + SprOther->collisionyoffset - (abs(SprOther->collisionHeight) * abs(SprOther->yscale) / 2);
+	float widthB = ((float)fabs(SprOther->collisionWidth) * (float)fabs(SprOther->sxscale));
+	float heightB = ((float)fabs(SprOther->collisionHeight) * (float)fabs(SprOther->syscale));
+	float minBx = SprOther->x + SprOther->collisionxoffset - ((float)fabs(SprOther->collisionWidth) * (float)fabs(SprOther->sxscale) / 2);
+	float minBy = SprOther->y + SprOther->collisionyoffset - ((float)fabs(SprOther->collisionHeight) * (float)fabs(SprOther->syscale) / 2);
 
 	bool xOverlap = ((minAx >= minBx) && (minAx <= minBx + widthB)) ||
 					((minBx >= minAx) && (minBx <= minAx + widthA));
@@ -557,7 +561,7 @@ bool CSprites_DetectRectRectCollsion(CSprite* Spr, CSprite* SprOther)
 //takes no rotations into account !
 bool CSprites_DetectSpriteCollision(CSprite* Spr, CSprite* SprOther)
 {
-	if((Spr == nullptr) || (SprOther == nullptr))
+	if((Spr == NULL) || (SprOther == NULL))
 		return false;
 
 	switch(Spr->collisionShape)
@@ -571,7 +575,7 @@ bool CSprites_DetectSpriteCollision(CSprite* Spr, CSprite* SprOther)
 					break;
 				case SHAPE_CIRCLE:
 					//only works for true circles not ovals!
-					if ((SprOther->collisionWidth == SprOther->collisionHeight) && (SprOther->xscale == SprOther->yscale))
+					if ((SprOther->collisionWidth == SprOther->collisionHeight) && (SprOther->sxscale == SprOther->syscale))
 					{	// check normal rect first
 						//if (CSprites_DetectRectRectCollsion(Spr, SprOther))
 							return CSprites_DetectRectCircleCollsion(Spr, SprOther);
@@ -592,7 +596,7 @@ bool CSprites_DetectSpriteCollision(CSprite* Spr, CSprite* SprOther)
 			{
 				case SHAPE_BOX:
 					//only works for true circles not ovals!
-					if ((Spr->collisionWidth == Spr->collisionHeight) && (Spr->xscale == Spr->yscale))
+					if ((Spr->collisionWidth == Spr->collisionHeight) && (Spr->sxscale == Spr->syscale))
 					{
 						// check normal rect first
 						//if (CSprites_DetectRectRectCollsion(Spr, SprOther))
@@ -618,7 +622,7 @@ int CSprites_SpriteSlotsUsed()
 	int c = 0;
 	for (int i=0; i < SPR_Max; i++)
 	{
-		if(CSprites_Sprites[i] != nullptr)
+		if(CSprites_Sprites[i] != NULL)
 			c++;
 	}
 	return c;

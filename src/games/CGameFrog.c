@@ -1,13 +1,12 @@
 #include <SDL.h>
-#include <string>
-#include <iostream>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "CGameFrog.h"
 #include "../CGame.h"
 #include "../Common.h"
 #include "../Vec2F.h"
 
-using namespace std;
+
 
 
 CGameFrog* Create_CGameFrog()
@@ -19,25 +18,94 @@ CGameFrog* Create_CGameFrog()
 	GameFrog->SfxCollect = -1;
 	GameFrog->SfxPlayerMove = -1;
 	GameFrog->prevrowtype = -1;
-	GameFrog->GameBase->playfieldwidth = GameFrog->numcols * GameFrog->playerspeed;
-	GameFrog->GameBase->playfieldheight = GameFrog->numrows * GameFrog->playerspeed;
+	GameFrog->GameBase->playfieldwidth = CGameFrog_numcols * CGameFrog_playerspeed;
+	GameFrog->GameBase->playfieldheight = CGameFrog_numrows * CGameFrog_playerspeed;
 	GameFrog->GameBase->screenleft = (ScreenWidth - GameFrog->GameBase->playfieldwidth) / 2;
 	GameFrog->GameBase->screenright = GameFrog->GameBase->screenleft + GameFrog->GameBase->playfieldwidth;
 	GameFrog->GameBase->screentop = ScreenHeight - GameFrog->GameBase->playfieldheight;
 	GameFrog->GameBase->screenbottom = ScreenHeight;
 
 
-	GameFrog->rowtypes[0] = {GameFrog->rowtypewater, 5, 9, true, GameFrog->idenemyplant, 1.0f*yscale, 2, 4};
-	GameFrog->rowtypes[1] = {GameFrog->rowtypewater, 5, 9, true, GameFrog->idenemyplant, 2.0f*yscale, 3, 2};
-	GameFrog->rowtypes[2] = {GameFrog->rowtypewater, 5, 9, true, GameFrog->idenemyplant, 3.0f*yscale, 4, 3};
+	GameFrog->rowtypes[0].type = CGameFrog_rowtypewater;
+	GameFrog->rowtypes[0].backgroundtile = 5;
+	GameFrog->rowtypes[0].backgroundtileend = 9;
+	GameFrog->rowtypes[0].deadlyground = true;
+	GameFrog->rowtypes[0].id = CGameFrog_idenemyplant;
+	GameFrog->rowtypes[0].speed = 1.0f*yscale;
+	GameFrog->rowtypes[0].minspace = 2;
+	GameFrog->rowtypes[0].maxrepeats = 4;
 
-	GameFrog->rowtypes[3] = {GameFrog->rowtyperoad, 0, 0, false, GameFrog->idenemycar1, 2.0f*yscale, 4, 2}; //ambulance
-	GameFrog->rowtypes[4] = {GameFrog->rowtyperoad, 0, 0, false, GameFrog->idenemycar2, 1.0f*yscale, 3, 2}; //truck
-	GameFrog->rowtypes[5] = {GameFrog->rowtyperoad, 0, 0, false, GameFrog->idenemycar3, 7.0f*yscale, GameFrog->numrows, 1}; //formula 1
-	GameFrog->rowtypes[6] = {GameFrog->rowtyperoad, 0, 0, false, GameFrog->idenemycar4, 1.5f*yscale, 4, 2}; //dumptruck
-	GameFrog->rowtypes[7] = {GameFrog->rowtyperoad, 0, 0, false, GameFrog->idenemycar5, 2.5f*yscale, 3, 2}; //jeep
+	GameFrog->rowtypes[1].type = CGameFrog_rowtypewater;
+	GameFrog->rowtypes[1].backgroundtile = 5;
+	GameFrog->rowtypes[1].backgroundtileend = 9;
+	GameFrog->rowtypes[1].deadlyground = true;
+	GameFrog->rowtypes[1].id = CGameFrog_idenemyplant;
+	GameFrog->rowtypes[1].speed = 2.0f*yscale;
+	GameFrog->rowtypes[1].minspace = 3;
+	GameFrog->rowtypes[1].maxrepeats = 2;
 
-	GameFrog->rowtypes[8] = {GameFrog->rowtypesafety, 10, 10,false, GameFrog->idnone, 2.0f*yscale, 2, 2};
+	GameFrog->rowtypes[2].type = CGameFrog_rowtypewater;
+	GameFrog->rowtypes[2].backgroundtile = 5;
+	GameFrog->rowtypes[2].backgroundtileend = 9;
+	GameFrog->rowtypes[2].deadlyground = true;
+	GameFrog->rowtypes[2].id = CGameFrog_idenemyplant;
+	GameFrog->rowtypes[2].speed = 3.0f*yscale;
+	GameFrog->rowtypes[2].minspace = 4;
+	GameFrog->rowtypes[2].maxrepeats = 3;
+
+	GameFrog->rowtypes[3].type = CGameFrog_rowtyperoad;
+	GameFrog->rowtypes[3].backgroundtile = 0;
+	GameFrog->rowtypes[3].backgroundtileend = 0;
+	GameFrog->rowtypes[3].deadlyground = false;
+	GameFrog->rowtypes[3].id = CGameFrog_idenemycar1;
+	GameFrog->rowtypes[3].speed = 2.0f*yscale;
+	GameFrog->rowtypes[3].minspace = 4;
+	GameFrog->rowtypes[3].maxrepeats = 2;
+
+	GameFrog->rowtypes[4].type = CGameFrog_rowtyperoad;
+	GameFrog->rowtypes[4].backgroundtile = 0;
+	GameFrog->rowtypes[4].backgroundtileend = 0;
+	GameFrog->rowtypes[4].deadlyground = false;
+	GameFrog->rowtypes[4].id = CGameFrog_idenemycar2;
+	GameFrog->rowtypes[4].speed = 1.0f*yscale;
+	GameFrog->rowtypes[4].minspace = 3;
+	GameFrog->rowtypes[4].maxrepeats = 2;
+
+	GameFrog->rowtypes[5].type = CGameFrog_rowtyperoad;
+	GameFrog->rowtypes[5].backgroundtile = 0;
+	GameFrog->rowtypes[5].backgroundtileend = 0;
+	GameFrog->rowtypes[5].deadlyground = false;
+	GameFrog->rowtypes[5].id = CGameFrog_idenemycar3;
+	GameFrog->rowtypes[5].speed = 7.0f*yscale;
+	GameFrog->rowtypes[5].minspace = CGameFrog_numrows;
+	GameFrog->rowtypes[5].maxrepeats = 1;
+
+	GameFrog->rowtypes[6].type = CGameFrog_rowtyperoad;
+	GameFrog->rowtypes[6].backgroundtile = 0;
+	GameFrog->rowtypes[6].backgroundtileend = 0;
+	GameFrog->rowtypes[6].deadlyground = false;
+	GameFrog->rowtypes[6].id = CGameFrog_idenemycar4;
+	GameFrog->rowtypes[6].speed = 1.5f*yscale;
+	GameFrog->rowtypes[6].minspace = 4;
+	GameFrog->rowtypes[6].maxrepeats = 2;
+	
+	GameFrog->rowtypes[7].type = CGameFrog_rowtyperoad;
+	GameFrog->rowtypes[7].backgroundtile = 0;
+	GameFrog->rowtypes[7].backgroundtileend = 0;
+	GameFrog->rowtypes[7].deadlyground = false;
+	GameFrog->rowtypes[7].id = CGameFrog_idenemycar5;
+	GameFrog->rowtypes[7].speed = 2.5f*yscale;
+	GameFrog->rowtypes[7].minspace = 3;
+	GameFrog->rowtypes[7].maxrepeats = 2;
+	
+	GameFrog->rowtypes[8].type = CGameFrog_rowtypesafety;
+	GameFrog->rowtypes[8].backgroundtile = 10;
+	GameFrog->rowtypes[8].backgroundtileend = 10;
+	GameFrog->rowtypes[8].deadlyground = false;
+	GameFrog->rowtypes[8].id = CGameFrog_idnone;
+	GameFrog->rowtypes[8].speed = 2.0f*yscale;
+	GameFrog->rowtypes[8].minspace = 2;
+	GameFrog->rowtypes[8].maxrepeats = 2;
 
 	GameFrog->levelincspeeds[0] = 0.0f;
 	GameFrog->levelincspeeds[1] = 0.25f*yscale;
@@ -52,7 +120,7 @@ CGameFrog* Create_CGameFrog()
 	GameFrog->levelincspawns[4] = 0;
 
 
-	for (int i= 0; i < GameFrog->maxobjects; i++)
+	for (int i= 0; i < CGameFrog_maxobjects; i++)
 		Initialize_CSpriteObject(&GameFrog->objects[i]);
 	Initialize_CSpriteObject(&GameFrog->player);
 
@@ -96,38 +164,38 @@ void CGameFrog_createobjects(CGameFrog* GameFrog, bool initialize)
 
 	if (initialize)
 	{
-		GameFrog->nextrowtype = GameFrog->rowtyperoad;
+		GameFrog->nextrowtype = CGameFrog_rowtyperoad;
 		GameFrog->plantsspawned = 0;
-		GameFrog->nextrowtypecountmax = rand() % (GameFrog->maxrowsbeforesafetyrow+1);
+		GameFrog->nextrowtypecountmax = rand() % (CGameFrog_maxrowsbeforesafetyrow+1);
 		GameFrog->nextrowtypecount = 0;
-		while (i < GameFrog->numrows)
+		while (i < CGameFrog_numrows)
 		{
-			if (i < GameFrog->playerstartrow)
-				GameFrog->createobjectrow(GameFrog,i, GameFrog->lenrowtypes - 1);
+			if (i < CGameFrog_playerstartrow)
+				GameFrog->createobjectrow(GameFrog,i, CGameFrog_lenrowtypes - 1);
 			else
 			{
-				if (GameFrog->nextrowtype == GameFrog->rowtyperoad)
+				if (GameFrog->nextrowtype == CGameFrog_rowtyperoad)
 				{
 					//while rowtype == GameFrog->prevrowtype loop
-					rowtype = GameFrog->rowtyperoadstart + rand() % (GameFrog->rowtyperoadend - GameFrog->rowtyperoadstart + 1);
+					rowtype = CGameFrog_rowtyperoadstart + rand() % (CGameFrog_rowtyperoadend - CGameFrog_rowtyperoadstart + 1);
 					if (rowtype == GameFrog->prevrowtype)
 					{
 						rowtype += 1;
-						if (rowtype > GameFrog->rowtyperoadend)
-							rowtype = GameFrog->rowtyperoadstart;
+						if (rowtype > CGameFrog_rowtyperoadend)
+							rowtype = CGameFrog_rowtyperoadstart;
 					}
 					GameFrog->prevrowtype = rowtype;
 				}
 				else
 				{
-					if (GameFrog->nextrowtype == GameFrog->rowtypewater)
+					if (GameFrog->nextrowtype == CGameFrog_rowtypewater)
 					{
-						rowtype = GameFrog->rowtypewaterstart + rand() % (GameFrog->rowtypewaterend - GameFrog->rowtypewaterstart + 1);
+						rowtype = CGameFrog_rowtypewaterstart + rand() % (CGameFrog_rowtypewaterend - CGameFrog_rowtypewaterstart + 1);
 						if (rowtype == GameFrog->prevrowtype)
 						{
 							rowtype += 1;
-							if (rowtype > GameFrog->rowtypewaterend)
-								rowtype = GameFrog->rowtypewaterstart;
+							if (rowtype > CGameFrog_rowtypewaterend)
+								rowtype = CGameFrog_rowtypewaterstart;
 						}
 					}
 
@@ -136,18 +204,18 @@ void CGameFrog_createobjects(CGameFrog* GameFrog, bool initialize)
 
 				if(GameFrog->nextrowtypecount == GameFrog->nextrowtypecountmax)
 				{
-					rowtype = GameFrog->lenrowtypes -1;
-					GameFrog->nextrowtypecountmax = 2+(rand() %(GameFrog->maxrowsbeforesafetyrow-1));
+					rowtype = CGameFrog_lenrowtypes -1;
+					GameFrog->nextrowtypecountmax = 2+(rand() %(CGameFrog_maxrowsbeforesafetyrow-1));
 					GameFrog->nextrowtypecount = 0;
 
 					r = rand() % 2;
 
 					if (r == 0)
-						GameFrog->nextrowtype = GameFrog->rowtyperoad;
+						GameFrog->nextrowtype = CGameFrog_rowtyperoad;
 					else
 					{
 						if (r == 1)
-							GameFrog->nextrowtype = GameFrog->rowtypewater;
+							GameFrog->nextrowtype = CGameFrog_rowtypewater;
 
 					}
 				}
@@ -163,31 +231,31 @@ void CGameFrog_createobjects(CGameFrog* GameFrog, bool initialize)
 	}
 	else
 	{
-		i = GameFrog->visiblerows;
+		i = CGameFrog_visiblerows;
 
-		while (i < GameFrog->numrows)
+		while (i < CGameFrog_numrows)
 		{
-			if (GameFrog->nextrowtype == GameFrog->rowtyperoad)
+			if (GameFrog->nextrowtype == CGameFrog_rowtyperoad)
 			{
-				rowtype = GameFrog->rowtyperoadstart + (rand() % (GameFrog->rowtyperoadend - GameFrog->rowtyperoadstart + 1));
+				rowtype = CGameFrog_rowtyperoadstart + (rand() % (CGameFrog_rowtyperoadend - CGameFrog_rowtyperoadstart + 1));
 				if (rowtype == GameFrog->prevrowtype)
 				{
 					rowtype += 1;
-					if (rowtype > GameFrog->rowtyperoadend)
-						rowtype = GameFrog->rowtyperoadstart;
+					if (rowtype > CGameFrog_rowtyperoadend)
+						rowtype = CGameFrog_rowtyperoadstart;
 				}
 				GameFrog->prevrowtype = rowtype;
 			}
 			else
 			{
-				if(GameFrog->nextrowtype == GameFrog->rowtypewater)
+				if(GameFrog->nextrowtype == CGameFrog_rowtypewater)
 				{
-					rowtype = GameFrog->rowtypewaterstart + (rand() % (GameFrog->rowtypewaterend - GameFrog->rowtypewaterstart + 1));
+					rowtype = CGameFrog_rowtypewaterstart + (rand() % (CGameFrog_rowtypewaterend - CGameFrog_rowtypewaterstart + 1));
 					if(rowtype == GameFrog->prevrowtype)
 					{
 						rowtype += 1;
-						if (rowtype > GameFrog->rowtypewaterend)
-							rowtype = GameFrog->rowtypewaterstart;
+						if (rowtype > CGameFrog_rowtypewaterend)
+							rowtype = CGameFrog_rowtypewaterstart;
 					}
 
 					GameFrog->prevrowtype = rowtype;
@@ -196,18 +264,18 @@ void CGameFrog_createobjects(CGameFrog* GameFrog, bool initialize)
 
 			if(GameFrog->nextrowtypecount == GameFrog->nextrowtypecountmax)
 			{
-				rowtype = GameFrog->lenrowtypes -1;
-				GameFrog->nextrowtypecountmax = 2+(rand() % (GameFrog->maxrowsbeforesafetyrow-1));
+				rowtype = CGameFrog_lenrowtypes -1;
+				GameFrog->nextrowtypecountmax = 2+(rand() % (CGameFrog_maxrowsbeforesafetyrow-1));
 				//for debugging finding max objects count
 				//GameFrog->nextrowtypecountmax = 4
 				GameFrog->nextrowtypecount = 0;
 				r = rand() % 2;
 				if (r == 0)
-					GameFrog->nextrowtype = GameFrog->rowtyperoad;
+					GameFrog->nextrowtype = CGameFrog_rowtyperoad;
 				else
 				{
 					if (r == 1)
-						GameFrog->nextrowtype = GameFrog->rowtypewater;
+						GameFrog->nextrowtype = CGameFrog_rowtypewater;
 				}
 			}
 			else
@@ -220,7 +288,7 @@ void CGameFrog_createobjects(CGameFrog* GameFrog, bool initialize)
 
 void CGameFrog_destroyallobjects(CGameFrog* GameFrog)
 {
-	for (int i = 0; i < GameFrog->maxobjects; i++)
+	for (int i = 0; i < CGameFrog_maxobjects; i++)
 		GameFrog->destroyobject(GameFrog,i);
 }
 
@@ -244,17 +312,17 @@ int CGameFrog_createobject(CGameFrog* GameFrog, int rownr, int col, int id, int 
 	CSpriteObject object;
 	int result = 0;
 
-	for (int i = startobjectindex; i < GameFrog->maxobjects; i++)
+	for (int i = startobjectindex; i < CGameFrog_maxobjects; i++)
 	{
 		if (!GameFrog->objects[i].alive)
 		{
 			object.spr = CSprites_CreateSprite();
 
-			if ((id == GameFrog->idwater) || (id == GameFrog->idroad) || (id == GameFrog->idgrass))
+			if ((id == CGameFrog_idwater) || (id == CGameFrog_idroad) || (id == CGameFrog_idgrass))
 			{
 				tilenr = GameFrog->rowtypes[arowtype].backgroundtile;
 				endtilenr = GameFrog->rowtypes[arowtype].backgroundtileend;
-				CSprites_SetSpriteImage(Renderer,object.spr, &GameFrog->spritesheetbackground,5,3);
+				CSprites_SetSpriteImageTiles(Renderer,object.spr, &GameFrog->spritesheetbackground,5,3);
 				tz = CSprites_TileSize(object.spr);
 				CSprites_SetSpriteAnimation(object.spr, tilenr, endtilenr, 6);
 				CSprites_SetSpriteDepth(object.spr, 0);
@@ -266,160 +334,184 @@ int CGameFrog_createobject(CGameFrog* GameFrog, int rownr, int col, int id, int 
 				//whats causing that so this is a nasty workaround but still have an optimazation
 				//of only doing 1 big draw call for the road / water per row instead of multiple small ones
 				CSprites_SetSpriteVisibility(object.spr, col == 0);
-				object.vel = {0,0};
-				//scale = {GameFrog->playerspeed / tz.x, GameFrog->playerspeed / tz.y}
-				scale = {1.0f, 1.0f};
+				object.vel.x = 0;
+				object.vel.y = 0;
+				//scale = {CGameFrog_playerspeed / tz.x, CGameFrog_playerspeed / tz.y}
+				scale.x = 1.0f;
+				scale.y = 1.0f;
+
 				visualscale = scale;
 				object.tz.x = tz.x * scale.x;
 				object.tz.y = tz.y * scale.y;
 			}
 
-			if (id == GameFrog->idenemyplant)
+			if (id == CGameFrog_idenemyplant)
 			{
 				tilenr = 1;
-				CSprites_SetSpriteImage(Renderer,object.spr, &GameFrog->spritesheetplant, 2, 1);
+				CSprites_SetSpriteImageTiles(Renderer,object.spr, &GameFrog->spritesheetplant, 2, 1);
 				tz = CSprites_TileSize(object.spr);
 
 				CSprites_SetSpriteAnimation(object.spr, tilenr, tilenr, 0);
 				CSprites_SetSpriteDepth(object.spr, 1);
-				//scale = {(GameFrog->playerspeed - int(GameFrog->playerspeed / 48)) / tz.x, (GameFrog->playerspeed - int(GameFrog->playerspeed / 48)) / tz.y}
-				scale = {GameFrog->playerspeed / tz.x, GameFrog->playerspeed / tz.y};
+				//scale = {(CGameFrog_playerspeed - int(CGameFrog_playerspeed / 48)) / tz.x, (CGameFrog_playerspeed - int(CGameFrog_playerspeed / 48)) / tz.y}
+				scale.x = CGameFrog_playerspeed / tz.x;
+				scale.y = CGameFrog_playerspeed / tz.y;
 				visualscale = scale;
-				object.vel = {dir*speed,0};
+				object.vel.x = dir*speed;
+				object.vel.y = 0;
 				object.tz.x = tz.x * scale.x;
 				object.tz.y = tz.y * scale.y;
 			}
 
-			if (id == GameFrog->idenemycar1)
+			if (id == CGameFrog_idenemycar1)
 			{
 				tilenr = 0;
 				if (dir == -1)
 					tilenr = 1;
 
-				CSprites_SetSpriteImage(Renderer,object.spr, &GameFrog->spritesheetcar1, 2, 1);
+				CSprites_SetSpriteImageTiles(Renderer,object.spr, &GameFrog->spritesheetcar1, 2, 1);
 				tz = CSprites_TileSize(object.spr);
 				CSprites_SetSpriteAnimation(object.spr, tilenr, tilenr, 0);
 				CSprites_SetSpriteDepth(object.spr, 3);
-				object.vel = {dir*speed,0};
-				scale = {(GameFrog->playerspeed - (GameFrog->playerspeed / 6)) / tz.x, (GameFrog->playerspeed - (GameFrog->playerspeed / 6))/ tz.y};
+				object.vel.x = dir*speed;
+				object.vel.y = 0;
+				scale.x = (CGameFrog_playerspeed - (CGameFrog_playerspeed / 6)) / tz.x;
+				scale.y = (CGameFrog_playerspeed - (CGameFrog_playerspeed / 6)) / tz.y;
 				visualscale = scale;
 				object.tz.x = tz.x * scale.x;
 				object.tz.y = tz.y * scale.y;
 			}
 
-			if (id == GameFrog->idenemycar2)
+			if (id == CGameFrog_idenemycar2)
 			{
 				tilenr = 0;
 				if (dir == -1)
 					tilenr = 1;
 
-				CSprites_SetSpriteImage(Renderer,object.spr, &GameFrog->spritesheetcar2, 2, 1);
+				CSprites_SetSpriteImageTiles(Renderer,object.spr, &GameFrog->spritesheetcar2, 2, 1);
 				tz = CSprites_TileSize(object.spr);
 				CSprites_SetSpriteAnimation(object.spr, tilenr, tilenr, 0);
 				CSprites_SetSpriteDepth(object.spr, 3);
-				object.vel = {dir*speed,0};
-				scale = {(GameFrog->playerspeed - (GameFrog->playerspeed / 6)) / tz.x, (GameFrog->playerspeed - (GameFrog->playerspeed / 6))/ tz.y};
+				object.vel.x = dir*speed;
+				object.vel.y = 0;
+				scale.x = (CGameFrog_playerspeed - (CGameFrog_playerspeed / 6)) / tz.x;
+				scale.y = (CGameFrog_playerspeed - (CGameFrog_playerspeed / 6)) / tz.y;
 				visualscale = scale;
 				object.tz.x = tz.x * scale.x;
 				object.tz.y = tz.y * scale.y;
 			}
 
-			if (id == GameFrog->idenemycar3)
+			if (id == CGameFrog_idenemycar3)
 			{
 				tilenr = 0;
 				if (dir == -1)
 					tilenr = 1;
 
-				CSprites_SetSpriteImage(Renderer,object.spr, &GameFrog->spritesheetcar3, 2, 1);
+				CSprites_SetSpriteImageTiles(Renderer,object.spr, &GameFrog->spritesheetcar3, 2, 1);
 				tz = CSprites_TileSize(object.spr);
 				CSprites_SetSpriteAnimation(object.spr, tilenr, tilenr, 0);
 				CSprites_SetSpriteDepth(object.spr, 3);
-				object.vel = {dir*speed,0};
-				scale = {(GameFrog->playerspeed - (GameFrog->playerspeed / 6)) / tz.x, (GameFrog->playerspeed - (GameFrog->playerspeed / 6))/ tz.y};
+				object.vel.x = dir*speed;
+				object.vel.y = 0;
+				scale.x = (CGameFrog_playerspeed - (CGameFrog_playerspeed / 6)) / tz.x;
+				scale.y = (CGameFrog_playerspeed - (CGameFrog_playerspeed / 6)) / tz.y;
 				visualscale = scale;
 				object.tz.x = tz.x * scale.x;
 				object.tz.y = tz.y * scale.y;
 			}
 
-			if (id == GameFrog->idenemycar4)
+			if (id == CGameFrog_idenemycar4)
 			{
 				tilenr = 0;
 				if (dir == -1)
 					tilenr = 1;
 
-				CSprites_SetSpriteImage(Renderer,object.spr, &GameFrog->spritesheetcar4, 2, 1);
+				CSprites_SetSpriteImageTiles(Renderer,object.spr, &GameFrog->spritesheetcar4, 2, 1);
 				tz = CSprites_TileSize(object.spr);
 				CSprites_SetSpriteAnimation(object.spr, tilenr, tilenr, 0);
 				CSprites_SetSpriteDepth(object.spr, 3);
-				object.vel = {dir*speed,0};
-				scale = {(GameFrog->playerspeed - (GameFrog->playerspeed / 6)) / tz.x, (GameFrog->playerspeed - (GameFrog->playerspeed / 6))/ tz.y};
+				object.vel.x = dir*speed;
+				object.vel.y = 0;
+				scale.x = (CGameFrog_playerspeed - (CGameFrog_playerspeed / 6)) / tz.x;
+				scale.y = (CGameFrog_playerspeed - (CGameFrog_playerspeed / 6)) / tz.y;
 				visualscale = scale;
 				object.tz.x = tz.x * scale.x;
 				object.tz.y = tz.y * scale.y;
 			}
 
-			if (id == GameFrog->idenemycar5)
+			if (id == CGameFrog_idenemycar5)
 			{
 				tilenr = 0;
 				if (dir == -1)
 					tilenr = 1;
 
-				CSprites_SetSpriteImage(Renderer,object.spr, &GameFrog->spritesheetcar5, 2, 1);
+				CSprites_SetSpriteImageTiles(Renderer,object.spr, &GameFrog->spritesheetcar5, 2, 1);
 				tz = CSprites_TileSize(object.spr);
 				CSprites_SetSpriteAnimation(object.spr, tilenr, tilenr, 0);
 				CSprites_SetSpriteDepth(object.spr, 3);
-				object.vel = {dir*speed,0};
-				scale = {(GameFrog->playerspeed - (GameFrog->playerspeed / 6)) / tz.x, (GameFrog->playerspeed - (GameFrog->playerspeed / 6))/ tz.y};
+				object.vel.x = dir*speed;
+				object.vel.y = 0;
+				scale.x = (CGameFrog_playerspeed - (CGameFrog_playerspeed / 6)) / tz.x;
+				scale.y = (CGameFrog_playerspeed - (CGameFrog_playerspeed / 6)) / tz.y;
 				visualscale = scale;
 				object.tz.x = tz.x * scale.x;
 				object.tz.y = tz.y * scale.y;
 			}
 
 
-			if (id == GameFrog->idcherry)
+			if (id == CGameFrog_idcherry)
 			{
 				tilenr = 0;
 
 				CSprites_SetSpriteImage(Renderer,object.spr, &GameFrog->spritesheetfruit1);
 				tz = CSprites_TileSize(object.spr);
 				CSprites_SetSpriteAnimation(object.spr, tilenr, tilenr, 0);
-				object.vel = {dir*speed,0};
-				scale = {GameFrog->playerspeed / tz.x, GameFrog->playerspeed / tz.y};
-				visualscale = {(GameFrog->playerspeed - (GameFrog->playerspeed / 2)) / tz.x, (GameFrog->playerspeed - (GameFrog->playerspeed / 2))/ tz.y};
+				object.vel.x = dir*speed;
+				object.vel.y = 0;
+				scale.x = CGameFrog_playerspeed / tz.x;
+				scale.y = CGameFrog_playerspeed / tz.y;
+				visualscale.x = (CGameFrog_playerspeed - (CGameFrog_playerspeed / 2)) / tz.x;
+				visualscale.y = (CGameFrog_playerspeed - (CGameFrog_playerspeed / 2)) / tz.y;
 				CSprites_SetSpriteDepth(object.spr, 3);
 			}
 
-			if (id == GameFrog->idlemon)
+			if (id == CGameFrog_idlemon)
 			{
 				tilenr = 0;
 
 				CSprites_SetSpriteImage(Renderer,object.spr, &GameFrog->spritesheetfruit2);
 				tz = CSprites_TileSize(object.spr);
 				CSprites_SetSpriteAnimation(object.spr, tilenr, tilenr, 0);
-				object.vel = {dir*speed,0};
-				scale = {GameFrog->playerspeed / tz.x, GameFrog->playerspeed / tz.y};
-				visualscale = {(GameFrog->playerspeed - (GameFrog->playerspeed / 2)) / tz.x, (GameFrog->playerspeed - (GameFrog->playerspeed / 2))/ tz.y};
+				object.vel.x = dir*speed;
+				object.vel.y = 0;
+				scale.x = CGameFrog_playerspeed / tz.x;
+				scale.y = CGameFrog_playerspeed / tz.y;
+				visualscale.x = (CGameFrog_playerspeed - (CGameFrog_playerspeed / 2)) / tz.x;
+				visualscale.y = (CGameFrog_playerspeed - (CGameFrog_playerspeed / 2)) / tz.y;
 				CSprites_SetSpriteDepth(object.spr, 3);
 			}
 
-			if (id == GameFrog->idapple)
+			if (id == CGameFrog_idapple)
 			{
 				tilenr = 0;
 
 				CSprites_SetSpriteImage(Renderer,object.spr, &GameFrog->spritesheetfruit3);
 				tz = CSprites_TileSize(object.spr);
 				CSprites_SetSpriteAnimation(object.spr, tilenr, tilenr, 0);
-				object.vel = {dir*speed,0};
-				scale = {GameFrog->playerspeed / tz.x, GameFrog->playerspeed / tz.y};
-				visualscale = {(GameFrog->playerspeed - (GameFrog->playerspeed / 2)) / tz.x, (GameFrog->playerspeed - (GameFrog->playerspeed / 2))/ tz.y};
+				object.vel.x = dir*speed;
+				object.vel.y = 0;
+				scale.x = CGameFrog_playerspeed / tz.x;
+				scale.y = CGameFrog_playerspeed / tz.y;
+				visualscale.x = (CGameFrog_playerspeed - (CGameFrog_playerspeed / 2)) / tz.x;
+				visualscale.y = (CGameFrog_playerspeed - (CGameFrog_playerspeed / 2)) / tz.y;
 				CSprites_SetSpriteDepth(object.spr, 3);
 			}
 			//setSpriteRotation(GameFrog->objects[i].spr, 0)
 			CSprites_SetSpriteScale(Renderer,object.spr, visualscale);
 			object.tz.x = tz.x * scale.x;
 			object.tz.y = tz.y * scale.y;
-			object.pos = {GameFrog->GameBase->screenleft + (col * GameFrog->playerspeed) + (GameFrog->playerspeed / 2),
-				GameFrog->GameBase->screenbottom - ((rownr+1) * GameFrog->playerspeed) + (GameFrog->playerspeed / 2)};
+			object.pos.x = GameFrog->GameBase->screenleft + (col * CGameFrog_playerspeed) + (CGameFrog_playerspeed / 2);
+			object.pos.y = GameFrog->GameBase->screenbottom - ((rownr+1) * CGameFrog_playerspeed) + (CGameFrog_playerspeed / 2);
 			//CSprites_SetSpriteLocation(object.spr, object.pos)
 			object.spr->x = (int)object.pos.x;
 			object.spr->y = (int)object.pos.y;
@@ -448,13 +540,13 @@ void CGameFrog_createobjectrow(CGameFrog* GameFrog, int rownr, int arowtype)
 	if (dir == 0)
 		dir = -1;
 
-	float speed = (GameFrog->rowtypes[arowtype].speed - GameFrog->speeddeviation) + ((rand() % (int)(GameFrog->speeddeviation*100)/100));
+	float speed = (GameFrog->rowtypes[arowtype].speed - CGameFrog_speeddeviation) + ((rand() % (int)(CGameFrog_speeddeviation*100)/100));
 	int index = 0;
-	for (int x = 0; x < GameFrog->numcols; x++)
+	for (int x = 0; x < CGameFrog_numcols; x++)
 	{
-		if (type == GameFrog->rowtyperoad)
+		if (type == CGameFrog_rowtyperoad)
 		{
-			index = GameFrog->createobject(GameFrog,rownr, x, GameFrog->idroad, arowtype, 0, 0, index);
+			index = GameFrog->createobject(GameFrog,rownr, x, CGameFrog_idroad, arowtype, 0, 0, index);
 
 			if ((x - lastplaced > minspace) || (repeats < maxrepeats))
 			{
@@ -470,9 +562,9 @@ void CGameFrog_createobjectrow(CGameFrog* GameFrog, int rownr, int arowtype)
 		}
 		else
 		{
-			if (type == GameFrog->rowtypewater)
+			if (type == CGameFrog_rowtypewater)
 			{
-				index = GameFrog->createobject(GameFrog,rownr, x, GameFrog->idwater, arowtype, 0, 0, index);
+				index = GameFrog->createobject(GameFrog,rownr, x, CGameFrog_idwater, arowtype, 0, 0, index);
 				if ((x - lastplaced > minspace) || (repeats < maxrepeats))
 				{
 					if (x - lastplaced > minspace)
@@ -485,20 +577,20 @@ void CGameFrog_createobjectrow(CGameFrog* GameFrog, int rownr, int arowtype)
 					index = GameFrog->createobject(GameFrog,rownr, x, id, arowtype, speed, dir, index);
 					GameFrog->plantsspawned += 1;
 
-					if (GameFrog->plantsspawned % GameFrog->cherryspawntrigger == 0)
-						index = GameFrog->createobject(GameFrog,rownr, x, GameFrog->idcherry, arowtype, speed, dir, index);
+					if (GameFrog->plantsspawned % CGameFrog_cherryspawntrigger == 0)
+						index = GameFrog->createobject(GameFrog,rownr, x, CGameFrog_idcherry, arowtype, speed, dir, index);
 
-					if (GameFrog->plantsspawned % GameFrog->lemonspawntrigger == 0)
-						index = GameFrog->createobject(GameFrog,rownr, x, GameFrog->idlemon, arowtype, speed, dir, index);
+					if (GameFrog->plantsspawned % CGameFrog_lemonspawntrigger == 0)
+						index = GameFrog->createobject(GameFrog,rownr, x, CGameFrog_idlemon, arowtype, speed, dir, index);
 
-					if (GameFrog->plantsspawned % GameFrog->applespawntrigger == 0)
-						index = GameFrog->createobject(GameFrog,rownr, x, GameFrog->idapple, arowtype, speed, dir, index);
+					if (GameFrog->plantsspawned % CGameFrog_applespawntrigger == 0)
+						index = GameFrog->createobject(GameFrog,rownr, x, CGameFrog_idapple, arowtype, speed, dir, index);
 				}
 			}
 			else
 			{
-				if (type == GameFrog->rowtypesafety)
-					index = GameFrog->createobject(GameFrog,rownr, x, GameFrog->idgrass, arowtype, 0, 0, index);
+				if (type == CGameFrog_rowtypesafety)
+					index = GameFrog->createobject(GameFrog,rownr, x, CGameFrog_idgrass, arowtype, 0, 0, index);
 			}
 		}
 	}
@@ -521,25 +613,26 @@ void CGameFrog_updateobjects(CGameFrog* GameFrog)
 	bool plantcol = false;
 	bool stopcheckplantcol = false;
 
-	for (int i = 0; i < GameFrog->maxobjects; i++)
+	for (int i = 0; i < CGameFrog_maxobjects; i++)
 	{
 		if(GameFrog->objects[i].alive)
 		{
 			// if ((GameFrog->objects[i].pos.y + 1 > GameFrog->player.pos.y) && (GameFrog->objects[i].pos.y - 1 < GameFrog->player.pos.y))
 			// {
-			// 	if(GameFrog->objects[i].id == GameFrog->idgrass)
+			// 	if(GameFrog->objects[i].id == CGameFrog_idgrass)
 			// 	{
 			// 		printf("P:%f O:%f\n", GameFrog->objects[i].pos.y, GameFrog->player.pos.y);
 			// 	}
 			//}
 
 			//if (floatequal(GameFrog->objects[i].pos.y,GameFrog->player.pos.y))
+			if(true)
 			{
 				if (CSprites_DetectSpriteCollision(GameFrog->objects[i].spr, GameFrog->player.spr))
 				{
 					id = GameFrog->objects[i].id;
 
-					if (!playermoved && (id == GameFrog->idenemyplant) && !GameFrog->playerdeath &&
+					if (!playermoved && (id == CGameFrog_idenemyplant) && !GameFrog->playerdeath &&
 						(GameFrog->player.pos.x - GameFrog->player.tz.x / 4 <= GameFrog->objects[i].pos.x + GameFrog->objects[i].tz.x / 2) &&
 						(GameFrog->player.pos.x + GameFrog->player.tz.x / 4 >= GameFrog->objects[i].pos.x - GameFrog->objects[i].tz.x / 2))
 						{
@@ -553,34 +646,34 @@ void CGameFrog_updateobjects(CGameFrog* GameFrog)
 							plantcol = true;
 						}
 
-					if ((id == GameFrog->idenemycar1) || (id == GameFrog->idenemycar2) || (id == GameFrog->idenemycar3) ||
-						(id == GameFrog->idenemycar4) || (id == GameFrog->idenemycar5))
+					if ((id == CGameFrog_idenemycar1) || (id == CGameFrog_idenemycar2) || (id == CGameFrog_idenemycar3) ||
+						(id == CGameFrog_idenemycar4) || (id == CGameFrog_idenemycar5))
 						GameFrog->playerdeath = true;
 					else
 					{
-						if ((id == GameFrog->idroad) or (id == GameFrog->idgrass))
+						if ((id == CGameFrog_idroad) || (id == CGameFrog_idgrass))
 							playermoved = true;
 						else
 						{
-							if (id == GameFrog->idlemon)
+							if (id == CGameFrog_idlemon)
 							{
-								CGame_AddToScore(GameFrog->lemonscore);
+								CGame_AddToScore(CGameFrog_lemonscore);
 								GameFrog->destroyobject(GameFrog,i);
 								CAudio_PlaySound(GameFrog->SfxCollect, 0);
 							}
 							else
 							{
-								if (id == GameFrog->idapple)
+								if (id == CGameFrog_idapple)
 								{
-									CGame_AddToScore(GameFrog->applescore);
+									CGame_AddToScore(CGameFrog_applescore);
 									GameFrog->destroyobject(GameFrog,i);
 									CAudio_PlaySound(GameFrog->SfxCollect, 0);
 								}
 								else
 								{
-									if (id == GameFrog->idcherry)
+									if (id == CGameFrog_idcherry)
 									{
-										CGame_AddToScore(GameFrog->cherryscore);
+										CGame_AddToScore(CGameFrog_cherryscore);
 										GameFrog->destroyobject(GameFrog,i);
 										CAudio_PlaySound(GameFrog->SfxCollect, 0);
 									}
@@ -590,16 +683,16 @@ void CGameFrog_updateobjects(CGameFrog* GameFrog)
 					}
 
 
-					if ((!stopcheckplantcol) && (!plantcol) && (id == GameFrog->idwater) && (!GameFrog->playerdeath))
+					if ((!stopcheckplantcol) && (!plantcol) && (id == CGameFrog_idwater) && (!GameFrog->playerdeath))
 					{
 						stopcheckplantcol = true;
-						for (int j = i + 1; j < GameFrog->maxobjects;j++)
+						for (int j = i + 1; j < CGameFrog_maxobjects;j++)
 						{
 							if ((GameFrog->objects[j].alive) /*&& floatequal(GameFrog->objects[j].pos.y,GameFrog->player.pos.y)*/)
 							{
 								if(CSprites_DetectSpriteCollision(GameFrog->objects[j].spr, GameFrog->player.spr))
 								{
-									if (id == GameFrog->idenemyplant)
+									if (id == CGameFrog_idenemyplant)
 									{
 										if ((GameFrog->player.pos.x - GameFrog->player.tz.x / 4 <= GameFrog->objects[i].pos.x + GameFrog->objects[i].tz.x / 2) &&
 											(GameFrog->player.pos.x + GameFrog->player.tz.x / 4 >= GameFrog->objects[i].pos.x - GameFrog->objects[i].tz.x / 2))
@@ -638,7 +731,7 @@ void CGameFrog_updateobjects(CGameFrog* GameFrog)
 					GameFrog->objects[i].spr->x = (int)GameFrog->objects[i].pos.x;
 					GameFrog->objects[i].spr->y = (int)GameFrog->objects[i].pos.y;
 
-					if ((GameFrog->objects[i].id == GameFrog->idwater) || (GameFrog->objects[i].id == GameFrog->idroad) || (GameFrog->objects[i].id == GameFrog->idgrass))
+					if ((GameFrog->objects[i].id == CGameFrog_idwater) || (GameFrog->objects[i].id == CGameFrog_idroad) || (GameFrog->objects[i].id == CGameFrog_idgrass))
 					{
 						if (GameFrog->objects[i].pos.x < x1)
 						{
@@ -675,7 +768,7 @@ void CGameFrog_updateobjects(CGameFrog* GameFrog)
 
 	if (GameFrog->objectinfo.mosttop > -1)
 	{
-		if ((GameFrog->GameBase->screenbottom - (GameFrog->visiblerows * GameFrog->playerspeed)) - (GameFrog->objects[GameFrog->objectinfo.mosttop].pos.y - GameFrog->objects[GameFrog->objectinfo.mosttop].tz.y / 2 ) <= 0.000001f) 
+		if ((GameFrog->GameBase->screenbottom - (CGameFrog_visiblerows * CGameFrog_playerspeed)) - (GameFrog->objects[GameFrog->objectinfo.mosttop].pos.y - GameFrog->objects[GameFrog->objectinfo.mosttop].tz.y / 2 ) <= 0.000001f) 
 		{
 			GameFrog->createobjects(GameFrog,false);
 			GameFrog->rowsspawned += 1;
@@ -700,15 +793,16 @@ void CGameFrog_createplayer(CGameFrog* GameFrog)
 {
 	GameFrog->player.spr = CSprites_CreateSprite();
 	CSprites_SetSpriteDepth(GameFrog->player.spr, 2);
-	CSprites_SetSpriteImage(Renderer,GameFrog->player.spr, &GameFrog->spritesheetfrog, 3, 4);
+	CSprites_SetSpriteImageTiles(Renderer,GameFrog->player.spr, &GameFrog->spritesheetfrog, 3, 4);
 	CSprites_SetSpriteAnimation(GameFrog->player.spr, 11, 11, 10);
 	SDL_Point tz = CSprites_TileSize(GameFrog->player.spr);
-	Vec2F scale = {((GameFrog->playerspeed -8*xscale)) / tz.x, ((GameFrog->playerspeed -8*yscale)) / tz.y};
+	Vec2F scale = {((CGameFrog_playerspeed -8*xscale)) / tz.x, ((CGameFrog_playerspeed -8*yscale)) / tz.y};
 	CSprites_SetSpriteScale(Renderer,GameFrog->player.spr, scale);
-	CSprites_SetSpriteCollisionShape(GameFrog->player.spr, SHAPE_BOX, (int)(GameFrog->playerspeed / 3.0f), (int)(GameFrog->playerspeed/3.0f), 0, 0, (int)(GameFrog->playerspeed/12.0f));
+	CSprites_SetSpriteCollisionShape(GameFrog->player.spr, SHAPE_BOX, (int)(CGameFrog_playerspeed / 3.0f), (int)(CGameFrog_playerspeed/3.0f), 0, 0, (int)(CGameFrog_playerspeed/12.0f));
 	GameFrog->player.tz.x = tz.x * scale.x;
 	GameFrog->player.tz.y = tz.y * scale.y;
-	GameFrog->player.pos = {GameFrog->GameBase->screenleft + (GameFrog->numcols / 2) * GameFrog->playerspeed + GameFrog->playerspeed / 2, GameFrog->GameBase->screenbottom - GameFrog->playerstartrow * GameFrog->playerspeed + GameFrog->playerspeed / 2};
+	GameFrog->player.pos.x = GameFrog->GameBase->screenleft + (CGameFrog_numcols / 2) * CGameFrog_playerspeed + CGameFrog_playerspeed / 2;
+	GameFrog->player.pos.y = GameFrog->GameBase->screenbottom - CGameFrog_playerstartrow * CGameFrog_playerspeed + CGameFrog_playerspeed / 2;
 	GameFrog->GameBase->HealthPoints = 3;
 	CSprites_SetSpriteLocation(GameFrog->player.spr, GameFrog->player.pos);
 	GameFrog->playermaxrow = 0;
@@ -727,11 +821,11 @@ void CGameFrog_updateplayer(CGameFrog* GameFrog)
 		{
 			CSprites_SetSpriteAnimation(GameFrog->player.spr, 4, 4, 10);
 
-			if ((GameFrog->player.pos.x - GameFrog->player.tz.x / 2) - GameFrog->playerspeed >= GameFrog->GameBase->screenleft)
+			if ((GameFrog->player.pos.x - GameFrog->player.tz.x / 2) - CGameFrog_playerspeed >= GameFrog->GameBase->screenleft)
 			{
-				if ((GameFrog->player.pos.x - GameFrog->player.tz.x / 2) - GameFrog->playerspeed >= 0)
+				if ((GameFrog->player.pos.x - GameFrog->player.tz.x / 2) - CGameFrog_playerspeed >= 0)
 				{
-					GameFrog->player.pos.x -= GameFrog->playerspeed;
+					GameFrog->player.pos.x -= CGameFrog_playerspeed;
 					CAudio_PlaySound(GameFrog->SfxPlayerMove, 0);
 				}
 			}
@@ -743,11 +837,11 @@ void CGameFrog_updateplayer(CGameFrog* GameFrog)
 		{
 			CSprites_SetSpriteAnimation(GameFrog->player.spr, 7, 7, 10);
 
-			if ((GameFrog->player.pos.x + GameFrog->player.tz.x / 2) + GameFrog->playerspeed <= GameFrog->GameBase->screenright)
+			if ((GameFrog->player.pos.x + GameFrog->player.tz.x / 2) + CGameFrog_playerspeed <= GameFrog->GameBase->screenright)
 			{
-				if ((GameFrog->player.pos.x + GameFrog->player.tz.x / 2) + GameFrog->playerspeed <= ScreenWidth)
+				if ((GameFrog->player.pos.x + GameFrog->player.tz.x / 2) + CGameFrog_playerspeed <= ScreenWidth)
 				{
-					GameFrog->player.pos.x += GameFrog->playerspeed;
+					GameFrog->player.pos.x += CGameFrog_playerspeed;
 					CAudio_PlaySound(GameFrog->SfxPlayerMove, 0);
 				}
 			}
@@ -759,11 +853,11 @@ void CGameFrog_updateplayer(CGameFrog* GameFrog)
 		{
 			CSprites_SetSpriteAnimation(GameFrog->player.spr, 11, 11, 10);
 
-			if ((GameFrog->player.pos.y - GameFrog->player.tz.y / 2) - GameFrog->playerspeed >= GameFrog->GameBase->screentop)
+			if ((GameFrog->player.pos.y - GameFrog->player.tz.y / 2) - CGameFrog_playerspeed >= GameFrog->GameBase->screentop)
 			{
-				if ((GameFrog->player.pos.y - GameFrog->player.tz.y / 2) - GameFrog->playerspeed >= 0)
+				if ((GameFrog->player.pos.y - GameFrog->player.tz.y / 2) - CGameFrog_playerspeed >= 0)
 				{
-					GameFrog->player.pos.y -= GameFrog->playerspeed;
+					GameFrog->player.pos.y -= CGameFrog_playerspeed;
 					GameFrog->playerrow += 1;
 					if (GameFrog->playerrow > GameFrog->playermaxrow)
 					{
@@ -781,11 +875,11 @@ void CGameFrog_updateplayer(CGameFrog* GameFrog)
 		{
 			CSprites_SetSpriteAnimation(GameFrog->player.spr, 2, 2, 10);
 
-			if ((GameFrog->player.pos.y + GameFrog->player.tz.y / 2) + GameFrog->playerspeed <= GameFrog->GameBase->screenbottom)
+			if ((GameFrog->player.pos.y + GameFrog->player.tz.y / 2) + CGameFrog_playerspeed <= GameFrog->GameBase->screenbottom)
 			{
-				if ((GameFrog->player.pos.y + GameFrog->player.tz.y / 2) + GameFrog->playerspeed <= ScreenHeight)
+				if ((GameFrog->player.pos.y + GameFrog->player.tz.y / 2) + CGameFrog_playerspeed <= ScreenHeight)
 				{
-					GameFrog->player.pos.y += GameFrog->playerspeed;
+					GameFrog->player.pos.y += CGameFrog_playerspeed;
 					GameFrog->playerrow -= 1;
 				}
 				CAudio_PlaySound(GameFrog->SfxPlayerMove, 0);
@@ -828,7 +922,7 @@ void CGameFrog_init(CGameFrog* GameFrog)
 	GameFrog->rowsspawned = 0;
 	GameFrog->plantsspawned = 0;
 	GameFrog->numobjects = 0;
-	GameFrog->worldspeed = GameFrog->globalworldspeed;
+	GameFrog->worldspeed = CGameFrog_globalworldspeed;
 	GameFrog->createplayer(GameFrog);
 	GameFrog->createobjects(GameFrog,true);
 	GameFrog->LoadSound(GameFrog);
@@ -871,17 +965,17 @@ void CGameFrog_LoadGraphics(CGameFrog* GameFrog)
 	GameFrog->backgroundtz = CImage_ImageSize(GameFrog->background);
 
 
-	GameFrog->spritesheetfrog = CImage_LoadImage(Renderer, "frog/player.png", 0, 128, dumpScaledBitmaps);
-	GameFrog->spritesheetbackground = CImage_LoadImage(Renderer, "frog/watergrass.png", 0, 128, dumpScaledBitmaps);
-	GameFrog->spritesheetcar1 = CImage_LoadImage(Renderer, "frog/carblue.png", 0, 80, dumpScaledBitmaps);
-	GameFrog->spritesheetcar2 = CImage_LoadImage(Renderer, "frog/garbagetruck.png", 0, 80, dumpScaledBitmaps);
-	GameFrog->spritesheetcar3 = CImage_LoadImage(Renderer, "frog/ambulance.png", 0, 80, dumpScaledBitmaps);
-	GameFrog->spritesheetcar4 = CImage_LoadImage(Renderer, "frog/taxi.png", 0, 80, dumpScaledBitmaps);
-	GameFrog->spritesheetcar5 = CImage_LoadImage(Renderer, "frog/police.png", 0, 80, dumpScaledBitmaps);
-	GameFrog->spritesheetplant = CImage_LoadImage(Renderer, "frog/waterplant.png", 0, 140, dumpScaledBitmaps);
-	GameFrog->spritesheetfruit1 = CImage_LoadImage(Renderer, "frog/apple.png",0, 10, dumpScaledBitmaps);
-	GameFrog->spritesheetfruit2 = CImage_LoadImage(Renderer, "frog/lemon.png",0, 10, dumpScaledBitmaps);
-	GameFrog->spritesheetfruit3 = CImage_LoadImage(Renderer, "frog/cherry.png",0, 10, dumpScaledBitmaps);
+	GameFrog->spritesheetfrog = CImage_LoadImageEx(Renderer, "frog/player.png", 0, 128, dumpScaledBitmaps);
+	GameFrog->spritesheetbackground = CImage_LoadImageEx(Renderer, "frog/watergrass.png", 0, 128, dumpScaledBitmaps);
+	GameFrog->spritesheetcar1 = CImage_LoadImageEx(Renderer, "frog/carblue.png", 0, 80, dumpScaledBitmaps);
+	GameFrog->spritesheetcar2 = CImage_LoadImageEx(Renderer, "frog/garbagetruck.png", 0, 80, dumpScaledBitmaps);
+	GameFrog->spritesheetcar3 = CImage_LoadImageEx(Renderer, "frog/ambulance.png", 0, 80, dumpScaledBitmaps);
+	GameFrog->spritesheetcar4 = CImage_LoadImageEx(Renderer, "frog/taxi.png", 0, 80, dumpScaledBitmaps);
+	GameFrog->spritesheetcar5 = CImage_LoadImageEx(Renderer, "frog/police.png", 0, 80, dumpScaledBitmaps);
+	GameFrog->spritesheetplant = CImage_LoadImageEx(Renderer, "frog/waterplant.png", 0, 140, dumpScaledBitmaps);
+	GameFrog->spritesheetfruit1 = CImage_LoadImageEx(Renderer, "frog/apple.png",0, 10, dumpScaledBitmaps);
+	GameFrog->spritesheetfruit2 = CImage_LoadImageEx(Renderer, "frog/lemon.png",0, 10, dumpScaledBitmaps);
+	GameFrog->spritesheetfruit3 = CImage_LoadImageEx(Renderer, "frog/cherry.png",0, 10, dumpScaledBitmaps);
 
 	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/frog/player.bmp", CImage_GetImage(GameFrog->spritesheetfrog), 1,1, true, 0, 128);
 	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/frog/watergrass.bmp", CImage_GetImage(GameFrog->spritesheetbackground), 1,1, true, 0, 128);
@@ -950,7 +1044,7 @@ void CGameFrog_UpdateLogic(CGameFrog* GameFrog)
 		//so if not done here weird collisions and false deaths happen
 		if (GameFrog->dolevelinc)
 		{
-			if (GameFrog->GameBase->level-1 < GameFrog->lenlevelincspeeds - 1)
+			if (GameFrog->GameBase->level-1 < CGameFrog_lenlevelincspeeds - 1)
 			{
 				GameFrog->GameBase->level += 1;
 				GameFrog->dolevelinc = false;

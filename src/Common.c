@@ -1,6 +1,7 @@
 #include <SDL.h>
-#include <string>
+#include <string.h>
 #include "Common.h"
+#include <stdbool.h>
 
 //Modes
 ModeDesc GMModes[Modes] = {
@@ -193,7 +194,7 @@ SDL_Color UintToColour(Uint32 colour)
 
 
 
-void PutPixel(SDL_Surface *surface, int x, int y, Uint32 pixel)
+void SDL_PutPixel(SDL_Surface *surface, int x, int y, Uint32 pixel)
 {
     int bpp = surface->format->BytesPerPixel;
     /* Here p is the address to the pixel we want to set */
@@ -230,7 +231,7 @@ void PutPixel(SDL_Surface *surface, int x, int y, Uint32 pixel)
  * Return the pixel value at (x, y)
  * NOTE: The surface must be locked before calling this!
  */
-Uint32 GetPixel(SDL_Surface *surface, int x, int y)
+Uint32 SDL_GetPixel(SDL_Surface *surface, int x, int y)
 {
     int bpp = surface->format->BytesPerPixel;
     /* Here p is the address to the pixel we want to retrieve */
@@ -301,7 +302,7 @@ void ditherSurface(SDL_Surface* Surface, SDL_Rect* Rect, uint8_t bayerver, uint8
 	{
 		for(x = tmp.x; x < tmp.w; ++x) 
 		{
-			uint32_t pix = GetPixel(Surface, x, y);
+			uint32_t pix = SDL_GetPixel(Surface, x, y);
 			uint8_t r, g, b, a;
 			SDL_GetRGBA(pix, Surface->format, &r, &g, &b, &a);
 			
@@ -331,7 +332,7 @@ void ditherSurface(SDL_Surface* Surface, SDL_Rect* Rect, uint8_t bayerver, uint8
 				lum = 0;
 
 			// Put the pixel back in the image
-			PutPixel(Surface, x, y, SDL_MapRGBA(Surface->format, lum, lum, lum, a));
+			SDL_PutPixel(Surface, x, y, SDL_MapRGBA(Surface->format, lum, lum, lum, a));
 
 		}
 	}
@@ -381,10 +382,10 @@ void ditherTarget(SDL_Renderer* aRenderer, SDL_Texture *Tex, SDL_Rect* Rect, uin
 	SDL_SetRenderTarget(aRenderer, tmptarget);
 }
 
-void SDL_SaveBMPTextureScaled(SDL_Renderer *Renderer, string File, SDL_Texture* Tex, float ScaleX, float ScaleY, bool ApplyDither, int ditherversion, int whiteThresHold)
-{
-	SDL_SaveBMPTextureScaled(Renderer, File.c_str(), Tex,ScaleX, ScaleY, ApplyDither, ditherversion, whiteThresHold);
-}
+// void SDL_SaveBMPTextureScaled(SDL_Renderer *Renderer, const char* File, SDL_Texture* Tex, float ScaleX, float ScaleY, bool ApplyDither, int ditherversion, int whiteThresHold)
+// {
+// 	SDL_SaveBMPTextureScaled(Renderer, File, Tex,ScaleX, ScaleY, ApplyDither, ditherversion, whiteThresHold);
+// }
 
 void SDL_SaveBMPTextureScaled(SDL_Renderer *Renderer, const char *File, SDL_Texture* Tex, float ScaleX, float ScaleY, bool ApplyDither, int ditherversion, int whiteThresHold)
 {

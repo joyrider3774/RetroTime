@@ -1,32 +1,31 @@
-#pragma once
+#ifndef CGAMESNAKE_H
+#define CGAMESNAKE_H
 
 #include <SDL.h>
-#include <iostream>
-#include <string>
+#include <stdbool.h>
 #include "CGameBase.h"
 #include "../CGame.h"
 #include "../Common.h"
 
-using namespace std;
+
+#define CGameSnake_snakesize 10 //floor(35 * yscale)
+#define CGameSnake_rows 22 //(int)(ScreenHeight / snakesize) -1;
+#define CGameSnake_cols 38 //(int)(ScreenWidth / snakesize) -1;
+#define CGameSnake_updateticks 8
+#define CGameSnake_totalcells 836 //rows*cols
 
 
 struct CGameSnake {
-
 	CGameBase *GameBase;
-	static constexpr int snakesize = 35 * yscale;
-	static constexpr int rows = int(ScreenHeight / snakesize) -1;
-	static constexpr int cols = int(ScreenWidth / snakesize) -1;
-	static constexpr int updateticks = 8;
+	SDL_Color snakeheadcolor;
+	SDL_Color snakebodycolor;
+	SDL_Color snakefoodcolor;
 
-	static constexpr SDL_Color snakeheadcolor = {0xFF, 0x65, 0x65, 0xFF};
-	static constexpr SDL_Color snakebodycolor = {0xFF, 0xFF, 0xFF, 0xFF};
-	static constexpr SDL_Color snakefoodcolor = {0x65, 0xFF, 0x65, 0xFF};
-
-	bool movedone = true;
+	bool movedone;
 	int snakelength;
 	int ticks;
 	SDL_Point head;
-	SDL_Point body[rows*cols+1];
+	SDL_Point body[CGameSnake_totalcells];
 	SDL_Point dir;
 	SDL_Point food;
 	int playerdeath;
@@ -70,3 +69,5 @@ void CGameSnake_drawfood(CGameSnake* GameSnake);
 void CGameSnake_createfood(CGameSnake* GameSnake);
 void Destroy_CGameSnake(CGameSnake* GameSnake);
 CGameSnake* Create_CGameSnake();
+
+#endif

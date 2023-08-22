@@ -1,9 +1,8 @@
-#pragma once
+#ifndef CGAMEPANG_H
+#define CGAMEPANG_H
 
 #include <SDL.h>
-#include <map>
-#include <iostream>
-#include <string>
+#include <stdbool.h>
 #include "CGameBase.h"
 #include "CSpriteObject.h"
 #include "../CGame.h"
@@ -11,34 +10,32 @@
 #include "../Common.h"
 #include "../Vec2F.h"
 
-using namespace std;
+#define CGamePang_backgroundcopyheight 30
+
+#define CGamePang_enemyspeed 1.0f*yscale
+#define CGamePang_playerspeed 8.0f*xscale
+#define CGamePang_bulletspeed 10.0f*yscale
+
+#define CGamePang_playerstateidle 0
+#define CGamePang_playerstatemoveleft 2
+#define CGamePang_playerstatemoveright 4
+#define CGamePang_playerstateshoot 8
+#define CGamePang_playerstatereviving 16
+
+#define CGamePang_ballbig 3
+#define CGamePang_ballmedium 2
+#define CGamePang_ballsmall 1
+
+#define CGamePang_maxbigballs 6
+#define CGamePang_maxballs 42 //maxbigballs * 7
 
 struct CGamePang {
 
 	CGameBase *GameBase;
-	static const int backgroundcopyheight = 30;
-	static constexpr Vec2F playerscale = {2.0f*yscale,2.0f*yscale};
-	static constexpr Vec2F bulletscale = {1.0f*yscale,0.8f*yscale};
-	static constexpr Vec2F ballscale = {1.5f*yscale,1.5f*yscale};
 
-	static constexpr float enemyspeed = 1.0f*yscale;
-	static constexpr float playerspeed = 8.0f*xscale;
-	static constexpr float bulletspeed = 10.0f*yscale;
-
-	static const int playerstateidle = 0;
-	static const int playerstatemoveleft = 2;
-	static const int playerstatemoveright = 4;
-	static const int playerstateshoot = 8;
-	static const int playerstatereviving = 16;
-
-
-	static const int ballbig = 3;
-	static const int ballmedium = 2;
-	static const int ballsmall = 1;
-
-	static const int maxbigballs = 6;
-	static const int maxballs = maxbigballs * 7;
-
+	Vec2F playerscale;
+	Vec2F bulletscale;
+	Vec2F ballscale;
 
 	int background;
 	int spritesheetplayer;
@@ -49,9 +46,9 @@ struct CGamePang {
 	SDL_Point backgroundtz;
 	SDL_Point spritesheetballtz;
 
-	int deaths = 0;
-	int levelcleared = false;
-	CSpriteObject balls[maxballs];
+	int deaths;
+	int levelcleared;
+	CSpriteObject balls[CGamePang_maxballs];
 	CSpriteObject player;
 	CSpriteObject bullet;
 
@@ -121,3 +118,5 @@ void CGamePang_destroyball(CGamePang* GamePang, int index, bool nocreate);
 void CGamePang_destroyallballs(CGamePang* GamePang);
 void Destroy_CGamePang(CGamePang* GamePang);
 CGamePang* Create_CGamePang();
+
+#endif

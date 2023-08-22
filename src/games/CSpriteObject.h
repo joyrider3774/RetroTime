@@ -1,20 +1,21 @@
-#pragma once
+#ifndef CSPRITEOBJECT_H
+#define CSPRITEOBJECT_H
 
 #include <SDL.h>
 #include "../CSprites.h"
+#include <stdbool.h>
 #include "../Vec2F.h"
-
 struct CSpriteObject
 {
-		bool alive = false;
-		Vec2F vel = {0,0};
-		Vec2F pos = {0,0};
-		SDL_Point tz = {0,0};
-		CSprite* spr = nullptr;
-		int healthpoints = 0;
-		int freeze = 0;
-		int state = 0;
-		int stateticks = 0;
+		bool alive;
+		Vec2F vel;
+		Vec2F pos;
+		SDL_Point tz;
+		CSprite* spr;
+		int healthpoints;
+		int freeze;
+		int state;
+		int stateticks;
 		//used in toad
 		int rowtype;
 		int id;
@@ -31,3 +32,4 @@ struct CSpriteObject
 typedef struct CSpriteObject CSpriteObject;
 
 void Initialize_CSpriteObject(CSpriteObject *SpriteObject);
+#endif

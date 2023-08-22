@@ -1,14 +1,12 @@
 #include <SDL.h>
-#include <string>
-#include <iostream>
-#include <cmath>
+#include <stdbool.h>
 #include "CGamePang.h"
 #include "CGameBase.h"
 #include "../CGame.h"
 #include "../Common.h"
 #include "../Vec2F.h"
 
-using namespace std;
+
 
 CGamePang* Create_CGamePang()
 {
@@ -24,6 +22,16 @@ CGamePang* Create_CGamePang()
 	GamePang->GameBase->screenright = ScreenWidth;
 	GamePang->GameBase->screentop = 0;
 	GamePang->GameBase->screenbottom = ScreenHeight;
+
+	GamePang->playerscale.x = 2.0f*yscale;
+	GamePang->playerscale.y = 2.0f*yscale;
+	GamePang->bulletscale.x = 1.0f*yscale;
+	GamePang->bulletscale.y = 0.8f*yscale;
+	GamePang->ballscale.x = 1.5f*yscale;
+	GamePang->ballscale.y = 1.5f*yscale;
+
+	GamePang->deaths = 0;
+	GamePang->levelcleared = false;
 
 	GamePang->drawplayer = CGamePang_drawplayer;
 	GamePang->updateplayer = CGamePang_updateplayer;
@@ -43,7 +51,7 @@ CGamePang* Create_CGamePang()
 	GamePang->destroyball = CGamePang_destroyball;
 	GamePang->destroyallballs = CGamePang_destroyallballs;
 
-	for (int i=0; i < GamePang->maxballs; i++)
+	for (int i=0; i < CGamePang_maxballs; i++)
 		Initialize_CSpriteObject(&GamePang->balls[i]);
 	
 	Initialize_CSpriteObject(&GamePang->player);
@@ -75,7 +83,7 @@ void Destroy_CGamePang(CGamePang* GamePang)
 
 void CGamePang_destroyallballs(CGamePang* GamePang)
 {
-	for(int i = 0; i < GamePang->maxballs; i++)
+	for(int i = 0; i < CGamePang_maxballs; i++)
 		GamePang->destroyball(GamePang,i, true);
 }
 
@@ -83,7 +91,7 @@ void CGamePang_destroyball(CGamePang* GamePang, int index, bool nocreate)
 {
 	if (!nocreate)
 	{
-		if (GamePang->balls[index].id > GamePang->ballsmall)
+		if (GamePang->balls[index].id > CGamePang_ballsmall)
 		{
 			GamePang->createball(GamePang,GamePang->balls[index].id - 1, GamePang->balls[index].pos.x - 25*yscale, GamePang->balls[index].pos.y, -10.0f*yscale);
 			GamePang->createball(GamePang,GamePang->balls[index].id - 1, GamePang->balls[index].pos.x + 25*yscale, GamePang->balls[index].pos.y, 10.0f*yscale);
@@ -98,7 +106,7 @@ void CGamePang_destroyball(CGamePang* GamePang, int index, bool nocreate)
 
 void CGamePang_createball(CGamePang* GamePang, int size, float x, float y, float speed)
 {
-	for (int i = 0; i < GamePang->maxballs; i++)
+	for (int i = 0; i < CGamePang_maxballs; i++)
 	{
 		if (!GamePang->balls[i].alive)
 		{
@@ -115,11 +123,12 @@ void CGamePang_createball(CGamePang* GamePang, int size, float x, float y, float
 			GamePang->balls[i].tz = CImage_ImageSize(GamePang->spritesheetball);
 			GamePang->balls[i].tz.x = GamePang->balls[i].tz.x * Scale.x;
 			GamePang->balls[i].tz.x = GamePang->balls[i].tz.y * Scale.y;
-			GamePang->balls[i].pos = { x, y};
+			GamePang->balls[i].pos.x = x;
+			GamePang->balls[i].pos.y = y;
 			CSprites_SetSpriteLocation(GamePang->balls[i].spr, GamePang->balls[i].pos);
 			GamePang->balls[i].alive = true;
 			GamePang->balls[i].speed = speed*0.1f;
-			GamePang->balls[i].force = -abs(speed);
+			GamePang->balls[i].force = -(float)fabs(speed);
 			GamePang->balls[i].curforce = GamePang->balls[i].force/3;
 			GamePang->balls[i].id = size;
 			break;
@@ -130,7 +139,7 @@ void CGamePang_createball(CGamePang* GamePang, int size, float x, float y, float
 void CGamePang_updateballs(CGamePang* GamePang)
 {
 	GamePang->levelcleared = true;
-	for (int i = 0; i < GamePang->maxballs; i++)
+	for (int i = 0; i < CGamePang_maxballs; i++)
 	{
 		if (GamePang->balls[i].alive)
 		{
@@ -138,54 +147,54 @@ void CGamePang_updateballs(CGamePang* GamePang)
 			if (GamePang->balls[i].pos.x + GamePang->balls[i].speed > GamePang->GameBase->screenright)
 			{
 				if (GamePang->balls[i].speed > 0)
-					GamePang->balls[i].speed = -abs(GamePang->balls[i].speed);
+					GamePang->balls[i].speed = -(float)fabs(GamePang->balls[i].speed);
 
 			}
 
 			if (GamePang->balls[i].pos.x + GamePang->balls[i].speed < GamePang->GameBase->screenleft)
 			{
 				if (GamePang->balls[i].speed < 0)
-					GamePang->balls[i].speed = abs(GamePang->balls[i].speed);
+					GamePang->balls[i].speed = (float)fabs(GamePang->balls[i].speed);
 			}
 
 
 			GamePang->balls[i].pos.x += GamePang->balls[i].speed*2;
 
-			if (GamePang->balls[i].id == GamePang->ballbig)
+			if (GamePang->balls[i].id == CGamePang_ballbig)
 				GamePang->balls[i].curforce += 0.1f*yscale;
 			else
 			{
-				if(GamePang->balls[i].id == GamePang->ballmedium)
+				if(GamePang->balls[i].id == CGamePang_ballmedium)
 					GamePang->balls[i].curforce += 0.15f*yscale;
 				else
 				{
-					if (GamePang->balls[i].id == GamePang->ballsmall)
+					if (GamePang->balls[i].id == CGamePang_ballsmall)
 						GamePang->balls[i].curforce += 0.25f*yscale;
 				}
 			}
 
 			GamePang->balls[i].pos.y += GamePang->balls[i].curforce;
 
-			if (GamePang->balls[i].id == GamePang->ballbig)
+			if (GamePang->balls[i].id == CGamePang_ballbig)
 				if (GamePang->balls[i].pos.y >= GamePang->GameBase->screenbottom - 135.0f*yscale)
 					GamePang->balls[i].curforce = GamePang->balls[i].force;
 
-			if (GamePang->balls[i].id == GamePang->ballmedium)
+			if (GamePang->balls[i].id == CGamePang_ballmedium)
 				if (GamePang->balls[i].pos.y >= GamePang->GameBase->screenbottom - 100.0f*yscale)
 					GamePang->balls[i].curforce = GamePang->balls[i].force;
 
-			if (GamePang->balls[i].id == GamePang->ballsmall)
+			if (GamePang->balls[i].id == CGamePang_ballsmall)
 				if (GamePang->balls[i].pos.y >= GamePang->GameBase->screenbottom - 75.0f*yscale)
 					GamePang->balls[i].curforce = GamePang->balls[i].force;
 
 			CSprites_SetSpriteLocation(GamePang->balls[i].spr, GamePang->balls[i].pos);
 
-			if (!GamePang->playerstate(GamePang,GamePang->playerstatereviving) && CSprites_DetectSpriteCollision(GamePang->balls[i].spr, GamePang->player.spr))
+			if (!GamePang->playerstate(GamePang,CGamePang_playerstatereviving) && CSprites_DetectSpriteCollision(GamePang->balls[i].spr, GamePang->player.spr))
 			{
 				CGame_AddToScore(-25);
 				GamePang->GameBase->HealthPoints -= 1;
-				GamePang->addplayerstate(GamePang,GamePang->playerstatereviving);
-				GamePang->remplayerstate(GamePang,GamePang->playerstateshoot);
+				GamePang->addplayerstate(GamePang,CGamePang_playerstatereviving);
+				GamePang->remplayerstate(GamePang,CGamePang_playerstateshoot);
 				GamePang->player.stateticks = 90;
 				CAudio_PlaySound(GamePang->SfxDie, 0);
 			}
@@ -205,7 +214,7 @@ void CGamePang_updateballs(CGamePang* GamePang)
 	}
 	if (GamePang->levelcleared)
 	{
-		if (GamePang->GameBase->level < GamePang->maxbigballs)
+		if (GamePang->GameBase->level < CGamePang_maxbigballs)
 			GamePang->GameBase->level += 1;
 		CAudio_PlaySound(GamePang->SfxSucces, 0);
 		CGame_AddToScore(100);
@@ -215,7 +224,7 @@ void CGamePang_updateballs(CGamePang* GamePang)
 
 void CGamePang_drawballs(CGamePang* GamePang)
 {
-	for (int i = 0; i < GamePang->maxballs; i++)
+	for (int i = 0; i < CGamePang_maxballs; i++)
 	{
 		if (GamePang->balls[i].alive)
 			CSprites_DrawSprite(Renderer, GamePang->balls[i].spr);
@@ -227,11 +236,11 @@ void CGamePang_createballs(CGamePang* GamePang)
 {
 	int added = 0;
 	float speed = 10.0f*yscale;
-	for (int i = GamePang->GameBase->screenleft; i < GamePang->GameBase->screenright; i += int((GamePang->GameBase->screenright - GamePang->GameBase->screenleft) / (GamePang->GameBase->level + 1)) + 1)
+	for (int i = GamePang->GameBase->screenleft; i < GamePang->GameBase->screenright; i += (int)((GamePang->GameBase->screenright - GamePang->GameBase->screenleft) / (GamePang->GameBase->level + 1)) + 1)
 	{
 		if ((i > GamePang->GameBase->screenleft) && (i < GamePang->GameBase->screenright))
 		{
-			GamePang->createball(GamePang,GamePang->ballbig, i, 160.0f*yscale, speed);
+			GamePang->createball(GamePang,CGamePang_ballbig, i, 160.0f*yscale, speed);
 			speed *= -1;
 			added += 1;
 			if (added >= GamePang->GameBase->level)
@@ -254,7 +263,7 @@ void CGamePang_destroybullet(CGamePang* GamePang)
 void CGamePang_createbullet(CGamePang* GamePang)
 {
 	GamePang->bullet.spr = CSprites_CreateSprite();
-	CSprites_SetSpriteImage(Renderer,GamePang->bullet.spr, &GamePang->spritesheetbullet, 1, 2);
+	CSprites_SetSpriteImageTiles(Renderer,GamePang->bullet.spr, &GamePang->spritesheetbullet, 1, 2);
 	CSprites_SetSpriteAnimation(GamePang->bullet.spr, 0, 0, 0);
 	CSprites_SetSpriteCollisionShape(GamePang->bullet.spr, SHAPE_BOX, CSprites_TileSize(GamePang->bullet.spr).y-18, CSprites_TileSize(GamePang->bullet.spr).x+160,0,0,0);
 
@@ -267,8 +276,10 @@ void CGamePang_createbullet(CGamePang* GamePang)
 	int tmpx = GamePang->bullet.tz.x;
 	GamePang->bullet.tz.x = GamePang->bullet.tz.y;
 	GamePang->bullet.tz.y = tmpx;
-	GamePang->bullet.pos = { GamePang->player.pos.x, GamePang->player.pos.y - (GamePang->player.tz.y) + (GamePang->bullet.tz.y /2)};
-	GamePang->bullet.vel = {0, -GamePang->bulletspeed};
+	GamePang->bullet.pos.x = GamePang->player.pos.x;
+	GamePang->bullet.pos.y = GamePang->player.pos.y - (GamePang->player.tz.y) + (GamePang->bullet.tz.y /2);
+	GamePang->bullet.vel.x = 0;
+	GamePang->bullet.vel.y = -CGamePang_bulletspeed;
 	CSprites_SetSpriteLocation(GamePang->bullet.spr, GamePang->bullet.pos);
 	GamePang->bullet.alive = true;
 }
@@ -282,7 +293,7 @@ void CGamePang_updatebullet(CGamePang* GamePang)
 			GamePang->bullet.freeze -= 1;
 			if (GamePang->bullet.freeze == 0)
 			{
-				GamePang->remplayerstate(GamePang,GamePang->playerstateshoot);
+				GamePang->remplayerstate(GamePang,CGamePang_playerstateshoot);
 				GamePang->destroybullet(GamePang);
 			}
 		}
@@ -307,15 +318,15 @@ void CGamePang_drawbullet(CGamePang* GamePang)
 		//copy whats on screen to a temporary buffer (i know this already contains the background)
 		SDL_Texture* prev = SDL_GetRenderTarget(Renderer);
 		SDL_SetRenderTarget(Renderer, TexTmp);
-		CImage_DrawImage(Renderer, prev, NULL, NULL);
+		CImage_DrawImageTex(Renderer, prev, NULL, NULL);
 		SDL_SetRenderTarget(Renderer, prev);
 		//draw the sprite
 		CSprites_DrawSprite(Renderer, GamePang->bullet.spr);
 		//draw bottom part of what was previously on screen back to the screen to obscure bottom part of the chain texture
 		//this makes it seem as if the texture is created on the ground instead of at the bottom of the screen, like it is
 		//in real time.
-		SDL_Rect Rect = {0, GamePang->GameBase->screenbottom - GamePang->backgroundcopyheight, GamePang->GameBase->screenright, GamePang->backgroundcopyheight};
-		CImage_DrawImage(Renderer, TexTmp, &Rect, &Rect);
+		SDL_Rect Rect = {0, GamePang->GameBase->screenbottom - CGamePang_backgroundcopyheight, GamePang->GameBase->screenright, CGamePang_backgroundcopyheight};
+		CImage_DrawImageTex(Renderer, TexTmp, &Rect, &Rect);
 	}
 }
 
@@ -333,21 +344,22 @@ void CGamePang_destroyplayer(CGamePang* GamePang)
 void CGamePang_createplayer(CGamePang* GamePang)
 {
 	GamePang->player.spr = CSprites_CreateSprite();
-	CSprites_SetSpriteImage(Renderer,GamePang->player.spr, &GamePang->spritesheetplayer, 12, 8);
+	CSprites_SetSpriteImageTiles(Renderer,GamePang->player.spr, &GamePang->spritesheetplayer, 12, 8);
 	CSprites_SetSpriteAnimation(GamePang->player.spr, 37, 37, 0);
 	CSprites_SetSpriteCollisionShape(GamePang->player.spr, SHAPE_BOX, CSprites_TileSize(GamePang->player.spr).x - 24, CSprites_TileSize(GamePang->player.spr).y-14,0,0,14*yscale);
 
 	CSprites_SetSpriteScale(Renderer,GamePang->player.spr, GamePang->playerscale);
 	CSprites_SetSpriteDepth(GamePang->player.spr, 37);
-	GamePang->player.state = GamePang->playerstateidle;
+	GamePang->player.state = CGamePang_playerstateidle;
 	GamePang->player.tz = CSprites_TileSize(GamePang->player.spr);
 	GamePang->player.tz.x = GamePang->player.tz.x * GamePang->playerscale.x;
 	GamePang->player.tz.y = GamePang->player.tz.y * GamePang->playerscale.y;
-	GamePang->player.pos = { (float)(GamePang->GameBase->screenright - GamePang->GameBase->screenleft) / 2,(float)GamePang->GameBase->screenbottom -10- GamePang->player.tz.y / 2};
+	GamePang->player.pos.x = (float)(GamePang->GameBase->screenright - GamePang->GameBase->screenleft) / 2;
+	GamePang->player.pos.y = (float)GamePang->GameBase->screenbottom -10- GamePang->player.tz.y / 2;
 	GamePang->GameBase->HealthPoints = 3;
 	CSprites_SetSpriteLocation(GamePang->player.spr, GamePang->player.pos);
 	GamePang->player.alive = true;
-	GamePang->player.state = GamePang->playerstateidle;
+	GamePang->player.state = CGamePang_playerstateidle;
 }
 
 void CGamePang_addplayerstate(CGamePang* GamePang, int state)
@@ -376,36 +388,36 @@ void CGamePang_updateplayer(CGamePang* GamePang)
 			GamePang->player.stateticks -= 1;
 		else
 		{
-			if (GamePang->playerstate(GamePang,GamePang->playerstateshoot))
-				GamePang->remplayerstate(GamePang,GamePang->playerstateshoot);
+			if (GamePang->playerstate(GamePang,CGamePang_playerstateshoot))
+				GamePang->remplayerstate(GamePang,CGamePang_playerstateshoot);
 			else
 			{
-				if (GamePang->playerstate(GamePang,GamePang->playerstatereviving))
-					GamePang->remplayerstate(GamePang,GamePang->playerstatereviving);
+				if (GamePang->playerstate(GamePang,CGamePang_playerstatereviving))
+					GamePang->remplayerstate(GamePang,CGamePang_playerstatereviving);
 			}
 		}
 
-		if (!GamePang->playerstate(GamePang,GamePang->playerstateshoot))
+		if (!GamePang->playerstate(GamePang,CGamePang_playerstateshoot))
 		{
 			if ((CInput_Buttons.ButLeft) ||
 				(CInput_Buttons.ButLeft2) ||
 				(CInput_Buttons.ButDpadLeft))
 			{
-				if ( GamePang->player.pos.x - GamePang->player.tz.x / 2 - GamePang->playerspeed > GamePang->GameBase->screenleft)
+				if ( GamePang->player.pos.x - GamePang->player.tz.x / 2 - CGamePang_playerspeed > GamePang->GameBase->screenleft)
 				{
-					GamePang->player.pos.x -=GamePang->playerspeed;
-					if (!GamePang->playerstate(GamePang,GamePang->playerstatemoveleft))
+					GamePang->player.pos.x -=CGamePang_playerspeed;
+					if (!GamePang->playerstate(GamePang,CGamePang_playerstatemoveleft))
 					{
-						GamePang->addplayerstate(GamePang,GamePang->playerstatemoveleft);
+						GamePang->addplayerstate(GamePang,CGamePang_playerstatemoveleft);
 						CSprites_SetSpriteAnimation(GamePang->player.spr, 12, 14, 10);
 					}
 				}
 				else
 				{
 					GamePang->player.pos.x = GamePang->GameBase->screenleft + GamePang->player.tz.x / 2;
-					if (GamePang->playerstate(GamePang,GamePang->playerstatemoveleft))
+					if (GamePang->playerstate(GamePang,CGamePang_playerstatemoveleft))
 					{
-						GamePang->remplayerstate(GamePang,GamePang->playerstatemoveleft);
+						GamePang->remplayerstate(GamePang,CGamePang_playerstatemoveleft);
 						CSprites_SetSpriteAnimation(GamePang->player.spr, 37, 37, 0);
 					}
 				}
@@ -416,40 +428,40 @@ void CGamePang_updateplayer(CGamePang* GamePang)
 					(CInput_Buttons.ButRight2) ||
 					(CInput_Buttons.ButDpadRight))
 				{
-					if ( GamePang->player.pos.x + GamePang->player.tz.x / 2 + GamePang->playerspeed < GamePang->GameBase->screenright)
+					if ( GamePang->player.pos.x + GamePang->player.tz.x / 2 + CGamePang_playerspeed < GamePang->GameBase->screenright)
 					{
-						GamePang->player.pos.x += GamePang->playerspeed;
-						if (!GamePang->playerstate(GamePang,GamePang->playerstatemoveright))
+						GamePang->player.pos.x += CGamePang_playerspeed;
+						if (!GamePang->playerstate(GamePang,CGamePang_playerstatemoveright))
 						{
-							GamePang->addplayerstate(GamePang,GamePang->playerstatemoveright);
+							GamePang->addplayerstate(GamePang,CGamePang_playerstatemoveright);
 							CSprites_SetSpriteAnimation(GamePang->player.spr, 24, 26, 10);
 						}
 					}
 					else
 					{
 						GamePang->player.pos.x = GamePang->GameBase->screenright - GamePang->player.tz.x / 2;
-						if (GamePang->playerstate(GamePang,GamePang->playerstatemoveleft))
+						if (GamePang->playerstate(GamePang,CGamePang_playerstatemoveleft))
 						{
-							GamePang->remplayerstate(GamePang,GamePang->playerstatemoveright);
+							GamePang->remplayerstate(GamePang,CGamePang_playerstatemoveright);
 							CSprites_SetSpriteAnimation(GamePang->player.spr,37, 37, 0);
 						}
 					}
 				}
 				else
 				{
-					GamePang->remplayerstate(GamePang,GamePang->playerstatemoveright);
-					GamePang->remplayerstate(GamePang,GamePang->playerstatemoveleft);
+					GamePang->remplayerstate(GamePang,CGamePang_playerstatemoveright);
+					GamePang->remplayerstate(GamePang,CGamePang_playerstatemoveleft);
 					CSprites_SetSpriteAnimation(GamePang->player.spr, 37, 37, 0);
 				}
 			}
 
-			if ((!GamePang->playerstate(GamePang,GamePang->playerstatereviving)) && (!CInput_PrevButtons.ButA && CInput_Buttons.ButA))
+			if ((!GamePang->playerstate(GamePang,CGamePang_playerstatereviving)) && (!CInput_PrevButtons.ButA && CInput_Buttons.ButA))
 			{
 				if (!GamePang->bullet.alive)
 				{
-					GamePang->addplayerstate(GamePang,GamePang->playerstateshoot);
-					GamePang->remplayerstate(GamePang,GamePang->playerstatemoveright);
-					GamePang->remplayerstate(GamePang,GamePang->playerstatemoveleft);
+					GamePang->addplayerstate(GamePang,CGamePang_playerstateshoot);
+					GamePang->remplayerstate(GamePang,CGamePang_playerstatemoveright);
+					GamePang->remplayerstate(GamePang,CGamePang_playerstatemoveleft);
 					CSprites_SetSpriteAnimation(GamePang->player.spr, 37, 37, 10);
 					GamePang->player.stateticks = 15;
 					GamePang->createbullet(GamePang);
@@ -472,7 +484,7 @@ void CGamePang_drawplayer(CGamePang* GamePang)
 {
 	if (GamePang->player.alive)
 	{
-		if (GamePang->playerstate(GamePang,GamePang->playerstatereviving))
+		if (GamePang->playerstate(GamePang,CGamePang_playerstatereviving))
 		{
 			if (GamePang->player.stateticks % 3 == 0)
 				CSprites_DrawSprite(Renderer, GamePang->player.spr);
@@ -538,9 +550,9 @@ void CGamePang_UnLoadSound(CGamePang* GamePang)
 void CGamePang_LoadGraphics(CGamePang* GamePang)
 {
 	GamePang->background = CImage_LoadImage(Renderer, "pang/background.png");
-	GamePang->spritesheetplayer = CImage_LoadImage(Renderer, "pang/character.png",0, 118, dumpScaledBitmaps);
-	GamePang->spritesheetbullet = CImage_LoadImage(Renderer, "pang/weapon.png", 0, 128, dumpScaledBitmaps);
-	GamePang->spritesheetball = CImage_LoadImage(Renderer, "pang/ball.png",0, 128, dumpScaledBitmaps);
+	GamePang->spritesheetplayer = CImage_LoadImageEx(Renderer, "pang/character.png",0, 118, dumpScaledBitmaps);
+	GamePang->spritesheetbullet = CImage_LoadImageEx(Renderer, "pang/weapon.png", 0, 128, dumpScaledBitmaps);
+	GamePang->spritesheetball = CImage_LoadImageEx(Renderer, "pang/ball.png",0, 128, dumpScaledBitmaps);
 	
 	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/pang/character.bmp", CImage_GetImage(GamePang->spritesheetplayer), 1,1, true, 0, 118);
 	// SDL_SaveBMPTextureScaled(Renderer, "./retrotimefs/graphics/pang/weapon.bmp", CImage_GetImage(GamePang->spritesheetbullet), 1,1, true, 0, 128);

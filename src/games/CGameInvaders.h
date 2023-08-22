@@ -1,9 +1,8 @@
-#pragma once
+#ifndef CGAMEINVADERS_H
+#define CGAMEINVADERS_H
 
 #include <SDL.h>
-#include <map>
-#include <iostream>
-#include <string>
+#include <stdbool.h>
 #include "CGameBase.h"
 #include "CSpriteObject.h"
 #include "../CGame.h"
@@ -12,7 +11,31 @@
 #include "../CTween.h"
 #include "../Vec2F.h"
 
-using namespace std;
+
+#define CGameInvaders_tweenenemypositions 0
+#define CGameInvaders_tweenenemydeath 1
+
+#define CGameInvaders_enemyrows 5
+#define CGameInvaders_enemycols 7
+#define CGameInvaders_enemystartxoffset (50*xscale)
+#define CGameInvaders_enemystartyoffset (50*yscale)
+#define CGameInvaders_enemyspacing (60*yscale)
+#define CGameInvaders_enemyhorzspacing (50*xscale)
+
+#define CGameInvaders_enemyspeed (1.0f*xscale)
+#define CGameInvaders_enemyspeedinc (0.15f*xscale)
+#define CGameInvaders_playerspeed (8.0f*xscale)
+#define CGameInvaders_bulletspeed (10.0f*yscale)
+#define CGameInvaders_asteroidsoffset (150*xscale)
+#define CGameInvaders_endscreenconstant ((45*xscale) + 150*xscale)
+#define CGameInvaders_maxexplosion 10
+#define CGameInvaders_maxasteroids 6
+#define CGameInvaders_asteroidscale (2.5f*xscale)
+#define CGameInvaders_asteroidmaxhealthpoints 50
+#define CGameInvaders_maxenemybullets 5
+#define CGameInvaders_enemybulletrandomizer 100
+
+#define CGameInvaders_maxenemies 35 //rows * cols
 
 struct senemyinfo
 {
@@ -26,45 +49,23 @@ typedef struct senemyinfo senemyinfo;
 struct CGameInvaders {
 
 	CGameBase *GameBase;
-	static const int tweenenemypositions = 0;
-	static const int tweenenemydeath = 1;
-
-
-	static const int enemyrows = 5;
-	static const int enemycols = 7;
-	static const int enemystartxoffset = 50*xscale;
-	static const int enemystartyoffset = 50*yscale;
-	static const int enemyspacing = 60*yscale;
-	static const int enemyhorzspacing = 50*xscale;
-	static constexpr Vec2F enemyscale = {1.5f*xscale,1.5f*yscale};
-	static constexpr float enemyspeed = 1.0f*xscale;
-	static constexpr float enemyspeedinc = 0.15f*xscale;
-	static constexpr float playerspeed = 8.0f*xscale;
-	static constexpr float bulletspeed = 10.0f*yscale;
-	static const int asteroidsoffset = 150*xscale;
-	static const int endscreenconstant = 45*xscale + asteroidsoffset;
-	static const int maxexplosion = 10;
-	static const int maxasteroids = 6;
-	static constexpr float asteroidscale = 2.5f*xscale;
-	static const int asteroidmaxhealthpoints = 50;
-	static const int maxenemybullets = 5;
-	static const int enemybulletrandomizer = 100;
-
-	int deaths = 0;
-	int pattern = 0;
-	float backgroundfade = 0;
-	float backgroundfadeinc = 0;
-	Vec2F enemyvel = {enemyspeed,0};
-
+	
+	int deaths;
+	int pattern;
+	float backgroundfade;
+	float backgroundfadeinc;
+	Vec2F enemyvel;
+	Vec2F enemyscale;
+	
 	senemyinfo enemyinfo;
 	CSpriteObject player;
 	CSpriteObject bullet;
-	CSpriteObject enemies[enemycols * enemycols];
-	CSpriteObject explosions[maxexplosion];
-	CSpriteObject asteroids[maxasteroids];
-	CSpriteObject enemybullets[maxenemybullets];
+	CSpriteObject enemies[CGameInvaders_maxenemies];
+	CSpriteObject explosions[CGameInvaders_maxexplosion];
+	CSpriteObject asteroids[CGameInvaders_maxasteroids];
+	CSpriteObject enemybullets[CGameInvaders_maxenemybullets];
 
-	CTweenInfo tweens[enemycols * enemycols][2];
+	CTweenInfo tweens[CGameInvaders_maxenemies][2];
 
 	int background;
 
@@ -157,3 +158,5 @@ void CGameInvaders_destroyallexplosion(CGameInvaders* GameInvaders);
 void CGameInvaders_checkexplosions(CGameInvaders* GameInvaders);
 void Destroy_CGameInvaders(CGameInvaders* GameInvaders);
 CGameInvaders* Create_CGameInvaders();
+
+#endif
