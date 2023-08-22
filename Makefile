@@ -6,20 +6,20 @@ OBJ_DIR = obj
 DAT_DIR = retrotimefs
 EXE=retrotime
 
-SRC=$(wildcard $(SRC_DIR)/*.cpp $(foreach fd, $(SRC_SUBDIR), $(SRC_DIR)/$(fd)/*.cpp))
-OBJS=$(SRC:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
+SRC=$(wildcard $(SRC_DIR)/*.c $(foreach fd, $(SRC_SUBDIR), $(SRC_DIR)/$(fd)/*.c))
+OBJS=$(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
 
-CXX ?= g++
+CC ?= gcc
 DESTDIR ?=
 PREFIX ?= /usr
 OPT_LEVEL ?= -O2
-CPPFLAGS ?= -Wall -Wextra -std=c++11 `sdl2-config --cflags` -Wdouble-promotion 
+CFLAGS ?= -Wall -Wextra `sdl2-config --cflags` -Wdouble-promotion
 LDFLAGS ?= -L$(PREFIX)/lib
-LDLIBS ?= `sdl2-config --libs` -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lSDL2 -lSDL2_gfx -lstdc++ 
+LDLIBS ?= `sdl2-config --libs` -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lSDL2 -lSDL2_gfx
 
 ifeq ($(DEBUG), 1)
-CPPFLAGS += -g 
+CFLAGS += -g 
 OPT_LEVEL =
 
 ifeq ($(OS),Windows_NT)
@@ -27,7 +27,7 @@ LDLIBS += -mconsole
 endif
 
 ifeq ($(PROFILE), 1)
-CPPFLAGS += -pg -no-pie
+CFLAGS += -pg -no-pie
 LDFLAGS += -pg -no-pie
 ifeq ($(OS),Windows_NT)
 LDLIBS += /mingw32/lib/libgmon.a
@@ -52,10 +52,10 @@ ICONDIR = $(DESTDIR)$(PREFIX)/share/icons/
 all: $(EXE)
 
 $(EXE): $(OBJS)
-	$(CXX) $(OPT_LEVEL) $(LDFLAGS) $(TARGET_ARCH) $^ $(LDLIBS) -o $@ 
+	$(CC) $(OPT_LEVEL) $(LDFLAGS) $(TARGET_ARCH) $^ $(LDLIBS) -o $@ 
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)  
-	$(CXX) $(OPT_LEVEL) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)  
+	$(CC) $(OPT_LEVEL) $(CFLAGS) $(CXXFLAGS) -c $< -o $@
 
 $(OBJ_DIR): $(SRC_SUBDIR)
 	mkdir -p $@
