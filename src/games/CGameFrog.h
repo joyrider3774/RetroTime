@@ -73,8 +73,8 @@ typedef struct SObjectInfo SObjectInfo;
 #define CGameFrog_numcols 14
 #define CGameFrog_generatorrows 1
 #define CGameFrog_maxrowsbeforesafetyrow 4
-#define CGameFrog_visiblerows 15 //(int)CEILING(ScreenHeight, (int)CGameFrog_playerspeed) or screensheight / playerspeed ceiled
-#define CGameFrog_numrows 16 //CGameFrog_visiblerows + CGameFrog_generatorrows
+#define CGameFrog_visiblerows 16 //(int)CEILING(ScreenHeight, (int)CGameFrog_playerspeed) or screensheight / playerspeed ceiled
+#define CGameFrog_numrows 17 //CGameFrog_visiblerows + CGameFrog_generatorrows
 #define CGameFrog_playerstartrow 7 //(int)FLOORING(CGameFrog_visiblerows, 2) or visible rows / 2 floored
 
 #define CGameFrog_speeddeviation 0.25f*yscale
