@@ -6,13 +6,10 @@
 #include "CTween.h"
 #include "Vec2F.h"
 
-float alpha = 0.0f;
 int maxticks = 240;
-float alphastep = 1.0f/240.0f;
-float archalpha = 0;
 int scene = 0;
 int sceneticks = 0;
-int tsize = 70;
+int tsize = 70*yscale;
 
 
 void Intro()
@@ -46,19 +43,19 @@ void Intro()
 	{
 		strcpy(s,"Retro Time");
 		w = CFont_TextWidth("Roboto-Regular", tsize, s, strlen(s));
-		CFont_WriteText(Renderer, "Roboto-Regular", tsize, s, strlen(s), (ScreenWidth - w) / 2, 40, tsize*2, ClWhite);
+		CFont_WriteText(Renderer, "Roboto-Regular", tsize, s, strlen(s), (ScreenWidth - w) / 2, 40*yscale, tsize*2, ClWhite);
 
 		strcpy(s,"A game containing");
 		w = CFont_TextWidth("Roboto-Regular", tsize, s, strlen(s));
-		CFont_WriteText(Renderer, "Roboto-Regular", tsize, s, strlen(s),(ScreenWidth - w) / 2, (ScreenHeight - 3 * (tsize + 10)) /2, tsize, ClWhite);
+		CFont_WriteText(Renderer, "Roboto-Regular", tsize, s, strlen(s),(ScreenWidth - w) / 2, ((ScreenHeight - 3 * (tsize + 10*yscale)) /2), tsize, ClWhite);
 
 		sprintf(s,"%d retro based games", Games);
 		w = CFont_TextWidth("Roboto-Regular", tsize, s, strlen(s));
-		CFont_WriteText(Renderer, "Roboto-Regular", tsize, s, strlen(s), (ScreenWidth - w) / 2, (ScreenHeight - 1 * (tsize + 10)) / 2, tsize, ClWhite);
+		CFont_WriteText(Renderer, "Roboto-Regular", tsize, s, strlen(s), (ScreenWidth - w) / 2, (ScreenHeight - 1 * (tsize + 10*yscale)) / 2, tsize, ClWhite);
 
 		sprintf(s, "playable in %d game modes", Modes);
 		w = CFont_TextWidth("Roboto-Regular", tsize, s, strlen(s));
-		CFont_WriteText(Renderer, "Roboto-Regular", tsize, s, strlen(s), (ScreenWidth - w) / 2, (ScreenHeight + 1 * (tsize + 10)) /2, tsize, ClWhite);
+		CFont_WriteText(Renderer, "Roboto-Regular", tsize, s, strlen(s), (ScreenWidth - w) / 2, (ScreenHeight + 1 * (tsize + 10*yscale)) /2, tsize, ClWhite);
 	}
 
 	if (scene >= 2)
@@ -71,23 +68,15 @@ void Intro()
 	SDL_RenderClear(Renderer);
 	SDL_Point Pos = {0,0};
 	Vec2F Scale = {1,1};
-	CImage_DrawImageFuzeTintFloatTex(Renderer, TexTmp, false, &Pos, 0, &Scale, 1, 1, 1, archalpha);
+	CImage_DrawImageFuzeTintFloatTex(Renderer, TexTmp, false, &Pos, 0, &Scale, 1, 1, 1, 1);
 	sceneticks += 1;
 
 	if (sceneticks >= maxticks)
 	{
-		alpha = 0;
 		scene += 1;
 		sceneticks = 0;
 	}
 
 	if (CInput_Buttons.ButA || CInput_Buttons.ButB || CInput_Buttons.ButBack || CInput_Buttons.ButStart || (scene -2 >= Games))
 		GameState = GSTitleScreenInit;
-
-	if (alpha < 1)
-		alpha += alphastep;
-	else
-		alpha = 1;
-
-	archalpha = arch(smoothstep3(alpha));
 }
