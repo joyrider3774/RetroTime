@@ -1,8 +1,6 @@
 #ifndef VEC2F_H
 #define VEC2F_H
 
- #define epsilion 0.000001f
-
 struct Vec2F {
 	float x;
 	float y;
