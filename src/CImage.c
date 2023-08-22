@@ -168,7 +168,6 @@ int CImage_LoadImageEx(SDL_Renderer* Renderer, const char* FileName, int bayerve
 	char BaseFileName[1000];
 	sprintf(FullFileName, "%sgraphics/%s",CImage_DataPath, FileName);
 	sprintf(BaseFileName, "%sgraphics/%s",CImage_DataPath, FileName);
-	printf("%s\n", BaseFileName);
 	for (int i=0; i < GFX_Max; i++)
 	{
 		if(CImage_Images[i] == NULL)
@@ -176,14 +175,12 @@ int CImage_LoadImageEx(SDL_Renderer* Renderer, const char* FileName, int bayerve
 			SDL_Surface* Img = IMG_Load(FullFileName);
 			if(Img)
 			{
-				printf("2%s\n", BaseFileName);
 				for (int j = strlen(BaseFileName) -1; j > 0; j--)
 					if(BaseFileName[j] == '.')
 					{
 						BaseFileName[j] = '\0';
 						break;
 					}
-				printf("%s\n", BaseFileName);
 				CImage_Images[i] = (CTexture*) malloc(sizeof(CTexture));
 				strcpy(CImage_Images[i]->BaseFilename, BaseFileName);
 				CImage_Images[i]->bayerversion = bayerver;

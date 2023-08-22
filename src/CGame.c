@@ -878,8 +878,6 @@ void CGame_Run(int argc, char *argv[])
 	CGame_GetFilePath(argv[0], &StartPath);
 	sprintf(DataPath, "%sretrotimefs/", StartPath);
 	free(StartPath);
-	printf("%s\n", DataPath);
-				SDL_Delay(1000);
 	int c;
 	while ((c = getopt(argc, argv, "?dsfw")) != -1)
 	{
@@ -950,9 +948,9 @@ Possible options are:\n\
 				SDL_Log("Succesfully Created Buffer\n");
 				srand(time(NULL));
 
-				CAudio_Init(DataPath, debugInfo);
+				CAudio_Init(DataPath, false);
 				CFont_Init(DataPath, debugInfo);
-				CImage_Init(DataPath, debugInfo);
+				CImage_Init(DataPath, false);
 				CInput_Init();
 				CSprites_Init();
 				CSprites_SetForceShowCollisionShape(debugShowCollisionShapes);
