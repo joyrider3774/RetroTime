@@ -11,6 +11,8 @@
 #define useDefaultColorAssets false
 #define loadDumpedScaledBitmaps true
 
+#define epsilion 0.0001f
+
 #define titleAlphaEnabled true
 
 #define MaxAlpha 245
