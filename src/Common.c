@@ -399,11 +399,11 @@ void SDL_SaveBMPTextureScaled(SDL_Renderer *Renderer, const char *File, SDL_Text
 	int w,h;
 	uint32_t f;
 	SDL_QueryTexture(Tex, &f, NULL, &w, &h);
-	if(((int)(w * ScaleX) <= 0) || ((int)(h * ScaleY) <= 0))
+	if(((int)ceil(w * ScaleX) <= 0) || ((int)ceil(h * ScaleY) <= 0))
 		return;
 	
 	
-	SDL_Texture *Tmp = SDL_CreateTexture(Renderer, f, SDL_TEXTUREACCESS_TARGET, w*ScaleX, h*ScaleY);
+	SDL_Texture *Tmp = SDL_CreateTexture(Renderer, f, SDL_TEXTUREACCESS_TARGET, (int)ceil(w * ScaleX), (int)ceil(h * ScaleY));
 	SDL_Texture *TmpR = SDL_GetRenderTarget(Renderer);
 	
 	SDL_SetRenderTarget(Renderer, Tmp);
@@ -419,8 +419,8 @@ void SDL_SaveBMPTextureScaled(SDL_Renderer *Renderer, const char *File, SDL_Text
 	SDL_Rect Dst;
 	Dst.x = 0;
 	Dst.y = 0;
-	Dst.w = w * ScaleX;
-	Dst.h = h * ScaleY;
+	Dst.w = (int)ceil(w * ScaleX);
+	Dst.h = (int)ceil(h * ScaleY);
 	SDL_RenderCopy(Renderer, Tex, NULL, &Dst);
     SDL_Texture* streamingTexture = SDL_CreateTexture(Renderer, f, SDL_TEXTUREACCESS_STREAMING, Dst.w, Dst.h );
     
