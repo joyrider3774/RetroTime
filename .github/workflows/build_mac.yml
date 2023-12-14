@@ -82,7 +82,7 @@ jobs:
           echo "</plist>" >> "./$GAME_NAME.app/Contents/Info.plist"
           echo "#!/bin/bash" > "./$GAME_NAME.app/Contents/MacOs/game.sh"
           echo "cd \"\${0%/*}\"" >> "./$GAME_NAME.app/Contents/MacOs/game.sh"
-          echo "\"./$GAME_BINARY\" \"$@\"" >> "./$GAME_NAME.app/Contents/MacOs/game.sh"
+          echo "\"./$GAME_BINARY\" \"\$\@\"" >> "./$GAME_NAME.app/Contents/MacOs/game.sh"
           chmod +x "./$GAME_NAME.app/Contents/MacOs/game.sh"
       - name: prepare artifact 
         # first tar.gz compresses to keep executable bit on the binary when extracted
