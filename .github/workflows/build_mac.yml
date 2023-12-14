@@ -1,6 +1,6 @@
 # Controls when the workflow will run
 on:
-  # Allows you to run this workflow manually ftarget the Actions tab
+  # Allows you to run this workflow manually target the Actions tab
   workflow_dispatch:
 
 env:
@@ -12,14 +12,13 @@ env:
   GAME_ICON_FILE: retrotimefs/data/io.github.joyrider3774.retrotime.svg
   ARTIFACT_NAME: Retro Time Mac Os (x64)
   
-
+name: Build Mac Os
 jobs:
   build:
     runs-on: macos-12    
     steps:
       - name: Checkout sources
         uses: actions/checkout@v3
-        with:
           
       - name: Setup homebrew stuff
         run: |
