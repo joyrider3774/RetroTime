@@ -27,10 +27,14 @@ void CGameSnake::createfood()
 	bool bok = false;
 	while (!bok)
 	{
-		food = {screenleft + int((rand() % cols) *snakesize),screentop + int((rand() % rows) * snakesize)};
-		bok = ((food.x != head.x) && (food.y != head.y));
+		food = { screenleft + int((rand() % cols) * snakesize),screentop + int((rand() % rows) * snakesize) };
+		bok = !((food.x == head.x) && (food.y == head.y));
 		for (int i = 0; i < snakelength; i++)
-			bok = bok && ((food.x != body[i].x) && (food.y != body[i].y));
+		{
+			bok = bok && !((food.x == body[i].x) && (food.y == body[i].y));
+			if (!bok)
+				break;
+		}
 	}
 }
 
