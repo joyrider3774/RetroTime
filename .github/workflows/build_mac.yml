@@ -37,6 +37,7 @@ jobs:
         run: |
           mkdir "$GAME_NAME.app"
           mkdir "$GAME_NAME.app/Contents"
+          mkdir "$GAME_NAME.app/Contents/MacOs"
           cp "./$GAME_BINARY" "./$GAME_NAME.app/Contents/MacOs"
           cp -R "./$GAME_DATA" "./$GAME_NAME.app/Contents/MacOs"
           mv "./$GAME_NAME.app/Contents/MacOs/libs" "./$GAME_NAME.app/Contents/libs"
