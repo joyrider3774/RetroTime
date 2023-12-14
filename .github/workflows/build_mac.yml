@@ -1,0 +1,109 @@
+# Controls when the workflow will run
+on:
+  # Allows you to run this workflow manually ftarget the Actions tab
+  workflow_dispatch:
+
+env:
+  GAME_NAME: Retro Time
+  GAME_ID: com.github.joyrider3774.retrotime
+  GAME_DATA: retrotimefs
+  GAME_BINARY: retrotime
+  #viewed from Source directory
+  GAME_ICON_FILE: retrotimefs/data/io.github.joyrider3774.retrotime.svg
+  ARTIFACT_NAME: Retro Time Mac Os (x64)
+  
+
+jobs:
+  build:
+    runs-on: macos-12    
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v3
+        with:
+          
+      - name: Setup homebrew stuff
+        run: |
+          brew update
+          brew install --ignore-dependencies portaudio fluid-synth libxmp gettext glib aom libavif
+          brew install --ignore-dependencies SDL2 SDL2_Mixer SDL2_Image SDL2_ttf SDL2_gfx dylibbundler
+       
+      - name: Build Game
+        run: |
+          make
+      - name: run dylibbundler
+        run: |
+          dylibbundler -cd -b -x "./$GAME_BINARY"
+      
+      - name: create app 
+        run: |
+          mkdir "$GAME_NAME.app"
+          mkdir "$GAME_NAME.app/Contents"
+          cp "./$GAME_BINARY" "./$GAME_NAME.app/Contents/MacOs"
+          cp -R "./$GAME_DATA" "./$GAME_NAME.app/Contents/MacOs"
+          mv "./$GAME_NAME.app/Contents/MacOs/libs" "./$GAME_NAME.app/Contents/libs"
+          mkdir "$GAME_NAME.app/Contents/Resources"
+          mkdir Icon.iconset
+          #for PNG
+          #sips -z 16 16 "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE" --out Icon.iconset/icon_16x16.png
+          #sips -z 32 32 "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE" --out Icon.iconset/icon_16x16@2x.png
+          #sips -z 32 32 "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE" --out Icon.iconset/icon_32x32.png
+          #sips -z 64 64 "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE" --out Icon.iconset/icon_32x32@2x.png
+          #sips -z 128 128 "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE" --out Icon.iconset/icon_128x128.png
+          #sips -z 256 256 "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE" --out Icon.iconset/icon_128x128@2x.png
+          #sips -z 256 256 "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE" --out Icon.iconset/icon_256x256.png
+          #sips -z 512 512 "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE" --out Icon.iconset/icon_256x256@2x.png
+          #sips -z 512 512 "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE" --out Icon.iconset/icon_512x512.png
+          #sips -z 1024 1024 "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE" --out Icon.iconset/icon_512x512@2x.png
+          #for SVG
+          qlmanage -t -s 16x16 -o Icon.iconset/icon_16x16.png "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE"
+          qlmanage -t -s 32x32 -o Icon.iconset/icon_16x16@2x.png "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE"
+          qlmanage -t -s 32x32 -o Icon.iconset/icon_32x32.png "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE"
+          qlmanage -t -s 64x64 -o Icon.iconset/icon_32x32@2x.png "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE"
+          qlmanage -t -s 128x128 -o Icon.iconset/icon_128x128.png "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE"
+          qlmanage -t -s 256x256 -o Icon.iconset/icon_128x128@2.png "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE"
+          qlmanage -t -s 256x256 -o Icon.iconset/icon_256x256.png "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE"
+          qlmanage -t -s 512x512 -o Icon.iconset/icon_256x256@2x.png "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE"
+          qlmanage -t -s 512x512 -o Icon.iconset/icon_512x512.png "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE"
+          qlmanage -t -s 1024x1024 -o Icon.iconset/icon_512x512@2x.png "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE"
+          iconutil -c icns Icon.iconset
+          mv icon.icns "./$GAME_NAME.app/Contents/Resources/Icon.icns"
+          echo "<?xml version='1.0' encoding='UTF-8'?>" > "./$GAME_NAME.app/Contents/Info.plist"
+          echo "<!DOCTYPE plist PUBLIC '-//Apple Computer//DTD PLIST 1.0//EN' 'http://www.apple.com/DTDs/PropertyList-1.0.dtd'>" >> "./$GAME_NAME.app/Contents/Info.plist"
+          echo "<plist version='1.0'>" >> "./$GAME_NAME.app/Contents/Info.plist"
+          echo "  <dict>" >> "./$GAME_NAME.app/Contents/Info.plist"
+          echo "    <key>CFBundleExecutable</key>" >> "./$GAME_NAME.app/Contents/Info.plist"
+          echo "    <string>game.sh</string>" >> "./$GAME_NAME.app/Contents/Info.plist"
+          echo "    <key>CFBundleIdentifier</key>" >> "./$GAME_NAME.app/Contents/Info.plist"
+          echo "    <string>$GAME_ID</string>" >> "./$GAME_NAME.app/Contents/Info.plist"
+          echo "    <key>CFBundleName</key>" >> "./$GAME_NAME.app/Contents/Info.plist"
+          echo "    <string>$GAME_NAME</string>" >> "./$GAME_NAME.app/Contents/Info.plist"
+          echo "    <key>CFBundleIconFile</key>" >> "./$GAME_NAME.app/Contents/Info.plist"
+          echo "    <string>Icon.icns</string>" >> "./$GAME_NAME.app/Contents/Info.plist"
+          echo "    <key>CFBundleShortVersionString</key>" >> "./$GAME_NAME.app/Contents/Info.plist"
+          echo "    <string>0.01</string>" >> "./$GAME_NAME.app/Contents/Info.plist"
+          echo "    <key>CFBundleInfoDictionaryVersion</key>" >> "./$GAME_NAME.app/Contents/Info.plist"
+          echo "    <string>6.0</string>" >> "./$GAME_NAME.app/Contents/Info.plist"
+          echo "    <key>CFBundlePackageType</key>" >> "./$GAME_NAME.app/Contents/Info.plist"
+          echo "    <string>APPL</string>" >> "./$GAME_NAME.app/Contents/Info.plist"
+          echo "    <key>IFMajorVersion</key>" >> "./$GAME_NAME.app/Contents/Info.plist"
+          echo "    <integer>0</integer>" >> "./$GAME_NAME.app/Contents/Info.plist"
+          echo "    <key>IFMinorVersion</key>" >> "./$GAME_NAME.app/Contents/Info.plist"
+          echo "    <integer>1</integer>" >> "./$GAME_NAME.app/Contents/Info.plist"
+          echo "  </dict>" >> "./$GAME_NAME.app/Contents/Info.plist"
+          echo "</plist>" >> "./$GAME_NAME.app/Contents/Info.plist"
+          echo "#!/bin/bash" > "./$GAME_NAME.app/Contents/MacOs/game.sh"
+          echo "cd \"\${0%/*}\"" >> "./$GAME_NAME.app/Contents/MacOs/game.sh"
+          echo "./$GAME_BINARY" >> "./$GAME_NAME.app/Contents/MacOs/game.sh"
+          chmod +x "./$GAME_NAME.app/Contents/MacOs/game.sh"
+      - name: prepare artifact 
+        # first tar.gz compresses to keep executable bit on the binary when extracted
+        # then prepares a directory to zip that file as github only supports zipped artifacts
+        run: |
+          mkdir artifact
+          tar -czvf "$GAME_NAME.tar.gz" "./$GAME_NAME.app"
+          mv  "$GAME_NAME.tar.gz" ./artifact/
+      - name: Store build
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{env.ARTIFACT_NAME}}
+          path: artifact
