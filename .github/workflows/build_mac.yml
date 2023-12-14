@@ -9,7 +9,7 @@ env:
   GAME_DATA: retrotimefs
   GAME_BINARY: retrotime
   #viewed from Source directory
-  GAME_ICON_FILE: retrotimefs/data/io.github.joyrider3774.retrotime.svg
+  GAME_ICON_FILE: retrotimefs/data/io.github.joyrider3774.retrotime.png
   ARTIFACT_NAME: Retro Time Mac Os (x64)
   
 name: Build Mac Os
@@ -44,27 +44,16 @@ jobs:
           mkdir "$GAME_NAME.app/Contents/Resources"
           mkdir Icon.iconset
           #for PNG
-          #sips -z 16 16 "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE" --out Icon.iconset/icon_16x16.png
-          #sips -z 32 32 "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE" --out Icon.iconset/icon_16x16@2x.png
-          #sips -z 32 32 "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE" --out Icon.iconset/icon_32x32.png
-          #sips -z 64 64 "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE" --out Icon.iconset/icon_32x32@2x.png
-          #sips -z 128 128 "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE" --out Icon.iconset/icon_128x128.png
-          #sips -z 256 256 "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE" --out Icon.iconset/icon_128x128@2x.png
-          #sips -z 256 256 "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE" --out Icon.iconset/icon_256x256.png
-          #sips -z 512 512 "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE" --out Icon.iconset/icon_256x256@2x.png
-          #sips -z 512 512 "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE" --out Icon.iconset/icon_512x512.png
-          #sips -z 1024 1024 "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE" --out Icon.iconset/icon_512x512@2x.png
-          #for SVG
-          qlmanage -t -s 16x16 -o Icon.iconset/icon_16x16.png "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE"
-          qlmanage -t -s 32x32 -o Icon.iconset/icon_16x16@2x.png "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE"
-          qlmanage -t -s 32x32 -o Icon.iconset/icon_32x32.png "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE"
-          qlmanage -t -s 64x64 -o Icon.iconset/icon_32x32@2x.png "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE"
-          qlmanage -t -s 128x128 -o Icon.iconset/icon_128x128.png "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE"
-          qlmanage -t -s 256x256 -o Icon.iconset/icon_128x128@2.png "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE"
-          qlmanage -t -s 256x256 -o Icon.iconset/icon_256x256.png "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE"
-          qlmanage -t -s 512x512 -o Icon.iconset/icon_256x256@2x.png "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE"
-          qlmanage -t -s 512x512 -o Icon.iconset/icon_512x512.png "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE"
-          qlmanage -t -s 1024x1024 -o Icon.iconset/icon_512x512@2x.png "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE"
+          sips -z 16 16 "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE" --out Icon.iconset/icon_16x16.png
+          sips -z 32 32 "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE" --out Icon.iconset/icon_16x16@2x.png
+          sips -z 32 32 "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE" --out Icon.iconset/icon_32x32.png
+          sips -z 64 64 "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE" --out Icon.iconset/icon_32x32@2x.png
+          sips -z 128 128 "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE" --out Icon.iconset/icon_128x128.png
+          sips -z 256 256 "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE" --out Icon.iconset/icon_128x128@2x.png
+          sips -z 256 256 "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE" --out Icon.iconset/icon_256x256.png
+          sips -z 512 512 "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE" --out Icon.iconset/icon_256x256@2x.png
+          sips -z 512 512 "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE" --out Icon.iconset/icon_512x512.png
+          sips -z 1024 1024 "./$GAME_NAME.app/Contents/MacOs/$GAME_ICON_FILE" --out Icon.iconset/icon_512x512@2x.png
           iconutil -c icns Icon.iconset
           mv icon.icns "./$GAME_NAME.app/Contents/Resources/Icon.icns"
           echo "<?xml version='1.0' encoding='UTF-8'?>" > "./$GAME_NAME.app/Contents/Info.plist"
