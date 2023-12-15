@@ -89,8 +89,8 @@ jobs:
         # then prepares a directory to zip that file as github only supports zipped artifacts
         run: |
           mkdir artifact
-          tar -czvf "$GAME_NAME.tar.gz" "./$GAME_NAME.app"
-          mv  "$GAME_NAME.tar.gz" ./artifact/
+          tar -czvf "$ARTIFACT_NAME.tar.gz" "./$GAME_NAME.app"
+          mv  "$ARTIFACT_NAME.tar.gz" ./artifact/
       - name: Store build
         uses: actions/upload-artifact@v3
         with:
