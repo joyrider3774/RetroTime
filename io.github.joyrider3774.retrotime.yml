@@ -1,6 +1,6 @@
 app-id: io.github.joyrider3774.retrotime
 runtime: org.freedesktop.Platform
-runtime-version: "22.08"
+runtime-version: "23.08"
 sdk: org.freedesktop.Sdk
 command: /app/games/retrotime/retrotime
 
@@ -17,7 +17,7 @@ cleanup:
   - "/lib/pkgconfig"
   
 modules:
-  - name: build SDL2_gfx
+  - name: SDL2_gfx
     config-opts: 
       - --disable-static
       - --disable-mmx
@@ -33,7 +33,7 @@ modules:
       - type: archive
         url: https://downloads.sourceforge.net/project/sdl2gfx/SDL2_gfx-1.0.4.tar.gz
         sha256: 63e0e01addedc9df2f85b93a248f06e8a04affa014a835c2ea34bfe34e576262
-  - name: build retrotime
+  - name: Game
     no-autogen: true    
     build-options: 
       env: 
@@ -43,7 +43,7 @@ modules:
     sources:
       - type: git
         url: https://github.com/joyrider3774/RetroTime.git
-  - name: copy appstream xml
+  - name: AppStream
     buildsystem: simple
     build-commands:
       - install -D retrotimefs/data/io.github.joyrider3774.retrotime.metainfo.xml /app/share/metainfo/io.github.joyrider3774.retrotime.metainfo.xml
