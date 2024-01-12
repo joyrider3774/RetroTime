@@ -45,4 +45,6 @@ modules:
         url: https://github.com/joyrider3774/RetroTime.git
     post-install:
       - install -D retrotimefs/data/io.github.joyrider3774.retrotime.metainfo.xml /app/share/metainfo/io.github.joyrider3774.retrotime.metainfo.xml
-    
+      - install -D retrotimefs/data/io.github.joyrider3774.retrotime-128x128.png /app/share/icons/hicolor/128x128/apps/io.github.joyrider3774.retrotime.png
+      - install -D retrotimefs/data/io.github.joyrider3774.retrotime-64x64.png /app/share/icons/hicolor/64x64/apps/io.github.joyrider3774.retrotime.png
+ 
