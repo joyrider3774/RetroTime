@@ -43,8 +43,6 @@ modules:
     sources:
       - type: git
         url: https://github.com/joyrider3774/RetroTime.git
-  - name: AppStream
-    buildsystem: simple
-    build-commands:
+    post-install:
       - install -D retrotimefs/data/io.github.joyrider3774.retrotime.metainfo.xml /app/share/metainfo/io.github.joyrider3774.retrotime.metainfo.xml
     
