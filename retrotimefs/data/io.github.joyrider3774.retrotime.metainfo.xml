@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.joyrider3774.retrotime</id>
+  
+  <name>RetroTime</name>
+  <summary>A game containing 8 retro based games playable in 3 game modes</summary>
+  
+  <metadata_license>MIT</metadata_license>
+  <project_license>MIT</project_license>
+  
+  <supports>
+    <control>pointing</control>
+    <control>keyboard</control>
+    <control>gamepad</control>
+  </supports>
+  
+  <description>
+    <p>
+      RetroTime is a game containing 8 retro based games playable in 3 game modes being Retro Carousel, Time Attack and Lives mode. The game is a port from my competetion entry for Fuze 4 for Nintendo switch, in colleboration Wireframe magazine.
+    </p>
+    <p>
+      In Retro Carousel mode you will play all games for 2 minutes after each other. You can not die by losing lives. Points will be deducted from the score when dying. The aim is to get the highest score, accumulated over all the games.
+    </p>
+    <p>
+      In Lives mode you play a single game and start with a fixed amount of lives. Dying will lose you one live. The game is over if the lives reaches 0. The aim of the game is to get the highest score possible without dying.
+    </p>
+    <p>
+      In Time Attack mode you play a single game for 5 minutes. You can not die by losing lives. Points will be deducted from the score when dying. The aim is to get the highest score during these 5 minutes of playing.
+    </p>
+  </description>
+  
+  <launchable type="desktop-id">io.github.joyrider3774.retrotime.desktop</launchable>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/joyrider3774/RetroTime/master/metadata/retrotime.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/joyrider3774/RetroTime/master/metadata/bubblebuster.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://raw.githubusercontent.com/joyrider3774/RetroTime/master/metadata/invaders.png</image>
+    </screenshot>
+  </screenshots>
+</component>
