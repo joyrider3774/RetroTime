@@ -100,7 +100,8 @@ The game makes uses of multiple payed and free assets packs, below are the credi
 > **Warning**
 > The Project's code is MIT but the assets are not, they all use different licenses, some are free some are Creative Commons and some i even payed for and can only be used with my project. so you can not re-use those as you wish. 
 
-### Main Game User interface 
+### Main Game User interface
+
 | Asset | Asset Pack | License |
 | ----- | --------- | -------- |
 | Music.ogg | Created and Owned by me on [Strofe](https://www.strofe.com/) |
@@ -113,6 +114,7 @@ The game makes uses of multiple payed and free assets packs, below are the credi
 
 
 ### Shared between games
+
 | Asset | Asset Pack | License |
 | ----- | --------- | -------- |
 | die.wav | [8-bit Action Music & SFX by Joel Steudler](https://joelsteudler.itch.io/8-bit-action-music-sfx) | [HUMBLE SOFTWARE BUNDLE: FRESH START GAME DEV ASSETS BUNDLE License - if you own the bundle](https://cdn.humblebundle.com/misc/files/hashed/97e53bc6fa248bd5eff48b074b09f21649401cbb.pdf) |
@@ -127,6 +129,7 @@ The game makes uses of multiple payed and free assets packs, below are the credi
 
 
 ### Block Stacker
+
 | Asset | Asset Pack | License |
 | ----- | --------- | -------- |
 | Music.ogg | Created and Owned by me on [Strofe](https://www.strofe.com/) |
@@ -137,6 +140,7 @@ The game makes uses of multiple payed and free assets packs, below are the credi
 
 
 ### Brick Breaker
+
 | Asset | Asset Pack | License |
 | ----- | --------- | -------- |
 | Music.ogg | Created and Owned by me on [Strofe](https://www.strofe.com/) |
@@ -149,6 +153,7 @@ The game makes uses of multiple payed and free assets packs, below are the credi
 
 
 ### Faster Dave
+
 | Asset | Asset Pack | License |
 | ----- | --------- | -------- |
 | Music.ogg | Created and Owned by me on [Strofe](https://www.strofe.com/) |
@@ -165,6 +170,7 @@ The game makes uses of multiple payed and free assets packs, below are the credi
 
 
 ### Bubble Buster
+
 | Asset | Asset Pack | License |
 | ----- | --------- | -------- |
 | Music.ogg | Created and Owned by me on [Strofe](https://www.strofe.com/) |
@@ -179,6 +185,7 @@ The game makes uses of multiple payed and free assets packs, below are the credi
 
 
 ### Color Invasion
+
 | Asset | Asset Pack | License |
 | ----- | --------- | -------- |
 | Music.ogg | Created and Owned by me on [Strofe](https://www.strofe.com/) |
@@ -187,6 +194,7 @@ The game makes uses of multiple payed and free assets packs, below are the credi
 
 
 ### Snakey
+
 | Asset | Asset Pack | License |
 | ----- | --------- | -------- |
 | Music.ogg | Created and Owned by me on [Strofe](https://www.strofe.com/) |
@@ -194,6 +202,7 @@ The game makes uses of multiple payed and free assets packs, below are the credi
 
 
 ### Invaders
+
 | Asset | Asset Pack | License |
 | ----- | --------- | -------- |
 | Music.ogg | Created and Owned by me on [Strofe](https://www.strofe.com/) |
@@ -215,6 +224,7 @@ The game makes uses of multiple payed and free assets packs, below are the credi
 
 
 ### Toady
+
 | Asset | Asset Pack | License |
 | ----- | --------- | -------- |
 | Music.ogg | Created and Owned by me on [Strofe](https://www.strofe.com/) |
