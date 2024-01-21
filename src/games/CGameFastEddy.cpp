@@ -437,7 +437,7 @@ void CGameFastEddy::createplayer()
 {
 	player.spr = Game->Sprites->CreateSprite();
 	player.alive = true;
-	SDL_Point tz = {238, 342};
+	SDL_Point tz = {238/2, 342/2};
 	Vec2F scale = {playerheight / tz.y, playerheight / tz.y};
 	player.tz.x = tz.x * scale.x;
 	player.tz.y = tz.y * scale.y;
