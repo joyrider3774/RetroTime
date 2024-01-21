@@ -49,8 +49,12 @@ int CImage::LoadImage(SDL_Renderer* Renderer, string FileName)
 			{
 				Images[i] = SDL_CreateTextureFromSurface(Renderer, Img);
 				SDL_FreeSurface(Img);
+				if(!(Images[i]))
+					SDL_Log("Failed Loading Graphic %s error:%s\n", FullFileName.c_str(), SDL_GetError());
+
 				if(DebugInfo)
-					SDL_Log("Loaded Graphic %s\n", FullFileName.c_str());
+					if(Images[i])
+						SDL_Log("Loaded Graphic %s\n", FullFileName.c_str());
 				return i;
 			}
 			else
