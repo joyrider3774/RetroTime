@@ -152,7 +152,7 @@ void SubScoreScreen(CGame *Game)
 			Game->Font->WriteText(Game->Renderer, "Roboto-Regular", 30, Text, Text.length(), 300, 545, 0, {255,255,255,255});
 		}
 	}
-
+#ifndef FULLMENUTRANSPARANCY
 	SDL_Rect SrcRect = {245,95,790,530};
 	//grab transparant part of frame + menu
 	SDL_Texture *Tmp = SDL_CreateTexture(Game->Renderer, PixelFormat, SDL_TEXTUREACCESS_TARGET, SrcRect.w, SrcRect.h);
@@ -167,7 +167,7 @@ void SubScoreScreen(CGame *Game)
 	//and then draw the transparant part over it now
 	Game->Image->DrawImage(Game->Renderer, Tmp, NULL, &SrcRect);
 	SDL_DestroyTexture(Tmp);
-
+#endif
 	SDL_SetRenderTarget(Game->Renderer, Game->TexScreen);
 	SDL_RenderCopy(Game->Renderer, Game->TexOffScreen, NULL, NULL);
 

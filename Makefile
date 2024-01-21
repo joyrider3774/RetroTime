@@ -1,4 +1,5 @@
 DEBUG=0
+FULLMENUTRANSPARANCY =
 SRC_DIR = src
 SRC_SUBDIR = games
 OBJ_DIR = obj
@@ -10,12 +11,17 @@ OBJS=$(SRC:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
 
 
 CXX ?= g++
+SDL2CONFIG ?= sdl2-config
 DESTDIR ?=
 PREFIX ?= /usr
 OPT_LEVEL ?= -O2
-CPPFLAGS ?= -Wall -Wextra -std=c++11 `sdl2-config --cflags`
+CPPFLAGS ?= -Wall -Wextra -std=c++11 `$(SDL2CONFIG) --cflags`
 LDFLAGS ?= -L$(PREFIX)/lib -g
-LDLIBS ?= `sdl2-config --libs` -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lSDL2 -lSDL2_gfx -lstdc++
+LDLIBS ?= `$(SDL2CONFIG) --libs` -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lSDL2 -lSDL2_gfx -lstdc++
+
+ifneq ($(FULLMENUTRANSPARANCY),)
+DEFINES = -DFULLMENUTRANSPARANCY
+endif
 
 ifeq ($(DEBUG), 1)
 ifeq ($(OS),Windows_NT)
@@ -28,7 +34,9 @@ endif
 #MINGW does not have X11 and does not require it
 #dont know about cygwin
 ifneq ($(OS),Windows_NT)
+ifeq ($(NOX11),)
 LDLIBS += -lX11
+endif
 endif
 
 GAMEDIR = $(DESTDIR)$(PREFIX)/games/retrotime
@@ -44,7 +52,7 @@ $(EXE): $(OBJS)
 	$(CXX) $(OPT_LEVEL) $(LDFLAGS) $(TARGET_ARCH) $^ $(LDLIBS) -o $@ 
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)  
-	$(CXX) $(OPT_LEVEL) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
+	$(CXX) $(OPT_LEVEL) $(CPPFLAGS) $(CXXFLAGS) $(DEFINES) -c $< -o $@
 
 $(OBJ_DIR): $(SRC_SUBDIR)
 	mkdir -p $@

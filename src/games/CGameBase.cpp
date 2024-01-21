@@ -458,7 +458,7 @@ void CGameBase::PauseMenu()
 				}
 			}
 		}
-
+#ifndef FULLMENUTRANSPARANCY
 		SDL_Rect SrcRect = {230,85,820,550};
 		//grab transparant part of frame + menu
 		SDL_Texture *Tmp = SDL_CreateTexture(Game->Renderer, PixelFormat, SDL_TEXTUREACCESS_TARGET, SrcRect.w, SrcRect.h);
@@ -473,7 +473,7 @@ void CGameBase::PauseMenu()
 		//and then draw the transparant part over it now
 		Game->Image->DrawImage(Game->Renderer, Tmp, NULL, &SrcRect);
 		SDL_DestroyTexture(Tmp);
-
+#endif
 		SDL_SetRenderTarget(Game->Renderer, Game->TexScreen);
 		SDL_RenderCopy(Game->Renderer, Game->TexOffScreen, NULL, NULL);
 
