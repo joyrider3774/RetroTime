@@ -134,10 +134,19 @@ void CInput::HandleJoystickButtonEvent(int Button, bool Value)
 		case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
 			Buttons.ButDpadRight = Value;
 			break;
-		case SDL_CONTROLLER_BUTTON_A:
-			Buttons.ButA = Value;
-			break;
+		//trim ui has A & B Buttons swapped
+		#ifdef TRIMUI_SMART_PRO
 		case SDL_CONTROLLER_BUTTON_B:
+		#else
+		case SDL_CONTROLLER_BUTTON_A:
+		#endif
+			Buttons.ButA = Value;
+			break;		
+		#ifdef TRIMUI_SMART_PRO
+		case SDL_CONTROLLER_BUTTON_A:
+		#else
+		case SDL_CONTROLLER_BUTTON_B:
+		#endif
 			Buttons.ButB = Value;
 			break;
 		case SDL_CONTROLLER_BUTTON_START:
@@ -146,6 +155,12 @@ void CInput::HandleJoystickButtonEvent(int Button, bool Value)
 		case SDL_CONTROLLER_BUTTON_BACK:
 			Buttons.ButBack = Value;
 			break;
+		//trimui menu (=guide button)
+		#ifdef TRIMUI_SMART_PRO
+		case SDL_CONTROLLER_BUTTON_GUIDE:
+			Buttons.ButQuit = Value;
+			break;
+		#endif
 		default:
 			break;
 	}

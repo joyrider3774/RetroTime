@@ -1,5 +1,5 @@
 DEBUG=0
-FULLMENUTRANSPARANCY =
+FULLMENUTRANSPARANCY = 0
 SRC_DIR = src
 SRC_SUBDIR = games
 OBJ_DIR = obj
@@ -20,9 +20,12 @@ CPPFLAGS ?= -Wall -Wextra -std=c++11 `$(SDL2CONFIG) --cflags`
 LDFLAGS ?= -L$(PREFIX)/lib -g
 LDLIBS ?= `$(SDL2CONFIG) --libs` -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lSDL2 -lSDL2_gfx -lstdc++
 
-ifneq ($(FULLMENUTRANSPARANCY),)
-DEFINES += -DFULLMENUTRANSPARANCY
+DEFINESADD = 
+ifneq ($(FULLMENUTRANSPARANCY), 0)
+DEFINESADD += -DFULLMENUTRANSPARANCY
 endif
+
+FINALDEFINES = $(DEFINES) $(DEFINESADD)
 
 ifeq ($(DEBUG), 1)
 ifeq ($(OS),Windows_NT)
@@ -50,10 +53,10 @@ ICONDIR = $(DESTDIR)$(PREFIX)/share/icons/
 all: $(EXE)
 
 $(EXE): $(OBJS)
-	$(CXX) $(OPT_LEVEL) $(LDFLAGS) $(TARGET_ARCH) $^ $(LDLIBS) -o $@ 
+	$(CXX) $(OPT_LEVEL) $(LDFLAGS) $(TARGET_ARCH) $(FINALDEFINES) $^ $(LDLIBS) -o $@ 
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)  
-	$(CXX) $(OPT_LEVEL) $(CPPFLAGS) $(CXXFLAGS) $(DEFINES) -c $< -o $@
+	$(CXX) $(OPT_LEVEL) $(CPPFLAGS) $(CXXFLAGS) $(FINALDEFINES) -c $< -o $@
 
 $(OBJ_DIR): $(SRC_SUBDIR)
 	mkdir -p $@
