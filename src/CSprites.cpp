@@ -70,6 +70,9 @@ CSprite* CSprites::CreateSprite()
 			Spr->tilesX = 1;
 			Spr->tilesY = 1;
 			Spr->rotation_speed = 0.0;
+            Spr->x = 0;
+            Spr->y = 0;
+			Spr->show_collision_shape = false;
 			Sprites[i] = Spr;
 			return Spr;
 		}
