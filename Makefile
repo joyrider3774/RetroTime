@@ -12,6 +12,7 @@ OBJS=$(SRC:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
 
 CXX ?= g++
 SDL2CONFIG ?= sdl2-config
+DEFINES ?= 
 DESTDIR ?=
 PREFIX ?= /usr
 OPT_LEVEL ?= -O2
@@ -20,7 +21,7 @@ LDFLAGS ?= -L$(PREFIX)/lib -g
 LDLIBS ?= `$(SDL2CONFIG) --libs` -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lSDL2 -lSDL2_gfx -lstdc++
 
 ifneq ($(FULLMENUTRANSPARANCY),)
-DEFINES = -DFULLMENUTRANSPARANCY
+DEFINES += -DFULLMENUTRANSPARANCY
 endif
 
 ifeq ($(DEBUG), 1)
