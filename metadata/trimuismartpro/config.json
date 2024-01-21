@@ -1,0 +1,8 @@
+{
+"package":"io.github.joyrider3774.retrotime",
+"label":"Retrotime",
+"icon":"icon.png",
+"iconsel":"icon.png",
+"launch":"launch.sh",
+"description":"Retrotime Created by Joyrider3774"
+}
