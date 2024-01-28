@@ -1,5 +1,5 @@
 export PORTS_FOLDER=$(realpath $(dirname ${BASH_SOURCE[0]}))
-export GAMEDIR="${PORTS_FOLDER}/puztrix"
+export GAMEDIR="${PORTS_FOLDER}/retrotime"
 export HOME="/userdata/system"
 export SDL_ASSERT=always_ignore
 export SDL_GAMECONTROLLERCONFIG=$(grep "Deeplay" "${HOME}/.config/gamecontrollerdb.txt")
