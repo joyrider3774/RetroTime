@@ -17,7 +17,7 @@ DESTDIR ?=
 PREFIX ?= /usr
 OPT_LEVEL ?= -O2
 CPPFLAGS ?= -Wall -Wextra -std=c++11 `$(SDL2CONFIG) --cflags`
-LDFLAGS ?= -L$(PREFIX)/lib -g
+LDFLAGS ?= -g
 LDLIBS ?= `$(SDL2CONFIG) --libs` -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lSDL2 -lSDL2_gfx -lstdc++
 
 DEFINESADD = 
