@@ -22,6 +22,8 @@ set(CMAKE_CXX_EXTENSIONS ON)
 file(GLOB SRC CONFIGURE_DEPENDS
         "${PROJECT_SOURCE_DIR}/src/*.cpp"
         "${PROJECT_SOURCE_DIR}/src/*.h"
+        "${PROJECT_SOURCE_DIR}/src/games/*.cpp"
+        "${PROJECT_SOURCE_DIR}/src/games/*.h"
         )
 
 set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
