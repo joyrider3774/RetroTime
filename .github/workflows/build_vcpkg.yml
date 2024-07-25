@@ -55,7 +55,7 @@ jobs:
         run: |
           mkdir ./Release
           mkdir ./Release/RetroTime
-          cp retrotime.exe ./Release/RetroTime/
+          cp build/${{ matrix.binary }} ./Release/RetroTime/
           cp -R ./retrotimefs ./Release/RetroTime/
           cp ./README.md ./Release/Retrotime/
           cp ./LICENSE ./Release/Retrotime/
