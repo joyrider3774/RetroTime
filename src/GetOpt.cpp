@@ -33,6 +33,8 @@
 * SUCH DAMAGE.
 */
 
+extern "C" {
+
 #include <string.h>
 #include <stdio.h>
 
@@ -103,4 +105,5 @@ int getopt(int nargc, char* const nargv[], const char* ostr)
         ++optind;
     }
     return (optopt);                        /* dump back option letter */
+}
 }
