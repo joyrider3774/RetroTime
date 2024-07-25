@@ -835,12 +835,13 @@ void CGame::Run(int argc, char *argv[])
 		{
 			case '?':
 				// i use sdl log because on windows printf did not show up
-				SDL_Log("\nZnax Version 1.0.2\n\n\
-Usage: Znax [Options]\n\n\
+				SDL_Log("\nRetrotime Version 1.1\n\n\
+Usage: retrotime [Options]\n\n\
 Possible options are:\n\
   -?: show this help message\n\
   -s: Use Software Renderer\n\
   -f: Show FPS\n\
+  -d: Disable linear filtering\n\
   -w: Run windowed at startup (by default starts up fullscreen)\n");
 				exit(0);
 				break;
