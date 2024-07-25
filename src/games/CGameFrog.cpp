@@ -495,7 +495,7 @@ void CGameFrog::updateobjects()
 						playerdeath = true;
 					else
 					{
-						if ((id == idroad) or (id == idgrass))
+						if ((id == idroad) || (id == idgrass))
 							playermoved = true;
 						else
 						{

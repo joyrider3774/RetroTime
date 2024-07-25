@@ -7,8 +7,8 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <time.h>
-#include <unistd.h>
 #include <inttypes.h>
+#include "GetOpt.h"
 #include "games/CGameBase.h"
 #include "games/CGameFrog.h"
 #include "games/CGameFastEddy.h"
@@ -490,6 +490,11 @@ void CGame::LoadSettings()
 		if(EnvHomeDrive && EnvHomePath) //windows systems normally
 			FileName = string(EnvHomeDrive) + string(EnvHomePath) + "/.retrotimesettings";
 
+	Audio->SetVolumeMusic(128);
+	Audio->SetVolumeSound(128);
+	MotionBlur = false;
+	Crt = 0;
+
 	SettingsFile = fopen(FileName.c_str(), "r");
 	if (SettingsFile)
 	{
@@ -502,13 +507,6 @@ void CGame::LoadSettings()
 		if(ret > 1)
 			Audio->SetVolumeSound(VolumeSound);
 		fclose(SettingsFile);
-	}
-	else
-	{
-		Audio->SetVolumeMusic(128);
-		Audio->SetVolumeSound(128);
-		MotionBlur = false;
-		Crt = 0;
 	}
 }
 
