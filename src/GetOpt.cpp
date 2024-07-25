@@ -1,4 +1,4 @@
-#include "getopt.h"
+#include "GetOpt.h"
 
 /*
 * Copyright (c) 1987, 1993, 1994
@@ -32,8 +32,9 @@
 * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 * SUCH DAMAGE.
 */
-
+#ifdef __cplusplus
 extern "C" {
+#endif
 
 #include <string.h>
 #include <stdio.h>
@@ -106,4 +107,6 @@ int getopt(int nargc, char* const nargv[], const char* ostr)
     }
     return (optopt);                        /* dump back option letter */
 }
+#ifdef __cplusplus
 }
+#endif
