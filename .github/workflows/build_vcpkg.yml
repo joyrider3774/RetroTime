@@ -1,0 +1,78 @@
+name: Build with VCPKG
+
+# Controls when the workflow will run
+on:
+  # Allows you to run this workflow manually target the Actions tab
+  workflow_dispatch:
+  
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: windows-latest, env: Windows x86_64, triplet: x64-windows-static, binary: Release/retrotime.exe }
+          - { os: macos-13, env: Mac Os x64, triplet: x64-osx, binary: retrotime }
+          - { os: macos-latest, env: Mac Os arm64, triplet: arm64-osx, binary: retrotime }
+          - { os: ubuntu-20.04, env: Ubuntu x86_64, triplet: x64-linux, binary: retrotime }
+    runs-on: ${{ matrix.os }} 
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v4      
+      - uses: ilammy/msvc-dev-cmd@v1
+        if: runner.os == 'Windows'
+      - name: install vcpkg
+        run : |
+          git clone --depth 1  https://github.com/microsoft/vcpkg "$HOME/vcpkg"          
+      - name: bootstrap vcpkg
+        if: runner.os == 'Windows'
+        run: |
+          cd "$HOME/vcpkg"
+          "bootstrap-vcpkg.bat"
+      - name: bootstrap vcpkg
+        if: runner.os != 'Windows'
+        run: |
+          cd "$HOME/vcpkg"
+          "./bootstrap-vcpkg.sh"
+      - name: configure triplet
+        run: |
+          cp "$HOME/vcpkg/triplets/${{ matrix.triplet }}.cmake" "$HOME/vcpkg/triplets/community/${{ matrix.triplet }}-release-only.cmake"
+          echo "set(VCPKG_BUILD_TYPE release)" >> "$HOME/vcpkg/triplets/community/${{ matrix.triplet }}-release-only.cmake"          
+      - name: Configure   
+        run: |
+          mkdir build
+          cd build
+          cmake "-DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }}-release-only" "-DCMAKE_TOOLCHAIN_FILE=$HOME/vcpkg/scripts/buildsystems/vcpkg.cmake" ..      
+      - name: Build
+        run: |
+          cd build
+          cmake --build . --config Release
+      - name: Make Executable
+        if: runner.os != 'Windows'
+        run: |
+          chmod +x  build/${{ matrix.binary }}
+      - name: Copy Game And Assets
+        run: |
+          mkdir ./Release
+          mkdir ./Release/RetroTime
+          cp retrotime.exe ./Release/RetroTime/
+          cp -R ./retrotimefs ./Release/RetroTime/
+          cp ./README.md ./Release/Retrotime/
+          cp ./LICENSE ./Release/Retrotime/
+      - name: Tar Gzip everything
+        if: runner.os != 'Windows'
+        run : |
+          cd Release
+          tar -czvf "../RetroTime ${{ matrix.env }}.tar.gz" RetroTime
+      - name: Store build
+        uses: actions/upload-artifact@v4
+        if: runner.os != 'Windows'
+        with:
+          name: RetroTime ${{ matrix.env }}
+          path: ./RetroTime ${{ matrix.env }}.tar.gz
+      - name: Store build
+        uses: actions/upload-artifact@v4
+        if: runner.os == 'Windows'
+        with:
+          name: RetroTime ${{ matrix.env }}
+          path: ./Release/
