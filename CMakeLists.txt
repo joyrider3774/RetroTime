@@ -8,7 +8,7 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     set(MACOSX TRUE)
 endif()
 
-project(ttftovircon)
+project(retrotime)
 
 find_package(SDL2 CONFIG REQUIRED)
 find_package(SDL2_image CONFIG REQUIRED)
@@ -32,7 +32,7 @@ if (! ${MACOSX})
 set(CMAKE_EXE_LINKER_FLAGS "-static")
 endif()
 
-add_executable(ttftovircon)
+add_executable(retrotime)
 target_sources(${PROJECT_NAME} PRIVATE ${SRC} )
 if (! ${MACOSX})
 target_link_libraries(${PROJECT_NAME} PRIVATE -static-libgcc -static-libstdc++)
