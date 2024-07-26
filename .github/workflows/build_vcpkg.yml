@@ -4,18 +4,22 @@ name: Build with VCPKG
 on:
   # Allows you to run this workflow manually target the Actions tab
   workflow_dispatch:
+
+ 
   
-jobs:
+jobs: 
   build:
     strategy:
       fail-fast: false
       matrix:
         include:
-          - { os: windows-latest, env: Windows x86_64, triplet: x64-windows-static, binary: Release/retrotime.exe }
-          - { os: macos-1015, env: Mac Os x64, triplet: x64-osx, binary: retrotime }
-          - { os: macos-latest, env: Mac Os arm64, triplet: arm64-osx, binary: retrotime }
-          - { os: ubuntu-20.04, env: Ubuntu x86_64, triplet: x64-linux, binary: retrotime }
+          - { os: windows-latest, env: Windows x86_64, triplet: x64-windows-static, binary: Release/retrotime.exe, vcpkgCommitId: 'a2938d0e28fdb82285ec1be1ab03f962cca3e6a3' }
+          - { os: macos-1015, env: Mac Os x64, triplet: x64-osx, binary: retrotime, vcpkgCommitId: 'a2938d0e28fdb82285ec1be1ab03f962cca3e6a3' }
+          - { os: macos-latest, env: Mac Os arm64, triplet: arm64-osx, binary: retrotime, vcpkgCommitId: 'a2938d0e28fdb82285ec1be1ab03f962cca3e6a3' }
+          - { os: ubuntu-20.04, env: Ubuntu x86_64, triplet: x64-linux, binary: retrotime, vcpkgCommitId: 'a2938d0e28fdb82285ec1be1ab03f962cca3e6a3' }
     runs-on: ${{ matrix.os }} 
+    env:
+      VCPKG_DEFAULT_TRIPLET: ${{ matrix.triplet }}-release-only.cmake
     steps:
       - name: 'Cleanup build folder'
         if: runner.os != 'Windows'
@@ -26,38 +30,33 @@ jobs:
           ls -la ./
       - name: Checkout sources
         uses: actions/checkout@v4      
-      - uses: ilammy/msvc-dev-cmd@v1
-        if: runner.os == 'Windows'
-      - name: install vcpkg
-        run : |
-          git clone --depth 1  https://github.com/microsoft/vcpkg "$HOME/vcpkg"          
-      - name: bootstrap vcpkg
-        if: runner.os == 'Windows'
-        run: |
-          cd "$HOME/vcpkg"
-          "bootstrap-vcpkg.bat"
-      - name: bootstrap vcpkg
-        if: runner.os != 'Windows'
-        run: |
-          cd "$HOME/vcpkg"
-          "./bootstrap-vcpkg.sh"
+      - uses: lukka/get-cmake@latest
+      - name: Dump the content of $RUNNER_TEMP
+        run: find $RUNNER_TEMP
+        shell: bash
+      - name: Setup vcpkg
+        uses: lukka/run-vcpkg@v11
+        id: runvcpkg
+        with:
+          # This specifies the location of vcpkg, where it is going to be restored from cache, or create from scratch.
+          vcpkgDirectory: '${{ runner.workspace }}/b/vcpkg'
+          # The Git commit id of vcpkg to be checked out. This is only needed because we are not using a submodule.
+          vcpkgGitCommitId: '${{ matrix.vcpkgCommitId}}'
+          # The vcpkg.json file, which will be part of cache key computation.
+          vcpkgJsonGlob: '**/vcpkg.json'
       - name: configure triplet
         run: |
-          cp "$HOME/vcpkg/triplets/${{ matrix.triplet }}.cmake" "$HOME/vcpkg/triplets/community/${{ matrix.triplet }}-release-only.cmake"
-          echo "set(VCPKG_BUILD_TYPE release)" >> "$HOME/vcpkg/triplets/community/${{ matrix.triplet }}-release-only.cmake"          
-      - name: Configure   
-        run: |
-          mkdir build
-          cd build
-          cmake "-DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }}-release-only" "-DCMAKE_TOOLCHAIN_FILE=$HOME/vcpkg/scripts/buildsystems/vcpkg.cmake" ..      
-      - name: Build
-        run: |
-          cd build
-          cmake --build . --config Release
-      - name: Make Executable
-        if: runner.os != 'Windows'
-        run: |
-          chmod +x  build/${{ matrix.binary }}
+          cp "${{ runner.workspace }}/vcpkg/triplets/${{ matrix.triplet }}.cmake" "${{ runner.workspace }}/vcpkg/triplets/community/${{ matrix.triplet }}-release-only.cmake"
+          echo "set(VCPKG_BUILD_TYPE release)" >> "$HOME/vcpkg/triplets/community/${{ matrix.triplet }}-release-only.cmake"                
+      - name: Prints output of run-vcpkg's action
+        run: echo "root='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}', triplet='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_DEFAULT_TRIPLET_OUT }}'"
+      - name: Run CMake with vcpkg.json manifest
+        uses: lukka/run-cmake@v10
+        with:
+          cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
+          configurePreset: ninja-multi-vcpkg
+          buildPreset: ninja-multi-vcpkg
+          buildPresetAdditionalArgs: "['--config Release']"
       - name: Copy Game And Assets
         run: |
           mkdir ./Release
