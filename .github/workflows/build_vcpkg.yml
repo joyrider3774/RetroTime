@@ -14,7 +14,7 @@ jobs:
           - { os: windows-latest, env: Windows x86_64, triplet: x64-windows-static, binary: Release/retrotime.exe }
           - { os: macos-1015, env: Mac Os x64, triplet: x64-osx, binary: retrotime }
           - { os: macos-latest, env: Mac Os arm64, triplet: arm64-osx, binary: retrotime }
-          - { os: ubuntu-1804, env: Ubuntu x86_64, triplet: x64-linux, binary: retrotime }
+          - { os: ubuntu-20.04, env: Ubuntu x86_64, triplet: x64-linux, binary: retrotime }
     runs-on: ${{ matrix.os }} 
     steps:
       - name: 'Cleanup build folder'
