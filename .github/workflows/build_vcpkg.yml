@@ -34,10 +34,6 @@ jobs:
       - name: Dump the content of $RUNNER_TEMP
         run: find $RUNNER_TEMP
         shell: bash
-      - name: configure triplet
-        run: |
-          cp "${{ runner.workspace }}/vcpkg/triplets/${{ matrix.triplet }}.cmake" "${{ runner.workspace }}/vcpkg/triplets/community/${{ matrix.triplet }}-release-only.cmake"
-          echo "set(VCPKG_BUILD_TYPE release)" >> "$HOME/vcpkg/triplets/community/${{ matrix.triplet }}-release-only.cmake"                      
       - name: Setup vcpkg
         uses: lukka/run-vcpkg@v11
         id: runvcpkg
@@ -48,6 +44,10 @@ jobs:
           vcpkgGitCommitId: '${{ matrix.vcpkgCommitId}}'
           # The vcpkg.json file, which will be part of cache key computation.
           vcpkgJsonGlob: '**/vcpkg.json'
+      - name: configure triplet
+        run: |
+          cp "${{ runner.workspace }}/vcpkg/triplets/${{ matrix.triplet }}.cmake" "${{ runner.workspace }}/vcpkg/triplets/community/${{ matrix.triplet }}-release-only.cmake"
+          echo "set(VCPKG_BUILD_TYPE release)" >> "$HOME/vcpkg/triplets/community/${{ matrix.triplet }}-release-only.cmake"  
       - name: Prints output of run-vcpkg's action
         run: echo "root='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}', triplet='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_DEFAULT_TRIPLET_OUT }}'"
       - name: Run CMake with vcpkg.json manifest
