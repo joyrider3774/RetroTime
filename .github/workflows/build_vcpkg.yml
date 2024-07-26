@@ -17,6 +17,12 @@ jobs:
           - { os: ubuntu-1804, env: Ubuntu x86_64, triplet: x64-linux, binary: retrotime }
     runs-on: ${{ matrix.os }} 
     steps:
+      - name: 'Cleanup build folder'
+        run: |
+          ls -la ./
+          rm -rf ./* || true
+          rm -rf ./.??* || true
+          ls -la ./
       - name: Checkout sources
         uses: actions/checkout@v4      
       - uses: ilammy/msvc-dev-cmd@v1
