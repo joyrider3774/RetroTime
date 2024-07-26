@@ -18,6 +18,7 @@ jobs:
     runs-on: ${{ matrix.os }} 
     steps:
       - name: 'Cleanup build folder'
+        if: runner.os != 'Windows'
         run: |
           ls -la ./
           rm -rf ./* || true
