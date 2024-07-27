@@ -114,5 +114,5 @@ public:
 	void LoadSound() override;
 	void UnLoadSound() override;
 	void UpdateObjects(bool IsGameState) override;
-	void DrawBackground(bool motionblur);
+	void DrawBackground(bool motionblur) override;
 };

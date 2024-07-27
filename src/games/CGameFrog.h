@@ -167,5 +167,5 @@ public:
 	void LoadGraphics() override;
 	void LoadSound() override;
 	void UnLoadSound() override;
-	void DrawBackground(bool motionblur);
+	void DrawBackground(bool motionblur) override;
 };

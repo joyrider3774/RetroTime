@@ -63,5 +63,5 @@ public:
 	void UnLoadSound() override;
 	void UpdateObjects(bool IsGameState) override;
 	bool DrawObjects() override;
-	void DrawBackground(bool motionblur);
+	void DrawBackground(bool motionblur) override;
 };
