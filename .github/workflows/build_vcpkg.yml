@@ -57,7 +57,7 @@ jobs:
         run: |
           mkdir ./Release
           mkdir ./Release/RetroTime
-          cp build/${{ matrix.binary }} ./Release/RetroTime/
+          cp builds/ninja-multi-vcpkg/${{ matrix.binary }} ./Release/RetroTime/
           cp -R ./retrotimefs ./Release/RetroTime/
           cp ./README.md ./Release/RetroTime/
           cp ./LICENSE ./Release/RetroTime/
