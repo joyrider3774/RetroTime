@@ -437,10 +437,16 @@ void CGame::LoadHighScores()
 	ScoreFile = fopen(FileName.c_str(), "r");
 	if (ScoreFile)
 	{
-		fscanf(ScoreFile, "RetroCarousel=%llu\n", &RetroCarouselHighScore);
+		int ret = fscanf(ScoreFile, "RetroCarousel=%llu\n", &RetroCarouselHighScore);
+		if(ret != 1)
+			RetroCarouselHighScore = 0;
 		for (int i = 0; i < Games; i++)
 			for (int j = 0; j < Modes; j++)
-				fscanf(ScoreFile, string("Game_" + to_string(i) + "_Mode_" + to_string(j) + "=%llu\n").c_str(), &HighScores[i][j]);
+			{
+				ret = fscanf(ScoreFile, string("Game_" + to_string(i) + "_Mode_" + to_string(j) + "=%llu\n").c_str(), &HighScores[i][j]);
+				if(ret != 1)
+					HighScores[i][j] = 0;
+			}
 		fclose(ScoreFile);
 	}
 	else
@@ -490,6 +496,9 @@ void CGame::LoadSettings()
 		if(EnvHomeDrive && EnvHomePath) //windows systems normally
 			FileName = string(EnvHomeDrive) + string(EnvHomePath) + "/.retrotimesettings";
 
+	ColorModR = 255;
+	ColorModG = 255;
+	ColorModB = 255;
 	Audio->SetVolumeMusic(128);
 	Audio->SetVolumeSound(128);
 	MotionBlur = false;
