@@ -14,12 +14,12 @@ jobs:
       matrix:
         include:
           - { os: windows-latest, env: Windows x86_64, triplet: x64-windows-static, binary: Release/retrotime.exe, vcpkgCommitId: 'a2938d0e28fdb82285ec1be1ab03f962cca3e6a3' }
-          - { os: macos-1015, env: Mac Os x64, triplet: x64-osx, binary: retrotime, vcpkgCommitId: 'a2938d0e28fdb82285ec1be1ab03f962cca3e6a3' }
-          - { os: macos-latest, env: Mac Os arm64, triplet: arm64-osx, binary: retrotime, vcpkgCommitId: 'a2938d0e28fdb82285ec1be1ab03f962cca3e6a3' }
-          - { os: ubuntu-20.04, env: Ubuntu x86_64, triplet: x64-linux, binary: retrotime, vcpkgCommitId: 'a2938d0e28fdb82285ec1be1ab03f962cca3e6a3' }
+          - { os: macos-1015, env: Mac Os x64, triplet: x64-osx, binary: Release/retrotime, vcpkgCommitId: 'a2938d0e28fdb82285ec1be1ab03f962cca3e6a3' }
+          - { os: macos-latest, env: Mac Os arm64, triplet: arm64-osx, binary: Release/retrotime, vcpkgCommitId: 'a2938d0e28fdb82285ec1be1ab03f962cca3e6a3' }
+          - { os: ubuntu-20.04, env: Ubuntu x86_64, triplet: x64-linux, binary: Release/retrotime, vcpkgCommitId: 'a2938d0e28fdb82285ec1be1ab03f962cca3e6a3' }
     runs-on: ${{ matrix.os }} 
     env:
-      VCPKG_DEFAULT_TRIPLET: ${{ matrix.triplet }}-release-only.cmake
+      VCPKG_DEFAULT_TRIPLET: ${{ matrix.triplet }}
     steps:
       - name: 'Cleanup build folder'
         if: runner.os != 'Windows'
@@ -44,10 +44,6 @@ jobs:
           vcpkgGitCommitId: '${{ matrix.vcpkgCommitId}}'
           # The vcpkg.json file, which will be part of cache key computation.
           vcpkgJsonGlob: '**/vcpkg.json'
-      - name: configure triplet
-        run: |
-          cp "${{ runner.workspace }}/vcpkg/triplets/${{ matrix.triplet }}.cmake" "${{ runner.workspace }}/vcpkg/triplets/community/${{ matrix.triplet }}-release-only.cmake"
-          echo "set(VCPKG_BUILD_TYPE release)" >> "${{ runner.workspace }}/vcpkg/triplets/community/${{ matrix.triplet }}-release-only.cmake"  
       - name: Prints output of run-vcpkg's action
         run: echo "root='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_ROOT_OUT }}', triplet='${{ steps.runvcpkg.outputs.RUNVCPKG_VCPKG_DEFAULT_TRIPLET_OUT }}'"
       - name: Run CMake with vcpkg.json manifest
