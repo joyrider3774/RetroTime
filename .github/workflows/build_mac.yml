@@ -18,7 +18,7 @@ jobs:
     runs-on: macos-13    
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
           
       - name: Setup homebrew stuff
         run: |
@@ -92,7 +92,7 @@ jobs:
           tar -czvf "$ARTIFACT_NAME.tar.gz" "./$GAME_NAME.app"
           mv  "$ARTIFACT_NAME.tar.gz" ./artifact/
       - name: Store build
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{env.ARTIFACT_NAME}}
           path: artifact
