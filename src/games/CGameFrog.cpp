@@ -871,7 +871,8 @@ SDL_Texture* CGameFrog::screenshot()
 	}
 	Draw();
 
-	SDL_RenderPresent(Game->Renderer);
+	//this crashes metal backend on mac and seems is not required !
+	//SDL_RenderPresent(Game->Renderer);
 	SDL_SetRenderTarget(Game->Renderer, prev);
 	deinit();
 	return image;
