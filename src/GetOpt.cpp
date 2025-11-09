@@ -1,3 +1,4 @@
+#ifdef FUNKEY
 #include "GetOpt.h"
 
 /*
@@ -110,3 +111,4 @@ int getopt(int nargc, char* const nargv[], const char* ostr)
 #ifdef __cplusplus
 }
 #endif
+#endif 
