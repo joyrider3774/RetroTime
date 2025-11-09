@@ -11,7 +11,7 @@ extern int optopt;		/* character checked for validity */
 extern int optreset;  	/* reset getopt  */
 extern char* optarg;	/* argument associated with option */
 
-int getopt(int nargc, char* const nargv[], const char* ostr);
+int getopt(int nargc, char* nargv[], char* ostr);
 
 #ifdef __cplusplus
 }
