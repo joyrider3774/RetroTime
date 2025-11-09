@@ -55,8 +55,8 @@ char* optarg;                /* argument associated with option */
  */
 int getopt(int nargc, char* const nargv[], const char* ostr)
 {
-    static const char* place = EMSG;              /* option letter processing */
-    const char* oli;                              /* option letter list index */
+    static char* place = EMSG;              /* option letter processing */
+    char* oli;                              /* option letter list index */
 
     if (optreset || !*place) {              /* update scanning pointer */
         optreset = 0;
