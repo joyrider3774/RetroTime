@@ -8,6 +8,9 @@
 #include <sys/stat.h>
 #include <time.h>
 #include <inttypes.h>
+#ifndef FUNKEY
+#include <getopt.h>
+#endif
 #include "GetOpt.h"
 #include "games/CGameBase.h"
 #include "games/CGameFrog.h"
